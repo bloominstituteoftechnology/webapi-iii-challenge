@@ -5,7 +5,7 @@ const app = express();
 
 const PORT = 3000
 
-app.use(bodyParser);
+app.use(bodyParser.json());;
 
 const users = [];
 let userId= 0;
