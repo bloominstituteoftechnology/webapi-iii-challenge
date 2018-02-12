@@ -25,16 +25,39 @@ server.get('/users', (req, res) => {
 
 server.get('/users/:id', (req, res) => {
   const findId = req.params.id;
-  // let foundName = '';
   const foundName = Object.keys(users)[findId];
-  console.log(Object.keys(users));
+
   if (!foundName) {
     res.status = STATUS_USER_ERROR;
     res.json({ error: `User with ID ${findId} not found`});
     return;
   }
+
   res.status = STATUS_SUCCESS;
   res.json({ foundName });
+  return;
+});
+
+server.get('/search', (req, res) => {
+  const searchName = req.query.name;
+  let searchResults = [];
+
+  if (!searchName || searchName === '') {
+    res.status = STATUS_USER_ERROR;
+    res.json({ error: `Search term not provided`});
+    return;
+  }
+
+  searchResults = Object.keys(users).filter(user => {
+    if (user.toLowerCase().includes(searchName.toLowerCase())) return user;
+  });
+  if (searchResults !== []) {
+    res.status = STATUS_SUCCESS;
+    res.json({ searchResults });
+    return;
+  }
+  res.status = STATUS_USER_ERROR;
+  res.json({ error: `No users with name ${searchName} found`});
   return;
 });
 
@@ -45,6 +68,7 @@ server.post('/users', (req, res) => {
     res.json({ error: 'Name must be specified' });
     return;
   }
+  
   users[name] = id;
   res.status = STATUS_SUCCESS;
   res.send(id + '');
