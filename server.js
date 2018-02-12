@@ -1,34 +1,47 @@
-const express = require('express');
-const bodyParser = require('body-parser');
+const express = require("express");
+const bodyParser = require("body-parser");
 
 const app = express();
 
-const PORT = 3000
+const PORT = 3000;
 
-app.use(bodyParser.json());;
+app.use(bodyParser.json());
 
 const users = [];
-let userId= 0;
+let UserId = 0;
+const STATUS_SUCCESS = 200;
+const STATUS_USER_ERROR = 422;
 
-app.use('/', (req, res, next) => {
-    console.log('Request type:', req.method)
-    next();
-});
-
-app.get('/users/:user', (req, res) => {
-    res.send(users [req.params.name] + "" || "This User Does Not Exist")
+app.get('/users', (req, res) => {
+  const user = req.body.user;
+  if (UserId === 0) {
+    res.status = STATUS_USER_ERROR;
+    res.json({ error: "No User To Display" });
+    return;
+  }
+  res.status = STATUS_SUCCESS;
+  res.json({ users });
+  return;
 });
 
 app.post('/users', (req, res) => {
-    userId ++;
-    users[req.body.name] = userId;
-    res.send(userId + "");
+  const name = req.body.name;
+  if (!name) {
+    res.status(STATUS_USER_ERROR);
+    res.json({ error: "Must Prove a User Name" });
+    return;
+  }
+  users.push(name);
+  res.status = STATUS_SUCCESS;
+  res.send(UserId + "");
+  UserId++;
+  return;
 });
 
 app.listen(PORT, err => {
-    if (err) {
-        console.log(`There was an error starting the server: ${err}`)
-    } else {
-        console.log(`App listening on port ${PORT}`)
-    }
+  if (err) {
+    console.log(`There was an error starting the server: ${err}`);
+  } else {
+    console.log(`App listening on port ${PORT}`);
+  }
 });
