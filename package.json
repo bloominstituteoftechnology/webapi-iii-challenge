@@ -4,7 +4,8 @@
   "description": "An example of node express functionality",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,10 @@
   "bugs": {
     "url": "https://github.com/JohnJustinn/Node-Express/issues"
   },
-  "homepage": "https://github.com/JohnJustinn/Node-Express#readme"
+  "homepage": "https://github.com/JohnJustinn/Node-Express#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
+    "express": "^4.16.2"
+  }
 }
