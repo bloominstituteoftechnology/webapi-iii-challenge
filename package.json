@@ -1,0 +1,25 @@
+{
+  "name": "node-express",
+  "version": "1.0.0",
+  "description": "Server excercises",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bitcointroy/Node-Express.git"
+  },
+  "author": "Troy Bradley",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bitcointroy/Node-Express/issues"
+  },
+  "homepage": "https://github.com/bitcointroy/Node-Express#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
+    "express": "^4.16.2"
+  }
+}
