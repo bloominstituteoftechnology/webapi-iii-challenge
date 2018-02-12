@@ -39,18 +39,32 @@ server.get('/search', (req, res) => {
 });
 
 server.get('/users', (req, res) => {
+  if (Object.values(users).length === 0) res.send('No users in db.');
   res.json(Object.values(users));
 });
 
 server.get('/users/:id', (req, res) => {
   const userId = req.params.id;
-  if (!Object.keys(users).includes(userId)) res.send('ID not found.');
+
+  if (!Object.keys(users).includes(userId))
+    res.send(`ID -${userId}- not found.`);
   res.json(users[userId]);
 });
 
 server.post('/users', (req, res) => {
   users[nextId++] = req.body.user;
   res.json(Object.values(users));
+});
+
+server.delete('/users/:id', (req, res) => {
+  const userId = req.params.id;
+
+  if (Object.keys(users).includes(userId)) {
+    delete users[userId];
+    if (Object.values(users).length === 0) res.send('No users in db.');
+    res.json(Object.values(users));
+  }
+  res.send(`ID -${userId}- not found`);
 });
 
 server.listen(PORT, err => {
