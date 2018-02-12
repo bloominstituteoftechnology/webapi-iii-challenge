@@ -14,13 +14,28 @@ server.get('/', (req, res) => {
 });
 
 server.get('/search', (req, res) => {
-  const query = req.query.name.toLowerCase();
+  const query = req.query.name;
+  const usersArr = Object.values(users).map(user => {
+    return user.toLowerCase();
+  });
 
   res.json(
-    Object.values(users).includes(query).length > 0
-      ? Object.values(users).includes(query)
-      : `No users found with name: ${query}`,
+    usersArr.includes(query.toLowerCase())
+      ? Object.values(users).filter(
+          user => user.toLowerCase() === query.toLowerCase(),
+        )
+      : `No user found with name: ${query}`,
   );
+
+  // search with user includes characters
+  //
+  // res.json(
+  //   usersArr.join('').includes(query.toLowerCase())
+  //     ? Object.values(users).filter(user =>
+  //         user.toLowerCase().includes(query.toLowerCase()),
+  //       )
+  //     : `No users found with name: ${query}`,
+  // );
 });
 
 server.get('/users', (req, res) => {
