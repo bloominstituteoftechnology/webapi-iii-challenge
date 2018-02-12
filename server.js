@@ -9,6 +9,10 @@ const users = [];
 
 server.use(bodyParser.json());
 
+server.get('/users', (req, res) => {
+	res.send(users);
+});
+
 server.post('/users', (req, res) => {
 	const user = req.body.user;
 	if (!user) {
