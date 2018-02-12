@@ -39,7 +39,7 @@ server.get('/search', (req, res) => {
 });
 
 server.get('/users', (req, res) => {
-  if (Object.values(users).length === 0) res.send('No users in db.');
+  // if (Object.values(users).length === 0) res.send('No users in db.');
   res.json(Object.values(users));
 });
 
@@ -61,7 +61,7 @@ server.delete('/users/:id', (req, res) => {
 
   if (Object.keys(users).includes(userId)) {
     delete users[userId];
-    if (Object.values(users).length === 0) res.send('No users in db.');
+    // if (Object.values(users).length === 0) res.send('No users in db.');
     res.json(Object.values(users));
   }
   res.send(`ID -${userId}- not found`);
