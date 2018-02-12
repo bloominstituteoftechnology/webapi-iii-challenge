@@ -1,0 +1,25 @@
+{
+  "name": "node-express",
+  "version": "1.0.0",
+  "description": "A sample node-express server",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/perryahern/Node-Express.git"
+  },
+  "author": "Perry Ahern",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/perryahern/Node-Express/issues"
+  },
+  "homepage": "https://github.com/perryahern/Node-Express#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
+    "express": "^4.16.2"
+  }
+}
