@@ -19,7 +19,6 @@
   "homepage": "https://github.com/perryahern/Node-Express#readme",
   "dependencies": {
     "body-parser": "^1.18.2",
-    "cors": "^2.8.4",
     "express": "^4.16.2"
   }
 }
