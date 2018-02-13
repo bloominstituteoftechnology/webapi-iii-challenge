@@ -7,35 +7,31 @@ const PORT = 3000;
 
 app.use(bodyParser.json());
 
-const users = [];
-let UserId = 0;
-const STATUS_SUCCESS = 200;
-const STATUS_USER_ERROR = 422;
+let users = [{user: "John", id:0}, {user: "Kate", id:1}, {user: "Toby", id:2}, {user: "Grace", id:3}];
+let id = 4;
 
 app.get('/users', (req, res) => {
-  const user = req.body.user;
-  if (UserId === 0) {
-    res.status = STATUS_USER_ERROR;
-    res.json({ error: "No User To Display" });
-    return;
-  }
-  res.status = STATUS_SUCCESS;
-  res.json({ users });
-  return;
+  res.status(200).send(users);
+});
+
+app.get('/users/:id', (req, res) => {
+    res.status(200).send(users[req.params.id])
+});
+
+app.get("/search", (req, res) => {
+    const name = req.query.name;
+    const filter = users.filter(user => {
+        user = user.name.toLowerCase();
+        return user.toLowerCase();
+    });
+    res.send(filter);
 });
 
 app.post('/users', (req, res) => {
-  const name = req.body.name;
-  if (!name) {
-    res.status(STATUS_USER_ERROR);
-    res.json({ error: "Must Prove a User Name" });
-    return;
-  }
-  users.push(name);
-  res.status = STATUS_SUCCESS;
-  res.send(UserId + "");
-  UserId++;
-  return;
+  const user = req.body.user;
+  users = [...users, { name: user, id: id}];
+  id++;
+  res.send(users);
 });
 
 app.listen(PORT, err => {
