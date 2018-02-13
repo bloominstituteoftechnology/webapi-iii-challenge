@@ -18,6 +18,10 @@ const users = [
 	}
 ];
 
+// server.get('/search/:name', (req, res) => {
+// 	res.send('Hello bro');
+// });
+
 server.get('/users', (req, res) => {
 	res.json(users);
 });
@@ -25,7 +29,6 @@ server.get('/users', (req, res) => {
 server.get('/users/:id', (req, res) => {
 	const { id } = req.params;
 	const { name } = req.body;
-	console.log('name ->', name);
 	let foundUser = null;
 	users.forEach(user => {
 		if (user.id == id) foundUser = user;
@@ -36,6 +39,24 @@ server.get('/users/:id', (req, res) => {
 	} else {
 		res.send(foundUser);
 	}
+});
+
+server.get('/search', (req, res) => {
+	const name = req.query.name;
+	if (!name) {
+		res.status(STATUS_USER_ERROR);
+		res.send({ error: "Must provide a name" });
+		return;
+	}
+	const names = users.filter(user => {
+		return user.name === name;
+	});
+	if (!names.length) {
+		res.status(STATUS_USER_ERROR);
+		res.send({ error: "User not found!" });
+		return;
+	}
+	res.send({ users: names });
 });
 
 let userId = 2;
