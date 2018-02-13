@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const server = express();
 const PORT = 8000
 
-//app.use(bodyParser());
+server.use(bodyParser());
 
 const users = [
 
@@ -32,8 +32,38 @@ const users = [
 
 let userId = 4;
 
-server.get('/', (req, res) => {
-   res.send('<h1>Hello!</h1>');
-})
+/*server.get('/', (req, res) => {
+   res.send('Hello!');
+});*/
 
-server.listen(8000);
+server.post('/users', (req, res) => {
+  users.push({
+    id: userId++,
+    name: req.body.name
+  });
+});
+
+server.get('/users' , (req, res) => {
+  res.json(users);
+});
+
+server.get('/users/:id', (req, res) => {
+    res.json(users.filter(user => user.id.toString() === req.params.id));
+  });
+
+  server.get('/search' , (req, res) => {
+    res.json(users.filter(user => req.query.name.toLowerCase() === user.name.toLocaleLowerCase.toLowerCase()));
+  });
+
+  server.delete('/users/:id', (req, res) => {
+    res.json(users.filter(user => user.id.toString() !== req.params.id));
+  });
+
+
+server.listen(PORT, err => {
+  if (err){
+      console.log(`You Dun Goofed!: ${err}`)
+  } else {
+      console.log(`Server listening on port ${PORT}`);
+  }
+});
