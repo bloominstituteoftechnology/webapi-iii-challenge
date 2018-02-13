@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const fs = require('fs');
 
 const server = express();     // create the server using express
 const PORT = 3060;            // specify the port as a constant
@@ -26,8 +27,13 @@ server.get('/users', (req, res) => {
 server.get('/users/:id', (req, res) => {
   const findId = req.params.id;                      // saving the id in simpler form
   const foundName = Object.keys(users)[findId];      // finding the name by the id
-
-  if (!foundName) {                                  // name not found, return error info
+  // const foundName = [findId];
+  // if (typeof findId !== 'number') {                      // handle id not a number error
+  //   res.status(STATUS_USER_ERROR);
+  //   res.send({ error: `ID must be an integer`});
+  //   return;
+  // } else if (!foundName) {                                  // name not found, return error info
+  if (!foundName) {
     res.status(STATUS_USER_ERROR);
     res.send({ error: `User with ID ${findId} not found`});
     return;
@@ -41,8 +47,12 @@ server.get('/users/:id', (req, res) => {
 server.get('/search', (req, res) => {
   const searchName = req.query.name;                 // saving the name to find in simpler form
   let searchResults = [];                            // empty array to hold search results
-
-  if (!searchName || searchName === '') {            // if no search name is provided, return error info
+  
+  if (Number(searchName) == searchName) {       // check that search term is not a number
+    res.status(STATUS_USER_ERROR);
+    res.send({ error: `Search term must be a string`});
+    return;
+  } else if (!searchName || searchName === '') {            // if no search name is provided, return error info
     res.status(STATUS_USER_ERROR);
     res.send({ error: `Search term not provided`});
     return;
@@ -68,12 +78,17 @@ server.post('/users', (req, res) => {    // post a new user to users data
     res.status(STATUS_USER_ERROR);
     res.send({ error: 'Name must be specified' });
     return;
+  } else if (typeof name !== 'string') { // handle error where name is not a string
+    res.status(STATUS_USER_ERROR);
+    res.send({ error: 'The name must be a string' });
+    return;
   }
   
   users[name] = id;                      // assign next id to the user (previously incremented)
   res.status(STATUS_SUCCESS);            // report the successful addition
   res.send(id + '');
   id++;
+  fs.writeFileSync('./data.txt', JSON.stringify(users), 'utf-8');
   return;
 });
 
@@ -90,6 +105,7 @@ server.delete('/users/:id', (req, res) => {           // delete a user from the 
   delete users[foundName];                            // delete the user
   res.status(STATUS_SUCCESS);                         // report the successful deletion
   res.send({ success: `User with ID ${findId} (${foundName}) deleted` });
+  fs.writeFileSync('./data.txt', JSON.stringify(users), 'utf-8');
   return;
 });
 
