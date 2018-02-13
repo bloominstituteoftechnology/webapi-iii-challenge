@@ -1,0 +1,25 @@
+{
+  "name": "express",
+  "version": "1.0.0",
+  "description": "Node and express server practice for CS6",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Synsyxx/Node-Express.git"
+  },
+  "author": "Travis Simpson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Synsyxx/Node-Express/issues"
+  },
+  "homepage": "https://github.com/Synsyxx/Node-Express#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
+    "express": "^4.16.2"
+  }
+}
