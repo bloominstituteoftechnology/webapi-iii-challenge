@@ -1,13 +1,24 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const fs = require('fs');
 
 const server = express();
 const PORT = 3031;
 
 server.use(bodyParser.json());
 
-const users = {};
+let users = {};
 let nextId = 0;
+
+const writeToFile = _ => {
+  fs.writeFileSync('users.txt', JSON.stringify(users), 'utf8');
+};
+
+const loadFile = _ => {
+  users = JSON.parse(fs.readFileSync('users.txt', 'utf8'));
+};
+
+loadFile();
 
 server.get('/', (req, res) => {
   res.send('<h1>home</h1>');
@@ -53,6 +64,7 @@ server.get('/users/:id', (req, res) => {
 
 server.post('/users', (req, res) => {
   users[nextId++] = req.body.user;
+  writeToFile();
   res.json(Object.values(users));
 });
 
