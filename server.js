@@ -18,10 +18,6 @@ const users = [
 	}
 ];
 
-// server.get('/search/:name', (req, res) => {
-// 	res.send('Hello bro');
-// });
-
 server.get('/users', (req, res) => {
 	res.json(users);
 });
@@ -53,7 +49,7 @@ server.get('/search', (req, res) => {
 	});
 	if (!names.length) {
 		res.status(STATUS_USER_ERROR);
-		res.send({ error: "User not found!" });
+		res.send({ error: `User by the name of (${name}) was not found!`});
 		return;
 	}
 	res.send({ users: names });
@@ -72,6 +68,23 @@ server.post('/users', (req, res) => {
 	users.push(newUser);
 	userId++;
 	res.send({ users: users });
+});
+
+server.delete('/users/:id', (req, res) => {
+	const { id } = req.params;
+	let removedUser = null
+	for (let i = 0; i < users.length; i++) {
+		if (users[i].id == id) {
+			removedUser = users.splice(i, 1);
+			break;
+		}
+	}
+	if (!removedUser) {
+		res.status(STATUS_USER_ERROR);
+		res.send({ error: "User not found by that id" });
+	} else {
+		res.send(removedUser);
+	}
 });
 
 server.listen(PORT, err => {
