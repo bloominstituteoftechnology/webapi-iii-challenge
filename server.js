@@ -73,6 +73,7 @@ server.delete('/users/:id', (req, res) => {
 
   if (Object.keys(users).includes(userId)) {
     delete users[userId];
+    writeToFile();
     // if (Object.values(users).length === 0) res.send('No users in db.');
     res.json(Object.values(users));
   } else res.send(`ID -${userId}- not found`);
