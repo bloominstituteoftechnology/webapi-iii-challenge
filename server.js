@@ -1,10 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const app = express();
-const PORT = 3040
+const server = express();
+const PORT = 8000
 
-app.use(bodyParser());
+//app.use(bodyParser());
 
 const users = [
 
@@ -32,3 +32,8 @@ const users = [
 
 let userId = 4;
 
+server.get('/', (req, res) => {
+   res.send('<h1>Hello!</h1>');
+})
+
+server.listen(8000);
