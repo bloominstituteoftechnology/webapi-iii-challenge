@@ -1,0 +1,28 @@
+{
+  "name": "node-express",
+  "version": "1.0.0",
+  "description": "node express assignment",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jryanp1/Node-Express.git"
+  },
+  "keywords": [
+    "node",
+    "express"
+  ],
+  "author": "John Pelley <jryanp@yahoo.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jryanp1/Node-Express/issues"
+  },
+  "homepage": "https://github.com/jryanp1/Node-Express#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
+    "express": "^4.16.2"
+  }
+}
