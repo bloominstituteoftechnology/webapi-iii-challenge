@@ -2,7 +2,7 @@
   "name": "node-express",
   "version": "1.0.0",
   "description": "* Node\r * Express\r * V8\r * RESTful API\r * GET\r * POST\r * req, res\r * route parameters\r * query parameters\r * Postman\r * body-parser",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
