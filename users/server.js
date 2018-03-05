@@ -34,11 +34,11 @@ server.get('/users/:id', (req, res) => {
   res.send(user);
 });
 
-server.get('/search?name=<query>', (req, res) => {
-  //Do a toLowerCase()
+server.get('/search?', (req, res) => {
   const { name } = req.query;
-  console.log('What is name?: ', name);
-  const user = users.filter(user => user.name === name)[0];
+  const user = users.filter(
+    user => user.username.toLowerCase() === name.toLowerCase()
+  )[0];
   res.status(SERVER_SUCCESS);
   res.send(user);
 });
