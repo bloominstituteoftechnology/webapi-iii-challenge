@@ -47,6 +47,7 @@ server.post("/users", (req, res) => {
 
 server.delete('/users/:id', (req, res) => {
   delete users[req.params.id];
+  idCounter--;
   res.send(`DELETE user: ${req.params.id}`);
 });
 
