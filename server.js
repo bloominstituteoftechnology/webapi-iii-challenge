@@ -44,6 +44,8 @@ server.get("/search", (req, res) => {
   //     res.send(users);
   //   }
 
+  //Addition
+
   const name = req.query.name;
   const filterUsers = users.filter(user => {
     user = user.name.toLowerCase();
