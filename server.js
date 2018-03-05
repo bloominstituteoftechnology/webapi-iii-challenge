@@ -5,7 +5,7 @@ const server = express();
 const PORT = 3030;
 const SUCCESS = 200;
 
-let idCounter = 0;
+let idCounter = 1;
 let users = [];
 
 server.use(bodyParser.json());
@@ -19,17 +19,24 @@ server.get("/users/:id", (req, res) => {
   const { id } = req.params;
   let selected = null;
   users.forEach((user) => {
-    if (user.id === +id) selected = user; 
+    if (user.id === +id) selected = user;
   });
   res.status(SUCCESS);
   res.send(selected);
 });
 
+server.get("/search", (req, res) => {
+  const { name } = req.query;
+  results = users.filter(obj => obj.name.toLowerCase() === name.toLowerCase());
+  res.status(SUCCESS);
+  res.send(results);
+});
+
 server.post("/users", (req, res) => {
-  const { user } = req.body;
+  const { name } = req.body;
   newUser = {
     id: idCounter++,
-    user
+    name
   }
   users.push(newUser);
   res.status(SUCCESS);
@@ -38,7 +45,7 @@ server.post("/users", (req, res) => {
 
 server.delete("/users/:id", (req, res) => {
   const { id } = req.params;
-  users = users.filter((user) => user.id !== +id);
+  users = users.filter((name) => name.id !== +id);
   res.status(SUCCESS);
   res.send(users);
 });
