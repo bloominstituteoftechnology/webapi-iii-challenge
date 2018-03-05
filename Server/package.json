@@ -1,0 +1,23 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "Node-Express Assignment CS7 Nate Flory & Giraud Julemis Collab",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nate152/Node-Express.git"
+  },
+  "author": "Nate Flory and Giraud Julemis",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Nate152/Node-Express/issues"
+  },
+  "homepage": "https://github.com/Nate152/Node-Express#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2"
+  }
+}
