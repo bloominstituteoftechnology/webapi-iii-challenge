@@ -19,13 +19,29 @@ const users = {
 server.get('/users', (req, res) =>{
     res.status(STATUS);
     res.send(users);
-})
+});
 
 server.get('/users/:id', (req, res) => {
     const id = req.params.id;
     res.status(STATUS);
     res.send(users[id]);
-})
+});
+
+server.get('/search', (req, res) => {
+    if (req.query.user) {
+        let user = req.query.user;
+        Object.keys(users).forEach((id => {
+            if (users[id] === user) {
+                user = id;
+            };
+        }));
+        res.status(200);
+        res.send(user);
+    } else {
+        res.status(200);
+        res.send(users);
+    }
+});
 
 server.use(bodyParser.json());
 
@@ -36,14 +52,14 @@ server.post('/users', (req, res) => {
     users[idCount] = user;
     res.status(STATUS);
     res.send({id: idCount})
-})
+});
 
 server.delete('/users/:id', (req, res) => {
     const id = req.params.id;
     delete users[id];
         res.status(STATUS);
         res.send(users);
-})
+});
 
 server.listen(PORT, (err) => {
     if (err) {
