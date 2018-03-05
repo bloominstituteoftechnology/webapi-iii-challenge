@@ -17,26 +17,28 @@ let users = [];
 
 server.post('/users', (req, res) => {
     const {name} = req.body;
-    const usersObj = { name, id: ++idCounter };
+    const usersObj = {name, id: ++idCounter};
     users.push(usersObj);
     res.status(STATUS_SUCCESS);
     res.send(users);
 });
 
 server.get('/users', (req, res) => {
-  res.status(STATUS_SUCCESS);
-  res.send(users);
+    res.status(STATUS_SUCCESS);
+    res.send(users);
 });
 
 server.delete('/users/:id', (req, res) => {
-  const { id } = req.params;
-  const foundUser = users.find((user) => user.id == id);
-  // console.log('id: ', id);
-  // console.log('users: ', users);
-  // console.log('req.params: ', req.params);
-  // console.log('foundUser: ', foundUser);
-  res.status(STATUS_SUCCESS);
-  res.send(foundUser);
+    const {id} = req.params;
+    const foundUser = users.find((user) => user.id == id);
+
+    if (foundUser) {
+        const userRemoved = {...foundUser};
+        users = users.filter(user => user.id != id);
+        res.status(STATUS_SUCCESS).json({userRemoved});
+    } else {
+        sendUserError('No user by that ID exists in the user DB', res);
+    }
 });
 
 
