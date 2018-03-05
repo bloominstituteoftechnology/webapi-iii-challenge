@@ -50,18 +50,23 @@ server.get("/users/:id", (req, res) => {
   console.log('MESSAGE: Grab single user: ', req.params.id);
 })
 
-// server.get("users/search", (req, res) => {
-//   if (req.query.name) {
-//     const query = req.query.name.toLowerCase();
-//     const usersMatched = users.filter(user =>
-//       user.name.toLowerCase().incldues(query)
-//     );
-//     res.send(usersMatched);
-//   } else {
-//     res.status(422);
-//     res.send('Error: must provide a search name');
-//   }
-//   });
+server.get("/", (req, res) => {
+  if (req.query.name) {
+    let usersMatch = [];
+    Object.keys(users).forEach((id) => {
+      if (req.query.name === users[id]) {
+        usersMatch.push(id);
+        console.log('MESSAGE: Found the user');
+      }
+    })
+    res.status(200);
+    res.send(usersMatch);
+    console.log('MESSAGE: Here is an array of the user IDs who match this name')
+  } else {
+    res.status(422);
+    res.send('Error: must provide a search name');
+  }
+  });
 
 // server.get("/", (req, res) => {
 //   if (req.query.name) {
