@@ -38,7 +38,7 @@ server.get("/users/:id", (req, res) => {
 server.get("/search", (req, res) => {
   let { name } = req.query;
   let searchResults = users.filter(user => {
-    return user.user === name;
+    return user.user.toLowerCase() === name.toLowerCase();
   });
 
   res.status(200);
