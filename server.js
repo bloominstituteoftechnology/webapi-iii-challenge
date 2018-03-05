@@ -8,7 +8,7 @@ const server = express();
 const PORT = 3030;
 
 let id = 4;
-const users = [
+let users = [
   { name: "dixie", id: 0 },
   { name: "steven", id: 1 },
   { name: "edmund", id: 2 },
@@ -62,13 +62,20 @@ server.get("/search", (req, res) => {
   res.send(filterUsers);
 });
 
- server.post("/users", (req, res) => {
-     const { user } = req.body;
-        let users = [...users, {name: user, id: id}];
-        id++;
-     res.status(STATUS_SUCCESS);
-     res.send(users);
- });
+server.post("/users", (req, res) => {
+    let user = req.body.name;
+    users = [...users, { name: user, id: id }];
+    id++;
+    res.send(users);
+  });
+  
+  server.delete("/users/:id", (req, res) => {
+    const id = req.params.id;
+    users = users.filter(user => {
+      return user.id !== Number(id);
+    });
+    res.send(users);
+  });
 
 server.listen(PORT, err => {
   if (err) {
