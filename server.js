@@ -54,3 +54,10 @@ server.post('/', (req, res) => {
   res.status(200);
   res.send({ id: idCounter });
 });
+
+server.delete('/users/:id', (req, res) => {
+  const { id } = req.params;
+  delete users[id];
+  res.status(200);
+  res.send(users);
+});
