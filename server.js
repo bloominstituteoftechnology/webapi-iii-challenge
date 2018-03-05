@@ -15,7 +15,6 @@ const users = {
 };
 
 server.get("/users", (req, res) => {
-    
     res.status(STATUS_SUCCESS);
     res.send(users);
 })
@@ -42,7 +41,7 @@ server.get("/search?name=<query>", (req, res) => {
     }
 });
 
-// server.post("/", (req, res) => {
+// server.post("/users", (req, res) => {
 //     const { user } = req.body;
 //     res.status(STATUS_SUCCESS);
 //     res.send();
