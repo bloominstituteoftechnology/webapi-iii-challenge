@@ -53,7 +53,7 @@ server.get("/:id/", (req, res) => {
 });
 
 // DELETE user based on id
-server.delete("/:id/", (req, res) => {
+server.delete("/users/:id/", (req, res) => {
   let id = req.params.id;
   delete users[id]
   res.status(200);
