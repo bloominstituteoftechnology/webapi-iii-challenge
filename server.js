@@ -16,6 +16,13 @@ const users = {
   3: 'Bob3',
 };
 
+server.use(bodyParser.json());
+
+server.get("/users", (req, res) => {
+    res.status(200);
+    res.send(users);
+})
+
 server.post('/', (req, res) => {
   const user = req.body;
 
