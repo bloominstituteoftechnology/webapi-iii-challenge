@@ -1,0 +1,42 @@
+[
+  {
+      "id": 0,
+      "Make": "Tobias",
+      "Model": "Toby",
+      "Strings": 5,
+      "Color": "Brown Sunburst",
+      "PurchaseLocation": "Bananas At Large, San Rafael",
+      "PurchasePrice": 850,
+      "CurrentValue": 1500
+     },
+     {
+      "id": 1,
+      "Make": "Fender",
+      "Model": "Jazz Bass",
+      "Strings": 4,
+      "Color": "Blue",
+      "PurchaseLocation": "Private",
+      "PurchasePrice": 300,
+      "CurrentValue": 2300
+     },
+{
+  "id": 2,
+  "Make": "Padula",
+  "Model": "MVP-Buzz-5",
+  "Strings": 5,
+  "Color": "Brown Sunburst",
+  "PurchaseLocation": "Guitar Center Hollywood",
+  "PurchasePrice": 1800,
+  "CurrentValue": 2800
+},
+{
+  "id": 3,
+  "Make": "Hohner",
+  "Model": "",
+  "Strings": 4,
+  "Color": "",
+  "PurchaseLocation": "",
+  "PurchasePrice": 0,
+  "CurrentValue": 0
+}
+]
