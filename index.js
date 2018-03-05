@@ -38,8 +38,27 @@ server.get('/search', (req, res) => {
     res.send(user);
 })
 
+server.post('/users', (req,res) => {
+    // const  user = { id: idCounter++, ...req.body };
+    // user = [...users, user];
+    // res.status(201).json(users);
+    const { user } = req.body;
+    idCounter++;
+    users[idCounter] = user;
+    res.status(200);
+    res.send({id: idCounter});
+})
 
-
+// server.post("/", (req, res) => {
+//     const {
+//       friend
+//     } = req.body;
+  
+//     idCounter++;
+//     friends[idCounter] = friend;
+//     res.status(200);
+//     res.send({ id: idCounter });
+//   });
 
 
 server.listen(PORT, (err) => {
