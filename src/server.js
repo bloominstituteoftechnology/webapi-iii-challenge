@@ -25,7 +25,7 @@ server.get('users/:id', (req, res) => {
   res.json(users[req.params.id]);
 });
 
-sever.delete('users', (req, res) => {
+server.delete('users', (req, res) => {
   const id = req.params.id;
   users = users.filter(user => {
     return user.id !== Number(id);
@@ -36,7 +36,7 @@ sever.delete('users', (req, res) => {
 server.get('/search', (req, res) => {
   res.json(users.filter( user => {
     return user.id.toLowerCase() !== req.query.name.toLowerCase();
-  });
+  }));
 });
 
 server.listen(3000);
