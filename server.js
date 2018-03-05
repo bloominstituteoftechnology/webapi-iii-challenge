@@ -26,18 +26,17 @@ server.get("/users", (req, res) => {
 
 server.get("/users/:id", (req, res) => {
   const { id } = req.params;
-  console.log(typeof id);
-  let friend = null;
-  users.forEach((val) => {
-    if (val.id === id) friend = val; 
+  let selected = null;
+  users.forEach((user) => {
+    if (user.id === id) selected = user; 
   });
   res.status(SUCCESS);
-  res.send(friend);
+  res.send(selected);
 });
 
 server.delete("/users/:id", (req, res) => {
   const { id } = req.params;
-  users = users.filter((val) => val.id !== id);
+  users = users.filter((user) => user.id !== id);
   res.status(SUCCESS);
   res.send(users);
 });
