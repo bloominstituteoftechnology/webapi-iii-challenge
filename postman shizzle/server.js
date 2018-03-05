@@ -46,7 +46,7 @@ server.get("/users", (req, res) => {
 server.delete("/users/:id", (req, res) => {
   const {
     id
-  } = req.body;  
+  } = req.body;
   if (users[id]) {
     delete users[id];
   }
@@ -61,7 +61,7 @@ server.get("/search", (req, res) => {
     let user = null;
     Object.keys(users).forEach((id) => {
       if (req.query.name.toLowerCase() === users[id].toLowerCase()) {
-        usersMatch.push(users[id]);
+        usersMatch.push(id);
         console.log('MESSAGE: Found the user');
       }
     });
