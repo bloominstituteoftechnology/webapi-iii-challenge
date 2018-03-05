@@ -1,0 +1,25 @@
+{
+  "name": "node-express",
+  "version": "1.0.0",
+  "description": "* Node\r * Express\r * V8\r * RESTful API\r * GET\r * POST\r * req, res\r * route parameters\r * query parameters\r * Postman\r * body-parser",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LordOrbnauticus/Node-Express.git"
+  },
+  "author": "LordOrbnauticus <haywood.d.johnson@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LordOrbnauticus/Node-Express/issues"
+  },
+  "homepage": "https://github.com/LordOrbnauticus/Node-Express#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
+    "express": "^4.16.2",
+    "nodemon": "^1.14.12"
+  }
+}
