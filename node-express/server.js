@@ -25,7 +25,7 @@ server.use((req, res, next) => {
 server.use(bodyParser.json());
 
 // GET all users
-server.get("/", (req, res) => {
+server.get("/users", (req, res) => {
   if (req.query.name) {
     let user = null;
     Object.keys(users).forEach((id => {
