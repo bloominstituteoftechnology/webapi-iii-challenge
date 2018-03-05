@@ -9,6 +9,9 @@ const STATUS_SUCCESSFUL = 200;
 
 const users = [{ id: 21, name: 'test'}, { id: 1, name: 'also testing'}];
 
+server.use(bodyParser.json());
+
+
 server.get('/users', (req, res) => {
   res.status(STATUS_SUCCESSFUL);
   res.send(users);
@@ -27,15 +30,15 @@ server.get('/users/:id', (req, res) => {
 });
 
 let idCounter = 0;
+
 server.post('/users', (req, res) => {
-  console.log(req.body);
+  console.log(req);
   const { name } = req.body;
 
   users.push({ name, id: idCounter++ })
   res.status(STATUS_SUCCESSFUL);
   res.send(users);
-  console.log(users);
-})
+});
 
 server.listen(PORT, (err) => {
   if (err) console.error(err);
