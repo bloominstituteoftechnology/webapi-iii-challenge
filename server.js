@@ -7,7 +7,9 @@ const server = express();
 
 const PORT = 3030;
 
-const users = [
+server.use(bodyParser.json());
+
+let users = [
   { name: "dixie", id: 0 },
   { name: "steven", id: 1 },
   { name: "edmund", id: 2 },
@@ -16,10 +18,10 @@ const users = [
 let id = 4;
 
 server.get("/users", (req, res) => {
-//<<<<<<< HEAD
-    res.status(STATUS_SUCCESS);
-    res.send(users);
-})
+  //<<<<<<< HEAD
+  res.status(STATUS_SUCCESS);
+  res.send(users);
+});
 
 //>>>>>>> 3d3dc5ba24dd1f4d754cae0a4c8683bd73c1d6d7
 
@@ -54,13 +56,20 @@ server.get("/search", (req, res) => {
   res.send(filterUsers);
 });
 
- server.post("/users", (req, res) => {
-     const user = req.body.user;
-        users = [...users, {name: user, id: id}];
-        id++;
-     res.status(STATUS_SUCCESS);
-     res.send(users);
- })
+server.post("/users", (req, res) => {
+  let user = req.body.name;
+  users = [...users, { name: user, id: id }];
+  id++;
+  res.send(users);
+});
+
+server.delete("/users/:id", (req, res) => {
+  const id = req.params.id;
+  users = users.filter(user => {
+    return user.id !== Number(id);
+  });
+  res.send(users);
+});
 
 server.listen(PORT, err => {
   if (err) {
