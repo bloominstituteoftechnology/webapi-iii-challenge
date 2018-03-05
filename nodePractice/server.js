@@ -36,9 +36,13 @@ server.get("/users/:id", (req, res) => {
 });
 
 server.get("/search", (req, res) => {
-  console.log("get request");
-  // const { name } = req.params;
-  // console.log(name);
+  let { name } = req.query;
+  let searchResults = users.filter(user => {
+    return user.user === name;
+  });
+
+  res.status(200);
+  res.send(searchResults);
 });
 
 server.post("/users", (req, res)=>{
@@ -54,8 +58,6 @@ server.get("/users", (req, res) => {
   res.status(200);
   res.send(users);
 });
-
-// * [DELETE] `/users/:id` This route should delete the specified user.
 
 server.delete("/users/:id", (req, res) => {
   let { id } = req.params;
