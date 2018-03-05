@@ -19,6 +19,11 @@ const users = {
   10: "Michael"
 };
 
+// server.use((req, res, next) => {
+//   console.log("Got a request");
+//   next();
+// });
+
 server.use(bodyParser.json());
 
 server.post("/users", (req, res) => {
@@ -35,28 +40,28 @@ server.post("/users", (req, res) => {
 server.get("/users", (req, res) => {
   res.status(200);
   res.send(users);
+  console.log('MESSAGE: Grab all users');
 });
 
-server.get("users/:id/", (req, res) => {
-  const {
-    id
-  } = req.params;
+server.get("/users/:id", (req, res) => {
+  const id = req.params.id;
   res.status(200);
   res.send(users[id])
-});
+  console.log('MESSAGE: Grab single user: ', req.params.id);
+})
 
-server.get("users/search", (req, res) => {
-  if (req.query.name) {
-    const query = req.query.name.toLowerCase();
-    const usersMatched = users.filter(user => 
-      user.name.toLowerCase().incldues(query)
-    );
-    res.send(usersMatched);
-  } else {
-    res.status(422);
-    res.send('Error: must provide a search name');
-  }
-  });
+// server.get("users/search", (req, res) => {
+//   if (req.query.name) {
+//     const query = req.query.name.toLowerCase();
+//     const usersMatched = users.filter(user =>
+//       user.name.toLowerCase().incldues(query)
+//     );
+//     res.send(usersMatched);
+//   } else {
+//     res.status(422);
+//     res.send('Error: must provide a search name');
+//   }
+//   });
 
 // server.get("/", (req, res) => {
 //   if (req.query.name) {
