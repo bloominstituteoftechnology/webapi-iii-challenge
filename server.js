@@ -7,10 +7,9 @@ const server = express();
 const PORT = 3030;
 const STATUS_SUCCESSFUL = 200;
 
-const users = [{ id: 21, name: 'test'}, { id: 1, name: 'also testing'}];
+const users = [{ id: 21, name: 'test' }, { id: 1, name: 'also testing' }];
 
 server.use(bodyParser.json());
-
 
 server.get('/users', (req, res) => {
   res.status(STATUS_SUCCESSFUL);
@@ -29,12 +28,18 @@ server.get('/users/:id', (req, res) => {
   res.send(foundUser);
 });
 
+server.get('/search', (req, res) => {
+  const { name } = req.query;
+  const foundUsers = users.filter(user => {
+    if(user.name === name) return user;
+  });
+  res.status(STATUS_SUCCESSFUL);
+  res.send(foundUsers);
+})
+
 let idCounter = 0;
-
 server.post('/users', (req, res) => {
-  console.log(req);
   const { name } = req.body;
-
   users.push({ name, id: idCounter++ })
   res.status(STATUS_SUCCESSFUL);
   res.send(users);
