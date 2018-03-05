@@ -20,13 +20,19 @@ server.get("/users", (req, res) => {
   res.send(Object.values(users));
 });
 
+server.get("/users/:id", (req, res) => {
+  const { id } = req.params;
+  res.status(STATUS_SUCCESS);
+  res.send(users[id]);
+});
+
 server.post("/users", (req, res) => {
   const { user } = req.body;
   idCounter++;
   users[idCounter] = user;
   res.status(200);
   res.send({id: idCounter});
-})
+});
 
 server.listen(PORT, (err) => {
   if (err) {
