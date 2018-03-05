@@ -31,11 +31,11 @@ server.get('/users/:id', (req, res) => {
 server.get('/search', (req, res) => {
   const { name } = req.query;
   const foundUsers = users.filter(user => {
-    if(user.name === name) return user;
+    if(user.name.toUpperCase() === name.toUpperCase()) return user;
   });
   res.status(STATUS_SUCCESSFUL);
   res.send(foundUsers);
-})
+});
 
 let idCounter = 0;
 server.post('/users', (req, res) => {
