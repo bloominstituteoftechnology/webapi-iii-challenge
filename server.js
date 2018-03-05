@@ -26,7 +26,7 @@ server.get("/users/:id", (req, res) => {
   res.send(users[id]);
 });
 
-server.get("/search?name=<query>", (req, res) => {
+server.get("/search", (req, res) => {
   let user = null;
   Object.keys(users).forEach(id => {
     if (users[id] === req.query.name) {
