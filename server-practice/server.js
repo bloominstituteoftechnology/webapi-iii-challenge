@@ -17,12 +17,18 @@ let idCounter = 0;
 let users = {};
 
 server.post('/', (req, res) => {
-  const { body: { user } } = req;
+  const { body: { name } } = req;
   idCounter++;
-  users[idCounter] = user;
+  users[idCounter] = name;
   res.status(STATUS_SUCCESS);
-  res.send({ id: idCounter, user });
+  res.send({users: { id: idCounter, name }});
 });
+
+server.get('/users', (req, res) => {
+  console.log(req.body, res.send)
+  res.status(STATUS_SUCCESS);
+  res.send(users);
+})
 
 
 server.listen(PORT, (err) => {
