@@ -8,10 +8,10 @@ const server = express();
 const PORT = 3030;
 
 const users = [
-  { name: "Dixie", id: 0 },
-  { name: "Steven", id: 1 },
-  { name: "Edmund", id: 2 },
-  { name: "Michael", id: 3 }
+  { name: "dixie", id: 0 },
+  { name: "steven", id: 1 },
+  { name: "edmund", id: 2 },
+  { name: "michael", id: 3 }
 ];
 let id = 4;
 
@@ -44,7 +44,7 @@ server.get("/search", (req, res) => {
   const name = req.query.name;
   const filterUsers = users.filter(user => {
     user = user.name.toLowerCase();
-    return user === user.toLowerCase();
+    return user === name.toLowerCase();
   });
   res.send(filterUsers);
 });
