@@ -4,13 +4,17 @@ const bodyParser = require("body-parser");
 const server = express();
 const PORT = 3030;
 
-let idCounter = 5;
+let idCounter = 9;
 const users = {
   1: "nikhil",
   2: "eileen",
   3: "ivan",
   4: "satish",
-  5: "sean"
+  5: "sean",
+  6: "luis",
+  7: "eileen",
+  8: "ben",
+  9: "nikhil"
 };
 
 server.use((req, res, next) => {
@@ -20,6 +24,7 @@ server.use((req, res, next) => {
 
 server.use(bodyParser.json());
 
+// GET all users
 server.get("/", (req, res) => {
   if (req.query.name) {
     let user = null;
@@ -38,6 +43,7 @@ server.get("/", (req, res) => {
   }
 });
 
+// GET specific user based on id
 server.get("/:id/", (req, res) => {
   const {
     id
@@ -46,6 +52,7 @@ server.get("/:id/", (req, res) => {
   res.send(users[id])
 });
 
+// DELETE user based on id
 server.delete("/:id/", (req, res) => {
   let id = req.params.id;
   delete users[id]
@@ -53,14 +60,29 @@ server.delete("/:id/", (req, res) => {
   res.send(users)
 });
 
+// POST new user
 server.post("/users", (req, res) => {
   let user = req.body.user;
   console.log(user);
   idCounter++;
   users[idCounter] = user;
   res.status(200);
-  res.send({ id: idCounter });
+  res.send(users);
 });
+
+// SEARCH for users and return an array of matches
+server.get('/users/search',(req, res) => {
+  let name = req.query.name;
+  const matchedUsers = [];
+  console.log(name);
+  Object.values(users).forEach(value => {
+    if (value === name) {
+      matchedUsers.push(value);
+    }
+  })
+  res.status(200);
+  res.send(matchedUsers);
+}) 
 
 server.listen(PORT, (err) => {
   if (err) {
