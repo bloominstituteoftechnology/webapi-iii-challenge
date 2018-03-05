@@ -7,13 +7,21 @@ const server = express();
 
 const PORT = 3030;
 
+let id = 4;
 const users = [
   { name: "dixie", id: 0 },
   { name: "steven", id: 1 },
   { name: "edmund", id: 2 },
-  { name: "michael", id: 3 }
-];
-let id = 4;
+ { name: "michael", id: 3 }
+]
+
+server.use((req, res, next) => {
+    console.log("Got a request")
+    next();
+});
+
+server.use(bodyParser.json());
+
 
 server.get("/users", (req, res) => {
 //<<<<<<< HEAD
@@ -55,12 +63,12 @@ server.get("/search", (req, res) => {
 });
 
  server.post("/users", (req, res) => {
-     const user = req.body.user;
-        users = [...users, {name: user, id: id}];
+     const { user } = req.body;
+        let users = [...users, {name: user, id: id}];
         id++;
      res.status(STATUS_SUCCESS);
      res.send(users);
- })
+ });
 
 server.listen(PORT, err => {
   if (err) {
