@@ -23,6 +23,13 @@ server.get("/users", (req, res) => {
     res.send(users);
 })
 
+server.get("/users/:id", (req, res) => {
+    const { id } = req.params;
+    res.status(200);
+    res.send({ id: users[id] });
+});
+
+
 server.post('/', (req, res) => {
   const user = req.body;
 
