@@ -24,8 +24,19 @@ server.post('/users', (req, res) => {
 });
 
 server.get('/users', (req, res) => {
-    res.status(STATUS_SUCCESS);
-    res.send(users);
+  res.status(STATUS_SUCCESS);
+  res.send(users);
+});
+
+server.delete('/users/:id', (req, res) => {
+  const { id } = req.params;
+  const foundUser = users.find((user) => user.id == id);
+  // console.log('id: ', id);
+  // console.log('users: ', users);
+  // console.log('req.params: ', req.params);
+  // console.log('foundUser: ', foundUser);
+  res.status(STATUS_SUCCESS);
+  res.send(foundUser);
 });
 
 
