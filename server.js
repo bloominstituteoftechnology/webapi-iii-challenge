@@ -45,6 +45,11 @@ server.post("/users", (req, res) => {
   res.send({id: idCounter});
 });
 
+server.delete('/users/:id', (req, res) => {
+  delete users[req.params.id];
+  res.send(`DELETE user: ${req.params.id}`);
+});
+
 server.listen(PORT, (err) => {
   if (err) {
     console.log(`There was an error with the server: ${err}`);
