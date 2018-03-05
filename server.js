@@ -6,7 +6,7 @@ const PORT = 3030;
 const STATUS_SUCCESS = 200;
 const STATUS_ERROR = 413;
 
-let counter = 3;
+let idCounter = 5;
 const pets = {
   1: 'Rigby',
   2: 'Tag',
@@ -14,6 +14,8 @@ const pets = {
   4: 'Riley',
   5: 'Rigby',
 };
+
+server.use(bodyParser.json());
 
 server.get('/', (req, res) => {
   console.log(req.query);
@@ -40,6 +42,13 @@ server.get('/:id/', (req, res) => {
   res.send(pets[id]);
   // res.error(STATUS_ERROR);
 });
+
+server.post('/pets/', (req, res) => {
+  const name = req.body;
+  idCounter++;
+  pets[idCounter] = name.name;
+  res.send(pets);
+})
 
 server.listen(PORT, err => {
   if (err) {
