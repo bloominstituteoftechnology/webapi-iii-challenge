@@ -1,0 +1,25 @@
+{
+  "name": "node-express",
+  "version": "1.0.0",
+  "description": "Node-express intro",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cwindeknecht/Node-Express.git"
+  },
+  "author": "cw - ds",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cwindeknecht/Node-Express/issues"
+  },
+  "homepage": "https://github.com/cwindeknecht/Node-Express#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2"
+  }
+}
+
