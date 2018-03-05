@@ -21,7 +21,7 @@ server.use((req, res, next) => {
 
 server.use(bodyParser.json());
 
-server.get("/users", (req, res) => {
+server.get("/users/", (req, res) => {
     if (req.query.name) {
       let user = null;
       Object.keys(users).forEach((id => {
@@ -45,13 +45,27 @@ res.status(STATUS_SUCCESS);
 res.send(users[id])
 });
 
-server.get("/search/", (req, res) => {
-  const {
-      id
-  } = req.query;
-  res.status(STATUS_SUCCESS);
-  res.send(users[id])
-  });
+server.get("/search", (req, res) => {
+  let name = req.query.name;
+  let userArr = [];
+  // if (name) {
+  //  for(let i = 0; i < users.length; i++) {
+  //    if(name.toUpperCase() === users[i].toUpperCase()) {
+  //      userArr.push(users[i]);
+  //    }
+  //  }
+  // }
+  if (name) {
+  Object.keys(users).forEach((id => {
+    if (users[id].toUpperCase() === name.toUpperCase()) {
+      // user = id;
+      userArr.push(users[i]);
+    };
+  }));
+  }
+ res.status(STATUS_SUCCESS);
+ res.send(userArr);
+ });
 
 server.post("/", (req, res) => {
     const {
