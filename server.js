@@ -34,7 +34,7 @@ server.get("/search", (req, res) => {
     }
   });
   res.status(STATUS_SUCCESS);
-  res.send(user);
+  res.send(users[user]);
 });
 
 server.post("/users", (req, res) => {
