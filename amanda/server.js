@@ -15,7 +15,7 @@ const users = [
     id: 1,
   },
 ];
-let userId = 1;
+let userId = 2;
 
 server.use((req, res, next) => {
   console.log("Got a request");
@@ -24,18 +24,18 @@ server.use((req, res, next) => {
 
 server.use(bodyParser.json());
 
-server.post("/users", (req, res) => {
-  userId++;
-  const { name } = req.body;
-  const newUser = {
-    name,
-    id: userId,
-  };
-  users.push(newUser);
+server.get("/users", (req, res) => {
+  res.status(STATUS_SUCCESS);
   res.send(users);
 });
 
-server.get("/users", (req, res) => {
+server.post("/users", (req, res) => {
+  const { name } = req.body;
+  newUser = {
+    name,
+    id: userId++,
+  };
+  users.push(newUser);
   res.status(STATUS_SUCCESS);
   res.send(users);
 });
