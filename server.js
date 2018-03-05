@@ -8,7 +8,7 @@ const STATUS_USER_ERROR = 422;
 
 // const friends = ["Daniel", "Steven", "Leon"];
 let idCounter = 3;
-const friends = {
+const users = {
   1: "Daniel",
   2: "Steven",
   3: "Leon"
@@ -21,37 +21,56 @@ server.use((req, res, next) => {
 
 server.use(bodyParser.json());
 
-server.get("/", (req, res) => {
+server.get("/users", (req, res) => {
     if (req.query.name) {
-      let friend = null;
-      Object.keys(friends).forEach((id => {
-        if (friends[id] === req.query.name) {
-          friend = id;
+      let user = null;
+      Object.keys(users).forEach((id => {
+        if (users[id] === req.query.name) {
+          user = id;
         };
       }));
       res.status(STATUS_SUCCESS);
-      res.send(friend);
+      res.send(user);
     } else {
       res.status(STATUS_SUCCESS);
-      res.send(friends);
+      res.send(users);
     }
   });
   
-server.get("/:id/", (req, res) => {
+server.get("/users/:id/", (req, res) => {
 const {
     id
 } = req.params;
 res.status(STATUS_SUCCESS);
-res.send(friends[id])
+res.send(users[id])
 });
+
+server.get("/search/", (req, res) => {
+  const {
+      id
+  } = req.query;
+  res.status(STATUS_SUCCESS);
+  res.send(users[id])
+  });
 
 server.post("/", (req, res) => {
     const {
-      friend
+      user
     } = req.body;
   
     idCounter++;
-    friends[idCounter] = friend;
+    users[idCounter] = user;
+    res.status(STATUS_SUCCESS);
+    res.send({ id: idCounter });
+  });
+
+  server.delete("/", (req, res) => {
+    const {
+      user
+    } = req.body;
+  
+    idCounter++;
+    users[idCounter] = user;
     res.status(STATUS_SUCCESS);
     res.send({ id: idCounter });
   });
