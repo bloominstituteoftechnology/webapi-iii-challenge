@@ -45,6 +45,15 @@ server.post('/users', (req, res) => {
   res.send(users);
 });
 
+server.delete('/users/:id', (req, res) => {
+  const id = Number(req.params.id);
+  const resultingUsers = users.filter(user => {
+    if (id !== user.id) return user;
+  });
+  res.status(STATUS_SUCCESSFUL);
+  res.send(resultingUsers);
+});
+
 server.listen(PORT, (err) => {
   if (err) console.error(err);
   else console.log(`Server is listening on port ${PORT}`);
