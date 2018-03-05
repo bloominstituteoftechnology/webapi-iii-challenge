@@ -4,6 +4,8 @@ const bodyParser = require("body-parser");
 const server = express();
 const PORT = 3104;
 
+let idCounter = 10;
+
 const users = {
   1: "Michael",
   2: "Terrie",
@@ -19,12 +21,23 @@ const users = {
 
 server.use(bodyParser.json());
 
-server.get("/", (req, res) => {
+server.post("/users", (req, res) => {
+  const {
+    user
+  } = req.body;
+
+  idCounter++;
+  users[idCounter] = user;
+  res.status(200);
+  res.send({ id: idCounter });
+});
+
+server.get("/users", (req, res) => {
   res.status(200);
   res.send(users);
 });
 
-server.get("/:id/", (req, res) => {
+server.get("users/:id/", (req, res) => {
   const {
     id
   } = req.params;
@@ -32,7 +45,7 @@ server.get("/:id/", (req, res) => {
   res.send(users[id])
 });
 
-server.get("/search", (req, res) => {
+server.get("users/search", (req, res) => {
   if (req.query.name) {
     const query = req.query.name.toLowerCase();
     const usersMatched = users.filter(user => 
