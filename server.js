@@ -26,6 +26,17 @@ server.get('/users/:id', (req, res) => {
   res.send(foundUser);
 });
 
+let idCounter = 0;
+server.post('/users', (req, res) => {
+  console.log(req.body);
+  const { name } = req.body;
+
+  users.push({ name, id: idCounter++ })
+  res.status(STATUS_SUCCESSFUL);
+  res.send(users);
+  console.log(users);
+})
+
 server.listen(PORT, (err) => {
   if (err) console.error(err);
   else console.log(`Server is listening on port ${PORT}`);
