@@ -14,13 +14,14 @@ server.use((req,res, next) => {
 server.use(bodyParser.json());
 
 let idCounter = 0;
+let users = {};
 
 server.post('/', (req, res) => {
   const { body: { user } } = req;
   idCounter++;
   users[idCounter] = user;
   res.status(STATUS_SUCCESS);
-  res.send({ id: idCounter });
+  res.send({ id: idCounter, user });
 });
 
 
