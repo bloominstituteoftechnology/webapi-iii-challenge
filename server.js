@@ -20,6 +20,14 @@ server.get("/users", (req, res) => {
   res.send(Object.values(users));
 });
 
+server.post("/users", (req, res) => {
+  const { user } = req.body;
+  idCounter++;
+  users[idCounter] = user;
+  res.status(200);
+  res.send({id: idCounter});
+})
+
 server.listen(PORT, (err) => {
   if (err) {
     console.log(`There was an error with the server: ${err}`);
