@@ -59,7 +59,7 @@ server.get("/search", (req, res) => {
   Object.keys(users).forEach((id => {
     if (users[id].toUpperCase() === name.toUpperCase()) {
       // user = id;
-      userArr.push(users[i]);
+      userArr.push(users[id]);
     };
   }));
   }
@@ -68,9 +68,7 @@ server.get("/search", (req, res) => {
  });
 
 server.post("/", (req, res) => {
-    const {
-      user
-    } = req.body;
+    const { user } = req.body;
   
     idCounter++;
     users[idCounter] = user;
