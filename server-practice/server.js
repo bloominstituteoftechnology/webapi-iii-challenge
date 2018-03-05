@@ -14,14 +14,15 @@ server.use((req,res, next) => {
 server.use(bodyParser.json());
 
 let idCounter = 0;
-let users = {};
+let users = [];
 
-server.post('/', (req, res) => {
-  const { body: { name } } = req;
-  idCounter++;
-  users[idCounter] = name;
+server.post('/users', (req, res) => {
+  let { body: { name } } = req;
+  let { body: { id } } = req;
+  id = idCounter++;
+  users.push({name, id});
   res.status(STATUS_SUCCESS);
-  res.send({users: { id: idCounter, name }});
+  res.send(users);
 });
 
 server.get('/users', (req, res) => {
