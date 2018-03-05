@@ -16,20 +16,33 @@ const users = {
 };
 
 
-server.get('/', (req, res) =>{
+server.get('/users', (req, res) =>{
     res.status(STATUS);
     res.send(users);
 })
 
+server.get('/users/:id', (req, res) => {
+    const id = req.params.id;
+    res.status(STATUS);
+    res.send(users[id]);
+})
+
 server.use(bodyParser.json());
 
-server.post('/', (req, res) => {
+server.post('/users', (req, res) => {
     console.log(req.body)
     const { user } = req.body;
     idCount++;
     users[idCount] = user;
     res.status(STATUS);
     res.send({id: idCount})
+})
+
+server.delete('/users/:id', (req, res) => {
+    const id = req.params.id;
+    delete users[id];
+        res.status(STATUS);
+        res.send(users);
 })
 
 server.listen(PORT, (err) => {
