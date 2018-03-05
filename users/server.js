@@ -19,23 +19,29 @@ const users = [
   }
 ];
 
+server.use(bodyParser.json());
+
 server.get("/users", (req, res) => {
-  /*if (req.query.name) {
-    const matchingUsers = users.filter(user => {
-      user.name === req.query.name
-    });
-    res.status(STATUS_SUCCESS);
-    res.send(matchingUsers);
-  } else {*/
-    res.status(STATUS_SUCCESS)
-    res.send(users);
-  //}
+  res.status(STATUS_SUCCESS);
+  res.send(users);
 })
 
 server.get("/users/:id", (req, res) => {
   const { id } = req.params;
   res.status(STATUS_SUCCESS);
   res.send(users[id]);
+})
+
+server.get("/search", (req, res) => {
+  if (req.query.name) {
+    const matchingUsers = users.filter(user => {
+      return user.name.toUpperCase() === req.query.name.toUpperCase();
+    });
+    res.status(STATUS_SUCCESS);
+    res.send(matchingUsers);
+  } else {
+    res.send("DIDN'T WORK");
+  }
 })
 
 server.listen(PORT, err => {
