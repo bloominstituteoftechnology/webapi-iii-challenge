@@ -27,7 +27,7 @@ server.get("/users/:id", (req, res) => {
   console.log(id);
 
   const user = users.filter(theUser => {
-    return theUser.id === id
+    return theUser.id === id;
       console.log(theUser);
   });
   
@@ -50,8 +50,18 @@ server.post("/users", (req, res)=>{
   res.send(users);
 });
 
-
 server.get("/users", (req, res) => {
   res.status(200);
   res.send(users);
+});
+
+// * [DELETE] `/users/:id` This route should delete the specified user.
+
+server.delete("/users/:id", (req, res) => {
+  let { id } = req.params;
+  let updatedUsers = users.filter(user => {
+    return user.id !== id;
+  });
+  res.status(200);
+  res.send(updatedUsers);
 });
