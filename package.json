@@ -1,0 +1,40 @@
+{
+  "name": "node-express",
+  "version": "1.0.0",
+  "description": "Class assignment Week 8 Day 1",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/d2rd/Node-Express.git"
+  },
+  "keywords": [
+    "Node",
+    "Express",
+    "V8",
+    "RESTful",
+    "API",
+    "GET",
+    "POST",
+    "req",
+    "res",
+    "route",
+    "parameters",
+    "query",
+    "parameters",
+    "Postman",
+    "body-parser"
+  ],
+  "author": "d2rd",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/d2rd/Node-Express/issues"
+  },
+  "homepage": "https://github.com/d2rd/Node-Express#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2"
+  }
+}
