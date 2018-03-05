@@ -49,6 +49,14 @@ server.post('/users', (req,res) => {
     res.send({id: idCounter});
 })
 
+server.delete('/users/:id', (req, res) => {
+    const { id } = req.params;
+    delete users[id];
+    res.status(200);
+    res.send(users);
+    
+});
+
 // server.post("/", (req, res) => {
 //     const {
 //       friend
