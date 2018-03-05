@@ -33,17 +33,6 @@ server.get("/", (req, res) => {
   }
 });
 
-server.post("/", (req, res) => {
-  const {
-    user
-  } = req.body;
-
-  idCounter++;
-  users[idCounter] = user;
-  res.status(200);
-  res.send({ id: idCounter });
-});
-
 server.get("/:id/", (req, res) => {
   const {
     id
@@ -60,12 +49,9 @@ server.delete("/:id/", (req, res) => {
   users = users.filter((user) => {
     return user[id] !== user;
   })
-
   res.status(200);
   res.send(users)
 });
-
-
 
 server.post("/users", (req, res) => {
   let user = req.body.user;
