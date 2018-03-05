@@ -28,6 +28,19 @@ server.get('/users', (req, res) => {
     res.send(users);
 });
 
+server.get('/users/:id', (req, res) => {
+    const {id} = req.params;
+    const foundUser = users.find((user) => user.id == id);
+
+    if (foundUser) {
+        res.status(STATUS_SUCCESS).send({foundUser});
+        console.log('foundUser =>', foundUser);
+    } else {
+        sendUserError('User Not Found', res);
+    }
+
+});
+
 server.delete('/users/:id', (req, res) => {
     const {id} = req.params;
     const foundUser = users.find((user) => user.id == id);
@@ -37,7 +50,7 @@ server.delete('/users/:id', (req, res) => {
         users = users.filter(user => user.id != id);
         res.status(STATUS_SUCCESS).json({userRemoved});
     } else {
-        sendUserError('No user by that ID exists in the user DB', res);
+        res.status(STATUS_USER_ERROR);
     }
 });
 
