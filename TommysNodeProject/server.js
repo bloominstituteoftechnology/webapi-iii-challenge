@@ -6,14 +6,14 @@ const PORT = 3333;
 const STATUS = 200;
 
 let idCount = 5;
-const users = {
-    1: 'Tommy',
-    2: 'Amanda',
-    3: 'Nate',
-    4: 'Jenniffer',
-    5: 'Russell',
+let users = [
+    {id: 1, name: 'Tommy'},
+    {id: 2, name: 'Amanda'},
+    {id: 3, name:  'Nate'},
+    {id: 4, name: 'Jenniffer'},
+    {id: 5, name: 'Russell'},
 
-};
+];
 
 
 server.get('/users', (req, res) =>{
@@ -22,25 +22,37 @@ server.get('/users', (req, res) =>{
 });
 
 server.get('/users/:id', (req, res) => {
-    const id = req.params.id;
+    let userId = req.params.id;
+    let id = parseInt(userId);
+
+    for (let i = 0; i < users.length; i++) {
+        if (users[i].id === id) {
+            id = i;
+            console.log(i);
+        }
+    }
+
     res.status(STATUS);
     res.send(users[id]);
+    console.log(id);
 });
 
 server.get('/search', (req, res) => {
-    if (req.query.user) {
-        let user = req.query.user;
-        Object.keys(users).forEach((id => {
-            if (users[id] === user) {
-                user = id;
-            };
-        }));
-        res.status(200);
-        res.send(user);
-    } else {
-        res.status(200);
-        res.send(users);
+    let name = req.query.name;
+    console.log(name);
+    let userArray = [];
+
+    if(name) {
+        for (let i = 0; i < users.length; i++) {
+            if (users[i].name.toUpperCase() === name.toUpperCase()) {
+                userArray.push(users[i].name);
+                console.log(users[i]);
+            }
+        }
     }
+
+    res.status(STATUS);
+    res.send(userArray);
 });
 
 server.use(bodyParser.json());
@@ -56,7 +68,10 @@ server.post('/users', (req, res) => {
 
 server.delete('/users/:id', (req, res) => {
     const id = req.params.id;
-    delete users[id];
+    console.log(id)
+    newUsers = users.filter(user => user.id.toString() !== id);
+    console.log(newUsers)
+    users = newUsers;
         res.status(STATUS);
         res.send(users);
 });
