@@ -25,10 +25,10 @@ server.get('users/:id', (req, res) => {
   res.json(users[req.params.id]);
 });
 
-server.delete('users', (req, res) => {
+server.delete('users/:id', (req, res) => {
   const id = req.params.id;
   users = users.filter(user => {
-    return user.id !== Number(id);
+    return user.id !== id;
   });
   res.json(users);
 });
