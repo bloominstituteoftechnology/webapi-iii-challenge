@@ -1,0 +1,25 @@
+{
+  "name": "node-express",
+  "version": "1.0.0",
+  "description": "node-express sprint ",
+  "main": "server.js",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/didacta/Node-Express.git"
+  },
+  "author": "Igor Yermak & Russell Stinson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/didacta/Node-Express/issues"
+  },
+  "homepage": "https://github.com/didacta/Node-Express#readme"
+}
