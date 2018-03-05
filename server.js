@@ -26,7 +26,7 @@ server.get('/search?', (req, res) => {
  if (req.query.name) {
    let matchingPets = [];
    Object.keys(pets).forEach(id => {
-     if (pets[id] === req.query.name)
+     if (pets[id].toLowerCase() === req.query.name.toLowerCase())
        matchingPets.push({ id: id, name: pets[id] });
    });
    res.send(matchingPets);
