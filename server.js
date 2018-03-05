@@ -26,6 +26,17 @@ server.get("/users/:id", (req, res) => {
   res.send(users[id]);
 });
 
+server.get("/search?name=<query>", (req, res) => {
+  let user = null;
+  Object.keys(users).forEach(id => {
+    if (users[id] === req.query.name) {
+      user = id;
+    }
+  });
+  res.status(STATUS_SUCCESS);
+  res.send(user);
+});
+
 server.post("/users", (req, res) => {
   const { user } = req.body;
   idCounter++;
