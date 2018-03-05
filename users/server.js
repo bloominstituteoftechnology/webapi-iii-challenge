@@ -44,6 +44,13 @@ server.get("/search", (req, res) => {
   }
 })
 
+server.delete("/users/:id", (req, res) => {
+  const { id } = req.params;
+  users.splice(id, 1);
+  res.status(STATUS_SUCCESS);
+  res.send(users);
+})
+
 server.listen(PORT, err => {
   if (err) {
     console.log("Error" + err)
