@@ -33,13 +33,33 @@ server.get("/:id/", (req, res) => {
 });
 
 server.get("/search", (req, res) => {
-  const name = req.query.name;
-  const usersMatched = users.filter(user => {
-    user = user.name.toLowerCase();
-    return user === name.toLowerCase();
+  if (req.query.name) {
+    const query = req.query.name.toLowerCase();
+    const usersMatched = users.filter(user => 
+      user.name.toLowerCase().incldues(query)
+    );
+    res.send(usersMatched);
+  } else {
+    res.status(422);
+    res.send('Error: must provide a search name');
+  }
   });
-  res.send(usersMatched);
-});
+
+// server.get("/", (req, res) => {
+//   if (req.query.name) {
+//     let friend = null;
+//     Object.keys(friends).forEach((id => {
+//       if (friends[id] === req.query.name) {
+//         friend = id;
+//       };
+//     }));
+//     res.status(200);
+//     res.send(friend);
+//   } else {
+//     res.status(200);
+//     res.send(friends);
+//   }
+// });
 
 server.listen(PORT, (err) => {
   if (err) {
