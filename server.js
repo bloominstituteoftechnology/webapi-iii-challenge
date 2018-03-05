@@ -4,48 +4,48 @@ const server = express();
 const PORT = 3040;
 const STATUS_SUCCESS = 200;
 const STATUS_USER_ERROR = 422;
-let idCounter = 0;
+let idCounter = null;
 let basses = 
 [
     {
         "id": 0,
-        "Make": "Tobias",
-        "Model": "Toby",
-        "Strings": 5,
-        "Color": "Brown Sunburst",
-        "PurchaseLocation": "Bananas At Large, San Rafael",
-        "PurchasePrice": 850,
-        "CurrentValue": 1500
+        "make": "Tobias",
+        "model": "Toby",
+        "strings": 5,
+        "color": "Brown Sunburst",
+        "purchaseLocation": "Bananas At Large, San Rafael",
+        "purchasePrice": 850,
+        "currentValue": 1500
        },
        {
         "id": 1,
-        "Make": "Fender",
-        "Model": "Jazz Bass",
-        "Strings": 4,
-        "Color": "Blue",
-        "PurchaseLocation": "Private",
-        "PurchasePrice": 300,
-        "CurrentValue": 2300
+        "make": "Fender",
+        "model": "Jazz Bass",
+        "strings": 4,
+        "color": "Blue",
+        "purchaseLocation": "Private",
+        "purchasePrice": 300,
+        "currentValue": 2300
        },
   {
     "id": 2,
-    "Make": "Padula",
-    "Model": "MVP-Buzz-5",
-    "Strings": 5,
-    "Color": "Brown Sunburst",
-    "PurchaseLocation": "Guitar Center Hollywood",
-    "PurchasePrice": 1800,
-    "CurrentValue": 2800
+    "make": "Padula",
+    "model": "MVP-Buzz-5",
+    "strings": 5,
+    "color": "Brown Sunburst",
+    "purchaseLocation": "Guitar Center Hollywood",
+    "purchasePrice": 1800,
+    "currentValue": 2800
   },
   {
     "id": 3,
-    "Make": "Hohner",
-    "Model": "",
-    "Strings": 4,
-    "Color": "",
-    "PurchaseLocation": "",
-    "PurchasePrice": 0,
-    "CurrentValue": 0
+    "make": "Hohner",
+    "model": "",
+    "strings": 4,
+    "color": "",
+    "purchaseLocation": "",
+    "purchasePrice": 0,
+    "currentValue": 0
   }
  ]
 server.use((req, res, next) => {
@@ -53,21 +53,46 @@ server.use((req, res, next) => {
     next();
 });
 server.use(bodyParser.json());
+
+
+
 server.get("/", (req, res) => {
-    if (req.query.name) {
-      let bass = null;
+    if (req.query.make) {
+      let bass = null; //declares empty variable for single item 
       Object.keys(basses).forEach((id => {
-        if (basses[id] === req.query.name) {
+        if (basses[id] === req.query.make) {
           bass = id;
         };
       }));
       res.status(STATUS_SUCCESS);
-      res.send(bass);
+      res.send(bass); // send the bass in question
     } else {
       res.status(STATUS_SUCCESS);
-      res.send(basses);
+      res.send(basses); // or send all basses
     }
   });
+
+  //QUERY REQUEST
+server.get("/:id/", (req, res) => {
+  const {
+    id
+  } = req.params;
+  res.status(STATUS_SUCCESS);
+  res.send(basses[id])
+});
+
+//POST request
+server.post("/", (req, res) => {
+  const {
+    bass 
+    }= req.body;
+
+    idCounter++;
+    basses[idCounter] = bass;
+    res.status(STATUS_SUCCESS);
+    res.send({ id: idCounter});
+})
+
 
   //TELL THE SERVER TO LISTEN TO 'PORT'
   server.listen(PORT,(err) => {
