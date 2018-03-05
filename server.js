@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const server = express();
 const PORT = 3000;
 
-let idGen = 1;
+let idGen = 0;
 let users = [
   {
     name: "Bob Marley",
@@ -12,9 +12,28 @@ let users = [
   }
 ];
 
-server.get("/", (req, res) => {
+server.use((req, res, next) => {
+  console.log("Got a request");
+  next();
+});
+
+server.use(bodyParser.json());
+
+server.post("/users", (req, res) => {
+  ++idGen;
+  const { name } = req.body;
+  let newUser = {
+    name,
+    id: idGen
+  };
+  users.push(newUser);
   res.status(200);
   res.send(users);
+});
+
+server.get("/", (req, res) => {
+  res.status(200);
+  res.send(req.body);
 });
 
 server.listen(PORT, err => {
