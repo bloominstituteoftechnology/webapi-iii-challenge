@@ -1,0 +1,23 @@
+{
+  "name": "server-practice",
+  "version": "1.0.0",
+  "description": "practicing server data handling with node",
+  "main": "server.js",
+  "scripts": {
+    "test": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Arkoma/Node-Express.git"
+  },
+  "author": "Aaron Burk",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Arkoma/Node-Express/issues"
+  },
+  "homepage": "https://github.com/Arkoma/Node-Express#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2"
+  }
+}
