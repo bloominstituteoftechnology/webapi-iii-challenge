@@ -20,8 +20,6 @@ server.get("/users", (req, res) => {
     res.status(STATUS_SUCCESS);
     res.send(users);
 })
-  
-
 
 //>>>>>>> 3d3dc5ba24dd1f4d754cae0a4c8683bd73c1d6d7
 
@@ -54,11 +52,13 @@ server.get("/search", (req, res) => {
   res.send(filterUsers);
 });
 
-// server.post("/users", (req, res) => {
-//     const { user } = req.body;
-//     res.status(STATUS_SUCCESS);
-//     res.send();
-// })
+ server.post("/users", (req, res) => {
+     const user = req.body.user;
+        users = [...users, {name: user, id: id}];
+        id++;
+     res.status(STATUS_SUCCESS);
+     res.send(users);
+ })
 
 server.listen(PORT, err => {
   if (err) {
