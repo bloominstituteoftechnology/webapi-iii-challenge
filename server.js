@@ -24,10 +24,10 @@ server.use(bodyParser.json());
 
 
 server.get("/users", (req, res) => {
-//<<<<<<< HEAD
-    res.status(STATUS_SUCCESS);
-    res.send(users);
-})
+  //<<<<<<< HEAD
+  res.status(STATUS_SUCCESS);
+  res.send(users);
+});
 
 //>>>>>>> 3d3dc5ba24dd1f4d754cae0a4c8683bd73c1d6d7
 
