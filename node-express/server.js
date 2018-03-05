@@ -28,8 +28,10 @@ server.get("/", (req, res) => {
     res.status(200);
     res.send(user);
   } else {
+    let usersArr = [];
+    Object.keys(users).forEach((user, i) => usersArr.push(users[i + 1]));
     res.status(200);
-    res.send(users);
+    res.send(usersArr);
   }
 });
 
