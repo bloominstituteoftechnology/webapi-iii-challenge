@@ -3,6 +3,8 @@ const bodyParser = require("body-parser");
 const server = express();
 const PORT = 3030;
 
+server.use(bodyParser());
+
 const users = [
   { id: "1", user: "userOne" },
   { id: "2", user: "userTwo" },
@@ -29,9 +31,23 @@ server.get("/users/:id", (req, res) => {
       console.log(theUser);
   });
   
-  console.log(user);
   res.status(200);
   res.send(user);
+});
+
+server.get("/search", (req, res) => {
+  console.log("get request");
+  // const { name } = req.params;
+  // console.log(name);
+});
+
+server.post("/users", (req, res)=>{
+  let { user } = req.body;
+  let userObj = {};
+  userObj.user = user;
+  userObj.id = users.length + 1;
+  users.push(userObj);
+  res.send(users);
 });
 
 
