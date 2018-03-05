@@ -52,13 +52,18 @@ app.post('/', (req, res) => {
 
 app.delete('/:id', (req, res) => {
   const { id } = req.params;
-  const foundId = users.find(user => user.id == id);
-
-  if (foundId) {
-    const removed = { ...foundId };
-    users = users.filter(user => user.id !== id);
+  // const foundId = users.find(user => user.id == id);
+  //
+  // if (foundId) {
+  //   const removed = { ...foundId };
+  //   users = users.filter(user => user.id !== id);
+  //   res.status(200);
+  //   res.send(removed);
+  // }
+  if (users.hasOwnProperty(id)) {
+    delete users[id];
     res.status(200);
-    res.send(removed);
+    res.send(users);
   }
 })
 
