@@ -43,22 +43,28 @@ server.get("/users", (req, res) => {
   console.log('MESSAGE: Grab all users');
 });
 
-server.get("/users/:id", (req, res) => {
-  const id = req.params.id;
+server.delete("/users/:id", (req, res) => {
+  const {
+    id
+  } = req.body;  
+  if (users[id]) {
+    delete users[id];
+  }
   res.status(200);
   res.send(users[id])
-  console.log('MESSAGE: Grab single user: ', req.params.id);
+  console.log('MESSAGE: Deleted the user: ', req.params.id);
 })
 
-server.get("/", (req, res) => {
+server.get("/search", (req, res) => {
   if (req.query.name) {
     let usersMatch = [];
+    let user = null;
     Object.keys(users).forEach((id) => {
-      if (req.query.name === users[id]) {
-        usersMatch.push(id);
+      if (req.query.name.toLowerCase() === users[id].toLowerCase()) {
+        usersMatch.push(users[id]);
         console.log('MESSAGE: Found the user');
       }
-    })
+    });
     res.status(200);
     res.send(usersMatch);
     console.log('MESSAGE: Here is an array of the user IDs who match this name')
@@ -66,23 +72,8 @@ server.get("/", (req, res) => {
     res.status(422);
     res.send('Error: must provide a search name');
   }
-  });
+});
 
-// server.get("/", (req, res) => {
-//   if (req.query.name) {
-//     let friend = null;
-//     Object.keys(friends).forEach((id => {
-//       if (friends[id] === req.query.name) {
-//         friend = id;
-//       };
-//     }));
-//     res.status(200);
-//     res.send(friend);
-//   } else {
-//     res.status(200);
-//     res.send(friends);
-//   }
-// });
 
 server.listen(PORT, (err) => {
   if (err) {
