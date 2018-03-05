@@ -1,0 +1,12 @@
+{
+  "name": "Node-Express",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/natdf/Node-Express.git",
+  "author": "Nathan Daniel <natdf@icloud.com>",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2"
+  }
+}
