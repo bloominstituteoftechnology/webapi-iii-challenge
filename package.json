@@ -1,0 +1,23 @@
+{
+  "name": "node-express",
+  "version": "1.0.0",
+  "description": "Node Express Practice",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PeterGrayCreative/Node-Express.git"
+  },
+  "author": "Peter and Richard",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PeterGrayCreative/Node-Express/issues"
+  },
+  "homepage": "https://github.com/PeterGrayCreative/Node-Express#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2"
+  }
+}
