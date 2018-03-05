@@ -4,10 +4,13 @@ const bodyParser = require("body-parser");
 const server = express();
 const PORT = 3030;
 
-let idCounter = 2;
+let idCounter = 5;
 const users = {
   1: "nikhil",
-  2: "eileen"
+  2: "eileen",
+  3: "ivan",
+  4: "satish",
+  5: "sean"
 };
 
 server.use((req, res, next) => {
@@ -44,13 +47,8 @@ server.get("/:id/", (req, res) => {
 });
 
 server.delete("/:id/", (req, res) => {
-  const {
-    id
-  } = req.params;
-  console.log(req.params);
-  users = users.filter((user) => {
-    return user[id] !== user;
-  })
+  let id = req.params.id;
+  delete users[id]
   res.status(200);
   res.send(users)
 });
