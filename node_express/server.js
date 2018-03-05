@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const server = express();
 const PORT = 3030;
 
-let idCounter = 3;
+let idCounter = 6;
 const users = {
     1: 'Shobana',
     2: 'Tiffany',
@@ -30,6 +30,7 @@ server.get('/search?', (req,res) => {
           user.push(users[id]);
         };
     }));
+
     res.status(200);
     res.send(user);
   } else {
@@ -40,7 +41,8 @@ server.get('/search?', (req,res) => {
 
 // get req with id
 server.get("/:id/", (req, res) => {
-const id = req.params;
+const id = req.params.id;
+console.log(users[id]);
  res.status(200);
  res.send(users[id]);
 });
@@ -48,11 +50,20 @@ const id = req.params;
 
 //post req with users
 server.post("/users/", (req, res) => {
-const user= req.body;
-idCounter++;
-users[idCounter] = name.name;
-res.send(users);
+  const name = req.body.name;
+  console.log(name);
+  idCounter++;
+  users[idCounter] = name.name;
+  res.send(users);
 });
+
+server.delete("/users/:id", (req, res) => {
+  const id = req.params;
+  delete users[id];
+  console.log("delete");
+  res.send(users);
+});
+
 
 
 
