@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const server = express();
 const PORT = 3000;
 
-let idGen = 1;
+let idGen = 2;
 let users = [
   {
     name: "Bob",
@@ -48,6 +48,13 @@ server.get("/users/:id", (req, res) => {
   const { id } = req.params;
   res.status(200);
   res.send(users[id]);
+});
+
+server.delete("/users/:id", (req, res) => {
+  const { id } = req.params;
+  delete users[id];
+  res.status(200);
+  res.send(users);
 });
 
 server.get("/search", (req, res) => {
