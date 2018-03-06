@@ -25,7 +25,7 @@
 * [POST] `/users` This route should save a new user to the server. (This is just in memory and will not persist if you restart the server.)
 * [GET] `/users` This route will return an array of all users.
 * [GET] `/users/:id` This route will return the user with the matching `id` property.
-* [GET] `/search?name=<query>` The query parameter passed to this route should specify the name of the user you are searching for.  Return an array of all users whose names match the name provided.  This search should not be case sensitive.
+* [GET] `/search?name=<query>` The query parameter passed to this route should specify the name of the user you are searching for.  Return an arnpm tartray of all users whose names match the name provided.  This search should not be case sensitive.
 * [DELETE] `/users/:id` This route should delete the specified user.
 
 Your user objects can take any form.  Just ensure that they have an `id` property.  You can generate this `id` property on the server any way you like.
