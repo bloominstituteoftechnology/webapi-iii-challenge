@@ -2,63 +2,60 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const server = express();
+server.use(bodyParser.json());
 const PORT = 3030;
 
-let idCounter = 5;
-const users = {
-  1: 'Joe',
-  2: 'John',
-  3: 'Jerry',
-  4: 'Joe',
-  5: 'Joe',
-};
-
-let results = [];
+const users = ["Joe", "John", "Jerry"];
 
 server.get('/users', (req, res) => {
   res.status(200);
   res.send(users);
 });
 
-server.get('/users/:id/', (req, res) => {
-  const id = req.params.id;
-  res.status(200);
-  res.send(users[id]);
+server.get('/users/:id', (req, res) => {
+  let id = req.params.id;
+  if(id) {
+    res.status(200);
+    res.send(users[id--]);
+  }
 });
 
 server.get('/search', (req, res) => {
-  if (req.query.name) {
-    let user = null;
-    Object.keys(users).forEach(id => {
-      if (users[id] === req.query.name) {
-        results.push(user[id]);
+  let results = [];
+  let name = req.query.name;
+  if (name) {
+    for (let i = 0; i < users.length; i++){
+      if(name.toUpperCase() === users[i].toUpperCase()){
+        results.push(users[i]);
       }
-    });
+    }
     res.status(200);
     res.send(results);
-  } else {
-    res.status(200);
-    res.send(users);
   }
 });
 
 server.post('/users', (req, res) => {
   const user = req.body.user;
-  if (!user) {
-    res.status(402);
-    return;
+  if (user) {
+    users.push(user);
+    res.status(200);
+    res.send(users);
   }
-
-  idCounter++;
-  users[idCounter] = user;
-  res.status(200);
-  res.send({ id: idCounter });
 });
+
+server.delete('/users/:id', (req, res) => {
+  let id = req.params.id;
+  if(id) {
+    users.splice(id, 1);
+    res.status(200);
+    res.send(users);
+  }
+})
 
 server.listen(PORT, err => {
   if (err) {
     console.log(`ERROR! ${err}`);
   } else {
-    console.log(`SERVER! ${PORT}`);
+    console.log(`SERVER ${PORT}`);
   }
 });
