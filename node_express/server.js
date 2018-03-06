@@ -48,24 +48,20 @@ console.log(users[id]);
 });
 
 
-//post req with users
-server.post("/users/", (req, res) => {
+server.post("/users", (req, res) => {
   const name = req.body.name;
   console.log(name);
   idCounter++;
-  users[idCounter] = name.name;
+  users[idCounter] = name;
   res.send(users);
 });
 
 server.delete("/users/:id", (req, res) => {
-  const id = req.params;
+  const id = req.params.id;
+  console.log(id);
   delete users[id];
-  console.log("delete");
   res.send(users);
 });
-
-
-
 
 server.listen(PORT, err => {
     if(err) {
