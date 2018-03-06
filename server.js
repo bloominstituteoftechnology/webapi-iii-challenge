@@ -28,11 +28,11 @@ server.get("/", (req, res) => {
     const user = users.find(target => target.name ===
       req.query.name)
 
-  
+
   }
   res.status(200)
   res.send(user);
- 
+
 });
 
 server.post("/", (req, res) => {
@@ -45,6 +45,15 @@ server.post("/", (req, res) => {
   res.send(idCounter + "");
 
 })
+
+server.delete("/:id", (req, res) => {
+  const { id } = req.params;
+  const index = users.findIndex(user => user.id === id);
+  user = users.splice(index, 1)[0];
+  res.status(200);
+  res.send(user);
+})
+
 
 server.listen(PORT, err => {
   if (err) {
