@@ -67,7 +67,7 @@ server.get("/search", (req, res) => {
  res.send(userArr);
  });
 
-server.post("/", (req, res) => {
+server.post("/users/", (req, res) => {
     const { user } = req.body;
   
     idCounter++;
@@ -76,16 +76,19 @@ server.post("/", (req, res) => {
     res.send({ id: idCounter });
   });
 
-  server.delete("/", (req, res) => {
-    const {
-      user
-    } = req.body;
-  
-    idCounter++;
-    users[idCounter] = user;
-    res.status(STATUS_SUCCESS);
-    res.send({ id: idCounter });
-  });
+  // server.delete("/", (req, res) => {
+  //   const { user } = req.body;
+  //   idCounter++;
+  //   users[idCounter] = user;
+  //   res.status(STATUS_SUCCESS);
+  //   res.send({ id: idCounter });
+  // });
+
+  server.delete('/users/:id', (req, res) => {
+    delete users[req.params.id];
+    idCounter--;
+    res.send(`Deleted User ID: ${req.params.id}`);
+ });
   
   server.listen(PORT, (err) => {
     if (err) {
