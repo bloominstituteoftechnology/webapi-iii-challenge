@@ -4,11 +4,19 @@ const bodyParser = require("body-parser");
 const server = express();
 const PORT = 3000;
 
-let idGen = 0;
+let idGen = 1;
 let users = [
   {
-    name: "Bob Marley",
+    name: "Bob",
     id: 0
+  },
+  {
+    name: "bob",
+    id: 1
+  },
+  {
+    name: "Jimmy",
+    id: 2
   }
 ];
 
@@ -31,9 +39,26 @@ server.post("/users", (req, res) => {
   res.send(users);
 });
 
-server.get("/", (req, res) => {
+server.get("/users", (req, res) => {
   res.status(200);
-  res.send(req.body);
+  res.send(users);
+});
+
+server.get("/users/:id", (req, res) => {
+  const { id } = req.params;
+  res.status(200);
+  res.send(users[id]);
+});
+
+server.get("/search", (req, res) => {
+  let { name } = req.query;
+  name.toLowerCase();
+  let results = [];
+  users.map(user => {
+    if (user.name.toLowerCase() === name) results.push(user);
+  });
+  res.status(200);
+  res.send(results);
 });
 
 server.listen(PORT, err => {
