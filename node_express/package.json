@@ -1,0 +1,16 @@
+{
+  "name": "node_express",
+  "version": "1.0.0",
+  "description": "Practice node walkthrough",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "author": "Shobana.R and Tiffany Robins",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2"
+  }
+}
