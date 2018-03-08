@@ -50,5 +50,12 @@ server.post("/users", (req, res) => {
     res.send(users);
 })
 
+server.delete("/users/:id", (req, res) => {
+    const id = req.params.id;
+    const index = users.indexOf(id);
+    users.splice(index, 1);
+    res.send(`The array is now: ${users}`);
+})
+
 server.listen(port);
 console.log(`The server is listening at port ${port}`);
