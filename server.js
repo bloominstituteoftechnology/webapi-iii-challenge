@@ -69,7 +69,6 @@ server.get("/search", (req, res) => {
 
 server.post("/users/", (req, res) => {
     const { user } = req.body;
-  
     idCounter++;
     users[idCounter] = user;
     res.status(STATUS_SUCCESS);
