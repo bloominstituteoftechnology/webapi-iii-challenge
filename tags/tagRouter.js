@@ -38,4 +38,16 @@ router.delete("/:tagId", (req, res) => {
   });
 });
 
+router.put("/:tagId", (req, res) => {
+  db.update(req.params.tagId, req.body).then(count => {
+    if (count < 1) {
+      res.status(404).json({ message: "There was no tag by that ID" });
+    } else {
+      db.get(req.params.tagId).then(tag => {
+        res.json(tag);
+      });
+    }
+  });
+});
+
 module.exports = router;
