@@ -29,5 +29,5 @@ server.use("/api/tags", tagRouter);
 const port = 5000;
 
 server.listen(port, () => {
-  console.log("Come at me Bro!");
+  console.log("Code at me Bro!");
 });
