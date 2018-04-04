@@ -22,4 +22,13 @@ router.get("/:userId/posts", (req, res) => {
   });
 });
 
+router.post("/", (req, res) => {
+  db.insert(req.body).then(userId => {
+    const { id } = userId;
+    db.get(id).then(user => {
+      res.json(user);
+    });
+  });
+});
+
 module.exports = router;
