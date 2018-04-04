@@ -25,8 +25,8 @@ server.use(morgan());
 server.use(toUpperCase);
 
 server.use("/api/posts/", postRouter);
-server.use("/api/users", userRouter);
-server.use("/api/tags", tagRouter);
+server.use("/api/users/", userRouter);
+server.use("/api/tags/", tagRouter);
 
 const port = 5000;
 server.listen(port, () => {

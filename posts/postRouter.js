@@ -5,30 +5,58 @@ const router = express.Router();
 const db = require("../data/helpers/postDb.js");
 
 router.get("/", (req, res) => {
-  db.get().then(posts => {
-    res.json(posts);
-  });
+  db
+    .get()
+    .then(posts => {
+      res.json(posts);
+    })
+    .catch(error => {
+      res
+        .status(500)
+        .json({ message: "There was a problem getting data from the server." });
+    });
 });
 
 router.get("/:postId/", (req, res) => {
-  db.get(req.params.postId).then(post => {
-    res.json(post);
-  });
+  db
+    .get(req.params.postId)
+    .then(post => {
+      res.json(post);
+    })
+    .catch(error => {
+      res
+        .status(500)
+        .json({ message: "There was a problem getting data from the server." });
+    });
 });
 
 router.get("/:postId/tags", (req, res) => {
-  db.getPostTags(req.params.postId).then(tags => {
-    res.json(tags);
-  });
+  db
+    .getPostTags(req.params.postId)
+    .then(tags => {
+      res.json(tags);
+    })
+    .catch(error => {
+      res
+        .status(500)
+        .json({ message: "There was a problem getting data from the server." });
+    });
 });
 
 router.post("/", (req, res) => {
-  db.insert(req.body).then(postId => {
-    const { id } = postId;
-    db.get(id).then(post => {
-      res.json(post);
+  db
+    .insert(req.body)
+    .then(postId => {
+      const { id } = postId;
+      db.get(id).then(post => {
+        res.json(post);
+      });
+    })
+    .catch(error => {
+      res
+        .status(500)
+        .json({ message: "There was a problem posting to the server." });
     });
-  });
 });
 
 router.delete("/:postId", (req, res) => {
@@ -38,7 +66,9 @@ router.delete("/:postId", (req, res) => {
     } else {
       res.json({ message: "Post successfully deleted." });
     }
-  });
+  }).catch(error => {
+    res.status(500).json({message: "There was a problem deleting the post. "})
+};
 });
 
 router.put("/:postId", (req, res) => {
