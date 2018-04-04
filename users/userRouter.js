@@ -10,4 +10,10 @@ router.get("/", (req, res) => {
   });
 });
 
+router.get("/:userId", (req, res) => {
+  db.get(req.params.userId).then(user => {
+    res.json(user);
+  });
+});
+
 module.exports = router;
