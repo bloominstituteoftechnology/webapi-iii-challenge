@@ -12,7 +12,9 @@ const tagRouter = require("./tags/tagRouter.js");
 
 function toUpperCase(req, res, next) {
   console.log("In middleware: ", req.body);
-  req.body.tag = req.body.tag.toUpperCase();
+  if (req.body.tag) {
+    req.body.tag = req.body.tag.toUpperCase();
+  }
 
   next();
 }
