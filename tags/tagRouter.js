@@ -10,4 +10,20 @@ router.get("/", (req, res) => {
   });
 });
 
+router.get("/:tagId", (req, res) => {
+  db.get(req.params.tagId).then(tag => {
+    res.json(tag);
+  });
+});
+
+router.post("/", (req, res) => {
+  let newTag = req.body;
+  db.insert(newTag).then(tagId => {
+    const { id } = tagId;
+    db.get(id).then(tag => {
+      res.json(tag);
+    });
+  });
+});
+
 module.exports = router;
