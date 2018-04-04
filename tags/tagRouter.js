@@ -7,7 +7,7 @@ const db = require('../data/helpers/tagDb');
 // handles routes that start with: /api/tags
 router.get('/', (req, res) => {
     db
-      .find()
+      .get()
       .then(tags => {
         res.json(users);
       })

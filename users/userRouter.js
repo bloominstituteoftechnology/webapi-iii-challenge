@@ -7,7 +7,7 @@ const db = require('../data/helpers/userDb');
 // handles routes that start with: /api/users
 router.get('/', (req, res) => {
     db
-      .find()
+      .get()
       .then(users => {
         res.json(users);
       })

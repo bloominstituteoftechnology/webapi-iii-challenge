@@ -7,7 +7,7 @@ const db = require('../data/helpers/postDb');
 // handles routes that start with: /api/posts
 router.get('/', (req, res) => {
     db
-      .find()
+      .get()
       .then(posts => {
         res.json(posts);
       })

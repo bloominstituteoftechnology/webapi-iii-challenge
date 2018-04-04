@@ -20,12 +20,9 @@ server.use(helmet());
 server.use(express.json());
 server.use(logger);
 
-server.use('api/users', userRouter);
-
-server.get('/', function(req, res) {
-  res.json({ api: 'Running...' });
-});
-
+server.use('/api/users', userRouter);
+server.use('/api/posts', postsRouter);
+server.use('api/tags', tagRouter)
 
 const port = 5000;
 server.listen(port, () => console.log('API Running on port 5000'));
