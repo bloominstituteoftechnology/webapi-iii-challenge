@@ -41,4 +41,16 @@ router.delete("/:postId", (req, res) => {
   });
 });
 
+router.put("/:postId", (req, res) => {
+  db.update(req.params.postId, req.body).then(count => {
+    if (count < 1) {
+      res.status(404).json({ message: "There was no post with that ID. " });
+    } else {
+      db.get(req.params.postId).then(post => {
+        res.json(post);
+      });
+    }
+  });
+});
+
 module.exports = router;
