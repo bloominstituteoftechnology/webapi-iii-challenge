@@ -1,0 +1,16 @@
+{
+  "name": "Node-Blog",
+  "version": "1.0.0",
+  "description": "blog server",
+  "main": "server.js",
+  "repository": "https://github.com/Mehrunes-Dagon/Node-Blog.git",
+  "author": "William <wtpwinberg@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "helmet": "^3.12.0",
+    "morgan": "^1.9.0"
+  }
+}
