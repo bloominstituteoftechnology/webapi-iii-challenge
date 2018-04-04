@@ -50,7 +50,7 @@ router.put('/:id/update', (req, res) => {
         res.status(200).json(tagged)
     })
     .catch(error => {
-        res.status(500).json(console.error( "Error updating tag", error))
+        res.status(500).json(console.error( "Error updating posting tag", error))
     })
 })
 
