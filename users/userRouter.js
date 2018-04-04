@@ -41,4 +41,16 @@ router.delete("/:userId", (req, res) => {
   });
 });
 
+router.put("/:userId", (req, res) => {
+  db.update(req.params.userId, req.body).then(count => {
+    if (count < 1) {
+      res.status(404).json({ message: "There was no user with that ID" });
+    } else {
+      db.get(req.params.userId).then(user => {
+        res.json(user);
+      });
+    }
+  });
+});
+
 module.exports = router;
