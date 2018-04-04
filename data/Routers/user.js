@@ -17,6 +17,18 @@ router.get('/:id', (req, res)=> {
 
 })
 
+router.get('/:id/posts', (req, res) => {
+    const { userId } = req.params;
+
+    db.getUserPosts(userId)
+    .then(posts => {
+        res.json(posts)
+    })
+    .catch(error => {
+        res.status(500).json(console.error( "Error is your life ", error))
+    })
+})
+
 
 
 
