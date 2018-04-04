@@ -3,7 +3,7 @@ const helmet = require('helmet');
 
 const userRouter = require('./users/userRouter.js');
 const postRouter = require('./posts/postRouter.js');
-const tagsRouter = require('./tags/tagRouter.js');
+const tagRouter = require('./tags/tagRouter.js');
 
 const server = express();
 
@@ -21,8 +21,8 @@ server.use(express.json());
 server.use(logger);
 
 server.use('/api/users', userRouter);
-server.use('/api/posts', postsRouter);
-server.use('api/tags', tagRouter)
+server.use('/api/posts', postRouter);
+server.use('/api/tags', tagRouter)
 
 const port = 5000;
 server.listen(port, () => console.log('API Running on port 5000'));

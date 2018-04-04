@@ -9,7 +9,7 @@ router.get('/', (req, res) => {
     db
       .get()
       .then(tags => {
-        res.json(users);
+        res.json(tags);
       })
       .catch(error => {
         res.status(500).json(error);
