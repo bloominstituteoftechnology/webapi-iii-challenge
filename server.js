@@ -6,7 +6,9 @@ const helmet = require('helmet');
 
 const cors = require('cors');
 
-const userRouter = require('./data/Routers/user.js');
+const usersRouter = require('./data/Routers/user.js');
+const postsRouter = require('./data/Routers/post.js');
+const tagsRouter = require('./data/Routers/tag.js');
 
 
 const logger = (req, res, next ) => {
@@ -20,8 +22,9 @@ server.use(cors());
 server.use(express.json());
 server.use(logger);
 
-// server.use('/api/posts', postRouter);
-server.use('/api/users', userRouter)
+server.use('/api/posts', postsRouter);
+server.use('/api/users', usersRouter)
+server.use('/api/tags', tagsRouter)
 
 server.get('/', (req, res) => {
     res.send({ api: 'Running...' })
