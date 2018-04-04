@@ -31,4 +31,14 @@ router.post("/", (req, res) => {
   });
 });
 
+router.delete("/:userId", (req, res) => {
+  db.remove(req.params.userId).then(num => {
+    if (num < 1) {
+      res.status(404).json({ message: "There is no user with that ID." });
+    } else {
+      res.json({ message: `Successfully deleted user ${req.params.userId}` });
+    }
+  });
+});
+
 module.exports = router;
