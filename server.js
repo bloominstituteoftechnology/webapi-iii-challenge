@@ -1,4 +1,6 @@
 const express = require("express");
+const morgan = require("morgan");
+const helmet = require("helmet");
 
 const server = express();
 
@@ -9,6 +11,8 @@ const postRouter = require("./posts/postRouter.js");
 const tagRouter = require("./tags/tagRouter.js");
 
 server.use(express.json());
+server.use(helmet());
+server.use(morgan());
 
 server.use("/api/posts/", postRouter);
 server.use("/api/users", userRouter);
