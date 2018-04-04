@@ -28,21 +28,34 @@ router.get("/:id", (req, res) => {
 
 // something here and less than 128ch.
 router.post("/", (req, res) => {
-  const { user } = req.body;
-  if (!user) {
-    res.status(400).json({ error: "Name Required" });
-  } else if (user.length > 128) {
-    res.status(400).json({ error: "Max length 128 characters" });
-  } else {
-    db
-      .insert()
-      .then(user => {
-        res.json(user);
-      })
-      .catch(error => {
-        res.status(500).json(error);
+  const user = req.body;
+  console.log(user);
+  const usersList = [];
+  db
+    .get()
+    .then(users => {
+      users.forEach(user => {
+        usersList.push(user.name);
       });
-  }
+      if (!user.name) {
+        res.status(400).json({ error: "Name Required" });
+      } else if (user.name.length > 128) {
+        res.status(400).json({ error: "Max length 128 characters" });
+      } else if (usersList.includes(user.name)) {
+        res.status(400).json({ error: "User already exists" });
+      } else {
+        db
+          .insert(user)
+          .then(user => {
+            res.json(user);
+          })
+          .catch(error => {
+            console.log("in the catch");
+            res.status(500).json(error);
+          });
+      }
+    })
+    .catch(error => res.status(500).json({ error }));
 });
 
 module.exports = router;
