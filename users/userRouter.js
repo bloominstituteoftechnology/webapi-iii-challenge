@@ -16,4 +16,10 @@ router.get("/:userId", (req, res) => {
   });
 });
 
+router.get("/:userId/posts", (req, res) => {
+  db.getUserPosts(req.params.userId).then(posts => {
+    res.json(posts);
+  });
+});
+
 module.exports = router;

@@ -10,10 +10,15 @@ router.get("/", (req, res) => {
   });
 });
 
-router.get("/:userId/", (req, res) => {
-  db.get().then(posts => {
-    let returnPosts = posts.filter(post => post.userId == req.params.userId);
-    res.json(returnPosts);
+router.get("/:postId/", (req, res) => {
+  db.get(req.params.postId).then(post => {
+    res.json(post);
+  });
+});
+
+router.get("/:postId/tags", (req, res) => {
+  db.getPostTags(req.params.postId).then(tags => {
+    res.json(tags);
   });
 });
 
