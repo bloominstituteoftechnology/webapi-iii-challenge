@@ -27,7 +27,7 @@ router.get("/:id", (req, res) => {
 });
 
 // something here and less than 128ch.
-router.push("/", (req, res) => {
+router.post("/", (req, res) => {
   const { user } = req.body;
   if (!user) {
     res.status(400).json({ error: "Name Required" });
