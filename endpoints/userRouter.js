@@ -1,0 +1,87 @@
+// Implementing CRUD for users
+const express = require("express");
+const router = express.Router();
+const userDb = require("../data/helpers/userDb.js");
+// get(id), getUserPosts(userId)
+// database functions all have insert(x), remove(id), and update(id, x)
+
+// GET by id
+server.get("/:id", (req, res) => {
+  const { id } = req.params;
+
+  userDb
+    .get(id)
+    .then(user => {
+      res.status(200).json(user);
+    })
+    .catch(err => {
+      res.status(500).json({ error: "Server error encountered.." });
+    });
+});
+
+// GET by userId
+server.get("/:userId", (req, res) => {
+  const { userId } = req.params;
+
+  userDb
+    .getUserPosts(userId)
+    .then(posts => {
+      res.status(200).json(posts);
+    })
+    .catch(err => {
+      res.status(500).json({
+        error: "Server error encountered while collecting user posts.."
+      });
+    });
+});
+
+// POST
+server.post("/", (req, res) => {
+  const user = req.body;
+
+  userDb
+    .insert(user)
+    .then(response => {
+      res.status(200).json(response);
+    })
+    .catch(err => {
+      res.status(500).json({
+        error: "Server error encountered while attempting to add post.."
+      });
+    });
+});
+
+// DELETE
+server.delete("/:id", (req, res) => {
+  const { id } = req.params;
+
+  userDb
+    .remove(id)
+    .then(response => {
+      res.status(200).json(response);
+    })
+    .catch(err => {
+      res
+        .status(500)
+        .json({ error: "Server error encountered while deleting post.." });
+    });
+});
+
+// PUT
+server.put("/:id", (req, res) => {
+  const { id } = req.params;
+  const user = req.body;
+
+  userDb
+    .update(id, user)
+    .then(response => {
+      res.status(200).json(response);
+    })
+    .catch(err => {
+      res
+        .status(500)
+        .json({ err: "Server error encountered while updating post.." });
+    });
+});
+
+module.exports(router);
