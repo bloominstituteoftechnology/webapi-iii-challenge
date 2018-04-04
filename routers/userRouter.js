@@ -26,7 +26,7 @@ router.get("/:id", (req, res) => {
     });
 });
 
-// something here and less than 128ch.
+// something here and less than 128ch. no duplicates.
 router.post("/", (req, res) => {
   const user = req.body;
   console.log(user);
