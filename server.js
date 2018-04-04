@@ -10,9 +10,17 @@ const userRouter = require("./users/userRouter.js");
 const postRouter = require("./posts/postRouter.js");
 const tagRouter = require("./tags/tagRouter.js");
 
+function toUpperCase(req, res, next) {
+  console.log("In middleware: ", req.body);
+  req.body.tag = req.body.tag.toUpperCase();
+
+  next();
+}
+
 server.use(express.json());
 server.use(helmet());
 server.use(morgan());
+server.use(toUpperCase);
 
 server.use("/api/posts/", postRouter);
 server.use("/api/users", userRouter);
