@@ -26,4 +26,16 @@ router.post("/", (req, res) => {
   });
 });
 
+router.delete("/:tagId", (req, res) => {
+  db.remove(req.params.tagId).then(num => {
+    if (num < 1) {
+      res.status(404).json({ message: "There is no tag with that id." });
+    } else {
+      res.json({
+        message: `Tag with the id ${req.params.tagId} successfully deleted.`
+      });
+    }
+  });
+});
+
 module.exports = router;
