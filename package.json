@@ -1,0 +1,31 @@
+{
+  "name": "node-blog",
+  "version": "0.0.1",
+  "description": "node-blog LS project",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cesarnml/Node-Blog.git"
+  },
+  "author": "Cesar Napoleon Mejia Leiva",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "helmet": "^3.12.0",
+    "knex": "^0.14.4",
+    "morgan": "^1.9.0",
+    "sqlite3": "^4.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.17.3"
+  },
+  "bugs": {
+    "url": "https://github.com/cesarnml/Node-Blog/issues"
+  },
+  "homepage": "https://github.com/cesarnml/Node-Blog#readme"
+}
