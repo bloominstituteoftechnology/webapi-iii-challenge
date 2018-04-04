@@ -30,20 +30,20 @@ router.get('/:id', (req, res) => {
 
 router.post('/', (req, res) => {
     
-    const { name } = req.body;
+    let user = {};
+    user = req.body.name;
 
-    if (!name) {
+    if (!user) {
             res.status(400).json({error: "Please include a name for the user"});
         } 
         
-        else if (name.length > 128) {
+        else if (user.length > 128) {
             res.status(400).json({error: "Maximum character count is 128 characters"});
         } 
         
         else {
-            
             db
-            .insert(name)
+            .insert(user)
             .then(user => {
                 res.json(user);
             })
