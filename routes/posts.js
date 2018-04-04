@@ -87,4 +87,16 @@ postsRouter.put('/:id', (req, res) => {
     });
 });
 
+postsRouter.get('/:postId/tags', (req, res) => {
+  const { postId } = req.params;
+  db
+    .getPostTags(postId)
+    .then(postTags => {
+      res.json(postTags);
+    })
+    .catch(error => {
+      res.status(500).json(error);
+    });
+});
+
 module.exports = postsRouter;

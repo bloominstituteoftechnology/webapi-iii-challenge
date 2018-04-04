@@ -18,7 +18,7 @@ server.use('/api/tags', tagsRouter);
 server.use('/api/users', usersRouter);
 
 server.get('/', (req, res) => {
-  res.json({ api: 'It is ALIIIIIVE!!!'});
+  res.json({ api: 'It\'s ALIIIIIVE!!'});
   console.log();
 });
 

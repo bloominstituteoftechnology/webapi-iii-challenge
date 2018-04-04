@@ -87,4 +87,16 @@ usersRouter.put('/:id', (req, res) => {
     });
 });
 
+usersRouter.get('/:userId/posts', (req, res) => {
+  const { userId } = req.params;
+  db
+    .getUserPosts(userId)
+    .then(userPosts => {
+      res.json(userPosts);
+    })
+    .catch(error => {
+      res.status(500).json(error);
+    });
+});
+
 module.exports = usersRouter;
