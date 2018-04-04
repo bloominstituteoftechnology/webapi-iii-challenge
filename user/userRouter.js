@@ -26,7 +26,7 @@ const tagDb = require('../data/helpers/tagDb.js');
 //     })
 // })
 
-router.get('/', function(req, res) {
+router.get('/', (req, res) => {
 
     userDb
     .get()
@@ -40,18 +40,9 @@ router.get('/', function(req, res) {
 
 })
 
-router.get('/api/users/posts', function(req, res) {
-    postDb
-    .get()
-    .then(posts => {
-        res.status(200).json(posts);
-    })
-    .catch(error => {
-        res.status(500).json({error: 'Posts dont exist.'})
-    })
-})
 
-router.get('/api/:userId', function(req, res) {
+
+router.get('/:userId', (req, res) => {
     const {userId} = req.params
     userDb
     .get(userId)
@@ -65,7 +56,7 @@ router.get('/api/:userId', function(req, res) {
 
 })
 
-router.get('/api/:userId/posts', function(req, res) {
+router.get('/:userId/posts', (req, res) => {
     const {userId} = req.params
 
     userDb
@@ -80,7 +71,7 @@ router.get('/api/:userId/posts', function(req, res) {
 })
 
     
-router.get('/api/:userId/:postId', function(req, res) {
+router.get('/:userId/:postId', (req, res) => {
 const {userId} = req.params;
 const {postId} = req.params;
 
@@ -99,7 +90,7 @@ const {postId} = req.params;
     })
 });
 
-router.get('/api/:userId/:postId/:tagId', function(req, res) {
+router.get('/:userId/:postId/:tagId', (req, res) => {
     const {userId} = req.params;
     const {postId} = req.params;
     const {tagId} = req.params;
