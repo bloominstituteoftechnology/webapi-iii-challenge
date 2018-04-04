@@ -22,4 +22,13 @@ router.get("/:postId/tags", (req, res) => {
   });
 });
 
+router.post("/", (req, res) => {
+  db.insert(req.body).then(postId => {
+    const { id } = postId;
+    db.get(id).then(post => {
+      res.json(post);
+    });
+  });
+});
+
 module.exports = router;
