@@ -1,0 +1,29 @@
+{
+  "name": "Blog",
+  "version": "1.0.0",
+  "description": "Blog with posts, users and tags",
+  "main": "server.js",
+  "author": "Edward Manda <lilkups@yahoo.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emukupa/Node-Blog.git"
+  },
+  "bugs": {
+    "url": "https://github.com/emukupa/node-express-mini/issues"
+  },
+  "dependencies": {
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "helmet": "^3.12.0",
+    "knex": "^0.14.4",
+    "morgan": "^1.9.0",
+    "sqlite3": "^4.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.17.3"
+  }
+}
