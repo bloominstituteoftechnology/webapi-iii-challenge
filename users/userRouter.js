@@ -2,7 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 
-const db = require('./data/helpers/userDb.js');
+const db = require('../data/helpers/userDb');
 
 // handles routes that start with: /api/users
 router.get('/', (req, res) => {

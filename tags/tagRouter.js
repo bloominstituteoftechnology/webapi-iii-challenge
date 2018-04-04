@@ -2,9 +2,9 @@ const express = require('express');
 
 const router = express.Router();
 
-const db = require('./data/helpers/tagDb.js');
+const db = require('../data/helpers/tagDb');
 
-// handles routes that start with: /api/users
+// handles routes that start with: /api/tags
 router.get('/', (req, res) => {
     db
       .find()
