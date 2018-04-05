@@ -9,17 +9,20 @@ const userRouter = require('./users/userRouter');
 const server = express();
 
 // custom middleware
-const logger = (req, res, next) => {
-  console.log('Serving up params: ', req.params);
+// const tagsToUpperCase = (req, res, next) => {
+//   const tag = req.body.tag;
+//   if (tag) {
+//     tag = tag.tagsToUpperCase;
+//   }
 
-  next();
-}
+//   next();
+// };
 
 // middleware
 server.use(helmet());
 server.use(cors());
 server.use(express.json());
-server.use(logger);
+server.use(tagsToUpperCase);
 
 server.use('/api/posts', postRouter);
 server.use('/api/tags', tagRouter);
