@@ -10,6 +10,7 @@ const postRouter = require('./posts/postRouter.js');
 const tagRouter = require('./tags/tagRouter.js');
 
 const server = express();
+var helmet = require('helmet')
 
 function logger(req, res, next) {
   console.log(`requesting: ${req.url}`);
@@ -19,6 +20,7 @@ function logger(req, res, next) {
 
 //middleware
 server.use(express.json());
+app.use(helmet())
 server.use(logger);
 
 server.use('/api/users', userRouter);
