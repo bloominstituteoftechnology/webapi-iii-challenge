@@ -19,8 +19,8 @@ function toUpperCase(req, res, next) {
   next();
 }
 
-server.use(express.json());
 server.use(helmet());
+server.use(express.json());
 server.use(morgan());
 server.use(toUpperCase);
 
