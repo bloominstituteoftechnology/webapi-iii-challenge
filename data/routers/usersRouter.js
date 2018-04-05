@@ -2,10 +2,10 @@ const express = require('express');
 
 const router = express.Router();
 
-const postDb = require('../helpers/postDb.js');
+const userDb = require('../helpers/userDb.js');
 
 router.get('/', (req, res) => {
-    postDb.get()
+    userDb.get()
     .then(response => {
         res.status(200).json(response);
     })
@@ -16,21 +16,26 @@ router.get('/', (req, res) => {
 
 router.get('/:id', (req, res) => {
     const { id } = req.params;
-    postDb.get(id)
+    userDb.get(id)
     .then( response => {
-        res.status(200).json(response);
+        if (response)
+            res.status(200).json(response);
+        else
+            res.status(404).json({error: 'No user with that Id'});
     })
     .catch(error => {
-        console.log('here');
-        res.status(500).json({error: 'Post could not be retrieved.'});
+        res.status(500).json(error);
     })
 });
 
-router.get('/:postId/tags', (req, res) => {
-    const { postId } = req.params;
-    postDb.getPostTags(postId)
+router.get('/:userId/posts', (req, res) => {
+    const { userId } = req.params;
+    userDb.getUserPosts(userId)
     .then(response => {
-        res.status(200).json(response);
+        if (response[0])
+            res.status(200).json(response);
+        else
+            res.status(404).json({error: 'No user with that Id'});
     })
     .catch(error => {
         res.status(500).json(error);
@@ -38,9 +43,9 @@ router.get('/:postId/tags', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-    const post = req.body;
-    if (post.userId && post.text) {
-        postDb.insert(post)
+    const user = req.body;
+    if (user.name && user.name.length < 129) {
+        userDb.insert(user)
         .then(response => {
             res.status(200).json(response);
         })
@@ -48,20 +53,20 @@ router.post('/', (req, res) => {
             res.status(500).json(error);
         })
     } else {
-        res.status(400).json({error: 'post must have a user id and text.'});
+        res.status(400).json({error: 'User must have a name that is no more than 128 characters.'});
     }
 });
 
 router.put('/:id', (req, res) => {
-    const post = req.body;
+    const user = req.body;
     const { id } = req.params;
     
-    postDb.update(id, post)
+    userDb.update(id, user)
     .then(response => {
         if (response === 1)
             res.status(200).json(id);
         else
-            res.status(404).json({error: 'No post with that id.'})
+            res.status(404).json({error: 'No user with that id.'})
     })
     .catch(error => {
         res.status(500).json(error);
@@ -70,16 +75,17 @@ router.put('/:id', (req, res) => {
 
 router.delete('/:id', (req, res) => {
     const { id } = req.params;
-    postDb.remove(id)
+    userDb.remove(id)
     .then(response => {
         if (response === 1)
             res.status(200).json(response);
         else
-            res.status(404).json({error: 'No post with that Id.'});
+            res.status(404).json({error: 'No user with that Id.'});
     })
     .catch(error => {
         res.status(500).json(error);
     })
 });
+
 
 module.exports = router;
