@@ -4,27 +4,30 @@ const db = require('../data/helpers/userDb.js');
 
 // handles routes that start with: /api/users
 
-router.get('/', (req,res) => {
-    // get data
-     db.get()
-     // send the data
-     .then(users => {
-         res.json(users);
-     })
-     // send error if there is one
-     .catch(error => {
-         res.status(500).json(err);
-     });
+router.get('/', (req, res) => {
+  // get data
+  db.get()
+    // send the data
+    .then(users => {
+      res.json(users);
+    })
+    // send error if there is one
+    .catch(error => {
+      res.status(500).json(err);
+    });
 });
 
-// router.get('/:id', (req, res) => {
-//     const { id } = req.params;
-//     db.findById(id).then(users => {
-//         res.json(users[0]);
-//     }).catch(error => {
-//         res.status(500).json(err);
-//     });
-// });
+router.get("/:id", (req, res) => {
+  db
+    .get(req.params.id)
+    .then(users => {
+      res.json(users);
+    })
+    .catch(error => {
+      res.status(500).json(error);
+    });
+});
+  
 
 // router.post('/', (req, res) => {
 //     const user = req.body;
