@@ -4,6 +4,8 @@ const helmet = require('helmet');
 const cors = require('cors');
 
 const userRouter = require('./routers/userRouter.js');
+const tagRouter = require('./routers/tagRouter.js');
+const postRouter = require('./routers/postRouter.js');
 
 const server = express();
 
@@ -24,6 +26,8 @@ server.use(express.json());
 server.use(logger);
 
 server.use('/api/users', userRouter);
+server.use('/api/tags', tagRouter);
+server.use('/api/posts', postRouter);
 
 server.get('/', function(req, res) {
   res.json({ api: 'Running...' });

@@ -69,10 +69,10 @@ router.put('/:id', (req, res) => {
           db
             .get(id)
             .then(user => {
-              res.json(user);
+              res.status(200).json(user);
             })
             .catch(error => {
-              res.status(500).json(error);
+              res.status(400).json(error);
             });
         } else {
           res.status(404).json({ errorMessage: 'User not found' });
