@@ -3,11 +3,22 @@ import "./App.css";
 import axios from "axios";
 
 class App extends Component {
-  state = {
-    users = [],
-    posts = [],
-    tags = []
+  constructor(){
+    this.state = {
+      users = [],
+      posts = [],
+      tags = []
   }
+}
+
+getData(){
+  
+}
+
+componentDidMount() {
+  
+}
+
   render() {
     return (
       <div className="App">
