@@ -62,7 +62,7 @@ router.get('/:id/posts', (req, res) => {
   db
     .getUserPosts(req.params.id)
     .then(posts => {
-      res.json(posts.map(post => post.text));
+      res.json(posts.map(post => post.text)); //an array of posts from the user
     })
     .catch(error => {
       res.status(500).json(error);
