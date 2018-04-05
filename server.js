@@ -15,6 +15,7 @@ function logger(req, res, next) {
   next();
 }
 
+
 //server.use(helmet());
 server.use(express.json());
 server.use(logger);
@@ -23,8 +24,10 @@ server.use(logger);
 // routers:
 
 server.use('/api/posts', postsRoutes);
-// server.use('/api/tags', tagsRoutes);
-// server.use('/api/users', usersRoutes);
+server.use('/api/tags', tagsRoutes);
+server.use('/api/users', usersRoutes);
+
+
 
 
 const port = 5000;
