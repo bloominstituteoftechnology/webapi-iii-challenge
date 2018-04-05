@@ -13,7 +13,7 @@ const server = express();
 function logger(req, res, next) {
   console.log('MW for', req.body);
   console.log(req.url);
-  console.log(res.error);
+
   next();
 }
 

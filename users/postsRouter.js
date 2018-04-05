@@ -45,7 +45,7 @@ router.post('/', (req, res) => {
       res.status(200).json(response);
     })
     .catch(error => {
-      res.status(500).json({ error: 'cant post' });
+      res.status(500).json({ error: 'Youre not doing it right' });
     });
 });
 router.put('/:id', (req, res) => {
