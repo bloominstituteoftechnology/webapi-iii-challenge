@@ -93,7 +93,33 @@ router.put('/:id', (req, res) => {
           res.status(404).json({ errorMessage: 'User not found' });
         }
       })
-      .catch(error => {});
+      .catch(error => {
+        res.status(500).json(error);
+      });
   }
 });
+
+router.delete('/:id', (req, res) => {
+  const { id } = req.params;
+  db
+    .remove(id)
+    .then(count => {
+      if (count > 0) {
+        db
+          .get()
+          .then(user => {
+            res.json(user);
+          })
+          .catch(error => {
+            res.status(500).json(error);
+          });
+      } else {
+        res.status(404).json({ errorMessage: 'User not found' });
+      }
+    })
+    .catch(error => {
+      res.status(500).json(error);
+    });
+});
+
 module.exports = router;
