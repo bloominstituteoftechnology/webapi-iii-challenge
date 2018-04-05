@@ -17,10 +17,6 @@ router.get('/', (req,res) => {
      });
 });
 
-// router.get('/:id/orders', (req, res) => {
-//     res.send(`viewing orders for user with id ${req.params.id}`);
-// });
-
 // router.get('/:id', (req, res) => {
 //     const { id } = req.params;
 //     db.findById(id).then(users => {

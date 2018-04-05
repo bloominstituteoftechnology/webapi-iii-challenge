@@ -7,13 +7,13 @@ exports.seed = function(knex, Promise) {
           userId: 1,
           text:
             'I wish the ring had never come to me. I wish none of this had happened.',
-        },
+        }, // 1
         {
           userId: 1,
-          text: 'I think we should get off the road. Get off the road! Quick!',
+          text: 'I think we should get off the road. Get off the road! Quick!', // 2
         },
-        { userId: 1, text: 'Our business is our own.' },
-        { userId: 1, text: 'Can you protect me from yourself?' },
+        { userId: 1, text: 'Our business is our own.' }, // 3
+        { userId: 1, text: 'Can you protect me from yourself?' }, // 4
         { userId: 2, text: "I ain't been droppin' no eaves, sir! Promise!" }, // 5
         { userId: 2, text: "Of course you are, and I'm coming with you!" }, // 6
         {
