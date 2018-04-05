@@ -77,13 +77,15 @@ const {postId} = req.params;
 router.put('/:userId/:postId', (req, res) => {
     const { postId } = req.params;
     const { userId } = req.params;
+    const { id } = req.params;
     const { text } = req.body;
-    // const editPost = { postId, text }
+    const editPost = { text }
+
     postDb
     
-    .update( postId, text )
+    .update( postId, editPost )
     .then(post => {
-        res.status(200).json(post)
+        res.status(200).json({message: `${postId} edited`})
     })
     .catch(error => {
         res.error(500).json({error: 'Post could not be edited.'})
