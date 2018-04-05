@@ -13,7 +13,7 @@ const server = express();
 function logger(req, res, next) {
   console.log('MW for', req.body);
   console.log(req.url);
-
+  console.log(res.error);
   next();
 }
 
@@ -21,9 +21,10 @@ server.use(express.json());
 server.use(cors());
 server.use(helmet());
 server.use(logger);
+
 server.use('/api/users', usersRouter);
-server.use('/api/users', postsRouter);
-server.use('/api/users', tagRouter);
+server.use('/api/posts', postsRouter);
+server.use('/api/tags', tagRouter);
 
 server.get('/', function(req, res) {
   res.json({ api: 'Running...' });

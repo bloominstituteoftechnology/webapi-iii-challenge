@@ -8,7 +8,7 @@ router.get('/', (req, res) => {
   db
     .get()
     .then(users => {
-      res.json(users);
+      res.status(200).json(users);
     })
     .catch(error => {
       res.status(500).json(error);
@@ -19,7 +19,18 @@ router.get('/:id', (req, res) => {
   db
     .get(id)
     .then(users => {
-      res.json(users);
+      res.status(200).json(users);
+    })
+    .catch(error => {
+      res.status(500).json(error);
+    });
+});
+router.get('/:id/posts', (req, res) => {
+  const { id } = req.params;
+  db
+    .getUserPosts(id)
+    .then(posts => {
+      res.status(200).json(posts);
     })
     .catch(error => {
       res.status(500).json(error);
@@ -30,7 +41,7 @@ router.post('/', (req, res) => {
   db
     .insert(name)
     .then(response => {
-      res.status(200).json(response);
+      res.status(201).json(response);
     })
     .catch(error => {
       res.status(500).json({ error: 'Error saving name to database.' });
