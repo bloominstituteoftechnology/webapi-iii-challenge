@@ -5,7 +5,7 @@ const cors = require('cors');
 
 const userRouter = require('./users/userRouter.js');
 const postRouter = require('./posts/postRouter.js');
-//const tagRouter = require('./users/userRouter.js');
+const tagRouter = require('./tags/tagRouter.js');
 
 const server = express();
 
@@ -18,17 +18,20 @@ function logger(req, res, next) {
     // next points to the next middleware
     next();
 }
+server.use(logger);
+
+
 
 // middleware
 // server.use(morgan('dev'));
 server.use(helmet());
 server.use(cors());
 server.use(express.json());
-server.use(logger);
+
 
 server.use('/api/users', userRouter);
 server.use('/api/posts', postRouter);
-//server.use('/api/tags', tagRouter);
+server.use('/api/tags', tagRouter);
 
 server.get('/', function(req, res) {
   res.json({ api: 'Running...' });
