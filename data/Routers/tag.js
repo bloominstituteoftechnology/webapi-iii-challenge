@@ -56,7 +56,7 @@ router.put('/:id/update', (req, res) => {
 
 router.delete('/:id/delete', (req, res) => {
     const { id } = req.params;
-    
+
     db.remove(id)
     .then(removed => {
         res.status(200).json(removed)
@@ -65,8 +65,5 @@ router.delete('/:id/delete', (req, res) => {
         res.status(500).json(console.error( "Error deleting tag", error))
     })
 })
-
-
-
 
 module.exports = router;
