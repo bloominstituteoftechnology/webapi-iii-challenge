@@ -17,27 +17,46 @@ router.get('/', (req, res) => {
 
 router.get('/:id', (req, res) => {
     const { id } = req.params;
-
+    console.log(res);
     db
-        .get(req.params.id)
-        .then(users => {
-            res.status(200).json(users);
-        })
-        .catch(error => {
-            res.status(500).json({errorMessage: "There was an error retrieving the user"});
-        })
+    .get(id)
+    .then(user => {
+        res.json(user);
+    })
+    .catch(error => {
+        res.status(500).json({error: "There was an error retrieving the user"});
+    })
+    
+})
+
+router.get('/posts/:id', (req, res) => {
+    const { id } = req.params;
+    
+    db
+    .getUserPosts(id)
+    .then(posts => {
+        if (posts.length > 0) res.json(posts);
+        else {
+            res.status(404).json({error: "That user does not exist"});
+        }
+    })
+    .catch(error => {
+        res.status(500).json({error: "There was an errror retrieving user posts"});
+    })
+    
+
 })
 
 router.post('/', (req, res) => {
     
     let user = {};
-    user = req.body.name;
+    user.name = req.body.name;
 
-    if (!user) {
+    if (!user.name) {
             res.status(400).json({error: "Please include a name for the user"});
         } 
         
-        else if (user.length > 128) {
+        else if (user.name.length > 128) {
             res.status(400).json({error: "Maximum character count is 128 characters"});
         } 
         
@@ -53,5 +72,44 @@ router.post('/', (req, res) => {
         }
 });
 
+router.put('/:id', (req, res) => {
+
+const { id } = req.params;
+let newUser = {};
+newUser.name = req.body.name;
+
+
+if (!newUser.name) res.status(400).json({errorMessage: "Please include a name"});
+
+else {
+db
+.update(id, newUser)
+.then(flag => {
+    if (flag > 0) res.json(newUser);
+    else {
+        res.status(404).json({errorMessage: "That user does not exist"});
+    }
+})
+.catch(error => {
+    res.status(500).json({error: "There was an error updating the user"});
+})
+}
+})
+
+router.delete('/:id', (req, res) => {
+    const { id } = req.params;
+
+    db
+    .remove(id)
+    .then(flag => {
+        if (flag > 0) res.json(id);
+        else {
+            res.status(404).json({errorMessage: "That user does not exist"});
+        }
+    })
+    .catch(error => {
+        res.status(500).json({error: "There was an error deleting the user"});
+    })
+})
 
 module.exports = router;
