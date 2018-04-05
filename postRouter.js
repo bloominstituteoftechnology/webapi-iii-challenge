@@ -19,6 +19,19 @@ postRouter.get('/:id', (req, res) => {
     })
 });
 
+postRouter.get('/:id/tags', (req, res) => {
+    const { id } = req.params;
+
+    postDb
+        .getPostTags(id)
+        .then(tags => {
+            res.status(200).json(tags);
+        })
+        .catch(error => {yarn
+            res.status(500).json(error);
+        });
+});
+
 postRouter.post('/', (req, res) => {
     postDb.insert(req.body).then(response => {
         res.json({ ...response, ...req.body});
