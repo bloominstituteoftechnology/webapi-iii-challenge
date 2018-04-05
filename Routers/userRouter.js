@@ -29,10 +29,15 @@ router.get("/:id", (req, res) => {
 });
 
 router.get("/:id/posts", (req, res) => {
-  const { userId } = req.params;
-  db.getUserPosts(userId).then(user => {
-    res.send(user);
-  });
+  const { id } = req.params;
+  db
+    .getUserPosts(id)
+    .then(users => {
+      res.send(users);
+    })
+    .catch(error => {
+      res.status(500).json({ message: "can't find posts for this user" });
+    });
 });
 
 router.post("/", (req, res) => {

@@ -28,6 +28,18 @@ router.get("/:id", (req, res) => {
     });
 });
 
+router.get("/:id/tags", (req, res) => {
+  const { id } = req.params;
+  db
+    .getPostTags(id)
+    .then(posts => {
+      res.send(posts);
+    })
+    .catch(error => {
+      res.status(500).json({ message: "can't find tags for this post" });
+    });
+});
+
 router.post("/", (req, res) => {
   const posts = req.body;
   db
