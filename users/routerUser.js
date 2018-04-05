@@ -11,7 +11,7 @@ router.get("/", (req, res) => {
         res.status(200).json(users);
     })
     .catch(error => {
-        res.status(500).json({ error: 'The users information could not be retrieved.'})
+        res.status(500).json({ error: "The users information could not be retrieved."})
     });
 })
 
@@ -32,21 +32,59 @@ router.get("/:id", (req, res) => {
     });
 })
 
-router.get('/:userid/posts', (req, res) => {
-    const { userid } = req.params;
+router.get('/:id/posts', (req, res) => {
+    const { id } = req.params;
 
     db
-    .getUserPosts(userid)
-    .then(uposts => {
-        res.status(200).json(uposts);
+    .getUserPosts(id)
+    .then(userPosts => {
+        res.status(200).json(userPosts);
     })
     .catch(error => console.error(error));
 })
 
 router.post('/', (req, res) => {
-    const { name } = req.body;
-    console.log(req.body)
-    res.json(req.body)
+    const user = req.body;
+    if (user.name === undefined || user.name.length > 128) res.status(400).json({ error: "Name field is required (128 characters maximum)."})
+    db
+    .insert(user)
+    .then(newID => {
+        db
+        .get(newID.id)
+        .then(newUser => {
+            res.status(201).json(newUser);
+        })
+        .catch(error => res.status(500).json({ error: "Added user could not be retrieved."}));
+    })
+    .catch(error =>  res.status(500).json({ error: "User could not be added to database." }));
+})
+
+router.put('/:id', (req, res) => {
+    const { id } = req.params;
+    const user = req.body;
+    if (user.name === undefined || user.name.length > 128) res.status(400).json({ error: "Name field is required (128 characters maximum)."})
+    db
+    .update(id, user)
+    .then(count => {
+        db.get(id).then(user => res.status(200).json(user)).catch(error => console.error(error))
+    })
+    .catch(error => res.status(500).json({ error: `user with id ${id} could not be updated.` }));
+
+})
+
+router.delete('/:id', (req, res) => {
+    const { id } = req.params;
+
+    db
+    .remove(id)
+    .then(deletions => {
+        if (deletions === 1) {
+            res.status(200).json({ success: `user with id ${id} was deleted.`})
+        } else {
+            res.status(404).json({ error: `user with id ${id} was not found.`})
+        }
+    })
+    .catch(error => res.status(500).json({ error: `user with id ${id} could not be deleted.` }))
 })
 
 module.exports = router;
