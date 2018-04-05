@@ -34,7 +34,7 @@ router.get('/:id/posts', (req, res) => {
     db.getUserPosts(id)
     .then(posts => {
         res.status(200).json(posts)
-      
+
     })
     .catch(error => {
         res.status(500).json(console.error( "Error pulling up posts ", error))
@@ -68,7 +68,7 @@ router.put('/:id/update', (req, res) => {
 
 router.delete('/:id/delete', (req, res) => {
     const { id } = req.params;
-    
+
     db.remove(id)
     .then(removed => {
         res.status(200).json(removed)
@@ -77,8 +77,5 @@ router.delete('/:id/delete', (req, res) => {
         res.status(500).json(console.error( "Error deleting ", error))
     })
 })
-
-
-
 
 module.exports = router;
