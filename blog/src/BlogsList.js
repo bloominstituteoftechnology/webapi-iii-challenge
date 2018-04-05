@@ -3,6 +3,8 @@ import axios from 'axios';
 
 import styled from 'styled-components';
 
+import { withRouter } from 'react-router-dom';
+
 import Card from './Card';
 
 class BlogsList extends Component {
@@ -39,6 +41,12 @@ class BlogsList extends Component {
 
     }
 
+    viewPostsList(event) {
+        const { id } = event.target
+        // this.props.history.push(`/posts/${id}`);
+        console.log(id)
+    }
+
 render() { 
     
 const Title = styled.p`
@@ -50,7 +58,10 @@ const Title = styled.p`
 
             {this.state.users.map((user, i)=> {
                 return (
-                    <Card key={i} id={user.id} user={user.name}/>
+                
+                    <Card key={i} id={user.id} onClick={(e)=> this.viewPostsList(e)} user={user.name}/>
+                    
+                    
                 )
             })}
 
@@ -59,4 +70,4 @@ const Title = styled.p`
   }
 }
 
-export default BlogsList;
+export default withRouter(BlogsList);

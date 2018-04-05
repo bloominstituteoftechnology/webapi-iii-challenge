@@ -27,7 +27,7 @@ ReactDOM.render(
   <Router>  
     <div>
       <Route to={"/"} component={App} />
-      <Route to={"/:id/posts"} component={PostsList} />
+      <Route to={"/posts/:id"} component={PostsList} />
     </div>
   </Router>    
 
