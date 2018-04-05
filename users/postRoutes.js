@@ -2,11 +2,11 @@ const express = require('express');
 
 const router = express.Router();
 
-const userDb = require('../data/helpers/userDb.js');
+const postDb = require('../data/helpers/postDb.js');
 
-// READ Users
+// READ posts
 router.get('/', (req, res) => {
-  userDb
+  postDb
     .get()
     .then(users => {
       res.status(200).json(users);
@@ -16,78 +16,70 @@ router.get('/', (req, res) => {
     });
 });
 
-// READ User By ID
+// READ post by ID
 router.get('/:id', (req, res) => {
   const { id } = req.params;
-  userDb
+  postDb
     .get(id)
     .then(users => {
-      res.json(users);
+      res.status(200).json(users);
     })
     .catch(error => {
       res.status(500).json(error);
     });
 });
 
-// READ User Posts
-router.get('/:id/posts', (req, res) => {
+// READ post by tag
+router.get('/:id/tag', (req, res) => {
   const { id } = req.params;
-  userDb
-    .getUserPosts(id)
+  postDb
+    .getPostTags(id)
     .then(users => {
-      res.json(users);
+      console.log('test');
+      res.status(200).json(users);
     })
     .catch(error => {
+      console.log('error');
       res.status(500).json(error);
     });
 });
 
-// CREATE User
+// CREATE post
 router.post('/', (req, res) => {
-  const user = req.body;
-  userDb
-    .insert(user)
-    .then(users => {
-      console.log('then test');
-      res.status(201).json(users);
+  const { id } = req.params;
+  const post = req.body;
+  postDb
+    .insert(post)
+    .then(id => {
+      res.status(201).json(id);
     })
     .catch(error => {
-      console.log('catch test');
-
       res.status(500).json(error);
     });
 });
 
-// UPDATE User
+// UPDATE post
 router.put('/:id', (req, res) => {
   const { id } = req.params;
-  const user = req.body;
-  userDb
-    .update(id, user)
-    .then(count => {
-      if (count > 0) {
-        userDb.get(id).then(user => {
-          res.status(200).json(user);
-        });
-      } else {
-        res
-          .status(404)
-          .json({ message: 'The user with the specified ID does not exist.' });
-      }
+  const post = req.body;
+  postDb
+    .update(id, post)
+    .then(id => {
+      res.status(200).json(id);
     })
     .catch(error => {
       res.status(500).json(error);
     });
 });
 
-// DELETE User
+// DELETE post
 router.delete('/:id', (req, res) => {
   const { id } = req.params;
-  console.log(id);
-  userDb
+  const post = req.body;
+  postDb
     .remove(id)
-    .then(users => {
-      res.status(200).json({ users });
+    .then(id => {
+      res.status(200).json(id);
     })
     .catch(error => {
       res.status(500).json(error);

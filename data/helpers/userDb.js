@@ -29,5 +29,5 @@ module.exports = {
     return db('users')
       .where('id', id)
       .del();
-  },
+  }
 };
