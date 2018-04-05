@@ -15,10 +15,11 @@ server.get('/', (req, res) => { // API Check
   res.json({ api: 'Running..' });
 });
 
-server.get('/api/users/', (req, res) => { // Grab all Users
+server.get('/api/users/:id', (req, res) => { // Grab all Users
+  const { id } = req.params;
 
   userDb
-    .get()
+    .get(id)
     .then(response => {
       res.json(users);
     })
