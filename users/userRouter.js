@@ -1,88 +1,98 @@
 const express = require('express');
 
-const db = require('../data/helpers/userDb.js');
-
 const router = express.Router();
 
+const userDb = require('../data/helpers/userDb.js');
 
+
+// Get all users
 router.get('/', (req, res) => {
-    db
-        .get()
-        .then(users => {
-            res.json(users);
-        })
-        .catch(error => {
-            res.status(404).json({
-                error: "Users could not be found"
-            })
-        })
-})
-
-router.get('/:id', (req, res ) => {
-    const { id } = req.params;
-    db
-        .getUserPosts(id)
-        .then(user => {
-            res.json(user[0]);
-        })
-        .catch(error => {
-            res.status(404).json({ 
-                message: "The post with the specified ID does not exist." })
-        })
+  userDb
+    .get()
+    .then(users => {
+      res.json(users);
+    })
+    .catch(error => {
+      res.status(500).json(error);
+    });
 });
 
+// Get user by ID.
+router.get('/:id', (req, res) => {
+  const { id } = req.params;
+  userDb
+    .get(id)
+    .then(users => {
+      res.json(users);
+    })
+    .catch(error => {
+      res.status(500).json(error);
+    });
+});
+
+// Get user posts
+router.get('/:id/posts', (req, res) => {
+  const { id } = req.params;
+  userDb
+    .getUserPosts(id)
+    .then(users => {
+      res.json(users);
+    })
+    .catch(error => {
+      res.status(500).json(error);
+    });
+});
+
+// Add new user
 router.post('/', (req, res) => {
-    const user = req.body;
-    db
-        .insert(user)
-        .then(response => {
-            res.status(201).json(response);
-        })
-        .catch(error => {
-            res.status(500).json
-            ({ error: 'There was an error while saving the user to the database.' })
-        })
-})
-
-router.delete('/:id', (req, res ) => {
-    const { id } = req.params;
-    let post;
-
-    db
-        .getUserPosts(id)
-        .then(response => {
-            user = {...response[0] };
-
-        db
-        .remove(id)
-        .then(response => {
-            res.status(500).json(user);
-            })
-        })
-        .catch(error => {
-            res.status(500).json({ 
-                message: "The user could not be removed" })
-        })
+  const user = req.body;
+  userDb
+    .insert(user)
+    .then(response => {
+      res.status(201).json(response);
+    })
+    .catch(error => {
+      res.status(500).json(error);
+    });
 });
 
-router.put('/:id', (req, res) => {
-    const { id } = req.params;
-    const update = req.body;
+// delete a user 
+router.delete('/:id', (req, res) => {
+  const { id } = req.params;
 
-    db
-        .update(id, update)
-        .then(count => {
-            if (count > 0) {
-                db.getUserPosts(id).then(updateUsers => {
-                    res.status(200).json(updateUsers[0]);
-                })
-            } else {
-                res.status(400).json({ message: 'The user with the specified ID does not exist.' })
-            }
-        })
-        .catch(error => {
-            res.status(500).json(error);
-        })
-})
+  userDb
+    .remove(id)
+    .then(users => {
+      res.json(users);
+    })
+    .catch(error => {
+      res.status(500).json(error);
+    });
+});
+
+// update a user's name
+router.put('/:id', (req, res) => {
+  const { id } = req.params;
+  const name = req.body;
+
+  
+  userDb
+    .update(id, name)
+    .then(name => {
+      if (name === 0) {
+        res.status(404).json({message: 'The user with the specified ID does not exist.'});
+      }
+      userDb
+      .get(id)
+      .then(updatedName => {
+        res.status(200).json(updatedName);
+      })
+    })
+    .catch(error => {
+      res.status(500).json({ error: "The user's information could not be modified"})
+    })
+});
+
+
 
 module.exports = router;
