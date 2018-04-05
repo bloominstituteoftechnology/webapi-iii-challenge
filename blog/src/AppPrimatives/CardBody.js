@@ -10,6 +10,14 @@ export default styled.div`
     display: flex;
     justify-content: center;
     
+    text-align: center;
+    font-size: 3rem;
+    font-weight: 900;
+    color: palevioletred;
+    &:hover{
+    color: papayawhip;
+
+    }
 
     border: solid palevioletred;
 
@@ -17,8 +25,7 @@ export default styled.div`
     overflow: hidden;
     text-overflow: ellipsis;
 
-
-
+ 
 
     
 

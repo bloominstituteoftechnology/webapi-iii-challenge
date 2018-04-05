@@ -44,15 +44,18 @@ class PostsList extends Component {
 
     render(){
 const Title = styled.p`
+    font-size: 5rem;
+`
+const Text = styled.p`
     font-size: 3rem;
 `
     return (
         <PostsListContainer>
-            <Title>{this.state.user}</Title>
+            <Title>{this.state.user + ' -'}</Title>
             {this.state.posts.map((post, i )=> {
                 return (
 
-                <Title key={i}>{post.text}</Title>
+                <Text key={i}> "{post.text}"</Text>
 
                 )
                 

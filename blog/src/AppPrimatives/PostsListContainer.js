@@ -5,7 +5,8 @@ export default styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-
+ 
+    color: palevioletred;
     background: papayawhip;
     min-height: 100vh;
     padding: 1px;

@@ -8,16 +8,13 @@ import './AppPrimatives/CardBody.css';
 
 const Card = props => {
 
-const Title = styled.p` 
-    font-size: 3rem;
-    font-weight: 900;
-    color: palevioletred;
 
-`
+
+
 
     return (
         <CardBody className="hvr-shutter-out-horizontal" onClick={()=> props.history.push(`/posts/${props.id}`) }>
-           <Title>{props.user} </Title>
+           <p>{props.user} </p>
     
 
         </CardBody>        
