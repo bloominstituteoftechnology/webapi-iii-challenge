@@ -3,6 +3,8 @@ import axios from 'axios';
 
 import styled from 'styled-components';
 
+import Card from './Card';
+
 class BlogsList extends Component {
     state = {
         users: [],
@@ -45,21 +47,10 @@ const Title = styled.p`
     
     return (
         <Fragment>
+
             {this.state.users.map((user, i)=> {
                 return (
-                    <Title>{user.name}</Title>
-                )
-            })}
-
-              {this.state.posts.map((post, i)=> {
-                return (
-                    <Title>{post.text}</Title>
-                )
-            })}
-
-              {this.state.tags.map( tag => {
-                return (
-                    <Title>{tag.tag}</Title>
+                    <Card key={i} id={user.id} user={user.name}/>
                 )
             })}
 

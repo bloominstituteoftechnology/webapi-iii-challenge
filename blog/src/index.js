@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom'
 
 
 import App from './App';
+import PostsList from './PostsList';
 
 import { injectGlobal } from 'styled-components';
 
@@ -24,7 +25,10 @@ html,body {
 ReactDOM.render(
 
   <Router>  
-    <Route to={"/"} component = {App} />
+    <div>
+      <Route to={"/"} component={App} />
+      <Route to={"/:id/posts"} component={PostsList} />
+    </div>
   </Router>    
 
 , document.getElementById('root'));
