@@ -1,32 +1,33 @@
-// Implementing CRUD for posts
+// Implementing CRUD for tags
 const express = require("express");
 const router = express.Router();
-const postDb = require("../data/helpers/postDb.js");
-// getPostTags(postId)
+const tagDb = require("../data/helpers/tagDb.js");
+// get(id)
 // database functions all have insert(x), remove(id), and update(id, x)
 
 // GET by id
-server.get("/:id", (req, res) => {
+router.get("/:id", (req, res) => {
   const { id } = req.params;
 
-  postDb
+  tagDb
     .get(id)
     .then(response => {
       res.status(200).json(response);
     })
     .catch(err => {
       res.status(500).json({
-        err: "Server error encountered while retrieving post by id.."
+        err:
+          "Server error encountered while attempting to retrieve posts by tag.."
       });
     });
 });
 
 // POST
-server.post("/", (req, res) => {
-  const post = req.body;
+router.post("/", (req, res) => {
+  const tag = req.body;
 
-  postDb
-    .insert(post)
+  tagDb
+    .insert(tag)
     .then(response => {
       res.status(200).json(response);
     })
@@ -38,10 +39,10 @@ server.post("/", (req, res) => {
 });
 
 // DELETE
-server.delete("/:id", (req, res) => {
+router.delete("/:id", (req, res) => {
   const { id } = req.params;
 
-  postDb
+  tagDb
     .remove(id)
     .then(response => {
       res.status(200).json(response);
@@ -54,12 +55,12 @@ server.delete("/:id", (req, res) => {
 });
 
 // PUT
-server.put("/:id", (req, res) => {
+router.put("/:id", (req, res) => {
   const { id } = req.params;
-  const post = req.body;
+  const tag = req.body;
 
-  postDb
-    .update(id, post)
+  tagDb
+    .update(id, tag)
     .then(response => {
       res.status(200).json(response);
     })
@@ -70,4 +71,4 @@ server.put("/:id", (req, res) => {
     });
 });
 
-module.exports(router);
+module.exports = router;

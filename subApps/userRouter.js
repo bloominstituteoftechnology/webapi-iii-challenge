@@ -5,8 +5,20 @@ const userDb = require("../data/helpers/userDb.js");
 // get(id), getUserPosts(userId)
 // database functions all have insert(x), remove(id), and update(id, x)
 
+// GET
+router.get("/", (req, res) => {
+  userDb
+    .get()
+    .then(response => {
+      res.status(200).json(response);
+    })
+    .catch(er => {
+      res.status(500).json({ err: "Server error encountered.." });
+    });
+});
+
 // GET by id
-server.get("/:id", (req, res) => {
+router.get("/:id", (req, res) => {
   const { id } = req.params;
 
   userDb
@@ -20,7 +32,7 @@ server.get("/:id", (req, res) => {
 });
 
 // GET by userId
-server.get("/:userId", (req, res) => {
+router.get("/:userId", (req, res) => {
   const { userId } = req.params;
 
   userDb
@@ -36,7 +48,7 @@ server.get("/:userId", (req, res) => {
 });
 
 // POST
-server.post("/", (req, res) => {
+router.post("/", (req, res) => {
   const user = req.body;
 
   userDb
@@ -52,7 +64,7 @@ server.post("/", (req, res) => {
 });
 
 // DELETE
-server.delete("/:id", (req, res) => {
+router.delete("/:id", (req, res) => {
   const { id } = req.params;
 
   userDb
@@ -68,7 +80,7 @@ server.delete("/:id", (req, res) => {
 });
 
 // PUT
-server.put("/:id", (req, res) => {
+router.put("/:id", (req, res) => {
   const { id } = req.params;
   const user = req.body;
 
@@ -84,4 +96,4 @@ server.put("/:id", (req, res) => {
     });
 });
 
-module.exports(router);
+module.exports = router;
