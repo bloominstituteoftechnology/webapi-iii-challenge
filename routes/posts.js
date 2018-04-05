@@ -37,7 +37,7 @@ postsRouter.post('/', (req, res) => {
     })
     .catch(error => {
       res.status(500).json({
-        error: 'There was an error while saving the post to the database',
+        error: 'There was an error while saving the post to the database'
       });
     });
 });
@@ -52,13 +52,13 @@ postsRouter.delete('/:id', (req, res) => {
       post = { ...response[0] };
 
       db
-      .remove(id)
-      .then(response => {
-        res.status(200).json(post);
-      })
-      .catch(error => {
-        res.status(500).json(error);
-      });
+        .remove(id)
+        .then(response => {
+          res.status(200).json(post);
+        })
+        .catch(error => {
+          res.status(500).json(error);
+        });
     })
     .catch(error => {
       res.status(500).json(error);

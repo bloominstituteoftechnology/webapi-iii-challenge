@@ -18,22 +18,9 @@ server.use('/api/tags', tagsRouter);
 server.use('/api/users', usersRouter);
 
 server.get('/', (req, res) => {
-  res.json({ api: 'It\'s ALIIIIIVE!!'});
+  res.json({ api: "It's ALIIIIIVE!!" });
   console.log();
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-const port = 5309;
+const port = process.env.PORT || 5309;
 server.listen(port, () => console.log('API Running on port 5309'));
