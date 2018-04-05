@@ -11,6 +11,14 @@ router.get('/', (req, res) => {
     .catch(error => res.status(500).json(error));
 })
 
+router.get('/:id/tags', (req, res) => {
+    const { id } = req.params;
+
+    db.getPostTags(id)
+    .then(posts => res.status(200).json(posts))
+    .catch(error => res.status(500).json(error));
+})
+
 router.get('/:id', (req, res) => {
     const { id } = req.params;
 
@@ -19,39 +27,30 @@ router.get('/:id', (req, res) => {
     .catch(error => res.status(500).json(error));
 })
 
-// router.post('/', (req, res) => {
-//     const { id } = req.params;
+router.post('/', (req, res) => {
+    const post = req.body;
 
-//     db.get(id)
-//     .then(posts => res.status(200).json(posts))
-//     .catch(error => res.status(500).json(error));
-// })
+    db.insert(post)
+    .then(posts => res.status(200).json(posts))
+    .catch(error => res.status(500).json(error));
+})
 
+router.put('/:id', (req, res) => {
+    const id = req.params.id;
+    const updatedPost = { ...req.body, id};
 
-// router.post('/', (req, res) => {
-//     const user = req.body;
+    db.update(id, updatedPost)
+    .then(posts => res.status(200).json(posts))
+    .catch(error => res.status(500).json(error));
+})
 
-//     db.insert(user)
-//     .then(posts => res.status(200).json(posts))
-//     .catch(error => res.status(500).json(error));
-// })
+router.delete('/:id', (req, res) => {
+    const id = req.params.id;
 
-// router.put('/:id', (req, res) => {
-//     const id = req.params.id;
-//     const updatedUser = { ...req.body, id};
-
-//     db.update(id, updatedUser)
-//     .then(posts => res.status(200).json(posts))
-//     .catch(error => res.status(500).json(error));
-// })
-
-// router.delete('/:id', (req, res) => {
-//     const id = req.params.id;
-
-//     db.remove(id)
-//     .then(posts => res.status(200).json(posts))
-//     .catch(error => res.status(500).json(error));
-// })
+    db.remove(id)
+    .then(posts => res.status(200).json(posts))
+    .catch(error => res.status(500).json(error));
+})
 
 
 module.exports = router;

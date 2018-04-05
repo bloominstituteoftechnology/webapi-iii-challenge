@@ -18,6 +18,13 @@ router.get('/:id', (req, res) => {
     .then(users => res.status(200).json(users))
     .catch(error => res.status(500).json(error));
 })
+router.get('/:id/posts', (req, res) => {
+    const { id } = req.params;
+
+    db.getUserPosts(id)
+    .then(users => res.status(200).json(users))
+    .catch(error => res.status(500).json(error));
+})
 
 router.post('/', (req, res) => {
     const user = req.body;
@@ -35,6 +42,7 @@ router.put('/:id', (req, res) => {
     .then(posts => res.status(200).json(posts))
     .catch(error => res.status(500).json(error));
 })
+
 
 router.delete('/:id', (req, res) => {
     const id = req.params.id;
