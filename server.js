@@ -19,8 +19,8 @@ function tagUppercase (req, res, next){
 }
 
 server.use(helmet());
-server.use(express.json());
 server.use(cors());
+server.use(express.json());
 server.use(tagUppercase);
 
 server.use('/api/users', userRouter);
