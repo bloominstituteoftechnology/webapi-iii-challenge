@@ -1,28 +1,29 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const postDb = require('./data/helpers/postDb.js');
-const tagDb = require('./data/helpers/tagDb.js');
-const userDb = require('./data/helpers/userDb.js');
+// const postDb = require('./data/helpers/postDb.js');
+// const tagDb = require('./data/helpers/tagDb.js');
+// const userDb = require('./data/helpers/userDb.js');
+
+const userRouter = require('./users/userRouter.js');
+const postRouter = require('./posts/postRouter.js');
+const tagRouter = require('./tags/tagRouter.js');
 
 const server = express();
 
+function logger(req, res, next) {
+  console.log(`requesting: ${req.url}`);
 
+  next();
+}
 
-server.get('/', function(req, res) {
-  res.json({ api: 'Running...' });
-});
+//middleware
+server.use(express.json());
+server.use(logger);
 
-server.get('/api/users', function(req,res) {
-  userDb.getUserPosts()
-    .then(users => {
-      res.join('users as u', 'u.id', 'p.userId').select('p.id', 'p.text', 'u.name as postedBy').where('p.userId', userId).json(users);
-  })
-    .catch(error => {
-      res.status(500).json(error);
-  });
-});
-
+server.use('/api/users', userRouter);
+server.use('/api/posts', postRouter);
+server.use('/api/tags', tagRouter);
 
 const port = 5000;
 server.listen(port, () => console.log('API Running on port 5000'));
