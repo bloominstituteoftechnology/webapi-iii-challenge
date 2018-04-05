@@ -5,7 +5,7 @@ const cors = require('cors');
 
 const usersRouter = require('./users/usersRouter.js');
 const postsRouter = require('./posts/postsRouter.js');
-// const tagsRouter = require('./tags/tagsRouter.js');
+const tagsRouter = require('./tags/tagsRouter.js');
 
 // const userDb = require('./data/helpers/userDb.js');
 // const postDb = require('./data/helpers/postDb.js');
@@ -31,6 +31,7 @@ server.use(logger);
 
 server.use('/api/users', usersRouter);
 server.use('/api/posts', postsRouter);
+server.use('/api/tags', tagsRouter);
 
 const port = 5012;
 server.listen(port, () => console.log('API running on port 5012'));
