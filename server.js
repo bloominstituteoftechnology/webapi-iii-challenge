@@ -27,7 +27,7 @@ server.use(logger);
 
 server.use('/api/users', userRouter);
 server.use('/api/posts', postRouter);
-server.use('/api/tag', tagRouter);
+server.use('/api/tags', tagRouter);
 
 
 
