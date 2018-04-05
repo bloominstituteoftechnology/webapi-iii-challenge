@@ -6,6 +6,9 @@ import BlogsListWrapper from './AppPrimatives/BlogsListWrapper';
 
 import BlogsList from './BlogsList';
 
+
+
+
 export default () => {
 const Title = styled.h1`
   display: flex;
@@ -20,10 +23,13 @@ const Title = styled.h1`
 
     return (
       <Wrapper>
-        <Title> Hello World </Title>
+
+        <Title> LOTR BLOG </Title>
         <BlogsListWrapper>
           <BlogsList />
-        </BlogsListWrapper>  
+        </BlogsListWrapper> 
+
+        
       </Wrapper>
     );
   

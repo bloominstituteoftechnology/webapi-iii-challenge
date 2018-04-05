@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export default styled.div`
-    display: flex;
+   display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -10,5 +10,4 @@ export default styled.div`
     min-height: 100vh;
     padding: 1px;
 
-    
 `

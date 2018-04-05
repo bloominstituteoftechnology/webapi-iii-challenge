@@ -9,11 +9,13 @@ import PostsList from './PostsList';
 import { injectGlobal } from 'styled-components';
 
 
+
+
 injectGlobal`
 
 html,body { 
     box-sizing: border-box;
-    overflow: hidden;
+    
     margin: 0;
     padding: 0;
     font-family: arial;
@@ -26,8 +28,8 @@ ReactDOM.render(
 
   <Router>  
     <div>
-      <Route to={"/"} component={App} />
-      <Route to={"/posts/:id"} component={PostsList} />
+      <Route exact path="/" component={App} />
+      <Route path="/posts/:id" component={PostsList} />
     </div>
   </Router>    
 

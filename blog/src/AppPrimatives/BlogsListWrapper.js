@@ -6,10 +6,9 @@ export default styled.div`
     align-items: center;
     flex-wrap: wrap;
     
-    float: right;
-    height: 100vh;
+    /* float: right; */
+    min-height: 100vh;
     width: 80%;
-    overflow: auto;
-    border: solid black;
+ 
 
 `
