@@ -1,15 +1,18 @@
 const express = require('express');
+const userRouter = express.Router();
 
-server.get('/api/users/:id', (req, res) => {
-  // Grab all Users
-  const { id } = req.params;
+const userDb = require('../helpers/userDb.js');
 
-  userDb
+// Server
+userRouter.get('/api/users/:id', (req, res) => {
+  db
     .get(id)
-    .then(response => {
+    .then(respond => {
       res.json(users);
     })
     .catch(error => {
       res.status(500).json(error);
     });
 });
+
+module.exports = userRouter;

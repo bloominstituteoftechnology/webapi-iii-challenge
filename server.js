@@ -8,6 +8,8 @@ const postDb = require('./data/helpers/postDb.js');
 const tagDb = require('./data/helpers/tagDb.js');
 const userDb = require('./data/helpers/userDb.js');
 
+const usersRouter = require('./data/Routers/users.js');
+
 // Server
 const server = express();
 
@@ -28,6 +30,9 @@ server.get('/', (req, res) => {
   // API Check
   res.json({ api: 'Running..' });
 });
+
+// Routes
+server.use('/api/users', usersRouter);
 
 // Port
 const port = 5000;
