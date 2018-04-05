@@ -1,13 +1,13 @@
 const express = require('express');
-const userRouter = express.Router();
+const router = express.Router();
 
-const userDb = require('../helpers/userDb.js');
+const db = require('../helpers/userDb.js');
 
 // Server
-userRouter.get('/api/users/:id', (req, res) => {
+router.get('/', (req, res) => {
   db
-    .get(id)
-    .then(respond => {
+    .get()
+    .then(users => {
       res.json(users);
     })
     .catch(error => {
@@ -15,4 +15,4 @@ userRouter.get('/api/users/:id', (req, res) => {
     });
 });
 
-module.exports = userRouter;
+module.exports = router;
