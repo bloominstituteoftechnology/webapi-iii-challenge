@@ -1,7 +1,7 @@
 {
-  "name": "Node-Blog",
+  "name": "Blog",
   "version": "1.0.0",
-  "description": "## Topics",
+  "description": "Building RESTful APIs",
   "main": "server.js",
   "scripts": {
     "start": "nodemon server.js"
