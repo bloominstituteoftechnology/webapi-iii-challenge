@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "start": "nodemon server.js"
-   },
+  },
   "main": "server.js",
   "description": "Robert and Carlos putting in work in the twenty eighteen and beyond!",
   "repository": "https://github.com/candrade86/Node-Blog.git",

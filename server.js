@@ -12,7 +12,7 @@ const tagsRouter = require('./data/Routers/tag.js');
 
 
 const logger = (req, res, next ) => {
-    console.log("it worked fool ", req.params)
+    console.log("it worked fool ", req.body)
 
     next();
 };
