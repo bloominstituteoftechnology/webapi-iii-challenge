@@ -1,0 +1,30 @@
+{
+  "name": "node-blog",
+  "version": "1.0.0",
+  "description": "## Topics",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RedSkelly/Node-Blog.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RedSkelly/Node-Blog/issues"
+  },
+  "homepage": "https://github.com/RedSkelly/Node-Blog#readme",
+  "dependencies": {
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "helmet": "^3.12.0",
+    "knex": "^0.14.4",
+    "sqlite3": "^4.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.17.3"
+  }
+}
