@@ -1,0 +1,79 @@
+.App {
+	text-align: center;
+}
+
+.App-header {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: #222;
+	height: 150px;
+	padding: 20px;
+	color: white;
+}
+
+.App-nav {
+	display: flex;
+	justify-content: space-between;
+	position: absolute;
+	top: 5px;
+	right: 10px;
+}
+
+.App-nav > * {
+	padding: 2%;
+}
+
+.App-title {
+	font-size: 1.5em;
+}
+
+.FriendsList__container {
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
+	max-width: 900px;
+	margin: auto;
+	padding: 2rem 0;
+}
+
+.FriendsList__Title {
+	text-align: center;
+}
+
+.Posts__post {
+	flex: 1 0 1;
+	width: 100%;
+	padding: 2rem;
+	margin: 0.3rem;
+	border: 1px solid lightgray;
+	box-shadow: 0 -1px 0 #e0e0e0, 0 0 2px rgba(0, 0, 0, 0.12),
+		0 2px 4px rgba(0, 0, 0, 0.24);
+}
+
+.FriendsList__friend {
+	padding: 2rem;
+	margin: 0.3rem;
+	border: 1px solid lightgray;
+	box-shadow: 0 -1px 0 #e0e0e0, 0 0 2px rgba(0, 0, 0, 0.12),
+		0 2px 4px rgba(0, 0, 0, 0.24);
+}
+
+.FriendsList__friendItem {
+	font-weight: 600;
+	font-size: 1.1rem;
+}
+
+.DeleteButton {
+	position: relative;
+	right: 32px;
+	bottom: 38px;
+	height: 15px;
+	width: 15px;
+	background-color: rgb(243, 213, 213);
+}
+
+.TextField {
+	display: flex;
+	justify-content: center;
+}
