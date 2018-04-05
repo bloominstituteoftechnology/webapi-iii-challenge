@@ -21,8 +21,15 @@ tagRouter.get('/:id', (req, res) => {
 
 
 tagRouter.post('/', (req, res) => {
-    tagDb.insert(req.body).then(response => {
-        res.json({ ...response, ...req.body});
+    const tag = req.body;
+
+    if(tag.length > 80) {
+        res.status(400).json({ messge: 'Tags may not be longer than 80 characters.' })
+        return;
+    }
+    
+    tagDb.insert(tag).then(response => {
+        res.json({ ...response, ...tag});
     }).catch(error => {
         res.status(500).json(error);
     })

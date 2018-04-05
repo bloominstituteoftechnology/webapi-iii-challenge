@@ -1,6 +1,7 @@
 const postRouter = require('express').Router();
 
 const postDb = require('./data/helpers/postDb');
+const userDb = require('./data/helpers/userDb');
 
 postRouter.get('/', (req, res) => {
     postDb.get().then(posts => {
@@ -15,7 +16,7 @@ postRouter.get('/:id', (req, res) => {
     postDb.get(id).then(post => {
         res.json(post);
     }).catch(error => {
-        res.status(500).json({error: "This post could not be retrieved."})
+        res.status(500).json({error: "The post could not be retrieved."})
     })
 });
 
@@ -28,16 +29,34 @@ postRouter.get('/:id/tags', (req, res) => {
             res.status(200).json(tags);
         })
         .catch(error => {yarn
-            res.status(500).json(error);
+            res.status(500).json({ error: 'Failed to retrieve tags for post'});
         });
 });
 
 postRouter.post('/', (req, res) => {
-    postDb.insert(req.body).then(response => {
-        res.json({ ...response, ...req.body});
-    }).catch(error => {
-        res.status(500).json(error);
-    })
+    const userId = req.body.userId;
+    const text = req.body.text;
+
+    if(!userId || !text) {
+        res.status(400).json({ message: 'Please provide a userId and text for the post.' })
+        return;
+    }
+
+    userDb.get(userId)
+        .then(user => {
+            if(!user) {
+                res.status(404).json({ message: 'Cannot post because specified user does not exist.'})
+            }
+
+            postDb
+                .insert(req.body).then(response => {
+                res.json({ ...response, ...req.body});
+            }).catch(error => {
+                res.status(500).json({ message: 'Server failed to make new post.' });
+            })
+        }).catch(error => {
+            res.status(500).json(error);
+        })
 });
 
 postRouter.delete('/:id', (req, res) => {

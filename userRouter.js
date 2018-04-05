@@ -45,7 +45,12 @@ userRouter.post('/', (req, res) => {
     const name = req.body.name;
 
     if(!name) {
-        res.json('User must have a name.');
+        res.status(400).json('User must have a name.');
+        return;
+    }
+
+    if(name.length > 128) {
+        res.status(400).json({ message: 'User name is too long. Please try again.'});
         return;
     }
 
