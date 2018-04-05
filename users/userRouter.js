@@ -86,6 +86,14 @@ router.post(`/`, (req, res) => {
       return;
   }
 
+  // check the user character length is less than 128
+  if(newUser.name.length > 128){
+    res 
+      .status(400)
+      .json({ errorMessage: `Please the name can only have a max characters of 128.` })
+      return;
+  }
+  
   //insert it in the database
   db
     .insert(newUser)

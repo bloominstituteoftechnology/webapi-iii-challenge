@@ -63,6 +63,14 @@ router.post(`/`, (req, res) => {
       return;
   }
 
+  // check the tag character length is less than 80
+  if(newUser.tag.length > 80){
+    res 
+      .status(400)
+      .json({ errorMessage: `Please the tag can only have a max characters of 80.` })
+      return;
+  }
+
   //insert it in the database
   db
     .insert(newTag)

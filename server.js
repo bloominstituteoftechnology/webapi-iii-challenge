@@ -11,6 +11,7 @@ const server = express();
 
 // custom middleware [m1, m2, mn] -> [request handlers]
 function logger(req, res, next) {
+    // making sure tags are uppercase, not going to do it but can be done here. Seems useless to me?
     if(req.url === '/api/tags/'){
         console.log('tags: ', req.url);
     }
