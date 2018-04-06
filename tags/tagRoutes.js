@@ -4,100 +4,84 @@ const router = express.Router();
 
 const db = require('../data/helpers/tagDb.js');
 
-//endpoint for /api/posts
+//endpoint for /api/tags/
 
 //GET REQUEST
 router.get('/', (req, res) => {
   db
     .get()
-    .then((posts) => {
-      res.status(200).json(posts);
-    })
-    .catch((error) => {
-      res.status(500).json({ error: 'The posts could not be retrieved' });
-    });
-});
-
-router.get('/:postId/', (req, res) => {
-  const { postId } = req.params;
-
-  db
-    .get(postId)
-    .then((post) => {
-      res.status(200).json(post);
-    })
-    .catch((error) => {
-      res.status(500).json({ error: 'The posts could not be retrieved' });
-    });
-});
-
-router.get('/:postId/tags', (req, res) => {
-  const { postId } = req.params;
-
-  db
-    .getPostTags(postId)
     .then((tags) => {
       res.status(200).json(tags);
     })
     .catch((error) => {
-      res.status(500).json({ error: 'The users posts could not be retrieved' });
+      res.status(500).json({ error: 'The tags could not be retrieved' });
     });
 });
 
-// //GET DELETE
-
-router.delete('/:postId', (req, res) => {
-  const { postId } = req.params;
+router.get('/:tagId/', (req, res) => {
+  const { tagId } = req.params;
 
   db
-    .remove(postId)
-    .then((post) => {
-      if (post > 0) {
-        res.status(200).json({ message: 'Post deleted successfully!' });
+    .get(tagId)
+    .then((tag) => {
+      res.status(200).json(tag);
+    })
+    .catch((error) => {
+      res.status(500).json({ error: 'The tags could not be retrieved' });
+    });
+});
+
+// // //GET DELETE
+
+router.delete('/:tagId', (req, res) => {
+  const { tagId } = req.params;
+
+  db
+    .remove(tagId)
+    .then((tag) => {
+      if (tag > 0) {
+        res.status(200).json({ message: 'Tag deleted successfully!' });
       } else {
-        res.status(404).json({ error: 'Post not found' });
+        res.status(404).json({ error: 'Tag not found' });
       }
     })
     .catch((error) => {
-      res.status(500).json({ error: 'The Post could not be retrieved' });
+      res.status(500).json({ error: 'The Tag could not be retrieved' });
     });
 });
 
-// //GET POST
+// // //GET POST
 
 router.post('/', (req, res) => {
-  const post = req.body;
-
-  if (!req.body.text || !req.body.userId) {
-    res.status(400).json({ errorMessage: 'UserId and text required' });
+  const { tag } = req.body;
+  if (!tag) {
+    res.status(400).json({ errorMessage: 'Tag is required' });
     return;
   }
 
   db
-    .insert(post)
-    .then((post) => {
-      res.status(201).json({ message: 'Created a new post successfully ' });
+    .insert({ tag })
+    .then((tag) => {
+      res.status(201).json({ message: 'Created a new tag successfully ' });
     })
     .catch((error) => {
-      res.status(500).json({ error: 'The new post could not be created' });
+      res.status(500).json({ error: 'The new tag could not be created' });
     });
-
-  // res.json({q:2});
 });
 
-// //GET PUT
+// // //GET PUT
 
-router.put('/:postId', (req, res) => {
-  const { postId } = req.params;
-  const updatedPost = req.body;
+router.put('/:tagId', (req, res) => {
+  const { tagId } = req.params;
+  const updatedTag = req.body;
 
   db
-    .update(postId, updatedPost)
+    .update(tagId, updatedTag)
     .then((updates) => {
-      res.status(200).json(updatedPost);
+      res.status(200).json(updatedTag);
     })
     .catch((error) => {
-      res.status(500).json({ error: 'The new users could not be retrieved' });
+      res.status(500).json({ error: 'The tag could not be updated' });
     });
   // res.json({q:2});
 });
