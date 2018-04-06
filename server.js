@@ -1,18 +1,17 @@
 const express = require('express');
 
 const userRouter = require('./data/user/userRouter.js');
+const postRouter = require('./data/post/postRouter.js');
 
-
-const db = require('./data/dbConfig.js');
 
 const server = express();
 
 
 server.use(express.json());
 server.use('/api/users', userRouter);
+server.use('/api/posts', postRouter);
 
 
-// server.get()
 
 
 const port = 5000;
