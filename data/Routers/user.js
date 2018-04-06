@@ -41,7 +41,7 @@ router.get('/:id/posts', (req, res) => {
 
 router.post('/add', (req, res) => {
     const user = req.body;
-      if (Object.keys(user).length <= 1) {             // check for single key, if empty object, then skip to missing key
+      if (Object.keys(user).length <= 1) {              // check for single key, if empty object, then skip to missing key
         if (Object.keys(user).includes('name')) {       // check for correct key
           if (typeof user.name === 'string') {          // check for string type
             if (user.name.trim().length === 0) {        // check for empty string
