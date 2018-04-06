@@ -1,3 +1,8 @@
+// ##### Users
+
+// * id: number, no need to provide it when creating users, the database will generate it.
+// * name: up to 128 characters long, required.
+
 const express = require('express');
 const router = express.Router();
 const db = require('../data/helpers/userDb.js');
