@@ -1,0 +1,22 @@
+{
+  "name": "node-blog",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "main": "server.js",
+  "description": "Robert and Carlos putting in work in the twenty eighteen and beyond!",
+  "repository": "https://github.com/candrade86/Node-Blog.git",
+  "author": "Carlos Andrade <carlos.andrade@outlook.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "nodemon": "^1.17.3"
+  },
+  "dependencies": {
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "helmet": "^3.12.0",
+    "knex": "^0.14.4",
+    "sqlite3": "^4.0.0"
+  }
+}
