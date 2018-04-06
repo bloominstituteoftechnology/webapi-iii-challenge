@@ -46,7 +46,7 @@ router.post('/add', (req, res) => {
           if (typeof user.name === 'string') {          // check for string type
             if (user.name.trim().length === 0) {        // check for empty string
               res.status(422)
-              .json(console.error('Name field must not be empty!'));
+              .json(console.error("The value of 'name' must not be empty!"));
             } else {
               db.insert(user)
               .then(user => {
@@ -57,13 +57,13 @@ router.post('/add', (req, res) => {
               })
             }
           } else {
-            res.status(422).json(console.error(`The value of the 'name' key should be a string, not ${Object.prototype.toString.call(user.name)}!`));
+            res.status(422).json(console.error(`The value of 'name' should be a string, not ${Object.prototype.toString.call(user.name)}!`));
           }
         } else {
-          res.status(422).json(console.error("Your JSON is missing the required 'name' key"));
+          res.status(422).json(console.error("Your JSON is missing the required 'name' attribute"));
         }
       } else {
-        res.status(422).json(console.error('Your JSON has too many keys'));
+        res.status(422).json(console.error('Your JSON has too many attributes'));
       }
     });
 
