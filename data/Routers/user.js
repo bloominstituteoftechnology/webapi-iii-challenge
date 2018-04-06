@@ -57,7 +57,7 @@ router.post('/add', (req, res) => {
               })
             }
           } else {
-            res.status(422).json(console.error(`The value of name should be a string, not ${Object.prototype.toString.call(user.name)}!`));
+            res.status(422).json(console.error(`The value of the 'name' key should be a string, not ${Object.prototype.toString.call(user.name)}!`));
           }
         } else {
           res.status(422).json(console.error("Your JSON is missing the required 'name' key"));
