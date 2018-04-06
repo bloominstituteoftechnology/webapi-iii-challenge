@@ -4,11 +4,10 @@ const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
 
-const postDb = require('./data/helpers/postDb.js');
-const tagDb = require('./data/helpers/tagDb.js');
-// const userDb = require('./data/helpers/userDb.js');
-
+// Routes
 const usersRouter = require('./data/Routers/users.js');
+const postsRouter = require('./data/Routers/post.js');
+const tagsRouter = require('./data/Routers/tag.js');
 
 // Server
 const server = express();
@@ -34,6 +33,8 @@ server.get('/', (req, res) => {
 
 // Routes
 server.use('/api/users', usersRouter);
+server.use('/api/posts', postsRouter);
+server.use('/api/tags', tagsRouter);
 
 // Port
 const port = 5000;
