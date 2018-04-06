@@ -1,0 +1,30 @@
+{
+  "dependencies": {
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "helmet": "^3.12.0",
+    "knex": "^0.14.4",
+    "sqlite3": "^4.0.0"
+  },
+  "name": "Node-Blog",
+  "description": "* Building RESTful APIs.\r * Performing CRUD Operations on Multiple Resources.\r * Configuring CORS.\r * Writing Custom Middleware.\r * Using Express Routers to Modularize Application.",
+  "version": "1.0.0",
+  "main": "knexfile.js",
+  "devDependencies": {
+    "nodemon": "^1.17.3"
+  },
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TheObserverofOne/Node-Blog.git"
+  },
+  "keywords": [],
+  "author": "Kev G",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TheObserverofOne/Node-Blog/issues"
+  },
+  "homepage": "https://github.com/TheObserverofOne/Node-Blog#readme"
+}
