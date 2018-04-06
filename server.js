@@ -184,12 +184,12 @@ server.delete('/tags/:id', async (req, res) => {
 })
 
 server.put('/tags/:id', async (req, res) => {
-  const { tag } = req.body;
+  const tags = req.body;
   console.log(req.body);
-  console.log(tag);
+  console.log(tags);
   const { id } = req.params;
   try {
-    const response = await tag.update(id, tag);
+    const response = await tag.update(id, tags);
     res.status(201).json(response);
   } catch (error) {
     res.status(500).json(error);
