@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 
 import Post from '../Post/Post';
+import CreatePost from '../CreatePost/CreatePost';
 
 class UserProfile extends Component {
     state = {
@@ -10,15 +11,12 @@ class UserProfile extends Component {
     }
     render() {
         return (
-            <div>
-                <h1>{this.state.user.name}</h1>
+            <div className='Content'>
+                <h1 className='Content__heading'>{this.state.user.name}</h1>
                 {this.state.posts.map(post => {
-                    return (
-                    <div>
-                        <h4>{post.text}</h4>
-                    </div>
-                    )
+                    return <Post className='Post' key={post.id} post={post} />
                 })}
+                <CreatePost user={this.state.user}/>
             </div>
         );
     }
@@ -43,6 +41,7 @@ class UserProfile extends Component {
             console.log(error.message);
         })
     }
+
 }
 
 
