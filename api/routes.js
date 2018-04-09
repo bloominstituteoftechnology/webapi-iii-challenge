@@ -1,18 +1,21 @@
 const router = require('express').Router()
-const { delUser, getUsers, getUserPosts, postUser, updateUser } = require('./user/controller')
-const { postTag } = require('./tag/controller')
-const { catchErrors } = require('./middleware')
+const { delUser, getUsers, getUserPosts, postUser, updateUser } = require('./user')
+const { getPosts } = require('./post')
+const { getTags, postTag } = require('./tag')
+const { catchErr } = require('./middleware')
 
 /* Users */
-router.get('/api/user/:id?', catchErrors(getUsers))
-router.get('/api/user/:id/posts', catchErrors(getUserPosts))
-router.post('/api/user', catchErrors(postUser))
-router.put('/api/user/:id', catchErrors(updateUser))
-router.delete('/api/user/:id', catchErrors(delUser))
+router.get('/user/:id?', catchErr(getUsers))
+router.get('/user/:id/posts', catchErr(getUserPosts))
+router.post('/user', catchErr(postUser))
+router.put('/user/:id', catchErr(updateUser))
+router.delete('/user/:id', catchErr(delUser))
 
 /* Posts */
-router.post('/api/tag', catchErrors(postTag))
+router.get('/post/:id?', catchErr(getPosts))
 
 /* Tags */
+router.get('/tag/:id?', catchErr(getTags))
+router.post('/tag', catchErr(postTag))
 
 module.exports = router

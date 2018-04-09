@@ -8,10 +8,10 @@ require('dotenv').config()
 const { port } = require('./config/config')
 
 /* Routes */
-server.use('/', require('./api/routes'))
+server.use('/api', require('./api/routes'))
 
 /* Middleware */
-const { handleErrors } = require('./api/middleware')
-server.use(handleErrors)
+const { handleErr } = require('./api/middleware')
+server.use(handleErr)
 
 server.listen(port, () => console.log(`👋 Hey from port ${port}!`))
