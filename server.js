@@ -6,60 +6,20 @@ const dbUser = require('./data/helpers/userDb')
 const dbPost = require('./data/helpers/postDb')
 const dbTag = require('./data/helpers/tagDb')
 
+const routerPost = require('./Routers/routerPost')
+const routerUser = require('./Routers/routerUser')
 const server = express();
+
 server.use(helmet())
 server.use(cors());
 server.use(express.json());
 
+server.use('/user', routerUser)
+server.use('/posts',routerPost)
 server.get('/', (req, res)=>{
     res.send('api is running')
 })
 
-server.get('/user', (req, res)=>{
-    dbUser
-    .get()
-    .then(posts =>{
-        res.json(posts);
-
-    })
-    .catch(err=>{
-        res.status(500).json({error: "geting fail"});
-    });
-});
-
-server.post('/user', (req,res)=>{
-const user = req.body
-dbUser
-.insert(user)
-.then(response =>{
-    dbUser.getUserPosts(response.id)
-    .then(user =>{
-        res.json(user)
-    
-    })
-})
-.catch(err=>{
-    res.status(400).json({error: "Please provide name and bio for the user."});
-});
-
-})
-server.delete('/user/:id', (req,res)=>{
-const { id } = req.params
-let post;
-dbUser.getUserPosts(id)
-.then(foundUser=>{
-    user = {...foundUser[0]}
-    dbUser.
-    remove(id)
-    .then(response =>{
-            res.status(200).json(post);
-    });
-
-})
-.catch(err =>{
-    res.status(500).json({error:"this darn error"});    
-  });
-})
 
 
 
