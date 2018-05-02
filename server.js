@@ -16,4 +16,7 @@ server.get("/", (req, res) => {
   res.send("API is running!");
 });
 
+// USERS
+server.get('/')
 
+server.listen(5000, () => console.log('\n== Server running on port 5000 ==\n'))
