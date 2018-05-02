@@ -15,9 +15,17 @@ router.get('/', (req, res) => {
 router.get('/:id', (req, res) => {
     const id = req.params.id;
     tagDb.get(id).then(tag => {
-        res.json(tag);
+        if(tag.length > 0) {
+            res.json(tag);
+        } else {
+            res.status(404).json({
+                message: "Tags not found"
+            })
+        }
     }).catch(err => {
-        error: "The specified tags for the user could not be found"
+        res.status(500).json({
+            error: "The specified tags for the user could not be found"
+        })
     })
 })
 

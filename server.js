@@ -10,6 +10,7 @@ const tagRouter = require("./tags/tagRouter")
 
 
 //Middleware
+//REMEMBER TO WRITE TAGS uPPERCASED BEFORE THEY ARE PROCCESSED BY THE REQUEST HANDLERS
 const server = express();
 server.use(express.json());
 
