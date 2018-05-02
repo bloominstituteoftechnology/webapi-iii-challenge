@@ -1,12 +1,14 @@
 const express = require('express');
-const db = require('./data/dbConfig');
+const posts = require('./data/helpers/postDb');
+const users = require('./data/helpers/userDb');
+const tags = require('./data/helpers/tagDb');
 
 const server = express();
 server.use(express.json());
 
 // get all posts
 server.get('/api/posts', (req, res) => {
-  db
+  posts
   .get()
   .then(posts => {
     res.json(posts);
