@@ -1,0 +1,21 @@
+{
+  "name": "nodeblog",
+  "version": "1.0.0",
+  "description": "Blog Activity Node Week 1",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "repository": "https://github.com/kkhaag/Node-Blog.git",
+  "author": "LambdaSchool",
+  "license": "MIT",
+
+  "dependencies": {
+    "express": "^4.16.3",
+    "knex": "^0.14.6",
+    "sqlite3": "^4.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.17.3"
+  }
+}
