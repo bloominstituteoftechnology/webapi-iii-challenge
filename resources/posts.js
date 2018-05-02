@@ -25,4 +25,12 @@ router.get('/:id/tags', (req, res) => {
     .catch(err => res.status(500).json({ error: "We could not find any tags." }))
 })
 
+// add post
+router.post('/newpost', (req, res) => {
+  const post = req.body; // must pass { text: "insert content here", userId: *corresponding userID* }
+  dbPost.insert(post) 
+    .then(newPost => res.json(newPost)) // returns post ID
+    .catch(err => res.status(500).json({ error: "Cannot post this." }))
+})
+
 module.exports = router;
