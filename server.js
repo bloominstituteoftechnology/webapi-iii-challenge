@@ -4,11 +4,15 @@ const cors = require('cors');
 const server = express();
 
 const usersRoute = require('./users/userRoutes');
+const postsRoute = require('./posts/postsRoutes');
 server.use(express.json());
 server.use(cors());
 
 server.use(express.json());
 server.use(cors());
 // server.use(helmet());
+
+//routes
 server.use('/api/users', usersRoute);
+server.use('/api/posts', postsRoute);
 server.listen(3500, console.log('Listening'));
