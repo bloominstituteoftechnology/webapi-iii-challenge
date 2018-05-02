@@ -29,8 +29,8 @@ router.get('/:id', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-    const {text} = req.body;
-    const newPost = {text};
+    const {text, userId} = req.body;
+    const newPost = {text, userId};
         if (req.body.length === 0) {
             res.status(404).json({ message: "The post with the specified userID does not exist."})
         } else 
@@ -59,7 +59,7 @@ router.delete('/:id', (req, res) => {
 });
 
 router.put('/:id', (req, res) => {
-    const {text} = req.body;
+    const {text, userId} = req.body;
     const id = req.params.id;
     if(!db.get(id)) {
         res.status(404).json({ message: "The post with the specified ID does not exist." })
