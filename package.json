@@ -1,0 +1,28 @@
+{
+	"dependencies": {
+		"express": "^4.16.3",
+		"knex": "^0.14.6",
+		"nodemon": "^1.17.3",
+		"sqlite3": "^4.0.0"
+	},
+	"name": "Node-Blog",
+	"description": "## Topics",
+	"version": "1.0.0",
+	"main": "knexfile.js",
+	"devDependencies": {},
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"start": "nodemon server.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/JustinSHong/Node-Blog.git"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/JustinSHong/Node-Blog/issues"
+	},
+	"homepage": "https://github.com/JustinSHong/Node-Blog#readme"
+}
