@@ -1,5 +1,5 @@
 {
-  "name": "Node-Blog",
+  "name": "node-blog",
   "version": "1.0.0",
   "description": "Building an API using a Node.js and Express",
   "main": "server.js",
