@@ -25,6 +25,12 @@ server.post('/api/posts', (req, res) => {
   .catch(err => res.status(500).json({Error: err}));
 })
 // delete
+server.delete('/api/posts/:robert', (req, res) => {
+  const id = req.params.robert;
+  postDb.remove(id)
+  .then(response => res.status(200).json({response}))
+  .catch(err => res.status(500).json({Error: err}))
+})
 
 
 //---------------------------tags
