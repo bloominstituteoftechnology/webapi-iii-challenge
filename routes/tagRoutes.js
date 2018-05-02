@@ -1,15 +1,14 @@
 const express = require('express');
 
-const userDb = require('../data/helpers/userDb');
-const postRoutes = require('./postRoutes');
+const tagDb = require('../data/helpers/tagDb');
 
 const router = express.Router();
 
 router.get('/', (req, res, next) => {
-    userDb
+    tagDb
         .get()
-        .then(users => {
-            res.json(users);
+        .then(posts => {
+            res.json(posts);
         })
         .catch(err => {
             res.status(500).json({ error: err });
@@ -19,10 +18,10 @@ router.get('/', (req, res, next) => {
 router.get('/:id', (req, res, next) => {
     const { id } = req.params;
 
-    userDb
+    tagDb
         .get(id)
-        .then(users => {
-            res.json(users);
+        .then(posts => {
+            res.json(posts);
         })
         .catch(err => {
             res.status(500).json({ error: err });
@@ -30,10 +29,10 @@ router.get('/:id', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-    const userInfo = req.body;
+    const tagInfo = req.body;
 
-    userDb
-        .insert(userInfo)
+    tagDb
+        .insert(tagInfo)
         .then(response => {
             res.status(201).json(response);
         })
@@ -46,16 +45,10 @@ router.put('/:id', (req, res, next) => {
     const { id } = req.params;
     const update = req.body;
 
-    userDb
+    tagDb
         .update(id, update)
         .then(response => {
-            userDb.get()
-                .then(users => {
-                    res.json(users);
-                })
-                .catch(err => {
-                    res.status(500).json({ error: err });
-                });
+            res.json(response)
         })
         .catch(err => {
             res.status(500).json({ error: err });
@@ -65,7 +58,7 @@ router.put('/:id', (req, res, next) => {
 router.delete('/:id', (req, res, next) => {
     const { id } = req.params;
 
-    userDb
+    tagDb
         .remove(id)
         .then(response => {
             res.json(response);
@@ -74,21 +67,5 @@ router.delete('/:id', (req, res, next) => {
             res.status(500).json({ error: err });
         });
 });
-
-router.get('/:id/posts', (req, res, next) => {
-    const { id } = req.params;
-
-    userDb
-        .getUserPosts(id)
-        .then(posts => {
-            res.json(posts);
-        })
-        .catch(err => {
-            res.status(500).json({ error: err });
-        });
-});
-
-router.use('/:id/posts', postRoutes);
-
 
 module.exports = router;
