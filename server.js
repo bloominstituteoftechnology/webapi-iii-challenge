@@ -64,4 +64,29 @@ server.post('/api/users', (req, res) => {
         });
 })
 
+server.delete('/api/users/:id', (req, res) => {
+    const id = req.params.id;
+    userDb
+       .remove(id)
+       .then(users => {
+           res.json(users);
+       })
+       .catch(err => { 
+        res.status(500).json({ error: "The user could not be removed." });
+    });
+})
+
+server.put('/api/users/:id', (req, res) => {
+    const id = req.params.id;
+    const name = req.body;
+    userDb
+        .update( id, req.body )
+        .then(users => {
+            res.json(users);
+        })
+        .catch(err => { 
+            res.status(500).json({ error: "The user could not be updated." });
+        });
+})
+
 server.listen(5000, () => console.log('\n== API running on port 5000 ==\n'));
