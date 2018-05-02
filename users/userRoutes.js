@@ -39,16 +39,10 @@ router.delete('/:id', (req, res) => {
     const id = req.params.id;
 
     userDb.remove(id)
-        .then(response  => {
-            if (response.length === 0) {
-                res.status(404).send({message: 'No user with found'})
-            }
-            else {
-                userDb.get(id)
-                    .then(response => {
-                        res.status(201).send(response);
-                    })
-            }
+        .then((response) => response === 0
+            ? res.status(404).send({ error: `User with id ${id} not found` })
+            : res.status(200).send({ message: `User with id ${id} deleted` }))
+        .catch(err => {
         }).catch(err => {
         res.status(500).send({error: 'problem'});
     })
