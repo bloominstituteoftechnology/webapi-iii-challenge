@@ -62,5 +62,26 @@ server.delete('/api/users/:id', (req, res) => {
     })
 });
 
+server.put('/api/users/:id', (req, res) => {
+
+    let id = req.params.id;
+    let name = req.body;
+    if (name && (name.name)) {
+        userDb.update(id, name)
+            .then(response => {
+                if (response == 0) {
+                    res.status(404).send({ message: "The post with the specified ID does not exist" })
+                } else {
+                    userDb.get(id)
+                        .then(response => {
+                            res.status(200).send(response)
+                        })
+                        .catch(error => res.status(500).send( { error: "There was an error updating the post" }))
+                }
+            })
+    } else {
+        res.status(400).send({ error: "Please provide title or content for the post" })
+    }
+});
 
 server.listen(3500, console.log('Listening'));
