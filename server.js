@@ -18,6 +18,42 @@ server.get('/', (req, res) => {
     res.send('Running now!');
 })
 
+//get -- user
+server.get('/api/users', (req, res) => {
+    userDb
+    .get()
+    .then(response => {
+        res.status(200).json({ response })
+    })
+    .catch(err => {
+        res.status(500).json({ Error: err })
+    })
+})
+
+//get -- post
+server.get('/api/posts', (req, res) => {
+    postDb
+    .get()
+    .then(response => {
+        res.status(200).json({ response })
+    })
+    .catch(err => {
+        res.status(500).json({ Error: err })
+    })
+})
+
+//get -- tag 
+server.get('/api/tags', (req, res) => {
+    tagDb
+    .get()
+    .then(response => {
+        res.status(200).json({ response })
+    })
+    .catch(err => {
+        res.status(500).json({ Error: err })
+    })
+})
+
 
 
 //server attached to a port
