@@ -16,6 +16,14 @@ server.get('/users', (req, res) => {
     .catch(err => req.status(500).json({ error: "The users could not be retrieved." }))
 })
 
+// get users by id
+server.get('/users/:id', (req, res) => {
+  const { id } = req.params;
+  dbUser.get(id)
+    .then(user => res.json(user))
+    .catch(err => res.status(500).json({ error: "That user could not be retrieved." }))
+})
+
 // retrieve all posts
 server.get('/posts', (req, res) => {
   dbPost.get()
