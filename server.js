@@ -17,6 +17,8 @@ server.get('/', (req,res) => {
     res.send('Got a server set up');
 })
 
+// --------USER--------
+
 // GET method for user
 server.get('/api/users', (req, res) => {
 
@@ -30,31 +32,6 @@ server.get('/api/users', (req, res) => {
     })
 }) 
 
-// GET method for post
-server.get('/api/posts', (req, res) => {
-
-     postDb
-     .get()
-     .then(response => {
-        res.status(200).json({ response });
-    })
-    .catch(err => {
-        res.status(500).json({ Error: err });
-    })
-})
-
-// GET method for tag
-server.get('/api/tags', (req, res) => {
-    tagDb
-    .get()
-    .then(response => {
-        res.status(200).json({ response });
-    })
-    .catch(err => {
-        res.status(500).json({ Error: err });
-    })
-})
-
 // POST method for user
 server.post('/api/users', (req, res) => {
     const userInfo = req.body;
@@ -67,6 +44,44 @@ server.post('/api/users', (req, res) => {
     .catch( err => {
         res.status(500).json({ Error: err })
     })
+})
+
+// DELETE method for user
+
+server.delete('/api/users/:id', (req, res) => {
+    const id = req.params.id;
+    let userDeleted;
+
+    userDb
+    .get(id)
+    .then(user => {
+        userDeleted = { ...user }
+    })
+
+
+    userDb
+    .remove(id)
+    .then(response => {
+        res.status(200).json({ userDeleted })
+    })
+    .catch(err => {
+        res.status(500).json({ Error: err })
+    })
+})
+
+// --------POST--------
+
+// GET method for post
+server.get('/api/posts', (req, res) => {
+
+    postDb
+    .get()
+    .then(response => {
+       res.status(200).json({ response });
+   })
+   .catch(err => {
+       res.status(500).json({ Error: err });
+   })
 })
 
 // POST method for post
@@ -84,6 +99,21 @@ server.post('/api/posts', (req, res) => {
     )
 })
 
+
+
+// --------TAG---------
+// GET method for tag
+server.get('/api/tags', (req, res) => {
+   tagDb
+   .get()
+   .then(response => {
+       res.status(200).json({ response });
+   })
+   .catch(err => {
+       res.status(500).json({ Error: err });
+   })
+})
+
 // POST method for tag
 server.post('/api/tags', (req, res) => {
     const tagInfo = req.body;
@@ -97,7 +127,6 @@ server.post('/api/tags', (req, res) => {
         res.status(500).json({ Error: err })
     })
 })
-
 
 // Server attached to a port
 
