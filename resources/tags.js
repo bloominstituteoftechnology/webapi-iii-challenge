@@ -17,4 +17,12 @@ router.get('/:id', (req, res) => {
     .catch(err => res.status(500).json({ error: "Sorry." }))
 })
 
+// add a tag
+router.post('/addtag', (req, res) => {
+  const { id } = req.params;
+  dbTags.insert(req.body)
+    .then(tag => res.json(tag)) // returns object with prop id - representing the tag id
+    .catch(err => res.status(500).json({ error: "Cannot add this tag." }))
+})
+
 module.exports = router;
