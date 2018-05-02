@@ -34,7 +34,16 @@ server.get('/api/users', (req, res) => {
 
 // POST method for user
 server.post('/api/users', (req, res) => {
-
+    const userInfo = req.body;
+    
+    userDb
+    .insert(userInfo)
+    .then(response => {
+        res.status(201).json({ userInfo })
+    })
+    .catch( err => {
+        res.status(500).json({ Error: "ERROR" })
+    })
 })
 
 
