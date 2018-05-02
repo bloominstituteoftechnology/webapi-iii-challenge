@@ -43,5 +43,24 @@ server.post('/api/users', (req, res) => {
     })
 });
 
+server.delete('/api/users/:id', (req, res) => {
+    const id = req.params.id;
+
+    userDb.remove(id)
+        .then(response  => {
+            if (response.length === 0) {
+                res.status(404).send({message: 'No user with found'})
+            }
+            else {
+                userDb.get(id)
+                    .then(response => {
+                        res.status(201).send(response);
+                    })
+            }
+        }).catch(err => {
+            res.status(500).send({error: 'problem'});
+    })
+});
+
 
 server.listen(3500, console.log('Listening'));
