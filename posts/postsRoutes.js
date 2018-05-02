@@ -23,4 +23,21 @@ router.get('/:id', (req, res) => {
         .catch(() => res.status(500).send({ error: 'Error fetching post' }))
 });
 
+// post new post
+router.post('/', (req, res) => {
+    const text= req.body.text;
+    const userId = req.body.userId;
+
+    if (!text && !userId) {
+        res.status(400).send({error: 'Please provide a name for the user'});
+    }
+
+    postDb.insert(req.body).then(post => {
+        res.status(200).send(req.body)
+    }).catch(err => {
+        res.status(500).send({error: 'There was a error while saving to user to database'});
+    })
+});
+
+
 module.exports = router;
