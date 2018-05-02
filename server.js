@@ -1,17 +1,20 @@
 const express = require('express');
-const posts = require('./data/helpers/postDb');
-const users = require('./data/helpers/userDb');
-const tags = require('./data/helpers/tagDb');
+const data = {
+  posts: require('./data/helpers/postDb'),
+  users: require('./data/helpers/userDb'),
+  tags: require('./data/helpers/tagDb')
+}
+
 
 const server = express();
 server.use(express.json());
 
-// get all posts
-server.get('/api/posts', (req, res) => {
-  posts
+// get all data pertaining to target param
+server.get('/api/:target', (req, res) => {
+  data[req.params.target]
   .get()
-  .then(posts => {
-    res.json(posts);
+  .then(response => {
+    res.json(response);
   })
   .catch(err => {
     res.status(500).json({
