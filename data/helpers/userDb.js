@@ -16,6 +16,7 @@ module.exports = {
       .where('p.userId', userId);
   },
   insert: function(user) {
+    console.log(user);
     return db('users')
       .insert(user)
       .then(ids => ({ id: ids[0] }));
