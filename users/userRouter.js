@@ -3,7 +3,7 @@ const userDb = require("../data/helpers/userDb.js");
 const router = express.Router();
 
 
-router.get('/users', (req, res) => {
+router.get('/', (req, res) => {
     userDb.get().then(users => {
         res.json(users);
     }).catch(err => {
@@ -13,7 +13,7 @@ router.get('/users', (req, res) => {
     })
 })
 
-router.get('/users/:id', (req, res) => {
+router.get('/:id', (req, res) => {
     const id = req.params.id;
     userDb.get(id).then(user => {
         res.json(user);
@@ -22,7 +22,7 @@ router.get('/users/:id', (req, res) => {
     })
 })
 
-router.post('/users/', (req, res) => {
+router.post('/', (req, res) => {
     newUser = req.body;
     userDb.insert(newUser).then(response => {
         res.status(200).json(response);
@@ -33,7 +33,7 @@ router.post('/users/', (req, res) => {
     })
 })
 
-router.put('/users/:id', (req, res) => {
+router.put('/:id', (req, res) => {
     const id = req.params.id;
     const userUpdate = req.body;
 
@@ -48,7 +48,7 @@ router.put('/users/:id', (req, res) => {
     })
 })
 
-router.delete('/users/:id', (req, res) => {
+router.delete('/:id', (req, res) => {
     const id = req.params.id;
 
     userDb.remove(id).then(response => {
