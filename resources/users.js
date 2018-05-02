@@ -27,10 +27,18 @@ router.get('/:id/posts', (req, res) => {
 
 // add new user
 router.post('/new-user', (req, res) => {
-  const { name } = req.body; // must pass { name: "user_name_here" }
-  dbUser.insert(req.body)
-    .then(user => res.json(user))
+  dbUser.insert(req.body) // must pass { name: "user_name_here" }
+    .then(user => res.json(user)) // returns id
     .catch(err => res.status(500).json({ error: "Cannot add this user." }))
+})
+
+// update existing user
+router.put('/update/:id', (req, res) => {
+  const { name } = req.body; // must pass { name: "updated_name", id: ogID }
+  const { id } = req.params;
+  dbUser.update(id, req.body)
+    .then(updated => res.json(updated)) // returns 1 for true, 0 for false
+    .catch(err => res.status(500).json({ error: "Cannot uodate this user." }))
 })
 
 module.exports = router;
