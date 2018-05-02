@@ -32,4 +32,12 @@ router.put('/:id/update', (req, res) => {
     .catch(err => res.status(500).json({ error: "Cannot update this tag." }))
 })
 
+// delete a tag
+router.delete('/:id/delete', (req, res) => {
+  const { id } = req.params;
+  dbTags.remove(id)
+    .then(tag => res.json(tag)) // returns 1 for success, 0 for failure
+    .catch(err => res.status(500).json({ error: "Cannot delete this tag." }))
+})
+
 module.exports = router;
