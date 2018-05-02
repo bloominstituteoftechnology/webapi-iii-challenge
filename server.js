@@ -17,8 +17,6 @@ server.get('/', (req,res) => {
     res.send('Got a server set up');
 })
 
-// ------ USERS --------
-
 // GET method for user
 server.get('/api/users', (req, res) => {
 
@@ -32,25 +30,9 @@ server.get('/api/users', (req, res) => {
     })
 }) 
 
-// POST method for user
-server.post('/api/users', (req, res) => {
-    const userInfo = req.body;
-    
-    userDb
-    .insert(userInfo)
-    .then(response => {
-        res.status(201).json({ userInfo })
-    })
-    .catch( err => {
-        res.status(500).json({ Error: "ERROR" })
-    })
-})
-
-
-// ------ POSTS --------
-
 // GET method for post
 server.get('/api/posts', (req, res) => {
+
      postDb
      .get()
      .then(response => {
@@ -60,9 +42,6 @@ server.get('/api/posts', (req, res) => {
         res.status(500).json({ Error: err });
     })
 })
-
-
-// ------ TAGS --------
 
 // GET method for tag
 server.get('/api/tags', (req, res) => {
@@ -76,7 +55,48 @@ server.get('/api/tags', (req, res) => {
     })
 })
 
+// POST method for user
+server.post('/api/users', (req, res) => {
+    const userInfo = req.body;
+    
+    userDb
+    .insert(userInfo)
+    .then(response => {
+        res.status(201).json({ userInfo })
+    })
+    .catch( err => {
+        res.status(500).json({ Error: err })
+    })
+})
 
+// POST method for post
+server.post('/api/posts', (req, res) => {
+    const postInfo = req.body;
+
+    postDb
+    .insert(postInfo)
+    .then(response => {
+        res.status(201).json({ postInfo })
+    })
+    .catch( err => {
+        res.status(500).json({ Error: err })
+        }
+    )
+})
+
+// POST method for tag
+server.post('/api/tags', (req, res) => {
+    const tagInfo = req.body;
+
+    tagDb
+    .insert(tagInfo)
+    .then(response => {
+        res.status(201).json({ tagInfo })
+    })
+    .catch(err => {
+        res.status(500).json({ Error: err })
+    })
+})
 
 
 // Server attached to a port
