@@ -1,7 +1,8 @@
 const userDb = require('./data/helpers/userDb');
 const postDb = require('./data/helpers/postDb');
 const tagDb = require('./data/helpers/tagDb');
-const userRoutes = require('./users/userRoutes');
+const userRoutes = require('./routes/userRoutes');
+const postRoutes = require('./routes/postRoutes');
 
 const express = require('express');
 const server = express();
@@ -23,6 +24,7 @@ server.get('/', (req, res) => {
 })
 
 server.use('/api/users', userRoutes);
+server.use('/api/users/:id/posts', postRoutes);
 
 server.use(errorHandler);
 

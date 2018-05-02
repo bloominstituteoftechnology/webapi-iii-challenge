@@ -1,8 +1,7 @@
 const express = require('express');
 
 const userDb = require('../data/helpers/userDb');
-const postDb = require('../data/helpers/postDb');
-const tagDb = require('../data/helpers/tagDb');
+const postRoutes = require('./postRoutes');
 
 const router = express.Router();
 
@@ -20,12 +19,12 @@ router.get('/:id', (req, res, next) => {
     const { id } = req.params;
 
     userDb.get(id)
-        .then(users => {
-            res.json(users);
-        })
-        .catch(err => {
-            res.status(500).json({ error: err });
-        });
+    .then(users => {
+        res.json(users);
+    })
+    .catch(err => {
+        res.status(500).json({ error: err });
+    });
 });
 
 router.post('/', (req, res, next) => {
@@ -70,5 +69,8 @@ router.delete('/:id', (req, res, next) => {
             res.status(500).json({ error: err });
         });
 });
+
+router.use('/', postRoutes);
+
 
 module.exports = router;
