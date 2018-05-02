@@ -83,4 +83,25 @@ router.delete("/:id", (req, res) => {
 		});
 });
 
+// PUT: update a user by id
+router.put("/:id", (req, res) => {
+	const { id } = req.params;
+	const update = req.body;
+	// console.log(update);
+
+	userDB
+		.update(id, update)
+		.then(count => {
+			console.log(count);
+			if (count === 0) {
+				res.status(404).json({ message: "user not found" });
+			} else {
+				res.status(200).json(user);
+			}
+		})
+		.catch(err => {
+			res.status(500).json({ error: "user could not be changed" });
+		});
+});
+
 module.exports = router;
