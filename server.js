@@ -13,7 +13,26 @@ server.get('/', (req, res) => {
     res.send('Api running');
   });
   
-//GETTING USERS
+//CREATING USErS = POST
+server.post('/api/users', (req, res) => {
+    const userInfo = req.body;
+    console.log('user info', userInfo);
+
+    db
+      .insert(userInfo)
+      .then(response => {
+          res.status(201).json(response);
+      })
+    //   .catch(err => {
+    //     if (err.errno === 19) {
+    //       res.status(400).json({ msg: 'WRONG' });
+    //     } else {
+    //       res.status(500).json({ erro: err });
+    //     }
+    //   });
+});
+
+//GETTING USERS = GET
 server.get('/api/users', (req, res) => {
     db.get()
       .then(users => {
@@ -24,7 +43,7 @@ server.get('/api/users', (req, res) => {
       });
 });
 
-//GETTING USER POSTS
+//GETTING USER POSTS = GET
 server.get('/api/users/:id', (req, res) => {
     const userId = req.params.id
     db.getUserPosts(userId)
@@ -43,10 +62,10 @@ server.get('/api/users/:id', (req, res) => {
       });
 });
 
-//DELETE USERS
+//DELETE USERS = DELETE
 server.delete('/api/users', (req, res) => {
-    const { id } = req.params;
-    // let user;
+    const { id } = req.query;
+    let user;
     db
       .get(id)
       .then(foundUser => {
@@ -58,11 +77,12 @@ server.delete('/api/users', (req, res) => {
           res.status(200).json(user);
       });
       })
-      
+
       .catch(err => {
           res.status(500).json({ error: err });
       })
 });
+
 
 const port = 5000;
 server.listen(port, () => console.log(`\n== API Running on port ${port} ==\n`));
