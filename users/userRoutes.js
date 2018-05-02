@@ -61,4 +61,26 @@ router.post("/", (req, res) => {
 	}
 });
 
+// DELETE: remove a user from the list
+router.delete("/:id", (req, res) => {
+	// define id
+	const { id } = req.params;
+
+	userDB
+		.get(id)
+		.then(user => {
+			let userToBeRemoved = user;
+			userDB.remove(id).then(count => {
+				if (count === 0) {
+					res.status(404).json({ message: "user not found" });
+				} else {
+					res.status(200).json(userToBeRemoved);
+				}
+			});
+		})
+		.catch(err => {
+			res.status(500).json({ error: "user could not be deleted" });
+		});
+});
+
 module.exports = router;
