@@ -22,6 +22,15 @@ router.get('/:id', (req, res) => {
     })
 })
 
+router.get('/:id/posts', (req, res) => {
+    const id = req.params.id;
+    userDb.getUserPosts(id).then(post => {
+        res.json(post);
+    }).catch(err => {
+        error: "The specified user could not be found"
+    })
+})
+
 router.post('/', (req, res) => {
     newUser = req.body;
     userDb.insert(newUser).then(response => {
