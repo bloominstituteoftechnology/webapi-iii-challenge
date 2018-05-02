@@ -21,6 +21,15 @@ router.get('/:id', (req, res) => {
     })
 })
 
+router.get('/:id/tags', (req, res) => {
+    const id = req.params.id;
+    postDb.getPostTags(id).then(tags => {
+        res.json(tags);
+    }).catch(err => {
+        error: "The specified post could not be found"
+    })
+})
+
 router.post('/', (req, res) => {
     newPost = req.body;
     postDb.insert(newPost).then(response => {
