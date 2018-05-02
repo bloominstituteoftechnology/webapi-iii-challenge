@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "## Topics",
   "main": "knexfile.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/pfang/Node-Blog.git"
@@ -19,5 +16,11 @@
   "dependencies": {
     "knex": "^0.14.6",
     "sqlite3": "^4.0.0"
+  },
+  "scripts" : {
+    "start": "nodemon"
+  },
+  "devDependencies": {
+    "nodemon": "^1.17.3"
   }
 }
