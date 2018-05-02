@@ -2,5 +2,24 @@
   "dependencies": {
     "knex": "^0.14.6",
     "sqlite3": "^4.0.0"
-  }
+  },
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "name": "Node-Blog",
+  "description": "## Topics",
+  "version": "1.0.0",
+  "main": "knexfile.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rhogan29/Node-Blog.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rhogan29/Node-Blog/issues"
+  },
+  "homepage": "https://github.com/rhogan29/Node-Blog#readme"
 }
