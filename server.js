@@ -16,6 +16,9 @@ server.get("/", (req, res) => {
 	res.send("API running");
 });
 
+// user route handlers
+server.use("/api/users", userRoutes);
+
 // server at port 5000
 server.listen(5000, () => {
 	console.log("\n== API Running on port 5000 ==\n");
