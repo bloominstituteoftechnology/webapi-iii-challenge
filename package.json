@@ -1,9 +1,12 @@
 {
-  "name": "Node-Blog",
+  "name": "node-blog",
   "version": "1.0.0",
   "main": "index.js",
   "repository": "https://github.com/kaitlynflynn/Node-Blog.git",
   "author": "Kaitlyn Flynn <kaitlynflynn@gmail.com>",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
   "license": "MIT",
   "dependencies": {
     "cors": "^2.8.4",
