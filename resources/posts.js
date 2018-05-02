@@ -42,4 +42,12 @@ router.put('/:id/update', (req, res) => {
     .catch(err => res.status(500).json({ error: "Cannot update this post." }))
 })
 
+// delete post
+router.delete('/:id/delete', (req, res) => {
+  const { id } = req.params; // must pass post id ... represented as "id"
+  dbPost.remove(id)
+    .then(removed => res.json(removed)) // returns 1 for success, 0 for failure
+    .catch(err => res.status(500).json({ error: "Cannot delete this post." }))
+})
+
 module.exports = router;
