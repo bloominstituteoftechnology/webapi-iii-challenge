@@ -1,6 +1,6 @@
 import express, { Router } from 'express';
 
-import db from './data/helpers/userDb';
+import db from '../data/helpers/userDb';
 
 const mainRouter = Router({ mergeParams: true });
 
