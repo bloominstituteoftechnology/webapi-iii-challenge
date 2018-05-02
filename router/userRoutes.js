@@ -49,18 +49,18 @@ router.post("/", (req, res, next) => {
 
 // http://localhost:5000?id=1 // for just using req.query
 // write it using an URL parameter instead /:id
+
 router.delete("/", (req, res) => {
   const { id } = req.query;
   db.get(id).then(userFound => {
-    user = { ...userFound[0] };
+    let user = { ...userFound[0] };
     db
       .remove(id)
       .then(response => {
-        res.status(200).json(response);
+        res.status(200).json(user);
       })
       .catch(error => {
         res.status(500).json({ error: "Nothing to delete" });
-        next(err);
       });
   });
 });
@@ -72,9 +72,9 @@ router.put("/", (req, res) => {
   db
     .update(id, updatedUser)
     .then(response => {
-      if (response !== 0) {
+      if (response > 0) {
         db.get(id).then(user => {
-          res.stat(200).json(user[0]);
+          res.status(200).json(user[0]);
         });
       } else {
         res.staus(404).json({ msg: "User is not found" });
