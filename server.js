@@ -6,7 +6,6 @@ const server = express();
 
 // GET method
 server.get('/', (req,res) => {
-    console.log('Got a server set up');
     res.send('Got a server set up');
 })
 
