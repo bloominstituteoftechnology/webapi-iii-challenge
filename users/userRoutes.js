@@ -21,7 +21,7 @@ router.get('/:id', (req, res) => {
         .catch(() => res.status(500).send({ error: 'Error fetching users' }))
 });
 
-router.get('/posts/:id', (req, res) => {
+router.get('/:id/posts', (req, res) => {
     const id = req.params.id;
     userDb
         .getUserPosts(id)
