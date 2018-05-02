@@ -1,7 +1,7 @@
 import express from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import { mainRouter } from './Routes';
+import mainRouter from './Routes';
 
 const app = express();
 

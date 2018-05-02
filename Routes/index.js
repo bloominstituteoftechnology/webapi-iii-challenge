@@ -1,19 +1,10 @@
-import express, { Router } from 'express';
-
-import db from '../data/helpers/userDb';
+import { Router } from 'express';
+import userRoute from './userRoute';
 
 const mainRouter = Router({ mergeParams: true });
 
 // this router will 3 different routers
 //  users, posts, tags
-
-// /users
-const userRoute = express.Router();
-
-userRoute.get('/', async (req, res) => {
-  const response = await db.get();
-  res.json(response);
-});
 
 mainRouter.use('/users/', userRoute);
 
@@ -23,4 +14,4 @@ mainRouter.use('/posts', () => {});
 // /tags
 mainRouter.use('/tags', () => {});
 
-export { mainRouter };
+export default mainRouter;
