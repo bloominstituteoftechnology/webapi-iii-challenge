@@ -43,7 +43,6 @@ router.post("/", (req, res, next) => {
     })
     .catch(err => {
       res.status(500).json({ error: "Error; could not save post to database" });
-
       next(err);
     });
 });
@@ -52,38 +51,31 @@ router.post("/", (req, res, next) => {
 // write it using an URL parameter instead /:id
 router.delete("/", (req, res) => {
   const { id } = req.query;
-  let user;
-  db
-    .getUserPost(id)
-    .then(userFound => {
-      user = { ...userFound[0] };
-      db
-        .remove(id)
-        .then(response => {
-          res.status(200).json(user);
-        })
-        .catch(error => {
-          res.status(500).json({ error: "Nothing to delete" });
-        });
-    })
+  db.get(id).then(userFound => {
+    user = { ...userFound[0] };
+    db
+      .remove(id)
+      .then(response => {
+        res.status(200).json(response);
+      })
+      .catch(error => {
+        res.status(500).json({ error: "Nothing to delete" });
+        next(err);
+      });
+  });
 });
 
-router.put("/:id", (req, res) => {
-  const id = req.parms.id;
+router.put("/", (req, res) => {
+  const { id } = req.query;
   const updatedUser = req.body;
 
   db
     .update(id, updatedUser)
     .then(response => {
       if (response !== 0) {
-        db
-          .getUserPost(id)
-          .then(user => {
-            res.stat(200).json(user[0]);
-          })
-          .catch(error => {
-            res.status(500).json({ error: "Cannot update this user" });
-          });
+        db.get(id).then(user => {
+          res.stat(200).json(user[0]);
+        });
       } else {
         res.staus(404).json({ msg: "User is not found" });
       }
