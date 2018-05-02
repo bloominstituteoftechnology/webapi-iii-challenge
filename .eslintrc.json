@@ -1,0 +1,17 @@
+{
+  "env": {
+    "browser": false,
+    "commonjs": false,
+    "es6": true,
+    "node": true
+  },
+  "parserOptions": {
+    "sourceType": "module"
+  },
+  "extends": ["prettier", "airbnb-base"],
+  "plugins": ["prettier"],
+  "rules": {
+    "prettier/prettier": ["error", { "singleQuote": true }],
+    "comma-dangle": "off"
+  }
+}
