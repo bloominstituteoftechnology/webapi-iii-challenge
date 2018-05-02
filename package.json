@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/pfang/Node-Blog/issues"
   },
-  "homepage": "https://github.com/pfang/Node-Blog#readme"
+  "homepage": "https://github.com/pfang/Node-Blog#readme",
+  "dependencies": {
+    "knex": "^0.14.6",
+    "sqlite3": "^4.0.0"
+  }
 }
