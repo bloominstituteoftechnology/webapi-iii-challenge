@@ -1,0 +1,17 @@
+{
+  "name": "nodeblog",
+  "version": "1.0.0",
+  "description": "Lambda Exercise",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "dependencies": {
+    "knex": "^0.14.6",
+    "sqlite3": "^4.0.0"
+  },
+  
+  "devDependencies": {
+    "nodemon": "^1.17.3"
+  }
+}
