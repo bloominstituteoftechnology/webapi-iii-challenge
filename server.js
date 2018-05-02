@@ -9,6 +9,7 @@ server.use(express.json()); // built-in middleware
 
 server.get('/', (req, res) => res.send('your server is working'));
 
+/**************** USERS ****************/
 // retrieve all users 
 server.get('/users', (req, res) => { 
   dbUser.get()
@@ -24,6 +25,7 @@ server.get('/users/:id', (req, res) => {
     .catch(err => res.status(500).json({ error: "That user could not be retrieved." }))
 })
 
+/**************** POSTS ****************/
 // get user posts 
 server.get('/users/:id/posts', (req, res) => {
   const { id } = req.params;
@@ -55,11 +57,20 @@ server.get('/posts/:id/tags', (req, res) => {
     .catch(err => res.status(500).json({ error: "We could not find any tags." }))
 })
 
+/**************** TAGS ****************/
 // retrieve all tags
 server.get('/tags', (req, res) => {
   dbTags.get()
     .then(tags => res.json(tags))
     .catch(err => res.status(500).json({ error: "The tags could not be retrieved." }))
+})
+
+// get tags by id
+server.get('/tags/:id', (req, res) => {
+  const { id } = req.params;
+  dbTags.get(id)
+    .then(tags => res.json(tags)) // returns object with props id, tag
+    .catch(err => res.status(500).json({ error: "Sorry." }))
 })
 
 server.listen(5000);
