@@ -13,12 +13,32 @@ server.use(express.json());
 server.get('/api/:target', (req, res) => {
   data[req.params.target]
   .get()
-  .then(response => {
-    res.json(response);
+  .then(target => {
+    res.json(target);
   })
   .catch(err => {
     res.status(500).json({
-      error: "The posts information could not be retrieved."
+      error: "The information could not be retrieved."
+    });
+  });
+});
+
+// get specific data pertaining to target param
+server.get('/api/:target/:id', (req, res) => {
+  data[req.params.target]
+  .get(req.params.id)
+  .then(target => {
+    if (target) {
+      res.json(target);
+    } else {
+      res.status(404).json({
+        err: "The data with the specified ID does not exist."
+      })
+    }
+  })
+  .catch(err => {
+    res.status(500).json({
+      error: "The information could not be retrieved."
     });
   });
 });
