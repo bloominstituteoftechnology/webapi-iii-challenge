@@ -11,7 +11,7 @@ const server = express();
 
 function logger(req, res, next) {
   return function(req, res, next) {
-    console.log(`\n= Requesting: $(req.rul)`);
+    console.log(`\n= Requesting: ${req.url}`);
     next();
   };
 }
