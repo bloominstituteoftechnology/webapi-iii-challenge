@@ -1,9 +1,9 @@
 // Imports node modules
 const express = require('express');
 
+const userDb = require('./data/helpers/userDb');
 const postDb = require('./data/helpers/postDb');
 const tagDb = require('./data/helpers/tagDb');
-const userDb = require('./data/helpers/userDb');
 
 // Server setup
 const server = express();
@@ -52,7 +52,7 @@ server.delete('/api/users/:id', (req, res) => {
     const id = req.params.id;
     let userDeleted;
 
-    userDb
+    userdDb
     .get(id)
     .then(user => {
         userDeleted = { ...user }
@@ -99,6 +99,29 @@ server.post('/api/posts', (req, res) => {
     )
 })
 
+// DELETE method for post
+server.delete('/api/posts/:id', (req, res) => {
+    const id = req.params.id;
+    let deletedPost;
+
+    postDb
+    .get()
+    .then(post => {
+        deletedPost = { ...post }
+    })
+    .catch(err => {
+        res.status(404);
+    })
+
+    postDb
+    .remove(id)
+    .then(response => {
+        res.status(200).json({ deletedPost })
+    })
+    .catch(err => {
+        res.status(500).json({ Error: err })
+    });
+})
 
 
 // --------TAG---------
