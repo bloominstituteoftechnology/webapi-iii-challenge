@@ -1,0 +1,19 @@
+{
+  "name": "node-blog",
+  "version": "1.0.0",
+  "description": "## Topics",
+  "main": "knexfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pfang/Node-Blog.git"
+  },
+  "author": "Node-Blog User <paulxfang@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pfang/Node-Blog/issues"
+  },
+  "homepage": "https://github.com/pfang/Node-Blog#readme"
+}
