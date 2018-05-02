@@ -21,6 +21,16 @@ router.get('/:id', (req, res) => {
         .catch(() => res.status(500).send({ error: 'Error fetching users' }))
 });
 
+router.get('/posts/:id', (req, res) => {
+    const id = req.params.id;
+    userDb
+        .getUserPosts(id)
+        .then((response) => response.length === 0
+            ? res.status(200).send({error: `User  post(s) not found`})
+            : res.status(200).send(response))
+        .catch(() => res.status(500).send({ error: 'Error fetching user posts' }))
+});
+
 router.post('/', (req, res) => {
     const name = req.body.name;
 
