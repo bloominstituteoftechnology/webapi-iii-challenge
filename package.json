@@ -1,0 +1,18 @@
+{
+    "name": "Node-Blog",
+    "version": "1.0.0",
+    "main": "index.js",
+    "repository": "https://github.com/raaayshell/Node-Blog",
+    "author": "Rachelle De Jesus Pestanas <rachelle.pestanas@gmail.com>",
+    "license": "ISC",
+    "dependencies": {
+        "cors": "^2.8.4",
+        "express": "^4.16.3",
+        "helmet": "^3.12.10",
+        "knex": "^0.14.6",
+        "sqlite3": "^4.0.0"
+    },
+    "devDependencies": {
+        "nodemon": "^1.17.3"
+    }
+}
