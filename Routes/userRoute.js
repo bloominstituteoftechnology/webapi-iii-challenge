@@ -1,40 +1,77 @@
 import express from 'express';
 import db from '../data/helpers/userDb';
+import { validateBody, respondWithError } from '../utils';
+import { NOT_FOUND_ERROR, INPUT_ERROR, REMOVE_ERROR, PUT_ERROR } from './Errors';
 
 // /users
 const userRoute = express.Router();
 
 userRoute.get('/', async (req, res) => {
-  const response = await db.get();
-  res.json(response);
+  try {
+    const users = await db.get();
+    res.json('get:', users);
+  } catch (e) {
+    // .catch(()=>respondWithError(res))
+    respondWithError(res);
+  }
 });
 
 userRoute.get('/:id', async (req, res) => {
-  const response = await db.get(req.params.id);
-  console.log(response);
-  if (response.length > 0) {
-    res.status(404).json({msg: 'User not found'});
-    return;
-  } 
-  res.json(response[0]);
+  try {
+    const user = await db.get(req.params.id);
+    console.log('get:', user);
+    if (!user.length) respondWithError(res, NOT_FOUND_ERROR);
+    res.json(user);
+  } catch (error) {
+    respondWithError(res);
+  }
 });
 
 userRoute.post('/', async (req, res) => {
   const userInformation = await db.insert(req.body);
   console.log(userInformation);
-  res.json(userInformation);
+  try {
+    if (!validateBody(body)) {
+      respondWithError(INPUT_ERROR);
+      return;
+    }
+    res.status(201).json(userInformation);
+  } catch (error) {
+    // .catch(()=>respondWithError(res))
+    respondWithError(res);
+  }
 });
 
 userRoute.put('/:id', async (req, res) => {
-  const userInformation = await db.update(req.params.id, req.body);
-  console.log(userInformation);
-  res.json(userInformation);
+  try {
+    const userInformation = await db.update(req.params.id, req.body);
+    console.log(userInformation);
+    if (!validateBody(body)) {
+      respondWithError(res, INPUT_ERROR);
+      return;
+    }
+    if (Number(response) === 0) {
+      respondWithError(res, NOT_FOUND_ERROR);
+      return;
+    }
+    res.json(userInformation);
+  } catch (error) {
+    respondWithError(res, PUT_ERROR);
+  }
 });
 
 userRoute.delete('/:id', async (req, res) => {
-  const userInformation = await db.remove(req.params.id);
-  console.log(userInformation);
-  res.json(userInformation);
+  try {
+    const userInformation = await db.remove(req.params.id);
+    console.log(userInformation);
+    if (response === 0) {
+      respondWithError(res, NOT_FOUND_ERROR);
+      return;
+    }
+    res.json(userInformation);
+  } catch (error) {
+    respondWithError(res, REMOVE_ERROR);
+  }
 })
 
 export default userRoute;
