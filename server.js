@@ -1,13 +1,23 @@
-// Imports dependencies
+// Imports node modules
 const express = require('express');
 
-// Add middleware
+// Server setup
 const server = express();
 
-// GET method
+// Access databases
+const postDb = require('./data/helpers/postDb');
+const tagDb = require('./data/helpers/tagDb');
+const userDb = require('./data/helpers/userDb');
+
+// Add middleware
+server.use(express.json());
+
+// GET method to send data to initial page
 server.get('/', (req,res) => {
     res.send('Got a server set up');
 })
+
+// GET method 
 
 // Server attached to a port
 
