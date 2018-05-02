@@ -23,7 +23,7 @@ server.get('/api/:target', (req, res) => {
   });
 });
 
-// get specific data pertaining to target param
+// get specific data
 server.get('/api/:target/:id', (req, res) => {
   data[req.params.target]
   .get(req.params.id)
@@ -39,6 +39,20 @@ server.get('/api/:target/:id', (req, res) => {
   .catch(err => {
     res.status(500).json({
       error: "The information could not be retrieved."
+    });
+  });
+});
+
+// add new data
+server.post('/api/:target', (req, res) => {
+  data[req.params.target]
+  .insert(req.body)
+  .then(() => {
+    res.status(201).json(req.body);
+  })
+  .catch(err => {
+    res.status(500).json({
+      error: "There was an error while saving the post to the database"
     });
   });
 });
