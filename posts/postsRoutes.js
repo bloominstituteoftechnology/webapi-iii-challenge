@@ -51,5 +51,17 @@ router.delete('/:id', (req, res) => {
     })
 });
 
+router.put('/:id', (req, res) => {
+    id = req.params.id;
+    body = req.body;
+    if (body && body.text || body.userId) {
+        postDb
+            .update(id, body)
+            .then((response) => response === 0
+                ? res.status(404).send({ error: `Post with id ${id} not found` })
+                : res.status(200).send({ message: `Post with id ${id} updated` }))
+            .catch(() => res.status(500).send({ error: `Error updating post with id ${id}` }))
+    }
+});
 
 module.exports = router;
