@@ -9,9 +9,18 @@ const tagRoutes = require('./routers/tagRoutes');
 const server = express();
 
 // Middlewares
+function tagToUpperCase(req, res, next) {
+    if(req.body.tag) {
+        req.body.tag = req.body.tag.toUpperCase();
+    }
+
+    next();
+}
+
 server.use(cors());
 server.use(helmet());
 server.use(express.json());
+server.use(tagToUpperCase);
 
 //  Route Handlers
 server.use('/api/users', userRoutes);
