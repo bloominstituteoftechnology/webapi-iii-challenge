@@ -1,8 +1,9 @@
 {
   "name": "node-blog",
   "version": "1.0.0",
-  "description": "* Building RESTful APIs.\r * Performing CRUD Operations on Multiple Resources.\r * Configuring CORS.\r * Writing Custom Middleware.\r * Using Express Routers to Modularize Application.",
-  "main": "knexfile.js",
+  "description": "Node Blog",
+  "private": true,
+  "main": "server.js",
   "scripts": {
     "start": "nodemon server.js"
   },
