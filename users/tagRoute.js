@@ -32,8 +32,8 @@ router.get('/:id', (req, res) => {
 router.post('/', (req, res) => {
     const {tag} = req.body;
     const newTag = {tag};
-        if (req.body.length === 0) {
-            res.status(404).json({ message: "The tag does not exist."})
+        if (tag.length === 0 || tag.length > 80) {
+            res.status(404).json({ message: "The tag does not exist or you had 81 characters or more."})
         } else 
         db
         .insert(newTag)
@@ -66,8 +66,8 @@ router.put('/:id', (req, res) => {
     if(!db.get(id)) {
         res.status(404).json({ message: "The post with the specified ID does not exist." })
     }
-    if (req.body.length === 0) {
-        res.status(400).json({ errorMessage: "Please provide a tag for the post." })
+    if (tag.length === 0 || tag.length > 80) {
+        res.status(400).json({ errorMessage: "Please provide a tag for the post and ensure its under our character limit of 80." })
     } else
     db.update(id, req.body)
     .then(improve => {

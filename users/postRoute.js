@@ -50,8 +50,8 @@ router.get('/:id/posts', (req, res) => {
 router.post('/', (req, res) => {
     const {text, userId} = req.body;
     const newPost = {text, userId};
-        if (req.body.length === 0) {
-            res.status(404).json({ message: "The post with the specified userID does not exist."})
+        if (req.body.length === 0 || !(typeof userId === 'number') ) {
+            res.status(404).json({ message: "The post with the specified userID does not exist or is not a number."})
         } else 
         db
         .insert(newPost)
@@ -83,7 +83,7 @@ router.put('/:id', (req, res) => {
     if(!db.get(id)) {
         res.status(404).json({ message: "The post with the specified ID does not exist." })
     }
-    if (req.body.length === 0) {
+    if (req.body.length === 0 || !(typeof userId === 'number')) {
         res.status(400).json({ errorMessage: "Please provide text and userId for the post." })
     } else
     db.update(id, req.body)
