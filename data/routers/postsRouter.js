@@ -27,6 +27,18 @@ router.get("/:id", function(req, res) {
     });
 });
 
+router.get("/:postId/tags", function(req, res) {
+  const postId = req.params.postId;
+  db
+    .getPostTags(postId)
+    .then(response => {
+      res.status(200).json(response);
+    })
+    .catch(error => {
+      res.status(500).json(error);
+    });
+});
+
 router.post("/", function(req, res) {
   const post = req.body;
   if (post.userId && Number.isInteger(post.userId) && post.text) {

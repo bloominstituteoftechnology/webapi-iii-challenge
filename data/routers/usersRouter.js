@@ -29,6 +29,19 @@ router.get("/:id", function(req, res) {
     });
 });
 
+router.get("/:userId/posts", function(req, res) {
+  const userId = req.params.userId;
+
+  db
+    .getUserPosts(userId)
+    .then(response => {
+      res.status(200).json(response);
+    })
+    .catch(error => {
+      res.status(500).json(error);
+    });
+});
+
 router.post("/", function(req, res) {
   const user = req.body;
 
