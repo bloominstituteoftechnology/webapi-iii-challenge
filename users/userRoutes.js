@@ -28,18 +28,6 @@ router.get('/:id', (req, res, next) => {
         });
 });
 
-router.delete('/:id', (req, res, next) => {
-    const { id } = req.params;
-
-    userDb.remove(id)
-        .then(response => {
-            res.json(response);
-        })
-        .catch(err => {
-            res.status(500).json({ error: err });
-        });
-})
-
 router.post('/', (req, res, next) => {
     const userInfo = req.body;
 
@@ -69,6 +57,18 @@ router.put('/:id', (req, res, next) => {
         .catch(err => {
             res.status(500).json({ error: err });
         });
-})
+});
+
+router.delete('/:id', (req, res, next) => {
+    const { id } = req.params;
+
+    userDb.remove(id)
+        .then(response => {
+            res.json(response);
+        })
+        .catch(err => {
+            res.status(500).json({ error: err });
+        });
+});
 
 module.exports = router;
