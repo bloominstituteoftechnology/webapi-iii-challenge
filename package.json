@@ -12,7 +12,9 @@
   "description": "## Topics",
   "version": "1.0.0",
   "main": "knexfile.js",
-  "devDependencies": {},
+  "devDependencies": {
+    "start": "nodemon server.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rhogan29/Node-Blog.git"

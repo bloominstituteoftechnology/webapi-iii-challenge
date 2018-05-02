@@ -1,13 +1,26 @@
-//importing express
+//importing
 const express = require('express');
-//add middleware
+
+//server run
 const server = express();
 
-//get method
+//databases
+const postDb = require('./data/helpers/postDb');
+const tagDb = require('./data/helpers/tagDb');
+const userDb = require('./data/helpers/userDb');
+
+// middleware
+server.use(express.json());
+
+//get method initial
 server.get('/', (req, res) => {
     console.log('Running');
     res.send('Running now!');
 })
+
+//get
+
+
 
 //server attached to a port
 const port = 5000;
