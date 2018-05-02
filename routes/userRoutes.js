@@ -35,6 +35,26 @@ router.get("/:id", (req, res) => {
     });
 });
 
+router.get("/:id/posts", (req, res) => {
+  const id = req.params.id;
+  db
+    .get(id)
+    .then(user => {
+      if (user) {
+        db.getUserPosts(id).then(posts => res.json(posts));
+      } else {
+        res
+          .status(404)
+          .json({ message: "The user with the specified ID does not exist." });
+      }
+    })
+    .catch(err => {
+      res
+        .status(500)
+        .json({ error: "The user information could not be retrieved." });
+    });
+});
+
 router.post("/", (req, res) => {
   db
     .insert(req.body)
@@ -72,7 +92,6 @@ router.delete("/:id", (req, res) => {
         db
           .get(id)
           .then(user => {
-            // user = { ...users };
             db.remove(id).then(response => {
               res.status(200).json({ ...user });
             });
