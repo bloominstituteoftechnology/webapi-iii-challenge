@@ -21,7 +21,7 @@ exports.seed = function(knex, Promise) {
         { postId: 21, tagId: 9 },
         { postId: 21, tagId: 2 },
         { postId: 21, tagId: 11 },
-        { postId: 29, tagId: 4 },
+        { postId: 29, tagId: 4   },
         { postId: 29, tagId: 2 },
         { postId: 29, tagId: 8 },
       ]);
