@@ -41,4 +41,12 @@ router.put('/update/:id', (req, res) => {
     .catch(err => res.status(500).json({ error: "Cannot uodate this user." }))
 })
 
+// delete user 
+router.delete('/delete/:id', (req, res) => {
+  const { id } = req.params;
+  dbUser.remove(id)
+    .then(removed => res.json(removed)) // returns 1 for true, 0 for false
+    .catch(err => res.status(500).json({ error: "Cannot remove this user." }))
+})
+
 module.exports = router;
