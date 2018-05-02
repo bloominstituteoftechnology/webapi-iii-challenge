@@ -18,10 +18,8 @@ server.get('/', (req, res) => {
     res.send('Running now!');
 })
 
-//get
-
 
 
 //server attached to a port
 const port = 5000;
-server.listen(port, () => {'== Server is listening on port 5000 =='});
+server.listen(port, () => {console.log('== Server is listening on port 5000 ==')});
