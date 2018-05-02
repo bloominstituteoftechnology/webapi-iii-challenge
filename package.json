@@ -1,0 +1,18 @@
+{
+  "name": "node-blog",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/yshuman1/Node-Blog.git",
+  "author": "Yasin and David",
+  "license": "MIT",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "dependencies": {
+    "knex": "^0.14.6",
+    "sqlite3": "^4.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.17.3"
+  }
+}
