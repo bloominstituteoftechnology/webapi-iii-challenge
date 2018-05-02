@@ -1,0 +1,21 @@
+{
+  "name": "node-blog",
+  "version": "1.0.0",
+  "description": "Node-Blog assignment for Lambda School",
+  "main": "server.js",
+  "repository": "https://github.com/cjmarsh725/Node-Blog.git",
+  "author": "Chris Marsh",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "express": "^4.16.3",
+    "knex": "^0.14.6",
+    "sqlite3": "^4.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.17.3"
+  },
+  "scripts": {
+    "start": "nodemon server.js"
+  }
+}
