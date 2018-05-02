@@ -29,8 +29,19 @@ server.get('/api/users/:id', (req, res) => {
 .catch(() => res.status(500).send({ error: 'Error fetching users' }))
 });
 
+server.post('/api/users', (req, res) => {
+    const name = req.body.name;
+
+    if (!name) {
+        res.status(400).send({error: 'Please provide a name for the user'});
+    }
+
+    userDb.insert(req.body).then(user => {
+        res.status(200).send(req.body)
+    }).catch(err => {
+        res.status(500).send({error: 'There was a error while saving to user to database'});
+    })
+});
 
 
-
-  
-server.listen(5000, console.log('Listening'));
+server.listen(3500, console.log('Listening'));
