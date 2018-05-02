@@ -26,7 +26,7 @@ router.get('/:id/posts', (req, res) => {
     userDb
         .getUserPosts(id)
         .then((response) => response.length === 0
-            ? res.status(200).send({error: `User  post(s) not found`})
+            ? res.status(400).send({error: `User  post(s) not found`})
             : res.status(200).send(response))
         .catch(() => res.status(500).send({ error: 'Error fetching user posts' }))
 });
