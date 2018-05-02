@@ -33,4 +33,13 @@ router.post('/newpost', (req, res) => {
     .catch(err => res.status(500).json({ error: "Cannot post this." }))
 })
 
+// update post 
+router.put('/:id/update', (req, res) => {
+  const { id } = req.params; // post ID
+  const updated = req.body; // must pass { text: "content" }
+  dbPost.update(id, updated)
+    .then(updated => res.json(updated))
+    .catch(err => res.status(500).json({ error: "Cannot update this post." }))
+})
+
 module.exports = router;
