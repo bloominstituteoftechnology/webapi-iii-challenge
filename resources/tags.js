@@ -19,10 +19,17 @@ router.get('/:id', (req, res) => {
 
 // add a tag
 router.post('/addtag', (req, res) => {
-  const { id } = req.params;
   dbTags.insert(req.body)
     .then(tag => res.json(tag)) // returns object with prop id - representing the tag id
     .catch(err => res.status(500).json({ error: "Cannot add this tag." }))
+})
+
+// update a tag
+router.put('/:id/update', (req, res) => {
+  const { id } = req.params;
+  dbTags.update(id, req.body) // req.body should be { tag: "tag content" }
+    .then(tag => res.json(tag)) // returns object with prop tag
+    .catch(err => res.status(500).json({ error: "Cannot update this tag." }))
 })
 
 module.exports = router;
