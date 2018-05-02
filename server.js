@@ -54,6 +54,48 @@ server.get('/api/tags', (req, res) => {
     })
 })
 
+//post -- users 
+server.post('/api/users', (req, res) => {
+    const userInfo = req.body;
+    console.log(userInfo);
+    userDb
+    .insert(userInfo)
+    .then(response => {
+        res.status(201).json({ userInfo })
+    })
+    .catch(err => {
+        res.status(500).json({ Error: err })
+    })
+})
+
+//post -- posts 
+server.post('/api/posts', (req, res) => {
+    const postInfo = req.body;
+    console.log(postInfo);
+    postDb
+    .insert(postInfo)
+    .then(response => {
+        res.status(201).json({ postInfo })
+    })
+    .catch(err => {
+        res.status(500).json({ Error: err })
+    })
+})
+
+//post -- tag 
+server.post('/api/tags', (req, res) => {
+    const tagInfo = req.body;
+    console.log(tagInfo);
+    tagDb
+    .insert(tagInfo)
+    .then(response => {
+        res.status(201).json({ response })
+    })
+    .catch(err => {
+        res.status(500).json({ Error: err })
+    })
+})
+
 
 
 //server attached to a port
