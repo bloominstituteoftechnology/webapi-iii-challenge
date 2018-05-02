@@ -36,9 +36,29 @@ router.get("/:id", (req, res) => {
 			}
 		})
 		.catch(err => {
-			// res.status(404).json({ message: "user not found" });
 			res.status(500).json({ error: err });
 		});
+});
+
+// POST: add a user to the list of users
+router.post("/", (req, res) => {
+	// define id
+	const newUser = req.body;
+
+	if (newUser.name.length === 0) {
+		res.status(400).json({ error: "Please provide the user's name" });
+	} else {
+		userDB
+			.insert(newUser)
+			.then(user => {
+				res.status(201).json(newUser);
+			})
+			.catch(err => {
+				res.status(500).json({
+					error: "There was an error saving the user to the database."
+				});
+			});
+	}
 });
 
 module.exports = router;
