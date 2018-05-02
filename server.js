@@ -5,7 +5,6 @@ const data = {
   tags: require('./data/helpers/tagDb')
 }
 
-
 const server = express();
 server.use(express.json());
 
@@ -47,12 +46,32 @@ server.get('/api/:target/:id', (req, res) => {
 server.post('/api/:target', (req, res) => {
   data[req.params.target]
   .insert(req.body)
-  .then(() => {
-    res.status(201).json(req.body);
+  .then(objId => {
+    res.status(201).json(objId);
   })
   .catch(err => {
     res.status(500).json({
       error: "There was an error while saving the post to the database"
+    });
+  });
+});
+
+// update data by id
+server.put('/api/:target/:id', (req, res) => {
+  data[req.params.target]
+  .update(req.params.id, req.body)
+  .then(found => {
+    if (found) {
+      res.status(200).json(req.body);
+    } else {
+      res.status(404).json({
+        err: "The post with the specified ID does not exist."
+      });
+    }
+  })
+  .catch(err => {
+    res.status(500).json({
+      error: "The post information could not be modified."
     });
   });
 });
