@@ -22,6 +22,18 @@ router.get('/users/:id', (req, res) => {
     })
 })
 
+router.post('/users/', (req, res) => {
+    const id = req.params.id;
+    newUser = req.body;
+    userDb.insert(newUser).then(response => {
+        res.status(200).json(response);
+    }).catch(err => {
+        res.status(500).json({
+            error: "There was en error posting a new user to the database"
+        })
+    })
+})
+
 
 
 module.exports = router;
