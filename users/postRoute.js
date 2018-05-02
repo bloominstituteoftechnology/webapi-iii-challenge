@@ -14,19 +14,38 @@ router.get('/', (req, res) => {
 });
 
 router.get('/:id', (req, res) => {
+    const id = req.params.id;
     db
     .get(id)
     .then(posts => {
         if (posts.length === 0) {
             res.status(404).json({  message: 'The post with the specified ID does not exist.'})
         } else {
-            res.json(posts[0]);
+            res.json(posts);
         }
     })
     .catch(err => {
         res.status(500).json({ error: 'The posts information could not be retrieved.'})
     });
 });
+
+router.get('/:id/posts', (req, res) => {
+    const id = req.params.id;
+    db
+    .getPostTags(id)
+    .then(posts => {
+        if (posts.length === 0) {
+            res.status(404).json({  message: 'The post with the specified ID does not exist.'})
+        } else {
+            res.json(posts);
+        }
+    })
+    .catch(err => {
+        res.status(500).json({ error: 'The posts information could not be retrieved.'})
+    });
+});
+
+
 
 router.post('/', (req, res) => {
     const {text, userId} = req.body;
@@ -65,7 +84,7 @@ router.put('/:id', (req, res) => {
         res.status(404).json({ message: "The post with the specified ID does not exist." })
     }
     if (req.body.length === 0) {
-        res.status(400).json({ errorMessage: "Please provide title and contents for the post." })
+        res.status(400).json({ errorMessage: "Please provide text and userId for the post." })
     } else
     db.update(id, req.body)
     .then(improve => {
@@ -73,8 +92,8 @@ router.put('/:id', (req, res) => {
     })
     .catch(err => {
         res.status(500).json({  error: "The post information could not be modified." })
-    })
-})
+    });
+});
 
 
 module.exports = router;
