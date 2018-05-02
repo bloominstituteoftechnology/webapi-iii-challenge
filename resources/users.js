@@ -25,4 +25,12 @@ router.get('/:id/posts', (req, res) => {
     .catch(err => res.status(500).json({ error: "Could not retrieve those posts." }))
 })
 
+// add new user
+router.post('/new-user', (req, res) => {
+  const { name } = req.body; // must pass { name: "user_name_here" }
+  dbUser.insert(req.body)
+    .then(user => res.json(user))
+    .catch(err => res.status(500).json({ error: "Cannot add this user." }))
+})
+
 module.exports = router;
