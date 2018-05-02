@@ -1,13 +1,13 @@
 // Imports node modules
 const express = require('express');
 
-// Server setup
-const server = express();
-
-// Access databases
 const postDb = require('./data/helpers/postDb');
 const tagDb = require('./data/helpers/tagDb');
 const userDb = require('./data/helpers/userDb');
+
+// Server setup
+const server = express();
+
 
 // Add middleware
 server.use(express.json());
@@ -17,9 +17,46 @@ server.get('/', (req,res) => {
     res.send('Got a server set up');
 })
 
-// GET method 
+// GET method for user
+server.get('/api/users', (req,res) => {
+
+    userDb
+    .get()
+    .then(response => {
+        res.status(200).json({ response });
+    })
+    .catch(err => {
+        res.status(500).json({ Error: err });
+    })
+
+// GET method for post
+server.get('/api/posts', (req, res) => {
+     postDb
+     .get()
+     .then(response => {
+        res.status(200).json({ response });
+    })
+    .catch(err => {
+        res.status(500).json({ Error: err });
+    })
+})
+
+// GET method for tag
+server.get('/api/tags', (req, res) => {
+    tagDb
+    .get()
+    .then(response => {
+        res.status(200).json({ response });
+    })
+    .catch(err => {
+        res.status(500).json({ Error: err });
+    })
+})
+
+})
+
 
 // Server attached to a port
 
 const port = 5000;
-server.listen(port, () => {`Server is listening in localhost: ${port} `})
+server.listen(port, () => {console.log(`Server is listening in port: ${port} `)})
