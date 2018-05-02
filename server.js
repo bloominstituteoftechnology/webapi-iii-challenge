@@ -47,6 +47,14 @@ server.get('/posts/:id', (req, res) => {
     .catch(err => res.status(500).json({ error: "We're having trouble retrieving that post." }))
 })
 
+// get post tags
+server.get('/posts/:id/tags', (req, res) => {
+  const { id } = req.params;
+  dbPost.getPostTags(id)
+    .then(tags => res.json(tags)) // returns array of objects with prop "tag" ... one tag per object
+    .catch(err => res.status(500).json({ error: "We could not find any tags." }))
+})
+
 // retrieve all tags
 server.get('/tags', (req, res) => {
   dbTags.get()
