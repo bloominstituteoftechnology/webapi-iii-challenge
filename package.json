@@ -6,7 +6,7 @@
     "morgan": "^1.9.0",
     "parcel-bundler": "^1.7.1"
   },
-  "name": "Node-Blog",
+  "name": "node-blog",
   "description": "## Topics",
   "version": "1.0.0",
   "main": "dist/server.js",
