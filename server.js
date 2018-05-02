@@ -17,8 +17,10 @@ server.get('/', (req,res) => {
     res.send('Got a server set up');
 })
 
+// ------ USERS --------
+
 // GET method for user
-server.get('/api/users', (req,res) => {
+server.get('/api/users', (req, res) => {
 
     userDb
     .get()
@@ -28,6 +30,15 @@ server.get('/api/users', (req,res) => {
     .catch(err => {
         res.status(500).json({ Error: err });
     })
+}) 
+
+// POST method for user
+server.post('/api/users', (req, res) => {
+
+})
+
+
+// ------ POSTS --------
 
 // GET method for post
 server.get('/api/posts', (req, res) => {
@@ -41,6 +52,9 @@ server.get('/api/posts', (req, res) => {
     })
 })
 
+
+// ------ TAGS --------
+
 // GET method for tag
 server.get('/api/tags', (req, res) => {
     tagDb
@@ -53,7 +67,7 @@ server.get('/api/tags', (req, res) => {
     })
 })
 
-})
+
 
 
 // Server attached to a port
