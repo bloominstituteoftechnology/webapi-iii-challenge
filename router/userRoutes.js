@@ -15,7 +15,7 @@ router.get("/", (req, res) => {
     });
 });
 
-// router GET, find by ID first, then return "post"
+// router GET, find by ID first, then return "user + title + content"
 router.get("/:id", (req, res) => {
   const id = req.params.id;
   db
@@ -32,8 +32,8 @@ router.get("/:id", (req, res) => {
     });
 });
 
-// router POST, Insert post, then give response, which is id of the post
-router.post("/", (req, res, next) => {
+// router POST, Insert user, then give response, which is id of the user
+router.post("/", (req, res) => {
   const user = req.body;
 
   db
@@ -42,16 +42,17 @@ router.post("/", (req, res, next) => {
       res.status(201).json(response);
     })
     .catch(err => {
-      res.status(500).json({ error: "Error; could not save post to database" });
-      next(err);
+      res.status(500).json({ error: "Error; could not save user to database" });
     });
 });
 
 // http://localhost:5000?id=1 // for just using req.query
 // write it using an URL parameter instead /:id
 
-router.delete("/", (req, res) => {
-  const { id } = req.query;
+
+// returns empty object
+router.delete("/:id", (req, res) => {
+  const id = req.params.id;
   db.get(id).then(userFound => {
     let user = { ...userFound[0] };
     db
@@ -65,14 +66,16 @@ router.delete("/", (req, res) => {
   });
 });
 
-router.put("/", (req, res) => {
-  const { id } = req.query;
+
+// this one also returns empty object
+router.put("/:id", (req, res) => {
+  const id = req.params.id;
   const updatedUser = req.body;
 
   db
     .update(id, updatedUser)
     .then(response => {
-      if (response > 0) {
+      if (response !== 0) {
         db.get(id).then(user => {
           res.status(200).json(user[0]);
         });
