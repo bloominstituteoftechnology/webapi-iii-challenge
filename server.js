@@ -47,12 +47,11 @@ server.post('/api/users', (req, res) => {
 })
 
 // DELETE method for user
-
 server.delete('/api/users/:id', (req, res) => {
     const id = req.params.id;
     let userDeleted;
 
-    userdDb
+    userDb
     .get(id)
     .then(user => {
         userDeleted = { ...user }
@@ -62,6 +61,7 @@ server.delete('/api/users/:id', (req, res) => {
     userDb
     .remove(id)
     .then(response => {
+        console.log(userDeleted)
         res.status(200).json({ userDeleted })
     })
     .catch(err => {
@@ -102,25 +102,15 @@ server.post('/api/posts', (req, res) => {
 // DELETE method for post
 server.delete('/api/posts/:id', (req, res) => {
     const id = req.params.id;
-    let deletedPost;
-
-    postDb
-    .get()
-    .then(post => {
-        deletedPost = { ...post }
-    })
-    .catch(err => {
-        res.status(404);
-    })
 
     postDb
     .remove(id)
     .then(response => {
-        res.status(200).json({ deletedPost })
+        res.status(200).json(`${response} post deleted`)
     })
     .catch(err => {
         res.status(500).json({ Error: err })
-    });
+    })
 })
 
 
@@ -150,6 +140,15 @@ server.post('/api/tags', (req, res) => {
         res.status(500).json({ Error: err })
     })
 })
+
+// DELETE method for tag
+// server.delete('/api/tags/:id', (req, res) => {
+//     const deletedTags = req.params.id;
+
+//     tagDb.remove(id).then(response => {
+        
+//     }).catch()
+// })
 
 // Server attached to a port
 
