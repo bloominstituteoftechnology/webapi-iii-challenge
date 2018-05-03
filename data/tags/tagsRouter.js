@@ -33,3 +33,19 @@ router.get("/:id", (req, res) => {
       error: "There was an error retrieving the specified tag."
     }));
 });
+
+// Add tags
+router.post('/', (req, res) => {
+    const tag = req.body;
+
+    db
+        .insert(tag)
+        .then(response => {
+            res.status(200).json(response)
+        })
+        .catch(error => {
+            res.status(500).json({
+                error: "There was an error adding tags."
+            })
+        })
+})
