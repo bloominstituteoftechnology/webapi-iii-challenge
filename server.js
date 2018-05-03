@@ -74,6 +74,39 @@ server.get('/api/tags', (req, res) => {
     });
 });
 
+//create a new tag
+server.post('/api/tags/new', (req, res) => {
+    const { tag } = req.body
+    const tags = { tag: tag };
+    dbTg.insert(tags).then(
+        res.status(200).json("creation success")
+    ).catch(err => {
+        res.status(500).json({ error: "There was an error while saving the user to the database" });
+    });
+});
+
+//delete a tag
+server.delete('/api/tags/:id/delete', (req, res) => {
+    const id = req.params.id;
+    dbTg.remove(id).then(tag => {
+        res.json("deleted");
+    }).catch(err => {
+        res.status(500).json({ error: "The post could not be removed" });
+    })
+});
+
+//update a tag
+server.put('/api/tags/:id/update', (req, res) => {
+    const id = req.params.id;
+    const { tag } = req.body;
+    const tags = { tag: tag };
+    dbTg.update(id, tags).then(
+        res.status(200).json("update success")
+    ).catch(err => {
+        res.status(500).json({ error: "There was an error while saving the post to the database" });
+    })
+});
+
 //get list of all posts
 server.get('/api/posts', (req, res) => {
     dbPst.get().then(users => {
