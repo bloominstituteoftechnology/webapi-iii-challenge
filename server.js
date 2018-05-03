@@ -1,94 +1,20 @@
 // Imports node modules
 const express = require('express');
 
-const postDb = require('./data/helpers/postDb');
-const tagDb = require('./data/helpers/tagDb');
-
 const userRoutes = require('./userRoute');
+const postRoutes = require('./postRoute');
 // Server setup
 const server = express();
 
 
 // Add middleware
 server.use(express.json());
-server.use('/api/users', userRoutes)
+server.use('/api/users', userRoutes);
+server.use('/api/posts', postRoutes);
 
 // GET method to send data to initial page
 server.get('/', (req,res) => {
     res.send('Got a server set up');
-})
-
-// --------POST--------
-
-// GET method for post
-server.get('/api/posts', (req, res) => {
-
-    postDb
-    .get()
-    .then(response => {
-       res.status(200).json({ response });
-   })
-   .catch(err => {
-       res.status(500).json({ Error: err });
-   })
-})
-
-// POST method for post
-server.post('/api/posts', (req, res) => {
-    const postInfo = req.body;
-
-    postDb
-    .insert(postInfo)
-    .then(response => {
-        res.status(201).json({ postInfo })
-    })
-    .catch( err => {
-        res.status(500).json({ Error: err })
-        }
-    )
-})
-
-// DELETE method for post
-server.delete('/api/posts/:id', (req, res) => {
-    const id = req.params.id;
-
-    postDb
-    .remove(id)
-    .then(response => {
-        res.status(200).json(`${response} post deleted`)
-    })
-    .catch(err => {
-        res.status(500).json({ Error: err })
-    })
-})
-
-// PUT method for post
-server.put('/api/posts/:id', (req, res) => {
-    const id = req.params.id;
-    const post = req.body;
-
-    postDb
-    .update(id, post)
-    .then(response => {
-        res.status(200).json({ post })
-    .catch(err => {
-        res.status(500).json({ Error: err })
-        })
-    })
-})
-
-// Retrieve List of Tags for a Post
-server.get('/api/posts/:id', (req, res) => {
-    const id = req.params.id;
-
-    postDb
-    .getPostTags(id)
-    .then(response => {
-        res.status(200).json({ response })
-    })
-    .catch(error => {
-        res.status(500).json({ Error: err })
-    })
 })
 
 // --------TAG---------
