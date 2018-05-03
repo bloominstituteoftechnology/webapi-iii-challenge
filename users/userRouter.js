@@ -62,7 +62,7 @@ router.delete('/:id', (req, res) => {
 
     userDb.remove(id).then(response => {
         res.status(200).json({
-            Deleted: "Post has been deleted from the database"
+            Deleted: "User has been deleted from the database"
         })
     })
 })
