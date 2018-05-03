@@ -156,7 +156,19 @@ server.put('/api/posts/:id', (req, res) => {
     })
 })
 
-// PUT method for post
+// Retrieve List of Tags for a Post
+server.get('/api/posts/:id', (req, res) => {
+    const id = req.params.id;
+
+    postDb
+    .getPostTags(id)
+    .then(response => {
+        res.status(200).json({ response })
+    })
+    .catch(error => {
+        res.status(500).json({ Error: err })
+    })
+})
 
 // --------TAG---------
 // GET method for tag
