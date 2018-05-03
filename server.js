@@ -192,6 +192,21 @@ server.delete('/api/tags/:id', (req, res) => {
     })
 })
 
+// PUT method for tag
+server.put('/api/tags/:id', (req, res) => {
+    const id = req.params.id;
+    const tag = req.body;
+
+    tagDb
+    .update(id, tag)
+    .then(response => {
+        res.status(200).json({ tag })
+    })
+    .catch(err => {
+        res.status(500).json({ Error: err })
+    })
+})
+
 // Server attached to a port
 
 const port = 5000;
