@@ -15,11 +15,11 @@ router.get('/', (req, res) => {
 router.get('/:id', (req, res) => {
     const id = req.params.id;
     tagDb.get(id).then(tag => {
-        if(tag.length > 0) {
+        if(tag.tag.length > 0) {
             res.json(tag);
         } else {
             res.status(404).json({
-                message: "Tags not found"
+                message: "Please insert a tag"
             })
         }
     }).catch(err => {
@@ -32,13 +32,20 @@ router.get('/:id', (req, res) => {
 
 router.post('/', (req, res) => {
     tag = req.body;
-    tagDb.insert(tag).then(response => {
-        res.status(200).json(response);
-    }).catch(err => {
+
+    if(tag.tag.length === 0) {
         res.status(500).json({
-            error: "There was en error creating a new tag to the database"
+            message: "Please insert a tag"
         })
-    })
+    }else {
+        tagDb.insert(tag).then(response => {
+            res.status(200).json(response);
+        }).catch(err => {
+            res.status(500).json({
+                error: "There was en error creating a new tag to the database"
+            })
+        })
+    }
 })
 
 router.put('/:id', (req, res) => {
@@ -51,22 +58,22 @@ router.put('/:id', (req, res) => {
         })
     }).catch(err => {
         res.status(500).json({
-            error: "Tag update failed"
+            error: "Tags update failed"
         })
     })
 })
+
+
 
 router.delete('/:id', (req, res) => {
     const id = req.params.id;
 
     tagDb.remove(id).then(response => {
         res.status(200).json({
-            Deleted: "Tag has been deleted from the database"
+            Deleted: "tag has been deleted from the database"
         })
     })
 })
-
-
 
 
 module.exports = router;
