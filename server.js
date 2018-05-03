@@ -4,9 +4,9 @@ const cors = require("cors");
 const helmet = require("helmet");
 
 // Import from ./users/
-const postsRouter = require("./posts/postsRouter");
-const tagsRouter = require("./tags/tagsRouter");
-const usersRouter = require('./users/usersRouter');
+const postsRouter = require("./data/posts/postsRouter");
+const tagsRouter = require("./data/tags/tagsRouter");
+const usersRouter = require('./data/users/usersRouter');
 
 const server = express();
 
