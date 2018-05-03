@@ -2,7 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 
-const db = require('../data/helpers/postDb.js');
+const db = require('../helpers/postDb.js');
 
 router.get('/', (req, res) => {
   db

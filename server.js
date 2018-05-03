@@ -2,9 +2,9 @@ const express = require("express");
 const helmet = require("helmet");
 const cors = require("cors");
 
-const userRouter = require("./routers/userRouter.js");
-const postRouter = require("./routers/postRouter.js");
-const tagRouter = require("./routers/tagRouter.js");
+const userRouter = require("../Node-Blog/data/router/userRouter.js");
+const postRouter = require("../Node-Blog/data/router/userRouter.js");
+const tagRouter = require("../Node-Blog/data/router/userRouter.js");
 
 const server = express();
 
