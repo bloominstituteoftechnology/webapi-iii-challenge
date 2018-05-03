@@ -10,8 +10,6 @@ const tagsRoute = require('./tags/tagsRoutes');
 server.use(express.json());
 server.use(cors());
 
-server.use(express.json());
-server.use(cors());
 server.use(helmet());
 
 //routes
