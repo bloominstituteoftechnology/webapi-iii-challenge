@@ -4,6 +4,8 @@ const cors = require("cors");
 
 const server = express();
 
+const userRoutes= require('./users/usrRoutes');
+
 server.get('/', (req, res) =>  {
     res.send('Testing Api');
 });
