@@ -12,14 +12,24 @@ router.get('/', (req, res) => {
     })
 })
 
+
 router.get('/:id', (req, res) => {
     const id = req.params.id;
     postDb.get(id).then(post => {
-        res.json(post);
+        if(post.text.length > 0 || post.postedBy.length > 0 || post.tags.length > 0) {
+            res.json(post);
+        } else {
+            res.status(404).json({
+                message: "Please insert a post"
+            })
+        }
     }).catch(err => {
-        error: "The specified post could not be found"
+        res.status(500).json({
+            error: "The specified posts for the user could not be found"
+        })
     })
 })
+
 
 router.get('/:id/tags', (req, res) => {
     const id = req.params.id;

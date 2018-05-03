@@ -16,9 +16,17 @@ router.get('/', (req, res) => {
 router.get('/:id', (req, res) => {
     const id = req.params.id;
     userDb.get(id).then(user => {
-        res.json(user);
+        if(user.name.length > 0) {
+            res.json(user);
+        } else {
+            res.status(404).json({
+                message: "Please insert a user"
+            })
+        }
     }).catch(err => {
-        error: "The specified user could not be found"
+        res.status(500).json({
+            error: "The specified users for the user could not be found"
+        })
     })
 })
 
