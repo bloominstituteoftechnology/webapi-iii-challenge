@@ -7,6 +7,8 @@ const dbP = require('../data/helpers/postDb');
 
 const router = express.Router();
 
+// <<< USERS     USERS >>> 
+
 router.post('/users', (req, res, next) => {
     const userInformation = req.body;
     console.log('user information', userInformation);
@@ -96,6 +98,7 @@ router.get('/users/:id', (req, res) => {
 
 
 
+// <<< TAGS     TAGS >>> 
 
 router.post('/tags', (req, res, next) => {
     const userInformation = req.body;
@@ -161,30 +164,7 @@ router.get('/tags', (req, res) => {
         });
 });
 
-router.get('/tags/:id', (req, res) => {
-    const id = req.params.id;
-
-    dbT
-        .getUserPosts(id)
-        .then(users => {
-            if (users.length === 0) {
-                res.status(404).json({ message: 'user not found' });
-            } else {
-                res.json(users[0]);
-            }
-        })
-        .catch(err => {
-            res.status(500).json({ error: err });
-        });
-});
-
-
-
-
-
-
-
-
+// <<< POSTS POSTS >>> 
 router.post('/posts', (req, res, next) => {
     const userInformation = req.body;
     console.log('user information', userInformation);
@@ -253,7 +233,7 @@ router.get('/posts/:id', (req, res) => {
     const id = req.params.id;
 
     dbP
-        .getUserPosts(id)
+        .getPostTags(id)
         .then(users => {
             if (users.length === 0) {
                 res.status(404).json({ message: 'user not found' });
