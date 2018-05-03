@@ -142,13 +142,25 @@ server.post('/api/tags', (req, res) => {
 })
 
 // DELETE method for tag
-// server.delete('/api/tags/:id', (req, res) => {
-//     const deletedTags = req.params.id;
+server.delete('/api/tags/:id', (req, res) => {
+    const id = req.params.id;
+    let tagDeleted;
 
-//     tagDb.remove(id).then(response => {
-        
-//     }).catch()
-// })
+    tagDb
+    .get(id)
+    .then(tag => {
+        tagDeleted = { ...tag }
+    })
+
+    tagDb
+    .remove(id)
+    .then(response => { 
+        res.status(200).json({ tagDeleted })
+    })
+    .catch(err => {
+        res.status(500).json({ Error: err })
+    })
+})
 
 // Server attached to a port
 
