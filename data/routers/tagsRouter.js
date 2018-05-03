@@ -10,13 +10,18 @@ const upperTags = function(req, res, next) {
 };
 
 const getUpperTags = function(req, res, next) {
-  req.on("end", function() {
-    res.data.map(tag => tag.toUpperCase());
-  });
+  var oldSend = res.send;
+
+  res.send = function(data) {
+    // arguments[0] (or `data`) contains the response body
+    arguments[0] = arguments[0].toUpperCase();
+    oldSend.apply(res, arguments);
+  };
   next();
 };
 
 router.get("/", getUpperTags, function(req, res) {
+  console.log(res.query);
   db
     .get()
     .then(response => {
@@ -27,7 +32,7 @@ router.get("/", getUpperTags, function(req, res) {
     });
 });
 
-router.get("/:id", function(req, res) {
+router.get("/:id", getUpperTags, function(req, res) {
   const id = req.params.id;
   db
     .get(id)
