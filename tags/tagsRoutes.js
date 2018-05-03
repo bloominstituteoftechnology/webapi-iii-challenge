@@ -41,4 +41,16 @@ router.post('/', (req, res) => {
     })
 });
 
+router.put('/:id', (req, res) => {
+
+    let id = req.params.id;
+    if (req.body) {
+        tagDb.update(id, req.body)
+            .then((response) => response === 0
+                ? res.status(404).send({ error: `Tag with id ${id} not found: ${response}` })
+                : res.status(200).send({ message: `Tag with id ${id} updated` }))
+            .catch(() => res.status(500).send({ error: `Error updating tag with id ${id} ` }))
+    }
+});
+
 module.exports = router;
