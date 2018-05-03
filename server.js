@@ -4,7 +4,7 @@ const cors = require("cors");
 
 const server = express();
 
-const userRoutes= require('./users/usrRoutes');
+const userRoutes= require('./users/userRoutes');
 
 server.use(express.json());
 server.use(helmet());
