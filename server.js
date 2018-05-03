@@ -126,6 +126,39 @@ server.get('/api/posts/:id/', (req, res) => {
     });
 });
 
+//create a new post
+server.post('/api/posts/new/:userid', (req, res) => {
+    const id = req.params.userid
+    const { text } = req.body
+    const posts = { text: text, userId: id };
+    dbPst.insert(posts).then(
+        res.status(200).json("creation success")
+    ).catch(err => {
+        res.status(500).json({ error: "There was an error while saving the user to the database" });
+    });
+});
+
+//delete a post
+server.delete('/api/posts/:id/delete', (req, res) => {
+    const id = req.params.id;
+    dbPst.remove(id).then(tag => {
+        res.json("deleted");
+    }).catch(err => {
+        res.status(500).json({ error: "The post could not be removed" });
+    })
+});
+
+//update a post
+server.put('/api/posts/:id/update', (req, res) => {
+    const id = req.params.id;
+    const { text } = req.body;
+    const posts = { text: text };
+    dbPst.update(id, posts).then(
+        res.status(200).json("update success")
+    ).catch(err => {
+        res.status(500).json({ error: "There was an error while saving the post to the database" });
+    })
+});
 
 
 
