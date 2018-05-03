@@ -1,7 +1,7 @@
 const express = require('express');
 const tagDb = require('./data/helpers/tagDb');
 
-// Add middleware
+// add middleware
 const router = express.Router();
 
 // --------TAG---------
