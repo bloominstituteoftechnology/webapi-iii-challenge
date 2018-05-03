@@ -56,8 +56,8 @@ server.post('/api/users', (req, res) => {
     const name = req.body;
     userDb
         .insert(name)
-        .then(name => {
-            res.json(name);
+        .then(named => {
+            res.json(named);
         })
         .catch(err => { 
             res.status(500).json({ error: "The user information could not be created." });
@@ -124,29 +124,16 @@ server.get('/api/posts/:id/tags', (req, res) => {
         });
 })
 
-server.get('/api/posts/:id/posts', (req, res) => {
-    const id = req.params.id;
-    postDb
-        .getpostPosts(id)
-        .then(posts => {
-            res.json(posts);
-        })
-        .catch(err => {
-            res.status(500).json({ error: "The post information could not be found." });
-        })
-})
-
-server.post('/api/posts/:id', (req, res) => {
-    const userId = req.params.userId;
+server.post('/api/posts', (req, res) => {
     const text = req.body;
     postDb
-        .insert(text, userId)
-        .then(text => {
-            res.json(text);
+        .insert(text)
+        .then(posted => {
+            res.json(posted);
         })
-        .catch(err => { 
-            res.status(500).json({ error: "The post information could not be created." });
-        });
+    .catch(err => { 
+        res.status(500).json({ error: "The post information could not be created." });
+    });
 })
 
 server.delete('/api/posts/:id', (req, res) => {
@@ -163,14 +150,74 @@ server.delete('/api/posts/:id', (req, res) => {
 
 server.put('/api/posts/:id', (req, res) => {
     const id = req.params.id;
-    const name = req.body;
+    const text = req.body;
     postDb
-        .update( id, req.body )
+        .update( id, text )
         .then(posts => {
             res.json(posts);
         })
         .catch(err => { 
             res.status(500).json({ error: "The post could not be updated." });
+        });
+})
+
+server.get('/api/tags', (req, res) => {
+    tagDb
+        .get()
+        .then(tags => {
+            res.json(tags);
+        })
+        .catch(err => { 
+            res.status(500).json({ error: "The tag information could not be found." });
+        });
+})
+
+server.get('/api/tags/:id', (req, res) => {
+    const id = req.params.id;
+    tagDb
+        .get(id)
+        .then(tags => {
+            res.json(tags);
+        })
+        .catch(err => { 
+            res.status(500).json({ error: "The tag information could not be found." });
+        });
+})
+
+server.post('/api/tags/:id', (req, res) => {
+    const tag = req.body;
+    tagDb
+        .insert(tag)
+        .then(tagged => {
+            res.json(tagged);
+        })
+        .catch(err => { 
+            res.status(500).json({ error: "The tag information could not be created." });
+        });
+})
+
+server.delete('/api/tags/:id', (req, res) => {
+    const id = req.params.id;
+    tagDb
+       .remove(id)
+       .then(tags => {
+           res.json(tags);
+       })
+       .catch(err => { 
+        res.status(500).json({ error: "The tag could not be removed." });
+    });
+})
+
+server.put('/api/tags/:id', (req, res) => {
+    const id = req.params.id;
+    const tag = req.body;
+    tagDb
+        .update( id, tag )
+        .then(tags => {
+            res.json(tags);
+        })
+        .catch(err => { 
+            res.status(500).json({ error: "The tag could not be updated." });
         });
 })
 
