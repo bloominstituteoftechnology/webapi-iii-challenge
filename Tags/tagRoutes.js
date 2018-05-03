@@ -38,8 +38,8 @@ router.get('/:id', (req, res) => {
     router.post('/', (req, res) => {
         const {tag} = req.body;
         const newTag = {tag};
-            if (req.body.length === 0) {
-                res.status(404).json({ message: 'The specified Tag does not exist.' })
+            if ((tag.length === 0) || tag.length > 80) {
+                res.status(404).json({ message: 'The specified Tag does not exist or is great than 80 characters.' })
             } else 
             db
             .insert(newTag)
@@ -76,8 +76,8 @@ router.put('/:id', (req, res) => {
     if(!db.get(id)) {
         res.status(404).json({ msg: 'Specified Tag ID does not exist.' })
     }
-    if(req.body.length === 0) {
-        res.status(400).json({ errorMsg: 'Provide Tag.' })
+    if((tag.length === 0) || tag.length > 80) {
+        res.status(400).json({ errorMsg: 'Provide Tag that must be less than 80 characters long.' })
     } else
     db.update(id, req.body)
     .then(improve => {

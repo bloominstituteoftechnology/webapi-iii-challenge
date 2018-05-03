@@ -39,8 +39,8 @@ router.get('/:id', (req, res) => {
 router.post('/', (req, res) => {
     const {name} = req.body;
     const newPost = {name};
-        if (req.body.length === 0) {
-            res.status(404).json({ errorMsg: 'User with specified userID does not exist.' })
+        if ((name.length === 0) || name.length > 128) {
+            res.status(404).json({ errorMsg: 'User with specified userID does not exist or is greater than 128 characters.' })
         } else 
         db
         .insert(newPost)
@@ -75,6 +75,9 @@ router.put('/:id', (req, res) => {
     const id = req.params.id;
     if(!db.get(id)) {
         res.status(404).json({ errorMsg: 'User with the specified userID does not exist.' })
+    } 
+    if (name.length === 0 || name.length > 128) {
+        res.status(400).json({ errorMsg: 'Please provide userId and text.' })
     } else 
     db.update(id, req.body)
     .then(improve => {
