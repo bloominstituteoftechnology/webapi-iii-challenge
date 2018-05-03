@@ -4,7 +4,19 @@ const router = express.Router();
 
 const db = require("../helpers/tagDb.js");
 
-router.get("/", function(req, res) {
+const upperTags = function(req, res, next) {
+  req.body.tag = req.body.tag.toUpperCase();
+  next();
+};
+
+const getUpperTags = function(req, res, next) {
+  req.on("end", function() {
+    res.data.map(tag => tag.toUpperCase());
+  });
+  next();
+};
+
+router.get("/", getUpperTags, function(req, res) {
   db
     .get()
     .then(response => {
@@ -27,11 +39,11 @@ router.get("/:id", function(req, res) {
     });
 });
 
-router.post("/", function(req, res) {
-  const tag = req.body;
-  if (tag.tag && tag.tag.length <= 80) {
+router.post("/", upperTags, function(req, res) {
+  // let tag = req.body;
+  if (req.body.tag && req.body.tag.length <= 80) {
     db
-      .insert(tag)
+      .insert(req.body)
       .then(response => {
         res.status(200).json(response);
       })
