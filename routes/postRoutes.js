@@ -5,6 +5,17 @@ const tagRoutes = require('./tagRoutes');
 
 const router = express.Router();
 
+router.get('/', (req, res, next) => {
+    postDb
+        .get()
+        .then(posts => {
+            res.json(posts);
+        })
+        .catch(err => {
+            res.status(500).json({ error: err });
+        });
+});
+
 router.get('/:id', (req, res, next) => {
     const { id } = req.params;
 
@@ -24,9 +35,17 @@ router.post('/', (req, res, next) => {
     postDb
         .insert(postInfo)
         .then(response => {
-            res.status(201).json(response);
+            postDb
+                .get()
+                .then(posts => {
+                    res.json(posts);
+                })
+                .catch(err => {
+                    res.status(500).json({ error: err });
+                });
         })
         .catch(err => {
+            console.log(err)
             res.status(500).json({ error: err });
         });
 });
@@ -36,7 +55,7 @@ router.put('/:id', (req, res, next) => {
     const update = req.body;
 
     postDb
-        .udpate(id, update)
+        .update(id, update)
         .then(posts => {
             postDb
                 .get(id)
@@ -58,7 +77,14 @@ router.delete('/:id', (req, res, next) => {
     postDb
         .remove(id)
         .then(posts => {
-            res.json(posts);
+            postDb
+                .get()
+                .then(posts => {
+                    res.json(posts);
+                })
+                .catch(err => {
+                    res.status(500).json({ error: err });
+                });
         })
         .catch(err => {
             res.status(500).json({ error: err });

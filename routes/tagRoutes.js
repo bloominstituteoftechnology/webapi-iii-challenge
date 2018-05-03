@@ -34,7 +34,14 @@ router.post('/', (req, res, next) => {
     tagDb
         .insert(tagInfo)
         .then(response => {
-            res.status(201).json(response);
+            tagDb
+                .get()
+                .then(posts => {
+                    res.json(posts);
+                })
+                .catch(err => {
+                    res.status(500).json({ error: err });
+                });
         })
         .catch(err => {
             res.status(500).json({ error: err });
@@ -48,7 +55,14 @@ router.put('/:id', (req, res, next) => {
     tagDb
         .update(id, update)
         .then(response => {
-            res.json(response)
+            tagDb
+                .get()
+                .then(posts => {
+                    res.json(posts);
+                })
+                .catch(err => {
+                    res.status(500).json({ error: err });
+                });
         })
         .catch(err => {
             res.status(500).json({ error: err });
@@ -61,7 +75,14 @@ router.delete('/:id', (req, res, next) => {
     tagDb
         .remove(id)
         .then(response => {
-            res.json(response);
+            tagDb
+                .get()
+                .then(posts => {
+                    res.json(posts);
+                })
+                .catch(err => {
+                    res.status(500).json({ error: err });
+                });
         })
         .catch(err => {
             res.status(500).json({ error: err });

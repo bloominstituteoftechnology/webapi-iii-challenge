@@ -35,7 +35,14 @@ router.post('/', (req, res, next) => {
     userDb
         .insert(userInfo)
         .then(response => {
-            res.status(201).json(response);
+            userDb
+                .get()
+                .then(users => {
+                    res.json(users);
+                })
+                .catch(err => {
+                    res.status(500).json({ error: err });
+                });
         })
         .catch(err => {
             res.status(500).json({ error: err });
@@ -68,7 +75,13 @@ router.delete('/:id', (req, res, next) => {
     userDb
         .remove(id)
         .then(response => {
-            res.json(response);
+            userDb.get()
+                .then(users => {
+                    res.json(users);
+                })
+                .catch(err => {
+                    res.status(500).json({ error: err });
+                });
         })
         .catch(err => {
             res.status(500).json({ error: err });
