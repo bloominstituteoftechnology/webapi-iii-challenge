@@ -19,3 +19,19 @@ router.get("/", (req, res) => {
       });
     });
 });
+
+// GET posts by id
+router.get("/:id", (req, res) => {
+  const { id } = req.params;
+
+  db;
+  get(id)
+    .then(posts => {
+      res.status(200).json(posts);
+    })
+    .catch(error => {
+      res.status(500).json({
+        error: "There was an error retrieving the specified post."
+      });
+    });
+});
