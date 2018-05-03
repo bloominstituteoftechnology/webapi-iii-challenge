@@ -44,7 +44,7 @@ router.post("/", (req, res) => {
 	const newPost = req.body;
 	const { id } = req.params;
 
-	// validate - text should not be empty/userId should be valid
+	// validate - a post should contain text and a userId
 	if (newPost.text.length === 0 || !newPost.userId) {
 		res
 			.status(400)
@@ -61,6 +61,28 @@ router.post("/", (req, res) => {
 				});
 			});
 	}
+});
+
+// DELETE: remove a post from the list
+router.delete("/:id", (req, res) => {
+	const { id } = req.params;
+
+	postDB
+		.get(id)
+		.then(post => {
+			let postToBeDeleted = post;
+			postDB.remove(id).then(count => {
+				// if (count === 0) {
+				// 	res.status(404).json({ message: "post not found" });
+				// } else {
+				// 	res.status(200).json(postToBeDeleted);
+				// }
+				res.status(200).json(postToBeDeleted);
+			});
+		})
+		.catch(err => {
+			res.status(500).json({ error: "post could not be deleted" });
+		});
 });
 
 module.exports = router;
