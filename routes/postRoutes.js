@@ -20,13 +20,7 @@ router.get("/:id", (req, res) => {
   db
     .get(id)
     .then(post => {
-      if (post) {
-        res.json(post);
-      } else {
-        res
-          .status(404)
-          .json({ message: "The post with the specified ID does not exist." });
-      }
+      res.json(post);
     })
     .catch(err => {
       res
