@@ -74,3 +74,21 @@ router.put("/:id", (req, res) => {
       });
     });
 });
+
+// DELETE; remove tag
+router.delete("/:id", (req, res) => {
+  const { id } = req.params;
+
+  db
+    .remove(id)
+    .then(response => {
+      res.status(200).json(response);
+    })
+    .catch(error => {
+      res.status(500).json({
+        error: "There was an error removing the specified tag."
+      });
+    });
+});
+
+module.exports = router;
