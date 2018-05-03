@@ -134,6 +134,62 @@ server.delete('/api/tags/:id', (req, res) => {
     })
 })
 
+//put -- user 
+server.put('/api/users/:id', (req, res) => {
+    const id = req.params.id;
+    const user = req.body;
+    userDb.update(id, user)
+    .then(response => {
+        res.status(200).json({ user })
+    })
+    .catch(err => {
+        res.status(500).json({ Error: err })
+    })
+})
+
+//put -- post 
+server.put('/api/posts/:id', (req, res) => {
+    const id = req.params.id;
+    const post = req.body;
+    postDb
+    .update(id, post)
+    .then(response => {
+        res.status(200).json({ post })
+    })
+    .catch(err => {
+        res.status(500).json({ Error: err })
+    })
+})
+
+//put -- tags
+server.put('/api/tags/:id', (req, res) => {
+    const id = req.params.id;
+    const tag = req.body;
+    tagDb
+    .update(id, tag)
+    .then(response => {
+        res.status(200).json({ tag })
+    })
+    .catch(err => {
+        res.status(500).json({ Error: err })
+    })
+})
+
+//retrieve list of posts for a user
+server.get("/api/users/:id/posts", (req, res) => {
+    const { id } = req.params;
+    console.log(id);
+    userDb
+      .getUserPosts(id)
+      .then(posts => {
+        res.send(posts);
+      })
+      .catch(error => {
+        res.status(500).json({ message: "no posts found for this user" });
+      });
+  });
+
+  //
 
 
 
