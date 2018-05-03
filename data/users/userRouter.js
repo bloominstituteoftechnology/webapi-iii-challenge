@@ -25,7 +25,7 @@ router.get("/:id", (req, res) => {
   db
     .get(id)
     .then(users => {
-      res.json(users);
+      res.status(200).json(users);
     })
     .catch(error => {
       res.status(500).json({
@@ -37,10 +37,34 @@ router.get("/:id", (req, res) => {
 // INSERT user to db
 router.post("/", (req, res) => {
   const user = req.body;
+
   db
     .insert(user)
     .then(response => {
       res.status(201).json(response);
+    })
+    .catch(error => {
+      res.status(500).json({
+        error: "There was an error while adding a new user."
+      });
+    });
+});
+
+// UPDATE user
+router.put("/", (req, res) => {
+  const { id } = req.params;
+  const update = req.body;
+
+  db
+    .update(id, update)
+    .then(count => {
+      if (count > 0) {
+        db.get(id).then(updatedUser => {
+          res.status(200).json(updatedUser);
+        });
+      } else {
+        res.status(404).json({ error: "Could not find specified user." });
+      }
     })
     .catch(error => {
       res.status(500).json({
