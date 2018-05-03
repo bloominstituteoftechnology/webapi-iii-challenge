@@ -52,7 +52,7 @@ router.post('/', (req, res) => {
       if (!post.text) {
         res.status(400).json({ error: 'Text Required' });
       } else if (post.text.length > 140) {
-        res.status(400).json({ error: 'Max length 140 Its ike Twitter' });
+        res.status(400).json({ error: 'Max length 140 Its Like Twitter' });
       } else if (postsList.includes(post.text)) {
         res.status(400).json({ error: 'Post Exists' });
       } else {
