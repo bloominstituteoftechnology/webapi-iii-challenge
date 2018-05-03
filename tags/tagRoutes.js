@@ -61,4 +61,28 @@ router.post("/", (req, res) => {
 	}
 });
 
+// DELETE: remove a user from the list
+router.delete("/:id", (req, res) => {
+	// define id
+	const { id } = req.params;
+	console.log(id);
+
+	tagDB
+		.get(id)
+		.then(tag => {
+			// id is valid and tag exists delete the tag
+			let tagToBeDeleted = tag;
+			tagDB.remove(id).then(count => {
+				if (count === 0) {
+					res.status(404).json({ message: "tag not found" });
+				} else {
+					res.status(200).json(tagToBeDeleted);
+				}
+			});
+		})
+		.catch(err => {
+			res.status(500).json({ error: err });
+		});
+});
+
 module.exports = router;
