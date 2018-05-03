@@ -40,7 +40,8 @@ const id = req.params.id;
 });
 
 //<<<NEED TO WORK ON PUT, NEED TO WORK ON PUT >>>>>>>>>>>>>>>>>>>>>>>
-router.put('/users/:id', function (req, res) {
+// RESOLVED ? >>>>>>>> RESOLVED<<<<<<<<<RESOLVED >>>>
+router.put('/users', function (req, res) {
 
 
     const update = req.body;
@@ -114,44 +115,51 @@ router.post('/tags', (req, res, next) => {
 });
 
 //Command executes with 200 OK, but hard to confirm proper execution
-router.delete('/tags/:id', function (req, res) {
-    console.log('inside delete tag, id:', req.params)
-    const id = req.params;
-    let user;
-    dbT
-        .remove(id)
-        .then(founduser => {
-            user = { ...founduser[0] };
+//RESOLVED >>> <<<RESOLVE>>> <<RESOLVE>>
+router.delete('/tags', function (req, res) {
 
-            dbT.remove(id).then(response => {
-                res.status(200).json(user);
-            });
-        })
-        .catch(err => {
-            res.status(500).json({ erroor: err });
-        });
+    const update = req.body;
+    const id  = update.id;
+
+    dbT.remove(id).then(posts => {
+        if (id === undefined) {
+            res.status(404).json({message: "The post with the specified ID does not exist." });
+        } else if (posts.title === "" || posts.content === "") {
+            res.status(400).json({ errorMessage: "Please provide title and contents for the post."})
+        } else {
+            res.status(200).json(posts);
+
+        }
+    }).catch(err => {
+        //do something with the error
+        res.status(500).json({error: "The post information could not be modified." });
+
+    })
 });
 
 // It works but the order is confusing
 // It resolves with server error, but actually executes (updates)
-router.put('/tags/:id', function (req, res) {
-    const id  = req.params.id;
+//RESOLVED <<< RESOLVED >>>> <<<RESOLVED >>>>>
+router.put('/tags', function (req, res) {
     const update = req.body;
-    console.log('this is the tag: ', update);
-    dbT
-        .update(id, update)
-        .then(count => {
-            if (count > 0) {
-                dbT.getUserPosts(id).then(users => {
-                    res.status(200).json(users[0]);
-                });
-            } else {
-                res.status(404).json({ msg: 'user not found' });
-            }
-        })
-        .catch(err => {
-            res.status(500).json(err);
-        });
+    const id  = update.id;
+
+    dbT.update(id, update).then(posts => {
+        if (id === undefined) {
+            res.status(404).json({message: "The post with the specified ID does not exist." });
+        } else if (posts.title === "" || posts.content === "") {
+            res.status(400).json({ errorMessage: "Please provide title and contents for the post."})
+        } else {
+            res.status(200).json(posts);
+
+        }
+    }).catch(err => {
+        //do something with the error
+        res.status(500).json({error: "The post information could not be modified." });
+
+    })
+    
+
 });
 
 router.get('/tags', (req, res) => {
@@ -206,24 +214,41 @@ router.delete('/posts/:id', function (req, res) {
 });
 
 
-router.put('/posts/:id', function (req, res) {
-    
+router.put('/posts', function (req, res) {
     const update = req.body;
-    const id = update.userId;
-    dbP
-        .update(id, update)
-        .then(count => {
-            if (count > 0) {
-                dbP.getUserPosts(id).then(users => {
-                    res.status(200).json(users[0]);
-                });
-            } else {
-                res.status(404).json({ msg: 'user not found' });
-            }
-        })
-        .catch(err => {
-            res.status(500).json(err);
-        });
+    const id  = update.id;
+
+    dbP.update(id, update).then(posts => {
+        if (id === undefined) {
+            res.status(404).json({message: "The post with the specified ID does not exist." });
+        } else if (posts.title === "" || posts.content === "") {
+            res.status(400).json({ errorMessage: "Please provide title and contents for the post."})
+        } else {
+            res.status(200).json(posts);
+
+        }
+    }).catch(err => {
+        //do something with the error
+        res.status(500).json({error: "The post information could not be modified." });
+
+    })
+    
+    // const update = req.body;
+    // const id = update.userId;
+    // dbP
+    //     .update(id, update)
+    //     .then(count => {
+    //         if (count > 0) {
+    //             dbP.getUserPosts(id).then(users => {
+    //                 res.status(200).json(users[0]);
+    //             });
+    //         } else {
+    //             res.status(404).json({ msg: 'user not found' });
+    //         }
+    //     })
+    //     .catch(err => {
+    //         res.status(500).json(err);
+    //     });
 });
 
 router.get('/posts', (req, res) => {
