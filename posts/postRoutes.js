@@ -72,17 +72,41 @@ router.delete("/:id", (req, res) => {
 		.then(post => {
 			let postToBeDeleted = post;
 			postDB.remove(id).then(count => {
-				// if (count === 0) {
-				// 	res.status(404).json({ message: "post not found" });
-				// } else {
-				// 	res.status(200).json(postToBeDeleted);
-				// }
-				res.status(200).json(postToBeDeleted);
+				if (count === 0) {
+					res.status(404).json({ message: "post not found" });
+				} else {
+					res.status(200).json(postToBeDeleted);
+				}
 			});
 		})
 		.catch(err => {
 			res.status(500).json({ error: "post could not be deleted" });
 		});
+});
+
+// PUT: update a post by id
+router.put("/:id", (req, res) => {
+	const { id } = req.params;
+	const update = req.body;
+
+	if (update.text.length === 0 || !update.userId) {
+		res
+			.status(400)
+			.json({ message: "Please provide text and a userId to update a post" });
+	} else {
+		postDB
+			.update(id, update)
+			.then(count => {
+				if (count === 0) {
+					res.status(404).json({ message: "post not found" });
+				} else {
+					res.status(200).json(update);
+				}
+			})
+			.catch(err => {
+				res.status(500).json({ error: "post could not be updated" });
+			});
+	}
 });
 
 module.exports = router;
