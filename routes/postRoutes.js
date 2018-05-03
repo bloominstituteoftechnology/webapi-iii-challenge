@@ -44,4 +44,11 @@ router.delete('/:id', asyncHandler(async (req, res) => {
   res.status('200').json(numAffectedRows);
 }));
 
+// Get tags for a post 
+router.get('/:id/tags', asyncHandler(async (req, res) => {
+  const tags = await postDb.getPostTags(req.params.id); 
+  if (tags.length === 0 ) return res.status('401').json({ message: 'This post has no tags' }); 
+  res.status('200').json(tags);
+}));
+
 module.exports = router;
