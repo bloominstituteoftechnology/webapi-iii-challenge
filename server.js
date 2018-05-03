@@ -199,7 +199,7 @@ server.delete('/posts/:id', (req, res) => {
 //   })
 // });
 
-// // add a post to a user
+// // dd a post to a user
 // server.post("/users", (req, res) => {
 // const newUser = req.body;
 // if (!newUser.name) {
