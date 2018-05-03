@@ -13,6 +13,10 @@ server.get('/', (req, res) => {
     res.send('Api running');
   });
   
+
+//USERS USERS USERS USERS
+
+
 //CREATING USErS = POST
 server.post('/api/users', (req, res) => {
     const userInfo = req.body;
@@ -81,6 +85,27 @@ server.delete('/api/users', (req, res) => {
       .catch(err => {
           res.status(500).json({ error: err });
       })
+});
+
+
+//UPDATE USERS = PUT
+server.put('/api/users/:id', (req, res) => {
+    const { id } = req.params;
+    const update = req.body;
+    db
+      .update(id, update)
+      .then(count => {
+          if (count > 0) {
+              db.get(id).then(users => {
+                  res.status(200).json(users[0]);
+              });
+          } else {
+              res.status(404).json({ msg: 'user not found' });
+          }
+      })
+      .catch(err => {
+          res.status(500).json(err);
+      });
 });
 
 
