@@ -39,4 +39,28 @@ router.get("/:id", (req, res) => {
 		});
 });
 
+// POST: add a post to an existing user's posts
+router.post("/", (req, res) => {
+	const newPost = req.body;
+	const { id } = req.params;
+
+	// validate - text should not be empty/userId should be valid
+	if (newPost.text.length === 0 || !newPost.userId) {
+		res
+			.status(400)
+			.json({ message: "Please provide text and a userId for the post" });
+	} else {
+		postDB
+			.insert(newPost)
+			.then(post => {
+				res.status(200).json(newPost);
+			})
+			.catch(err => {
+				res.status(500).json({
+					error: "There was an error saving the post to the database"
+				});
+			});
+	}
+});
+
 module.exports = router;
