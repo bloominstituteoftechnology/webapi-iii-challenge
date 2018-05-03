@@ -2,24 +2,30 @@ const express = require('express');
 
 const db = require('../helpers/tagDb.js');
 
-// create router, then rename all 'server.' to 'router.'
+const upperTags = function (req, res, next) {
+  req.body.tag = req.body.tag.toUpperCase();
+  next();
+};
+
+// const upperTagsRes = function (req, res) {
+//   return (req.on("end", function () {
+//     console.log(res.data);
+//     res.data = res.data.map(tag => tag.toUpperCase());
+//   })
+//   )
+// }; // Not working... yet!
+
 const router = express.Router();
 
-router.post('/', (req, res, next) => {
+router.post('/', upperTags, (req, res, next) => {
   const userInformation = req.body;
-  // console.log('user information', userInformation);
-
   db
     .insert(userInformation)
     .then(response => {
       res.status(201).json(response);
     })
     .catch(err => {
-      // console.log(err);
-      // logErrorToDatabase(err);
       res.status(400).send({ Error: 'must be a unique value' });
-
-      // next(err);
     });
 });
 
@@ -41,7 +47,7 @@ router.delete('/', function (req, res) {
     });
 });
 
-router.put('/:id', function (req, res) {
+router.put('/:id', upperTags, function (req, res) {
   const { id } = req.params;
   const update = req.body;
 
@@ -56,29 +62,23 @@ router.put('/:id', function (req, res) {
 });
 
 router.get('/', (req, res) => {
-  //get the users
   db
     .get()
     .then(users => {
-      //middleware here
+      //middleware here?
+      console.log("after middleware?\n")
       res.json(users);
     })
     .catch(err => {
       res.status(500).json({ error: err });
-      // do something with the error
     });
 });
 
-// /123
 router.get('/:id', (req, res) => {
-  // grab the id from URL parameters
-
   const id = req.params.id;
-
   db
     .get(id)
     .then(users => {
-      // console.log(users);
       if (users === undefined) {
         res.status(404).json({ message: 'user not found' });
       } else {
@@ -86,7 +86,6 @@ router.get('/:id', (req, res) => {
       }
     })
     .catch(err => {
-      // do something with the error
       res.status(500).json({ error: err });
     });
 });

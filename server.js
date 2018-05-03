@@ -9,13 +9,6 @@ const postRoutes = require('./data/Routes/postRoutes');
 const server = express();
 // client -> [error, m1, post, m3] -> [rh1, rh2]
 
-function upperCase(tags) {
-  return (req, res, tags) => {
-    tags.forEach( tag => tag.toUpperCase());
-  }
-  next();
-}
-
 // function logger(msg) {
 //   return function(req, res, next) {
 //     console.log(`\n= ${msg}: ${req.url}`);
@@ -44,7 +37,7 @@ server.use(express.json());
 // user route handlers
 server.use('/api/users', userRoutes);
 server.use('/api/posts', postRoutes);
-server.use('/api/tags', upperCase(), tagRoutes);
+server.use('/api/tags', tagRoutes);
 
 server.get('/', (req, res) => {
   res.json({ api: 'running' });
