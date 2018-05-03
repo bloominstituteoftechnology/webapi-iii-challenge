@@ -7,8 +7,12 @@ const data = {
 
 const server = express();
 const userRoutes = require('./routes/userRoutes');
+const postRoutes = require('./routes/postRoutes');
+
 server.use(express.json());
 server.use('/api/users', userRoutes);
+server.use('/api/posts', postRoutes);
+
 
 // get all data pertaining to target param
 server.get('/api/:target', (req, res) => {

@@ -4,7 +4,8 @@ const data = require('../data/helpers/userDb');
 const router = express.Router();
 
 router.get('/:id/posts', (req, res) => {
-  data.getUserPosts(req.params.id)
+  data
+    .getUserPosts(req.params.id)
     .then(posts => {
       res.json(posts);
     })
