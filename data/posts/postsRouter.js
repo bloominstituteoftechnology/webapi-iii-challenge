@@ -20,7 +20,7 @@ router.get("/", (req, res) => {
     });
 });
 
-// GET posts by id
+// GET post by id
 router.get("/:id", (req, res) => {
   const { id } = req.params;
 
@@ -32,6 +32,22 @@ router.get("/:id", (req, res) => {
     .catch(error => {
       res.status(500).json({
         error: "There was an error retrieving the specified post."
+      });
+    });
+});
+
+//  GET post tags by id; getPostTags
+router.get("/:id/tags", (req, res) => {
+  const { id } = req.params;
+
+  db
+    .getPostTags(id)
+    .then(tags => {
+      res.status(200).json(tags);
+    })
+    .catch(error => {
+      res.status(500).json({
+        error: "There was an error retrieving the specified post's tags."
       });
     });
 });
