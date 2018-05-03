@@ -4,10 +4,17 @@ const router = express.Router();
 
 router.get('/', (req, res) => {
     db
+  
     .get()
     .then(posts => {
-        res.status(200).json(posts);
-    })
+        // console.log(res)
+        // console.log(posts[1].tag.toUpperCase())
+        res.status(200).json(posts.map(post => {
+            return {
+                ...post, tag: post.tag.toUpperCase()
+            }
+        }));
+        })
     .catch(err => {
         res.status(500).json({ error: 'The tags information could not be retrieved.'})
     });
@@ -21,7 +28,7 @@ router.get('/:id', (req, res) => {
         if (posts.length === 0) {
             res.status(404).json({  message: 'The tag with the specified ID does not exist.'})
         } else {
-            res.json(posts);
+            res.json({...posts, tag: posts.tag.toUpperCase()});
         }
     })
     .catch(err => {
@@ -30,8 +37,8 @@ router.get('/:id', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-    const {tag} = req.body;
-    const newTag = {tag};
+    const { tag } = req.body;
+    const newTag = { tag };
         if (tag.length === 0 || tag.length > 80) {
             res.status(404).json({ message: "The tag does not exist or you had 81 characters or more."})
         } else 
