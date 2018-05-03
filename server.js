@@ -83,6 +83,20 @@ server.put('/api/users/:id', (req, res) => {
     })
 })
 
+// Retrieve List of Post for a User
+server.get('/api/users/:id', (req, res) => {
+    const id = req.params.id;
+
+    userDb
+    .getUserPosts(id)
+    .then(response => {
+        res.send({ response })
+    })
+    .catch(err => {
+        res.json({ Error: err })
+    })
+})
+
 // --------POST--------
 
 // GET method for post
@@ -206,6 +220,7 @@ server.put('/api/tags/:id', (req, res) => {
         res.status(500).json({ Error: err })
     })
 })
+
 
 // Server attached to a port
 
