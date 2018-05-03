@@ -6,9 +6,7 @@
   "author": "Yasin and David",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon server.js --exec babel-node",
-    "build": "babel lib -d dist",
-    "serve": "node dist/index.js"
+    "start": "nodemon server.js --exec babel-node"
   },
   "dependencies": {
     "express": "^4.16.3",
