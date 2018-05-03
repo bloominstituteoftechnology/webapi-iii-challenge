@@ -31,7 +31,7 @@ router.get('/:id', (req, res) => {
   db.get(id)
     .then(post => {
       if (post === undefined) {
-        res.status(404).json({ message: 'User not found' });
+        res.status(404).json({ message: 'Post not found' });
       } else {
         res.json(post);
       }
@@ -51,7 +51,7 @@ router.put('/:id', function(req, res) {
           res.status(200).json(post);
         });
       } else {
-        res.status(404).json({ msg: 'User not found' });
+        res.status(404).json({ msg: 'Post not found' });
       }
     })
     .catch(err => {
@@ -65,9 +65,9 @@ router.delete('/:id', function(req, res) {
     .remove(id)
     .then(status => {
       if (status === 0) {
-        res.status(400).json({ msg: 'Unable to delete user.' });
+        res.status(400).json({ msg: 'Unable to delete post.' });
       } else {
-        res.status(200).json({ msg: 'User successfully deleted.' });
+        res.status(200).json({ msg: 'Post successfully deleted.' });
       }
     })
     .catch(err => {
