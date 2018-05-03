@@ -2,10 +2,16 @@ const express = require('express');
 const dbTags = require('../data/helpers/tagDb');
 const router = express.Router();
 
+const upperCase = (req, res, next) => {
+  if (req.body) { console.log(req.params) }
+  else console.log(false);
+  next();
+}
+
 // retrieve all tags
 router.get('/', (req, res) => {
   dbTags.get()
-    .then(tags => res.json(tags))
+    .then(tags => res.json(tags.map(tag => {return {...tag, tag: tag.tag.toUpperCase()}})))
     .catch(err => res.status(500).json({ error: "The tags could not be retrieved." }))
 })
 
@@ -13,7 +19,7 @@ router.get('/', (req, res) => {
 router.get('/:id', (req, res) => {
   const { id } = req.params;
   dbTags.get(id)
-    .then(tags => res.json(tags)) // returns object with props id, tag
+    .then(tags => res.json({...tags, tag: tags.tag.toUpperCase()})) // returns object with props id, tag
     .catch(err => res.status(500).json({ error: "Sorry." }))
 })
 
@@ -28,7 +34,7 @@ router.post('/addtag', (req, res) => {
 router.put('/:id/update', (req, res) => {
   const { id } = req.params;
   dbTags.update(id, req.body) // req.body should be { tag: "tag content" }
-    .then(tag => res.json(tag)) // returns object with prop tag
+    .then(tag => res.json(tag)) // returns 1 for success, 0 for failure
     .catch(err => res.status(500).json({ error: "Cannot update this tag." }))
 })
 
