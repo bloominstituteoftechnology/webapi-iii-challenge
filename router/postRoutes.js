@@ -15,19 +15,36 @@ router.get("/", (req, res) => {
     });
 });
 
+// router.get("/:id", (req, res) => {
+//   const { id } = req.params;
+//   db
+//     .get(id)
+//     .then(postFound => {
+//       if (postFound.length === 0) {
+//         res.status(404).json({ message: "Post is not found. Try again." });
+//       } else {
+//         res.json(postFound);
+//       }
+//     })
+//     .catch(err => {
+//       res.status(500).json({ error: "not working" });
+//     });
+// });
+
 router.get("/:id", (req, res) => {
-  const id = req.params.id;
+  const { id } = req.params;
+
   db
     .get(id)
-    .then(postFound => {
-      if (postFound.length === 0) {
-        res.status(404).json({ message: "Post is not found. Try again." });
-      } else {
-        res.json(postFound[0]);
-      }
-    })
-    .catch(err => {
-      res.status(500).json({ error: "not working" });
+    .then(post => res.json(post))
+    .catch(error => console.log(error))
+    .catch(error => {
+      res
+        .status(500)
+        .json({
+          error:
+            "The posts information could not be retrieved, or doesn't exist"
+        });
     });
 });
 
@@ -68,9 +85,8 @@ router.post("/", (req, res, next) => {
 
 router.delete("/:id", (req, res) => {
   const id = req.param.id;
-  
   db.get(id).then(postFound => {
-    let post = { ...postFound[0] };
+    let post = { ...postFound };
     db
       .remove(id)
       .then(response => {
@@ -91,7 +107,7 @@ router.put("/", (req, res) => {
     .then(response => {
       if (response > 0) {
         db.get(id).then(post => {
-          res.status(200).json(post[0]);
+          res.status(200).json(post);
         });
       } else {
         res.staus(404).json({ msg: "post is not found" });

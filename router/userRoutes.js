@@ -50,11 +50,11 @@ router.post("/", (req, res) => {
 // write it using an URL parameter instead /:id
 
 
-// returns empty object
+// both are fixed
 router.delete("/:id", (req, res) => {
   const id = req.params.id;
   db.get(id).then(userFound => {
-    let user = { ...userFound[0] };
+    let user = { ...userFound };
     db
       .remove(id)
       .then(response => {
@@ -66,8 +66,6 @@ router.delete("/:id", (req, res) => {
   });
 });
 
-
-// this one also returns empty object
 router.put("/:id", (req, res) => {
   const id = req.params.id;
   const updatedUser = req.body;
@@ -77,7 +75,7 @@ router.put("/:id", (req, res) => {
     .then(response => {
       if (response !== 0) {
         db.get(id).then(user => {
-          res.status(200).json(user[0]);
+          res.status(200).json(user);
         });
       } else {
         res.staus(404).json({ msg: "User is not found" });

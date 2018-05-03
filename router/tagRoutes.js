@@ -16,14 +16,15 @@ router.get("/", (req, res) => {
 });
 
 router.get("/:id", (req, res) => {
-  const id = req.params.id;
+  const { id } = req.params;
+
   db
     .get(id)
     .then(tagFound => {
       if (tagFound.length === 0) {
         res.status(404).json({ message: "tag is not found. Try again." });
       } else {
-        res.json(tagFound[0]);
+        res.json(tagFound);
       }
     })
     .catch(err => {
@@ -31,20 +32,17 @@ router.get("/:id", (req, res) => {
     });
 });
 
-// router GET, find by ID first, then return tag with tags
-router.get("/:id/tags", (req, res) => {
-  const id = req.params.id;
+router.post("/", (req, res, next) => {
+  const tag = req.body;
+
   db
-    .gettagTags(id)
-    .then(user => {
-      if (user.length === 0) {
-        res.status(404).json({ message: "tag is not found. Try again." });
-      } else {
-        res.json(user[0]);
-      }
+    .insert(tag)
+    .then(response => {
+      res.status(201).json(response);
     })
     .catch(err => {
-      res.status(500).json({ error: err });
+      res.status(500).json({ error: "Error; could not save post to database" });
+      next(err);
     });
 });
 
@@ -52,14 +50,17 @@ router.get("/:id/tags", (req, res) => {
 // write it using an URL parameter instead /:id
 
 router.delete("/:id", (req, res) => {
-  const id = req.param.id;
-  
-  db.get(id).then(tagFound => {
-    let tag = { ...tagFound[0] };
+  const id = req.params.id;
+
+  db
+  .get(id)
+  .then(tagFound => {
+    let tag = { ...tagFound };
+
     db
       .remove(id)
       .then(response => {
-        res.status(200).json(tag);
+        res.status(200).json(response);
       })
       .catch(error => {
         res.status(500).json({ error: "Nothing to delete" });
@@ -67,8 +68,8 @@ router.delete("/:id", (req, res) => {
   });
 });
 
-router.put("/", (req, res) => {
-  const id = req.param.id;
+router.put("test/:id", (req, res) => {
+  const id = req.params.id;
   const updatedtag = req.body;
 
   db
@@ -76,7 +77,7 @@ router.put("/", (req, res) => {
     .then(response => {
       if (response > 0) {
         db.get(id).then(tag => {
-          res.status(200).json(tag[0]);
+          res.status(200).json(tag);
         });
       } else {
         res.staus(404).json({ msg: "tag is not found" });
