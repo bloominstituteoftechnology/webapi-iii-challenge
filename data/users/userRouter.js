@@ -33,3 +33,18 @@ router.get("/:id", (req, res) => {
       });
     });
 });
+
+// INSERT user to db
+router.post("/", (req, res) => {
+  const user = req.body;
+  db
+    .insert(user)
+    .then(response => {
+      res.status(201).json(response);
+    })
+    .catch(error => {
+      res.status(500).json({
+        error: "There was an error while adding a new user."
+      });
+    });
+});
