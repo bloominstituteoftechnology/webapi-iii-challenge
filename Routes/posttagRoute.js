@@ -1,77 +1,63 @@
 import express from 'express';
-import db from '../data/helpers/userDb';
-import { validateBody, respondWithError } from '../utils';
-import { NOT_FOUND_ERROR, INPUT_ERROR, REMOVE_ERROR, PUT_ERROR } from './Errors';
+import db from '../data/helpers/tagDb';
+import { asyncMiddWrapper } from '../utils';
+import { NOT_FOUND_ERROR, INPUT_ERROR } from '../Errors';
 
-// post tag
-const postTagRoute = express.Router();
+// /posts
+const postTagsRoute = express.Router();
 
-postTagRoute.get('/', async (req, res) => {
-  try {
+postTagsRoute.get(
+  '/',
+  asyncMiddWrapper(async (req, res) => {
     const users = await db.get();
-    res.json('get:', users);
-  } catch (e) {
-    // .catch(()=>respondWithError(res))
-    respondWithError(res);
-  }
-});
+    res.json(users);
+  }),
+);
 
-postTagRoute.get('/:id', async (req, res) => {
-  try {
-    const user = await db.get(req.params.id);
-    console.log('get:', user);
-    if (!user.length) respondWithError(res, NOT_FOUND_ERROR);
+postTagsRoute.get(
+  '/:id',
+  asyncMiddWrapper(async (req, res) => {
+    console.log(req.params.id, req.params.index);
+    const user = await db.get(+req.params.id);
+    //  if (!user.length) throw NOT_FOUND_ERROR;
     res.json(user);
-  } catch (error) {
-    respondWithError(res);
-  }
-});
+  }),
+);
 
-postTagRoute.post('/', async (req, res) => {
-  const userInformation = await db.insert(req.body);
-  console.log(userInformation);
-  try {
-    if (!validateBody(body)) {
-      respondWithError(INPUT_ERROR);
-      return;
+postTagsRoute.post(
+  '/',
+  asyncMiddWrapper(async (req, res) => {
+    if (!req.body) {
+      throw INPUT_ERROR;
     }
+    const userInformation = await db.insert(req.body);
     res.status(201).json(userInformation);
-  } catch (error) {
-    // .catch(()=>respondWithError(res))
-    respondWithError(res);
-  }
-});
+  }),
+);
 
-postTagRoute.put('/:id', async (req, res) => {
-  try {
+postTagsRoute.put(
+  '/:id',
+  asyncMiddWrapper(async (req, res) => {
+    if (!req.body.name) {
+      throw INPUT_ERROR;
+    }
     const userInformation = await db.update(req.params.id, req.body);
-    console.log(userInformation);
-    if (!validateBody(body)) {
-      respondWithError(res, INPUT_ERROR);
-      return;
+    if (Number(userInformation) === 0) {
+      throw NOT_FOUND_ERROR;
     }
-    if (Number(response) === 0) {
-      respondWithError(res, NOT_FOUND_ERROR);
-      return;
-    }
-    res.json(userInformation);
-  } catch (error) {
-    respondWithError(res, PUT_ERROR);
-  }
-});
+    res.status(200).json(userInformation);
+  }),
+);
 
-postTagRoute.delete('/:id', async (req, res) => {
-  try {
+postTagsRoute.delete(
+  '/:id',
+  asyncMiddWrapper(async (req, res) => {
     const userInformation = await db.remove(req.params.id);
-    console.log(userInformation);
-    if (response === 0) {
-      respondWithError(res, NOT_FOUND_ERROR);
-      return;
+    if (userInformation === 0) {
+      throw NOT_FOUND_ERROR;
     }
-    res.json(userInformation);
-  } catch (error) {
-    respondWithError(res, REMOVE_ERROR);
-  }
-})
+    res.status(200).json(userInformation);
+  }),
+);
 
-export default postTagRoute;
+export default postTagsRoute;

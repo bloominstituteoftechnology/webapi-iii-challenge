@@ -1,5 +1,7 @@
 import { Router } from 'express';
 import userRoute from './userRoute';
+import postsRoute from './postsRoute';
+import posttagRoute from './posttagRoute';
 
 const mainRouter = Router({ mergeParams: true });
 
@@ -9,9 +11,9 @@ const mainRouter = Router({ mergeParams: true });
 mainRouter.use('/users', userRoute);
 
 // /posts
-mainRouter.use('/posts', () => {});
+mainRouter.use('/posts', postsRoute);
 
 // /tags
-mainRouter.use('/tags', () => {});
+mainRouter.use('/tags', posttagRoute);
 
 export default mainRouter;
