@@ -16,6 +16,24 @@ function logger(req, res, next) {
   };
 }
 
+function uppercaseTag(req, res, next) {
+  let oldjson = res.json;
+  let newTagObjects;
+
+  res.json = function(data) {
+    tagObjects = arguments[0];
+
+    if (tagObjects[0].tag) {
+      newTagObjects = tagObjects.map(tagObject => {
+        return { ...tagObject, tag: tagObject.tag.toUpperCase() };
+      });
+    }
+    arguments[0] = newTagObjects;
+    oldjson.apply(res, arguments);
+  };
+  next();
+}
+
 function errorHandler(err, req, res, next) {
   if (err) {
     if (err.errno === 19) {
