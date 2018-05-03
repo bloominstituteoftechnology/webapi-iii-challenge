@@ -2,7 +2,8 @@ const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
 
-const userDb = require('./data/helpers/userDb.js');
+const userRoutes = require('./users/userRoutes');
+
 const tagDb = require('./data/helpers/tagDb.js');
 const postDb = require('./data/helpers/postDb.js');
 
@@ -16,78 +17,9 @@ server.get('/', (req, res) => {
     res.send('API running');
 });
 
+server.use('/api/users', userRoutes);
 
-server.get('/api/users', (req, res) => {
-    userDb
-        .get()
-        .then(users => {
-            res.json(users);
-        })
-        .catch(err => { 
-            res.status(500).json({ error: "The user information could not be found." });
-        });
-})
 
-server.get('/api/users/:id', (req, res) => {
-    const id = req.params.id;
-    userDb
-        .get(id)
-        .then(users => {
-            res.json(users);
-        })
-        .catch(err => { 
-            res.status(500).json({ error: "The user information could not be found." });
-        });
-})
-
-server.get('/api/users/:id/posts', (req, res) => {
-    const id = req.params.id;
-    userDb
-        .getUserPosts(id)
-        .then(users => {
-            res.json(users);
-        })
-        .catch(err => {
-            res.status(500).json({ error: "The user information could not be found." });
-        })
-})
-
-server.post('/api/users', (req, res) => {
-    const name = req.body;
-    userDb
-        .insert(name)
-        .then(named => {
-            res.json(named);
-        })
-        .catch(err => { 
-            res.status(500).json({ error: "The user information could not be created." });
-        });
-})
-
-server.delete('/api/users/:id', (req, res) => {
-    const id = req.params.id;
-    userDb
-       .remove(id)
-       .then(users => {
-           res.json(users);
-       })
-       .catch(err => { 
-        res.status(500).json({ error: "The user could not be removed." });
-    });
-})
-
-server.put('/api/users/:id', (req, res) => {
-    const id = req.params.id;
-    const name = req.body;
-    userDb
-        .update( id, req.body )
-        .then(users => {
-            res.json(users);
-        })
-        .catch(err => { 
-            res.status(500).json({ error: "The user could not be updated." });
-        });
-})
 
 server.get('/api/posts', (req, res) => {
     postDb
