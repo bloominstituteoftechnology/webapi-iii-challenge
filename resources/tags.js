@@ -19,9 +19,11 @@ router.get('/:id', (req, res) => {
 
 // add a tag
 router.post('/addtag', (req, res) => {
-  dbTags.insert(req.body)
-    .then(tag => res.json(tag)) // returns object with prop id - representing the tag id
-    .catch(err => res.status(500).json({ error: "Cannot add this tag." }))
+  req.body.tag.length < 80 ?
+    dbTags.insert(req.body)
+      .then(tag => res.json(tag)) // returns object with prop id - representing the tag id
+      .catch(err => res.status(500).json({ error: "Cannot add this tag." })) :
+    res.json({ error: "Your tag is too long. Must be less than 80 characters." })
 })
 
 // update a tag

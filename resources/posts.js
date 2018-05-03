@@ -3,8 +3,6 @@ const dbPost = require('../data/helpers/postDb');
 const dbUsers = require('../data/helpers/userDb');
 const router = express.Router();
 
-// const existingUsers = dbUsers.get().then(users => res.json(users)).catch(err => res.json({ error: "Could not retrieve users." }))
-
 // retrieve all posts
 router.get('/', (req, res) => {
   dbPost.get()
