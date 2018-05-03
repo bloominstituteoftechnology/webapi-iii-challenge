@@ -2,10 +2,24 @@ const express = require("express");
 const router = express.Router();
 const tagDb = require("../data/helpers/tagDb.js")
 
+
+let upperCaseTags = (req, res, next) => {
+    if(req.method === "POST") {
+        req.body.tag = req.body.tag.toUpperCase()
+        console.log(req.body.tag)
+    }
+    next()
+}
+
+router.use(express.json())
+router.use(upperCaseTags)
+
+
 router.get('/', (req, res) => {
     tagDb.get().then(tags => {
         res.json(tags);
     }).catch(err => {
+
         res.status(500).json({
             error: "The tags could not be found"
         })
