@@ -1,14 +1,16 @@
 //import all dependency's here:
-import express from 'express';
-import cors from 'cors';
-import helmet from 'helmet';
-import userDb from './data/helpers/userDb.js';
-import postsDb from './data/helpers/postDb.js';
-import tagsDb from './data/helpers/tagDb.js';
+const express = require('express');
+const cors = require('cors');
+const helmet = require('helmet');
+const userDb = require('./data/helpers/userDb');
+const postDb = require('./data/helpers/postDb');
+const tagsDb = require('./data/helpers/tagDb');
+const userRoute = require('./userRoute');
 
 const port = 5000;
 const server = express();
 
+// "start": "nodemon server.js --exec babel-node --presets es2015,stage-2"
 // create custom middleware here:
 
 
@@ -18,26 +20,20 @@ server.use(cors());
 server.use(express.json());
 
 // add route handlers:
+server.use('/api/users', userRoute);
 
 // create route handlers here:
-server.get('/api/users', (req, res) => {
-  userDb.get()
-    .then(users => {
-      postsDb.get()
-        .then(posts => {
-          users.map(user => {
-            user.posts = [];
-            posts.map((post) => {
-              if(post.userId === user.id){
-                user.posts.push(post);
-              }
-            })
-          })
-          res.json(users);
-        })
-    });
-})
 
+// server.post('/api/users', (req, res) => {
+//   const {name} = req.body;
+//   userDb.insert(name)
+//     .then(obj => {
+//       userDb.get(obj.id)
+//         .then(user => {
+//           res.json(user);
+//         })
+//     })
+// })
 server.get('/api/posts', (req, res) => {
   postsDb.get()
     .then(posts => {
