@@ -51,3 +51,21 @@ router.get("/:id/tags", (req, res) => {
       });
     });
 });
+
+// POST add new posts
+router.post("/", (req, res) => {
+  const post = req.body;
+
+  db
+    .insert(post)
+    .then(response => {
+      res.status(200).json(response);
+    })
+    .catch(error => {
+      res.status(500).json({
+        error: "There was an error adding a post."
+      });
+    });
+});
+
+
