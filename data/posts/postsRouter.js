@@ -52,7 +52,7 @@ router.get("/:id/tags", (req, res) => {
     });
 });
 
-// POST add new posts
+// POST add new posts; insert
 router.post("/", (req, res) => {
   const post = req.body;
 
@@ -68,4 +68,27 @@ router.post("/", (req, res) => {
     });
 });
 
+// PUT update posts by id
+router.put("/:id", (req, res) => {
+  const { id } = req.params;
+  const update = req.body;
 
+  db
+    .update(id, update)
+    .then(count => {
+      if (count > 0) {
+        db.get(id).then(updatedPost => {
+          res.status(200).json(updatedPost);
+        });
+      } else {
+        res.status(404).json({
+          error: "Could not find specified post."
+        });
+      }
+    })
+    .catch(error => {
+      res.status(500).json({
+        error: "There was an error updating the post."
+      });
+    });
+});
