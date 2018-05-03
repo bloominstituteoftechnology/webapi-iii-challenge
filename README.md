@@ -50,10 +50,11 @@ The _schemas_ (properties and data type of each property) used to store and retr
 * id: number, no need to provide it when creating users, the database will generate it.
 * name: up to 128 characters long, required.
 
-##### Posts
+##### Posts <<UPDATE method updates POSTS TEXT, NOT TAG>>
 
 * id: number, no need to provide it when creating posts, the database will automatically generate it.
 * userId: number, required, must be the id of an existing user.
+# This is not specific...  in /posts the "id" is actually the "userId", for the json object we do use "userId" (although it's just the id according to the /posts output, not the userId). There are many users with the same userId, but id is unique.
 * text: string, no size limit, required.
 
 ##### Tags
