@@ -22,6 +22,49 @@ server.get('/api/users', (req, res) => {
     });
 });
 
+//get list of all posts by a user
+server.get('/api/users/:id/posts', (req, res) => {
+    const id = req.params.id;
+    dbUsr.getUserPosts(id).then(posts => {
+        res.json(posts);
+    }).catch(err => {
+        res.status(500).json({ error: "we fucked up"});
+    });
+});
+
+//create a new user
+server.post('/api/users/new', (req, res) => {
+    const { name } = req.body
+    const user = { name: name };
+    dbUsr.insert(user).then(
+        res.status(200).json("creation success")
+    ).catch(err => {
+        res.status(500).json({ error: "There was an error while saving the user to the database" });
+    });
+});
+
+//delete a user
+server.delete('/api/users/:id/delete', (req, res) => {
+    const id = req.params.id;
+    dbUsr.remove(id).then(user => {
+        res.json("deleted");
+    }).catch(err => {
+        res.status(500).json({ error: "The post could not be removed" });
+    })
+});
+
+//update a user
+server.put('/api/users/:id/update', (req, res) => {
+    const id = req.params.id;
+    const { name } = req.body;
+    const user = { name: name };
+    dbUsr.update(id, user).then(
+        res.status(200).json("update success")
+    ).catch(err => {
+        res.status(500).json({ error: "There was an error while saving the post to the database" });
+    })
+});
+
 //get list of all tags
 server.get('/api/tags', (req, res) => {
     dbTg.get().then(users => {
@@ -40,15 +83,17 @@ server.get('/api/posts', (req, res) => {
     });
 });
 
-//get list of all posts by a user
-server.get('/api/users/:id/posts', (req, res) => {
+//get list of all tags on a
+server.get('/api/posts/:id/', (req, res) => {
     const id = req.params.id;
-    dbUsr.getUserPosts(id).then(posts => {
+    dbPst.getPostTags(id).then(posts => {
         res.json(posts);
     }).catch(err => {
         res.status(500).json({ error: "we fucked up"});
     });
 });
+
+
 
 
 server.listen(666, () => console.log('\n==API Running on port 666\n'));
