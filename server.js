@@ -69,6 +69,20 @@ server.delete('/api/users/:id', (req, res) => {
     })
 })
 
+// PUT method for user
+server.put('/api/users/:id', (req, res) => {
+    const id = req.params.id;
+    const user = req.body;
+
+    userDb.update(id, user)
+    .then(response => {
+        res.status(200).json({ user })
+    })
+    .catch(err => {
+        res.status(500).json({ Error: err })
+    })
+})
+
 // --------POST--------
 
 // GET method for post
