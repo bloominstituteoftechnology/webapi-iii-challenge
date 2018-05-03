@@ -44,4 +44,11 @@ router.delete('/:id', asyncHandler(async (req, res) => {
   res.status('200').json(numAffectedRows);
 }));
 
+// Get posts for a user 
+router.get('/:id/posts', asyncHandler(async (req, res) => {
+  const posts = await userDb.getUserPosts(req.params.id); 
+  if (posts.length === 0 ) return res.status('401').json({ message: 'This user has no posts' }); 
+  res.status('200').json(posts);
+}));
+
 module.exports = router;
