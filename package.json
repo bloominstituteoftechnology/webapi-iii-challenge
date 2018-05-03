@@ -1,0 +1,37 @@
+{
+  "dependencies": {
+    "express": "^4.16.3",
+    "helmet": "^3.12.0",
+    "knex": "^0.14.6",
+    "morgan": "^1.9.0",
+    "parcel-bundler": "^1.7.1",
+    "sqlite3": "^4.0.0"
+  },
+  "name": "node-blog",
+  "description": "## Topics",
+  "version": "1.0.0",
+  "main": "dist/server.js",
+  "devDependencies": {
+    "concurrently": "^3.5.1",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.11.0",
+    "nodemon": "^1.17.3"
+  },
+  "scripts": {
+    "start": "concurrently \"yarn watch\" \"nodemon\" ",
+    "watch": "parcel watch server.js --target node",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/axhon/Node-Blog.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/axhon/Node-Blog/issues"
+  },
+  "homepage": "https://github.com/axhon/Node-Blog#readme"
+}
