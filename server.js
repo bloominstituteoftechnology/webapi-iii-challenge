@@ -1,6 +1,8 @@
 const express = require("express");
 const helmet = require("helmet");
 
+const userRoutes = require("./Routes/userRoutes");
+
 const server = express();
 
 // function greeter(name) {
@@ -29,9 +31,7 @@ const server = express();
 server.use(express.json());
 server.use(helmet());
 
-server.get("/", (req, res) => {
-  res.send("hello there!");
-});
+server.use("/api/users", userRoutes);
 
 // function errorHandler(err, req, res, next) {
 //   if (err) {
