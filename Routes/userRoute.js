@@ -1,14 +1,9 @@
-import { Router } from 'express';
+// unnecessary
+// will make a smaller bundle size
+import Router from 'express/lib/router';
 import db from '../data/helpers/userDb';
-import { respondWithError } from '../utils';
+import { errHandler } from '../utils';
 import { NOT_FOUND_ERROR, INPUT_ERROR } from '../Errors';
-
-const errHandler = (err, req, res) => {
-  if (err.error) {
-    return respondWithError(res, err);
-  }
-  return respondWithError(res);
-};
 
 const asyncMiddWrapper = fn => (req, res) =>
   Promise.resolve(fn(req, res)).catch(e => errHandler(e, req, res));
@@ -21,7 +16,7 @@ userRoute.get(
   asyncMiddWrapper(async (req, res) => {
     const users = await db.get();
     res.json(users);
-  })
+  }),
 );
 
 userRoute.get(
@@ -30,7 +25,7 @@ userRoute.get(
     const user = await db.get(req.params.id);
     if (!user) throw NOT_FOUND_ERROR;
     res.status(200).json(user);
-  })
+  }),
 );
 
 userRoute.post(
@@ -42,7 +37,7 @@ userRoute.post(
     const userInformation = await db.insert(req.body);
 
     res.status(201).json(userInformation);
-  })
+  }),
 );
 
 userRoute.put(
@@ -56,7 +51,7 @@ userRoute.put(
       throw NOT_FOUND_ERROR;
     }
     res.status(200).json(userInformation);
-  })
+  }),
 );
 
 userRoute.delete(
@@ -67,7 +62,7 @@ userRoute.delete(
       throw NOT_FOUND_ERROR;
     }
     res.status(200).json(userInformation);
-  })
+  }),
 );
 
 export default userRoute;
