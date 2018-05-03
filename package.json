@@ -2,7 +2,7 @@
   "name": "node-blog",
   "version": "1.0.0",
   "description": "## Topics",
-  "main": "knexfile.js",
+  "main": "server.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/pfang/Node-Blog.git"
