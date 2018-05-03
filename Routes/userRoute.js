@@ -1,90 +1,73 @@
 import { Router } from 'express';
 import db from '../data/helpers/userDb';
-import { validateBody, respondWithError } from '../utils';
-import {
-  NOT_FOUND_ERROR,
-  INPUT_ERROR,
-  REMOVE_ERROR,
-  PUT_ERROR
-} from '../Errors';
+import { respondWithError } from '../utils';
+import { NOT_FOUND_ERROR, INPUT_ERROR } from '../Errors';
+
+const errHandler = (err, req, res) => {
+  if (err.error) {
+    return respondWithError(res, err);
+  }
+  return respondWithError(res);
+};
+
+const asyncMiddWrapper = fn => (req, res) =>
+  Promise.resolve(fn(req, res)).catch(e => errHandler(e, req, res));
 
 // /users
 const userRoute = Router();
 
-const errorMiddleware = async (err, req, res, next) => {
-  console.log('i ran');
-  if (err) next(err);
-  res.status(400).json({ msg: err });
-  // await next();
-};
-
-const middWrapper = fn => (err, req, res, next) => fn(err, req, res, next);
-
-const errwrapper = middWrapper(errorMiddleware);
-
-userRoute.get('/', errwrapper, async (req, res) => {
-  try {
+userRoute.get(
+  '/',
+  asyncMiddWrapper(async (req, res) => {
     const users = await db.get();
-    // throw 'err';
-    res.status(200).json(users);
-  } catch (e) {
-    // .catch(()=>respondWithError(res))
-    respondWithError(res);
-  }
-});
+    res.json(users);
+  })
+);
 
-userRoute.get('/:id', async (req, res) => {
-  try {
+userRoute.get(
+  '/:id',
+  asyncMiddWrapper(async (req, res) => {
     const user = await db.get(req.params.id);
-    if (!user.name) respondWithError(res, NOT_FOUND_ERROR);
+    if (!user) throw NOT_FOUND_ERROR;
     res.status(200).json(user);
-  } catch (error) {
-    respondWithError(res);
-  }
-});
+  })
+);
 
-userRoute.post('/', async (req, res) => {
-  const userInformation = await db.insert(req.body);
-  try {
-    if (!validateBody(userInformation)) {
-      respondWithError(res, INPUT_ERROR);
-      return;
+userRoute.post(
+  '/',
+  asyncMiddWrapper(async (req, res) => {
+    if (!req.body.name) {
+      throw INPUT_ERROR;
     }
+    const userInformation = await db.insert(req.body);
+
     res.status(201).json(userInformation);
-  } catch (error) {
-    // .catch(()=>respondWithError(res))
-    respondWithError(res);
-  }
-});
+  })
+);
 
-userRoute.put('/:id', async (req, res) => {
-  try {
-    const userInformation = await db.update(req.params.id, req.body);
-    if (!validateBody(userInformation)) {
-      respondWithError(res, INPUT_ERROR);
-      return;
+userRoute.put(
+  '/:id',
+  asyncMiddWrapper(async (req, res) => {
+    if (!req.body.name) {
+      throw INPUT_ERROR;
     }
+    const userInformation = await db.update(req.params.id, req.body);
     if (Number(userInformation) === 0) {
-      respondWithError(res, NOT_FOUND_ERROR);
-      return;
+      throw NOT_FOUND_ERROR;
     }
     res.status(200).json(userInformation);
-  } catch (error) {
-    respondWithError(res, PUT_ERROR);
-  }
-});
+  })
+);
 
-userRoute.delete('/:id', async (req, res) => {
-  try {
+userRoute.delete(
+  '/:id',
+  asyncMiddWrapper(async (req, res) => {
     const userInformation = await db.remove(req.params.id);
     if (userInformation === 0) {
-      respondWithError(res, NOT_FOUND_ERROR);
-      return;
+      throw NOT_FOUND_ERROR;
     }
     res.status(200).json(userInformation);
-  } catch (error) {
-    respondWithError(res, REMOVE_ERROR);
-  }
-});
+  })
+);
 
 export default userRoute;
