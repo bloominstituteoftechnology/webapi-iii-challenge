@@ -3,13 +3,14 @@
     "private": true,
     "main": "server.js",
     "scripts": {
-      "start": "nodemon server.js"
+        "start": "nodemon server.js"
     },
     "dependencies": {
+        "cors": "^2.8.4",
         "knex": "^0.14.6",
         "sqlite3": "^4.0.0"
     },
     "devDependencies": {
-      "nodemon": "^1.17.3"
+        "nodemon": "^1.17.3"
     }
 }

@@ -1,6 +1,7 @@
 const userDb = require('./data/helpers/userDb');
 const postDb = require('./data/helpers/postDb');
 const tagDb = require('./data/helpers/tagDb');
+const cors = require('cors');
 const userRoutes = require('./routes/userRoutes');
 const postRoutes = require('./routes/postRoutes');
 const tagRoutes = require('./routes/tagRoutes');
@@ -18,6 +19,7 @@ errorHandler = (err, req, res, next) => {
     }
 }
 
+server.use(cors());
 server.use(express.json());
 
 server.get('/', (req, res) => {
