@@ -6,9 +6,23 @@ import { NOT_FOUND_ERROR, INPUT_ERROR } from '../Errors';
 // /posts
 const postTagsRoute = express.Router();
 
+// allow uppercase
+function upperCase() {
+
+  return function (req, res, next) {
+    const str = res.json
+    res.json = (tag) => {
+      str(tag.tag.toUpperCase())
+    }
+    next()
+  }
+}
+
+// postTagRoute.use(upperCase)
+
 postTagsRoute.get(
   '/',
-  asyncMiddWrapper(async (req, res) => {
+  upperCase(), asyncMiddWrapper(async (req, res) => {
     const users = await db.get();
     res.json(users);
   }),
