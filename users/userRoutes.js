@@ -21,6 +21,32 @@ router.get("/", (req, res) => {
 		});
 });
 
+// GETUSERSPOST: get a list of posts for a user
+router.get("/userPosts/:id", (req, res) => {
+	const { id } = req.params;
+
+	userDB
+		.get(id)
+		.then(user => {
+			if (user) {
+				userDB.getUserPosts(id).then(userPosts => {
+					if (userPosts.length === 0) {
+						res.status(404).json({ message: "user has no posts!" });
+					} else {
+						res.status(200).json(userPosts);
+					}
+				});
+			} else {
+				res.status(404).json({ message: "user not found" });
+			}
+		})
+		.catch(err => {
+			res.status(500).json({
+				error: "there was a problem retrieving the list of posts for this user"
+			});
+		});
+});
+
 // GET: user by id
 router.get("/:id", (req, res) => {
 	// define id
@@ -101,12 +127,5 @@ router.put("/:id", (req, res) => {
 			res.status(500).json({ error: "user could not be changed" });
 		});
 });
-
-// GETUSERSPOST: get a list of posts for a user
-// router.getUserPosts("/:id", (req, res) => {
-// 	// define id
-// 	const { id } = req.params;
-// 	console.log(id);
-// });
 
 module.exports = router;
