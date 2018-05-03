@@ -23,6 +23,16 @@ router.get('/:id', (req, res) => {
         .catch(() => res.status(500).send({ error: 'Error fetching post' }))
 });
 
+router.get('/:id/tags', (req, res) => {
+    const id = req.params.id;
+    postDb
+        .getPostTags(id)
+        .then((response) => response.length === 0
+            ? res.status(404).send({error: `Tags not found`})
+            : res.status(200).send(response))
+        .catch(() => res.status(500).send({ error: 'Error fetching tags' }))
+});
+
 // post new post
 router.post('/', (req, res) => {
     const text= req.body.text;
