@@ -4,6 +4,8 @@ const router = express.Router();
 
 const db = require('../data/helpers/tagDb')
 
+router.use(express.json());
+
 router.get('/',(req,res)=>{
     db
     .get()
