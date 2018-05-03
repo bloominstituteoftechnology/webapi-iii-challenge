@@ -89,4 +89,89 @@ server.put('/api/users/:id', (req, res) => {
         });
 })
 
+server.get('/api/posts', (req, res) => {
+    postDb
+        .get()
+        .then(posts => {
+            res.json(posts);
+        })
+        .catch(err => { 
+            res.status(500).json({ error: "The post information could not be found." });
+        });
+})
+
+server.get('/api/posts/:id', (req, res) => {
+    const id = req.params.id;
+    postDb
+        .get(id)
+        .then(posts => {
+            res.json(posts);
+        })
+        .catch(err => { 
+            res.status(500).json({ error: "The post information could not be found." });
+        });
+})
+
+server.get('/api/posts/:id/tags', (req, res) => {
+    const id = req.params.id;
+    postDb
+        .getPostTags(id)
+        .then(posts => {
+            res.json(posts);
+        })
+        .catch(err => { 
+            res.status(500).json({ error: "The post information could not be found." });
+        });
+})
+
+server.get('/api/posts/:id/posts', (req, res) => {
+    const id = req.params.id;
+    postDb
+        .getpostPosts(id)
+        .then(posts => {
+            res.json(posts);
+        })
+        .catch(err => {
+            res.status(500).json({ error: "The post information could not be found." });
+        })
+})
+
+server.post('/api/posts/:id', (req, res) => {
+    const userId = req.params.userId;
+    const text = req.body;
+    postDb
+        .insert(text, userId)
+        .then(text => {
+            res.json(text);
+        })
+        .catch(err => { 
+            res.status(500).json({ error: "The post information could not be created." });
+        });
+})
+
+server.delete('/api/posts/:id', (req, res) => {
+    const id = req.params.id;
+    postDb
+       .remove(id)
+       .then(posts => {
+           res.json(posts);
+       })
+       .catch(err => { 
+        res.status(500).json({ error: "The post could not be removed." });
+    });
+})
+
+server.put('/api/posts/:id', (req, res) => {
+    const id = req.params.id;
+    const name = req.body;
+    postDb
+        .update( id, req.body )
+        .then(posts => {
+            res.json(posts);
+        })
+        .catch(err => { 
+            res.status(500).json({ error: "The post could not be updated." });
+        });
+})
+
 server.listen(5000, () => console.log('\n== API running on port 5000 ==\n'));
