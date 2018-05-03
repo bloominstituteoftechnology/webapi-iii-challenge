@@ -6,7 +6,7 @@ const router = express.Router();
 
 const db = require("../helpers/tagDb");
 
-// GET tags
+// GET tags; root
 router.get("/", (req, res) => {
   db
     .get()
@@ -20,4 +20,16 @@ router.get("/", (req, res) => {
     });
 });
 
+// GET tags by id
+router.get("/:id", (req, res) => {
+  const { id } = req.params;
 
+  db
+    .get(id)
+    .then(tag => {
+      res.status(200).json(tag);
+    })
+    .catch(error => ({
+      error: "There was an error retrieving the specified tag."
+    }));
+});
