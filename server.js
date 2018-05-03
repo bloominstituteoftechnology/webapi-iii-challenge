@@ -9,18 +9,12 @@ const postRoutes = require('./data/Routes/postRoutes');
 const server = express();
 // client -> [error, m1, post, m3] -> [rh1, rh2]
 
-// function greeter(name) {
-//   return function(req, res, next) {
-//     console.log(`hello ${name}`);
-//     console.log(req.query);
-//     // http://localhost:8000/?pass=mellon
-//     if (req.query.pass === 'mellon') {
-//       next();
-//     } else {
-//       res.send('YOU SHALL NOT PASS!!!!');
-//     }
-//   };
-// }
+function upperCase(tags) {
+  return (req, res, tags) => {
+    tags.forEach( tag => tag.toUpperCase());
+  }
+  next();
+}
 
 // function logger(msg) {
 //   return function(req, res, next) {
@@ -50,7 +44,7 @@ server.use(express.json());
 // user route handlers
 server.use('/api/users', userRoutes);
 server.use('/api/posts', postRoutes);
-server.use('/api/tags', tagRoutes);
+server.use('/api/tags', upperCase(), tagRoutes);
 
 server.get('/', (req, res) => {
   res.json({ api: 'running' });

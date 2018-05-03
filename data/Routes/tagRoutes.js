@@ -17,14 +17,14 @@ router.post('/', (req, res, next) => {
     .catch(err => {
       // console.log(err);
       // logErrorToDatabase(err);
-      res.status(400).send({Error: 'must be a unique value'});
+      res.status(400).send({ Error: 'must be a unique value' });
 
       // next(err);
     });
 });
 
 
-router.delete('/', function(req, res) {
+router.delete('/', function (req, res) {
   const { id } = req.query;
   let user;
   db
@@ -41,13 +41,13 @@ router.delete('/', function(req, res) {
     });
 });
 
-router.put('/:id', function(req, res) {
+router.put('/:id', function (req, res) {
   const { id } = req.params;
   const update = req.body;
 
   db
     .update(id, update)
-    .then (count => {
+    .then(count => {
       if (count === 1) res.json('successfully updated')
     })
     .catch(err => {
@@ -60,6 +60,7 @@ router.get('/', (req, res) => {
   db
     .get()
     .then(users => {
+      //middleware here
       res.json(users);
     })
     .catch(err => {

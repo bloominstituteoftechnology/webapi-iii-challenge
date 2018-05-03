@@ -24,7 +24,7 @@ router.post('/', (req, res) => {
 })
 
 
-router.delete('/', function(req, res) {
+router.delete('/', function (req, res) {
   const { id } = req.query;
   let user;
   db
@@ -41,13 +41,33 @@ router.delete('/', function(req, res) {
     });
 });
 
-router.put('/:id', function(req, res) {
+router.get('/:id/tags', (req, res) => {
+  // grab the id from URL parameters
+  const id = req.params.id;
+
+  db
+    .getPostTags(id)
+    .then(users => {
+      // console.log(users);
+      if (users === undefined) {
+        res.status(404).json({ message: 'user not found' });
+      } else {
+        res.json(users);
+      }
+    })
+    .catch(err => {
+      // do something with the error
+      res.status(500).json({ error: err });
+    });
+});
+
+router.put('/:id', function (req, res) {
   const { id } = req.params;
   const update = req.body;
 
   db
     .update(id, update)
-    .then (count => {
+    .then(count => {
       if (count === 1) res.json('successfully updated')
     })
     .catch(err => {
@@ -75,26 +95,6 @@ router.get('/:id', (req, res) => {
 
   db
     .get(id)
-    .then(users => {
-      // console.log(users);
-      if (users === undefined) {
-        res.status(404).json({ message: 'user not found' });
-      } else {
-        res.json(users);
-      }
-    })
-    .catch(err => {
-      // do something with the error
-      res.status(500).json({ error: err });
-    });
-});
-
-router.get('/tags/:id', (req, res) => {
-  // grab the id from URL parameters
-  const id = req.params.id;
-
-  db
-    .getPostTags(id)
     .then(users => {
       // console.log(users);
       if (users === undefined) {
