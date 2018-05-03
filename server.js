@@ -96,6 +96,45 @@ server.post('/api/tags', (req, res) => {
     })
 })
 
+//delete -- posts
+server.delete('/api/posts/:id', (req, res) => {
+    const id = req.params.id;
+    postDb
+    .remove(Number(id))
+    .then(response => {
+        res.status(200).json({ response })
+    })
+    .catch(err => {
+        res.status(500).json({ Error: err })
+    })
+})
+
+//delete -- users
+server.delete('/api/users/:id', (req, res) => {
+    const id = req.params.id;
+    userDb
+    .remove(Number(id))
+    .then(response => {
+        res.status(200).json({ response })
+    })
+    .catch(err => {
+        res.status(500).json({ Error: err })
+    })
+})
+
+//delete -- tag 
+server.delete('/api/tags/:id', (req, res) => {
+    const id = req.params.id;
+    tagDb.remove(Number(id))
+    .then(response => {
+        res.status(200).json({ response })
+    })
+    .catch(err => {
+        res.status(500).json({ Error: err })
+    })
+})
+
+
 
 
 //server attached to a port
