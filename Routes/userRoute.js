@@ -6,8 +6,9 @@ import { asyncMiddWrapper } from '../utils';
 import { NOT_FOUND_ERROR, INPUT_ERROR } from '../Errors';
 
 // /users
-const userRoute = Router();
+const userRoute = Router({ mergeParams: true });
 
+// gets
 userRoute.get(
   '/',
   asyncMiddWrapper(async (req, res) => {
@@ -25,6 +26,17 @@ userRoute.get(
   }),
 );
 
+userRoute.get(
+  '/:id/posts',
+  asyncMiddWrapper(async (req, res) => {
+    const user = await db.getUserPosts(req.params.id);
+    if (!user) throw NOT_FOUND_ERROR;
+    res.status(200).json(user);
+  }),
+);
+
+// posts
+
 userRoute.post(
   '/',
   asyncMiddWrapper(async (req, res) => {
@@ -37,6 +49,7 @@ userRoute.post(
   }),
 );
 
+// puts
 userRoute.put(
   '/:id',
   asyncMiddWrapper(async (req, res) => {
@@ -51,6 +64,7 @@ userRoute.put(
   }),
 );
 
+// deletes
 userRoute.delete(
   '/:id',
   asyncMiddWrapper(async (req, res) => {
