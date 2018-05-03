@@ -6,7 +6,9 @@
   "author": "Yasin and David",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon server.js --exec babel-node --presets es2015,stage-2"
+    "start": "nodemon server.js --exec babel-node",
+    "build": "babel lib -d dist",
+    "serve": "node dist/index.js"
   },
   "dependencies": {
     "express": "^4.16.3",
