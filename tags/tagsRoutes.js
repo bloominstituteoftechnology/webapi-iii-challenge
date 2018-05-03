@@ -53,4 +53,17 @@ router.put('/:id', (req, res) => {
     }
 });
 
+router.delete('/:id', (req, res) => {
+    const id = req.params.id;
+
+   tagDb.remove(id)
+        .then((response) => response === 0
+            ? res.status(404).send({ error: `Tag with id ${id} not found` })
+            : res.status(200).send({ message: `Tag with id ${id} deleted` }))
+        .catch(err => {
+        }).catch(err => {
+        res.status(500).send({error: 'problem'});
+    })
+});
+
 module.exports = router;
