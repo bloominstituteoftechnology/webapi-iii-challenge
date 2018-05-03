@@ -1,0 +1,11 @@
+.user-list {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.user {
+  text-align: center;
+  width: 100%;
+  border: 1px solid red;
+}
