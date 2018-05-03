@@ -1,5 +1,5 @@
 const express = require("express");
-const userDB = require("../data/helpers/userDB");
+const userDB = require("../data/helpers/userDb");
 const router = express.Router();
 
 // routes for "/api/users"
@@ -87,21 +87,26 @@ router.delete("/:id", (req, res) => {
 router.put("/:id", (req, res) => {
 	const { id } = req.params;
 	const update = req.body;
-	// console.log(update);
 
 	userDB
 		.update(id, update)
 		.then(count => {
-			console.log(count);
 			if (count === 0) {
 				res.status(404).json({ message: "user not found" });
 			} else {
-				res.status(200).json(user);
+				res.status(200).json(update);
 			}
 		})
 		.catch(err => {
 			res.status(500).json({ error: "user could not be changed" });
 		});
 });
+
+// GETUSERSPOST: get a list of posts for a user
+// router.getUserPosts("/:id", (req, res) => {
+// 	// define id
+// 	const { id } = req.params;
+// 	console.log(id);
+// });
 
 module.exports = router;
