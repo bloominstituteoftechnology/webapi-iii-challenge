@@ -35,6 +35,24 @@ router.get('/:id', (req, res) => {
     });
 });
 
+//GET (retrieve the list of posts for a user) //Postman test ok: http://localhost:5000/api/users/2/userposts 
+router.get('/:id/userposts', (req, res) => {
+    const id = req.params.id; 
+    db
+    .getUserPosts(id)
+    .then(posts => {
+        if (posts.length === 0) {
+            res.status(404).json({ errorMsg: 'The specified UserID does not exist.' })
+        } else {
+            res.json(posts);
+        }
+    })
+    //If there's an error in retrieving the user from the database
+    .catch(err => {
+        res.status(500).json({ errorMsg: 'User Info could not be found.' })
+    });
+});
+
 //POST (add user) //Postman test ok: http://localhost:5000/api/users (added Froto Puggins, id 10)
 router.post('/', (req, res) => {
     const {name} = req.body;

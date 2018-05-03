@@ -8,7 +8,11 @@ router.get('/', (req, res) => {
     db
     .get()
     .then(posts => {
-        res.status(200).json(posts);
+        res.status(200).json(posts.map(post => {
+            return {
+                ...post, tag: post.tag.toUpperCase()
+            }
+        }));
     })
     //If there's an error in retrieving the tag from the database
     .catch(err => {
@@ -25,7 +29,7 @@ router.get('/:id', (req, res) => {
         if (posts.length === 0) {
             res.status(404).json({  message: 'The specified Tag ID does not exist.' })
         } else {
-            res.json(posts);
+            res.json({...posts, tag: posts.tag.toUpperCase()});
         }
     })
         //If there's an error in retrieving the tag from the database
@@ -36,8 +40,8 @@ router.get('/:id', (req, res) => {
     
 //POST (add tag) //Postman test ok: http://localhost:5000/api/tags/ 
     router.post('/', (req, res) => {
-        const {tag} = req.body;
-        const newTag = {tag};
+        const { tag } = req.body;
+        const newTag = { tag };
             if ((tag.length === 0) || tag.length > 80) {
                 res.status(404).json({ message: 'The specified Tag does not exist or is great than 80 characters.' })
             } else 
