@@ -25,7 +25,6 @@ router.get("/", (req, res) => {
 router.get("/:id", (req, res) => {
 	// define id
 	const { id } = req.params;
-	console.log(id);
 
 	tagDB
 		.get(id)
@@ -39,6 +38,27 @@ router.get("/:id", (req, res) => {
 		.catch(err => {
 			res.status(500).json({ error: err });
 		});
+});
+
+// POST: add a user to the list of users
+router.post("/", (req, res) => {
+	// define new tag
+	const newTag = req.body;
+
+	if (newTag.tag.length === 0) {
+		res.status(400).json({ error: "Please provide a tag name" });
+	} else {
+		tagDB
+			.insert(newTag)
+			.then(tag => {
+				res.status(200).json(newTag);
+			})
+			.catch(err => {
+				res
+					.status(500)
+					.json({ error: "There was an error saving the tag to the database" });
+			});
+	}
 });
 
 module.exports = router;
