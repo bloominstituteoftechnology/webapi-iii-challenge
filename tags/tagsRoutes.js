@@ -14,4 +14,17 @@ router.get('/', (req, res) => {
     })
 });
 
+router.get('/:id', (req, res) => {
+
+    const {id} = req.params;
+    tagDb.get(id)
+        .then((response) => response.length === 0
+            ? res.status(404).send({error: `Tag not found`})
+            : res.status(200).send(response))
+        .catch((error) => {
+            res.status(500).send({error: `Error getting Tags from the database`})
+        })
+});
+
+
 module.exports = router;
