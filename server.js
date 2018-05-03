@@ -4,9 +4,9 @@ const cors = require("cors");
 const helmet = require("helmet");
 
 // Import from ./users/
-const postRoutes = require("./posts/postRoutes");
-const tagRoutes = require("./tags/tagRoutes");
-const userRoutes = require('./users/userRoutes');
+const postsRouter = require("./posts/postsRouter");
+const tagsRouter = require("./tags/tagsRouter");
+const usersRouter = require('./users/usersRouter');
 
 const server = express();
 
@@ -16,9 +16,9 @@ server.use(helmet());
 server.use(cors());
 
 // Route Handlers
-server.use('/api/users', userRoutes)
-server.use('/api/tags', tagRoutes)
-server.use('/api/posts', postRoutes)
+server.use('/api/users', usersRouter)
+server.use('/api/tags', tagsRouter)
+server.use('/api/posts', postsRouter)
 
 // Server running
 server.get("/", (req, res) => {
