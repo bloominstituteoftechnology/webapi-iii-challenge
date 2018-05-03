@@ -2,16 +2,10 @@ const express = require('express');
 const dbTags = require('../data/helpers/tagDb');
 const router = express.Router();
 
-const upperCase = (req, res, next) => {
-  if (req.body) { console.log(req.params) }
-  else console.log(false);
-  next();
-}
-
 // retrieve all tags
 router.get('/', (req, res) => {
   dbTags.get()
-    .then(tags => res.json(tags.map(tag => {return {...tag, tag: tag.tag.toUpperCase()}})))
+    .then(tags => res.json(tags.map(tag => {return {...tag, tag: tag.tag.toUpperCase()}}))) 
     .catch(err => res.status(500).json({ error: "The tags could not be retrieved." }))
 })
 

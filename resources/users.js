@@ -27,9 +27,11 @@ router.get('/:id/posts', (req, res) => {
 
 // add new user
 router.post('/new-user', (req, res) => {
-  dbUser.insert(req.body) // must pass { name: "user_name_here" }
-    .then(user => res.json(user)) // returns id
-    .catch(err => res.status(500).json({ error: "Cannot add this user." }))
+  req.body.name.length >= 128 ?
+    res.status(500).send({ error: "Your name is too long." }) :
+    dbUser.insert(req.body) // must pass { name: "user_name_here" }
+      .then(user => res.json(user)) // returns id
+      .catch(err => res.status(500).json({ error: "Cannot add this user." }))
 })
 
 // update existing user

@@ -1,6 +1,9 @@
 const express = require('express');
 const dbPost = require('../data/helpers/postDb');
+const dbUsers = require('../data/helpers/userDb');
 const router = express.Router();
+
+// const existingUsers = dbUsers.get().then(users => res.json(users)).catch(err => res.json({ error: "Could not retrieve users." }))
 
 // retrieve all posts
 router.get('/', (req, res) => {
@@ -27,11 +30,17 @@ router.get('/:id/tags', (req, res) => {
 
 // add post
 router.post('/newpost', (req, res) => {
-  const post = req.body; // must pass { text: "insert content here", userId: *corresponding userID* }
-  dbPost.insert(post) 
-    .then(newPost => res.json(newPost)) // returns post ID
-    .catch(err => res.status(500).json({ error: "Cannot post this." }))
+  dbUsers.get()
+    .then(users => users.filter(user => user.id === req.body.userId))
+    .then(response => response.length > 0 ?
+      dbPost.insert(req.body)
+        .then(result => res.json(result))
+        .catch(err => res.json({ error: "Something went wrong while attempting to add this post." })) :
+      res.json({ error: "That user ID does not exist." })
+    )
+    .catch(err => res.json({ error: "The users could not be retrieved." }))
 })
+
 
 // update post 
 router.put('/:id/update', (req, res) => {
