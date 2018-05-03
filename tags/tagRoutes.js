@@ -65,7 +65,6 @@ router.post("/", (req, res) => {
 router.delete("/:id", (req, res) => {
 	// define id
 	const { id } = req.params;
-	console.log(id);
 
 	tagDB
 		.get(id)
@@ -82,6 +81,26 @@ router.delete("/:id", (req, res) => {
 		})
 		.catch(err => {
 			res.status(500).json({ error: err });
+		});
+});
+
+// PUT: update a user by id
+router.put("/:id", (req, res) => {
+	// define id and update data
+	const { id } = req.params;
+	const update = req.body;
+
+	tagDB
+		.update(id, update)
+		.then(count => {
+			if (count === 0) {
+				res.status(404).json({ message: "user not found" });
+			} else {
+				res.status(200).json(update);
+			}
+		})
+		.catch(err => {
+			res.status(500).json({ error: "tag could not be updated" });
 		});
 });
 
