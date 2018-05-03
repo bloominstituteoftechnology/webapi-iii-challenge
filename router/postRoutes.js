@@ -8,62 +8,60 @@ router.get("/", (req, res) => {
   db
     .get()
     .then(posts => {
-      res.json(posts);
+      res.status(200).json(posts);
     })
     .catch(err => {
       res.status(500).json({ error: err });
     });
 });
 
-// router.get("/:id", (req, res) => {
-//   const { id } = req.params;
-//   db
-//     .get(id)
-//     .then(postFound => {
-//       if (postFound.length === 0) {
-//         res.status(404).json({ message: "Post is not found. Try again." });
-//       } else {
-//         res.json(postFound);
-//       }
-//     })
-//     .catch(err => {
-//       res.status(500).json({ error: "not working" });
-//     });
-// });
-
 router.get("/:id", (req, res) => {
   const { id } = req.params;
-
   db
     .get(id)
-    .then(post => res.json(post))
-    .catch(error => console.log(error))
-    .catch(error => {
-      res
-        .status(500)
-        .json({
-          error:
-            "The posts information could not be retrieved, or doesn't exist"
-        });
+    .then(postFound => {
+      // if (postFound.length === 0) {
+      // res.status(404).json({ message: "Post is not found. Try again." });
+      // } else {
+      res.json(postFound);
+      // }
+    })
+    .catch(err => {
+      res.status(500).json({ error: "not working" });
     });
 });
 
-// router GET, find by ID first, then return post with tags
 router.get("/:id/tags", (req, res) => {
   const id = req.params.id;
   db
     .getPostTags(id)
-    .then(user => {
-      if (user.length === 0) {
+    .then(post => {
+      if (post.length === 0) {
         res.status(404).json({ message: "Post is not found. Try again." });
       } else {
-        res.json(user[0]);
+        res.json(post[0]);
       }
     })
     .catch(err => {
       res.status(500).json({ error: err });
     });
 });
+
+// router GET, find by ID first, then return post with tags
+
+// router.get("/:id", (req, res) => {
+//   const { id } = req.params;
+
+//   db
+//   .get(id)
+//   .then(post => res.json(post))
+//   .catch(error => console.log(error))
+//   .catch(error => {
+//     res.status(500).json({
+//       error: "The posts information could not be retrieved, or doesn't exist"
+//     });
+//   });
+// });
 
 // router POST, insert post, then give response, which is id of the post
 router.post("/", (req, res, next) => {
@@ -84,7 +82,8 @@ router.post("/", (req, res, next) => {
 // write it using an URL parameter instead /:id
 
 router.delete("/:id", (req, res) => {
-  const id = req.param.id;
+  const id = req.params.id;
+
   db.get(id).then(postFound => {
     let post = { ...postFound };
     db
@@ -94,12 +93,13 @@ router.delete("/:id", (req, res) => {
       })
       .catch(error => {
         res.status(500).json({ error: "Nothing to delete" });
+
       });
   });
 });
 
 router.put("/", (req, res) => {
-  const id = req.param.id;
+  const id = req.params.id;
   const updatedPost = req.body;
 
   db
@@ -114,7 +114,7 @@ router.put("/", (req, res) => {
       }
     })
     .catch(error => {
-      res.status(500).json({ error: "Cannot update this user" });
+      res.status(500).json({ error: "Cannot update this post" });
     });
 });
 
