@@ -8,13 +8,14 @@
 
 // import your node modules
 const express = require('express');
-const helmet = require('helmet');
+
 // yarn add helmet -> npm i helmet
+const helmet = require('helmet');
 
-const server = express();
 // add your server code starting here
+const server = express();
 
-const db = require('./data/dbConfig.js');
+// const db = require('./data/dbConfig.js');
 
 const userRouter = require("./users/userRouter.js");
 const postRouter = require("./posts/postRouter.js");
@@ -40,6 +41,6 @@ server.get('/', (req, res) => {
     res.send('THIS TOOK FOREVER - AMANDA');
 });
 
-const port = 8000;
+const port = 5000;
 server.listen(port, () =>
-    console.log('\n== server listening on port 8000 ==\n'));
+    console.log('\n== Listening to Port 5000 ==\n'));

@@ -9,7 +9,7 @@ router.get("/", (req, res) => {
   db
     .get()
     .then(posts => {
-      res.status(200).json(posts);
+        res.status(200).json(posts);
     })
     .catch(error => {
       res
@@ -19,9 +19,9 @@ router.get("/", (req, res) => {
 });
 
 // GET/Request Specific Post
-router.get("/:postId/", (req, res) => {
+router.get("/:id", (req, res) => {
   db
-    .get(req.params.postId)
+    .get(req.params.id)
     .then(post => {
       console.log(post);
       if (post.length >= 1) {
