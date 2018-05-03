@@ -61,7 +61,6 @@ router.put('/:id', function(req, res) {
 
 router.delete('/:id', function(req, res) {
   const id = req.params.id;
-  let user;
   db
     .remove(id)
     .then(status => {
