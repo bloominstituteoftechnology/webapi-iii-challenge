@@ -9,7 +9,7 @@ router.get("/", (req, res) => {
   db
     .get()
     .then(posts => {
-      res.json(posts);
+      res.status(200).json(posts);
     })
     .catch(error => {
       res
@@ -55,7 +55,7 @@ router.get("/:postId/tags", (req, res) => {
     });
 });
 
-// POST/Create
+// POST/Create New Post
 router.post("/", (req, res) => {
   db
     .insert(req.body)
@@ -72,7 +72,7 @@ router.post("/", (req, res) => {
     });
 });
 
-// DELETE/Remove
+// DELETE/Remove Post
 router.delete("/:postId", (req, res) => {
   db
     .remove(req.params.postId)
