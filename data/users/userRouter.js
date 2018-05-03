@@ -34,6 +34,22 @@ router.get("/:id", (req, res) => {
     });
 });
 
+// GET user posts by id
+router.get("/:id/posts", (req, res) => {
+  const { id } = req.params;
+
+  db
+    .getUserPosts(id)
+    .then(posts => {
+      res.status(200).json(posts);
+    })
+    .catch(error => {
+      res.status(500).json({
+        error: "There was an error while retrieving the specified user's posts."
+      });
+    });
+});
+
 // INSERT user to db
 router.post("/", (req, res) => {
   const user = req.body;
@@ -71,4 +87,30 @@ router.put("/", (req, res) => {
         error: "There was an error while adding a new user."
       });
     });
+});
+
+// REMOVE user
+router.delete("/:id", (req, res) => {
+  const { id } = req.params;
+  let post;
+
+  db.get(id).then(response => {
+    post = { ...response };
+
+    db
+      .remove(id)
+      .then(response => {
+        res.status(200).json(post);
+      })
+      .catch(error => {
+        res.status(404).json({
+          error: "Could not find specified user."
+        });
+      })
+      .catch(error => {
+        res.status(500).json({
+          error: "There was an error while removing a new user."
+        });
+      });
+  });
 });
