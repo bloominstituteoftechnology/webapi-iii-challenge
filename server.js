@@ -6,6 +6,9 @@ const server = express();
 
 const userRoutes= require('./users/usrRoutes');
 
+server.use(express.json());
+server.use(helmet());
+
 server.get('/', (req, res) =>  {
     res.send('Testing Api');
 });
