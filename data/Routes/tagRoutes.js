@@ -7,6 +7,16 @@ const upperTags = function (req, res, next) {
   next();
 };
 
+function upperTagsRes(req, res, next) {
+  var oldSend = res.send;
+
+  res.send = function (data) {
+    arguments[0] = arguments[0].toUpperCase();
+    oldSend.apply(res, arguments);
+  }
+  next();
+}
+
 // const upperTagsRes = function (req, res) {
 //   return (req.on("end", function () {
 //     console.log(res.data);
@@ -61,7 +71,7 @@ router.put('/:id', upperTags, function (req, res) {
     });
 });
 
-router.get('/', (req, res) => {
+router.get('/', upperTagsRes, (req, res) => {
   db
     .get()
     .then(users => {
@@ -74,7 +84,7 @@ router.get('/', (req, res) => {
     });
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', upperTagsRes, (req, res) => {
   const id = req.params.id;
   db
     .get(id)
