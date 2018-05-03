@@ -2,11 +2,8 @@
 // will make a smaller bundle size
 import Router from 'express/lib/router';
 import db from '../data/helpers/userDb';
-import { errHandler } from '../utils';
+import { asyncMiddWrapper } from '../utils';
 import { NOT_FOUND_ERROR, INPUT_ERROR } from '../Errors';
-
-const asyncMiddWrapper = fn => (req, res) =>
-  Promise.resolve(fn(req, res)).catch(e => errHandler(e, req, res));
 
 // /users
 const userRoute = Router();
