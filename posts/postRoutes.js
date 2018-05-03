@@ -21,6 +21,32 @@ router.get("/", (req, res) => {
 		});
 });
 
+// GETUSERSPOST: get a list of posts for a user
+router.get("/postTags/:id", (req, res) => {
+	const { id } = req.params;
+
+	postDB
+		.get(id)
+		.then(post => {
+			if (post) {
+				postDB.getPostTags(id).then(postTags => {
+					if (postTags.length === 0) {
+						res.status(404).json({ message: "post has no tags!" });
+					} else {
+						res.status(200).json(postTags);
+					}
+				});
+			} else {
+				res.status(404).json({ message: "post not found" });
+			}
+		})
+		.catch(err => {
+			res
+				.status(500)
+				.json({ error: "there was an error fetching the tags for this post" });
+		});
+});
+
 // GET - get a posts by id
 router.get("/:id", (req, res) => {
 	const { id } = req.params;
