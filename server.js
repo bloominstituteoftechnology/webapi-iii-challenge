@@ -57,7 +57,6 @@ server.delete('/api/users/:id', (req, res) => {
         userDeleted = { ...user }
     })
 
-
     userDb
     .remove(id)
     .then(response => {
@@ -74,7 +73,8 @@ server.put('/api/users/:id', (req, res) => {
     const id = req.params.id;
     const user = req.body;
 
-    userDb.update(id, user)
+    userDb
+    .update(id, user)
     .then(response => {
         res.status(200).json({ user })
     })
@@ -127,6 +127,22 @@ server.delete('/api/posts/:id', (req, res) => {
     })
 })
 
+// PUT method for post
+server.put('/api/posts/:id', (req, res) => {
+    const id = req.params.id;
+    const post = req.body;
+
+    postDb
+    .update(id, post)
+    .then(response => {
+        res.status(200).json({ post })
+    .catch(err => {
+        res.status(500).json({ Error: err })
+        })
+    })
+})
+
+// PUT method for post
 
 // --------TAG---------
 // GET method for tag
