@@ -9,9 +9,8 @@
 // import your node modules
 const express = require('express');
 // const morgan = require("morgan");
-// const helmet = require("helmet");
+const helmet = require('helmet');
 // yarn add helmet -> npm i helmet
-// const helmet = require('helmet');
 
 const server = express();
 // add your server code starting here
@@ -19,7 +18,7 @@ const server = express();
 const db = require('./data/dbConfig.js');
 
 // const userRouter = require("./users/userRouter.js");
-// const postRouter = require("./posts/postRouter.js");
+const postRouter = require("./posts/postRouter.js");
 // const tagRouter = require("./tags/tagRouter.js");
 
 function toUpperCase(req, res, next) {
@@ -30,12 +29,12 @@ function toUpperCase(req, res, next) {
     next();
 }
 
-// server.use(helmet());
+server.use(helmet());
 server.use(express.json());
 // server.use(morgan());
 server.use(toUpperCase);
 
-// server.use("/api/posts/", postRouter);
+server.use("/api/posts/", postRouter);
 // server.use("/api/users/", userRouter);
 // server.use("/api/tags/", tagRouter);
 
