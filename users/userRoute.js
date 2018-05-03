@@ -84,7 +84,7 @@ router.put('/:id', (req, res) => {
         res.status(404).json({ message: "The user with the specified ID does not exist." })
     }
     if (name.length === 0 || name.length > 128) {
-        res.status(400).json({ errorMessage: "Please provide text and userId for the user." })
+        res.status(400).json({ errorMessage: "Please provide name for the user." })
     } else
     db.update(id, req.body)
     .then(improve => {
