@@ -1,6 +1,7 @@
 import { Route, Switch } from 'react-router-dom';
 import React, { Component } from 'react';
 import Users from './Components/Users';
+import User from './Components/User';
 import Redirect from './Components/Redirect';
 
 import axios from 'axios';
@@ -24,14 +25,12 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
         <Switch>
         <Route exact path='/' component={Redirect} />
           <Route exact path='/api/users'
             render={props => <Users {...props} users={this.state.users} />}
           />
+          <Route exact path='/api/users/:id' component={User} />
         </Switch>
       </div>
     );

@@ -1,12 +1,12 @@
 import React from 'react';
-import User from './User'
+import UserItem from './UserItem'
 
 const Users = props => {
     return (
-        <div>
+        <div className="list" >
             {props.users.map(user => {
                 return (
-                    <User user={user} />
+                    <UserItem user={user} />
                 )
             })}
         </div>
