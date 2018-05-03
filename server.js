@@ -8,7 +8,9 @@ const server = express();
 server.use(express.json());
 server.use(helmet());
 
-server.use('/api/users', userRoutes);
+server.use('/api', userRoutes);
+// server.use('/api/tags', userRoutes);
+// server.use('/api/posts', userRoutes);
 
 server.get('/', (req,res) => {
     res.json({api: 'This api server is running, and ready for requests'});

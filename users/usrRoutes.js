@@ -1,52 +1,54 @@
 
 const express = require('express');
 
-const db = require('../data/helpers/userDb');
+const dbU = require('../data/helpers/userDb');
+const dbT = require('../data/helpers/tagDb');
+const dbP = require('../data/helpers/postDb');
 
 const router = express.Router();
 
-router.post('/', (req, res, next) => {
+router.post('/users', (req, res, next) => {
     const userInformation = req.body;
     console.log('user information', userInformation);
-    db
+    dbU
         .insert(userInformation)
         .then(response => {
             res.status(201).json(response);
         })
         .catch(err => {
-            logErrorToDatabase(err);
+            console.log(err);
 
             next(err);
         });
 });
 
-router.delete('/', function(req,res) {
-    const {id} = req.query;
+router.delete('/users', function (req, res) {
+    const { id } = req.query;
     let user;
-    db 
+    dbU
         .remove(id)
         .then(founduser => {
             user = { ...founduser[0] };
 
-            db.remove(id).then(response => {
+            dbU.remove(id).then(response => {
                 res.status(200).json(user);
             });
         })
         .catch(err => {
-            res.status(500).json({ erroor: err});
+            res.status(500).json({ erroor: err });
         });
 });
 
 
-router.put('/:id', function(req, res) {
-    const {id} = req.params;
+router.put('/users/:id', function (req, res) {
+    const { id } = req.params;
     const update = req.body;
 
-    db
+    dbU
         .update(id, update)
         .then(count => {
             if (count > 0) {
-                db.getUserPosts(id).then(users => {
+                dbU.getUserPosts(id).then(users => {
                     res.status(200).json(users[0]);
                 });
             } else {
@@ -58,21 +60,23 @@ router.put('/:id', function(req, res) {
         });
 });
 
-router.get('/', (req, res) => {
-    db
+router.get('/users', (req, res) => {
+    dbU
         .get()
         .then(users => {
             res.json(users);
         })
         .catch(err => {
-            res.status(500).json({error: err});
+            res.status(500).json({ error: err });
         });
+        console.log('insdie dbU, req.params are: ', req.query);
+
 });
 
-router.get('/:id', (req, res) => {
+router.get('/users/:id', (req, res) => {
     const id = req.params.id;
 
-    db
+    dbU
         .getUserPosts(id)
         .then(users => {
             if (users.length === 0) {
@@ -82,7 +86,183 @@ router.get('/:id', (req, res) => {
             }
         })
         .catch(err => {
-            res.status(500).json({ error: err});
+            res.status(500).json({ error: err });
+        });
+});
+
+
+
+
+
+
+
+
+router.post('/tags', (req, res, next) => {
+    const userInformation = req.body;
+    console.log('user information', userInformation);
+    dbT
+        .insert(userInformation)
+        .then(response => {
+            res.status(201).json(response);
+        })
+        .catch(err => {
+            logErrorToDatabase(err);
+
+            next(err);
+        });
+});
+
+router.delete('/tags', function (req, res) {
+    const { id } = req.query;
+    let user;
+    dbT
+        .remove(id)
+        .then(founduser => {
+            user = { ...founduser[0] };
+
+            dbT.remove(id).then(response => {
+                res.status(200).json(user);
+            });
+        })
+        .catch(err => {
+            res.status(500).json({ erroor: err });
+        });
+});
+
+
+router.put('/tags/:id', function (req, res) {
+    const { id } = req.params;
+    const update = req.body;
+
+    dbT
+        .update(id, update)
+        .then(count => {
+            if (count > 0) {
+                dbT.getUserPosts(id).then(users => {
+                    res.status(200).json(users[0]);
+                });
+            } else {
+                res.status(404).json({ msg: 'user not found' });
+            }
+        })
+        .catch(err => {
+            res.status(500).json(err);
+        });
+});
+
+router.get('/tags', (req, res) => {
+    dbT
+        .get()
+        .then(users => {
+            res.json(users);
+        })
+        .catch(err => {
+            res.status(500).json({ error: err });
+        });
+});
+
+router.get('/tags/:id', (req, res) => {
+    const id = req.params.id;
+
+    dbT
+        .getUserPosts(id)
+        .then(users => {
+            if (users.length === 0) {
+                res.status(404).json({ message: 'user not found' });
+            } else {
+                res.json(users[0]);
+            }
+        })
+        .catch(err => {
+            res.status(500).json({ error: err });
+        });
+});
+
+
+
+
+
+
+
+
+router.post('/posts', (req, res, next) => {
+    const userInformation = req.body;
+    console.log('user information', userInformation);
+    dbP
+        .insert(userInformation)
+        .then(response => {
+            res.status(201).json(response);
+        })
+        .catch(err => {
+            logErrorToDatabase(err);
+
+            next(err);
+        });
+});
+
+router.delete('/posts', function (req, res) {
+    const { id } = req.query;
+    let user;
+    dbP
+        .remove(id)
+        .then(founduser => {
+            user = { ...founduser[0] };
+
+            dbP.remove(id).then(response => {
+                res.status(200).json(user);
+            });
+        })
+        .catch(err => {
+            res.status(500).json({ erroor: err });
+        });
+});
+
+
+router.put('/posts/:id', function (req, res) {
+    const { id } = req.params;
+    const update = req.body;
+
+    dbP
+        .update(id, update)
+        .then(count => {
+            if (count > 0) {
+                dbP.getUserPosts(id).then(users => {
+                    res.status(200).json(users[0]);
+                });
+            } else {
+                res.status(404).json({ msg: 'user not found' });
+            }
+        })
+        .catch(err => {
+            res.status(500).json(err);
+        });
+});
+
+router.get('/posts', (req, res) => {
+    dbP
+        .get()
+        .then(users => {
+            res.json(users);
+        })
+        .catch(err => {
+            res.status(500).json({ error: err });
+        });
+});
+
+router.get('/posts/:id', (req, res) => {
+    const id = req.params.id;
+
+    dbP
+        .getUserPosts(id)
+        .then(users => {
+            if (users.length === 0) {
+                res.status(404).json({ message: 'user not found' });
+            } else {
+                res.json(users[0]);
+            }
+        })
+        .catch(err => {
+            res.status(500).json({ error: err });
         });
 });
 
