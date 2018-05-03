@@ -1,7 +1,7 @@
 const express = require('express');
 const userDb = require('./data/helpers/userDb');
 
-// Middleware
+// add middleware
 const router = express.Router();
 
 // --------USER--------
