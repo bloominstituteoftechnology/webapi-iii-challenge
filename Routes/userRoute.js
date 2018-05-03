@@ -1,15 +1,32 @@
-import express from 'express';
+import { Router } from 'express';
 import db from '../data/helpers/userDb';
 import { validateBody, respondWithError } from '../utils';
-import { NOT_FOUND_ERROR, INPUT_ERROR, REMOVE_ERROR, PUT_ERROR } from './Errors';
+import {
+  NOT_FOUND_ERROR,
+  INPUT_ERROR,
+  REMOVE_ERROR,
+  PUT_ERROR
+} from '../Errors';
 
 // /users
-const userRoute = express.Router();
+const userRoute = Router();
 
-userRoute.get('/', async (req, res) => {
+const errorMiddleware = async (err, req, res, next) => {
+  console.log('i ran');
+  if (err) next(err);
+  res.status(400).json({ msg: err });
+  // await next();
+};
+
+const middWrapper = fn => (err, req, res, next) => fn(err, req, res, next);
+
+const errwrapper = middWrapper(errorMiddleware);
+
+userRoute.get('/', errwrapper, async (req, res) => {
   try {
     const users = await db.get();
-    res.json('get:', users);
+    // throw 'err';
+    res.status(200).json(users);
   } catch (e) {
     // .catch(()=>respondWithError(res))
     respondWithError(res);
@@ -19,9 +36,8 @@ userRoute.get('/', async (req, res) => {
 userRoute.get('/:id', async (req, res) => {
   try {
     const user = await db.get(req.params.id);
-    console.log('get:', user);
-    if (!user.length) respondWithError(res, NOT_FOUND_ERROR);
-    res.json(user);
+    if (!user.name) respondWithError(res, NOT_FOUND_ERROR);
+    res.status(200).json(user);
   } catch (error) {
     respondWithError(res);
   }
@@ -29,10 +45,9 @@ userRoute.get('/:id', async (req, res) => {
 
 userRoute.post('/', async (req, res) => {
   const userInformation = await db.insert(req.body);
-  console.log(userInformation);
   try {
-    if (!validateBody(body)) {
-      respondWithError(INPUT_ERROR);
+    if (!validateBody(userInformation)) {
+      respondWithError(res, INPUT_ERROR);
       return;
     }
     res.status(201).json(userInformation);
@@ -45,16 +60,15 @@ userRoute.post('/', async (req, res) => {
 userRoute.put('/:id', async (req, res) => {
   try {
     const userInformation = await db.update(req.params.id, req.body);
-    console.log(userInformation);
-    if (!validateBody(body)) {
+    if (!validateBody(userInformation)) {
       respondWithError(res, INPUT_ERROR);
       return;
     }
-    if (Number(response) === 0) {
+    if (Number(userInformation) === 0) {
       respondWithError(res, NOT_FOUND_ERROR);
       return;
     }
-    res.json(userInformation);
+    res.status(200).json(userInformation);
   } catch (error) {
     respondWithError(res, PUT_ERROR);
   }
@@ -63,15 +77,14 @@ userRoute.put('/:id', async (req, res) => {
 userRoute.delete('/:id', async (req, res) => {
   try {
     const userInformation = await db.remove(req.params.id);
-    console.log(userInformation);
-    if (response === 0) {
+    if (userInformation === 0) {
       respondWithError(res, NOT_FOUND_ERROR);
       return;
     }
-    res.json(userInformation);
+    res.status(200).json(userInformation);
   } catch (error) {
     respondWithError(res, REMOVE_ERROR);
   }
-})
+});
 
 export default userRoute;

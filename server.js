@@ -11,4 +11,5 @@ app.use(express.json());
 
 app.use('/api', mainRouter);
 
+/*eslint-disable */
 app.listen(3000, () => console.log('hey'));

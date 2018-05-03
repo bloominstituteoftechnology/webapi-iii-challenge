@@ -6,7 +6,7 @@ const mainRouter = Router({ mergeParams: true });
 // this router will 3 different routers
 //  users, posts, tags
 
-mainRouter.use('/users/', userRoute);
+mainRouter.use('/users', userRoute);
 
 // /posts
 mainRouter.use('/posts', () => {});
