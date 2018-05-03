@@ -20,4 +20,25 @@ router.get("/", (req, res) => {
 			res.status(500).json({ error: err });
 		});
 });
+
+// GET: tag by id
+router.get("/:id", (req, res) => {
+	// define id
+	const { id } = req.params;
+	console.log(id);
+
+	tagDB
+		.get(id)
+		.then(tag => {
+			if (tag) {
+				res.status(200).json(tag);
+			} else {
+				res.status(404).json({ message: "tag not found" });
+			}
+		})
+		.catch(err => {
+			res.status(500).json({ error: err });
+		});
+});
+
 module.exports = router;
