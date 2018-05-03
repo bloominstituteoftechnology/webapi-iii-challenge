@@ -16,14 +16,6 @@ function upperCase(tags) {
   next();
 }
 
-// function logger(msg) {
-//   return function(req, res, next) {
-//     console.log(`\n= ${msg}: ${req.url}`);
-
-//     next();
-//   };
-// }
-
 function errorHandler(err, req, res, next) {
   if (err) {
     // check the type of error and react to it
