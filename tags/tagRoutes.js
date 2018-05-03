@@ -90,18 +90,22 @@ router.put("/:id", (req, res) => {
 	const { id } = req.params;
 	const update = req.body;
 
-	tagDB
-		.update(id, update)
-		.then(count => {
-			if (count === 0) {
-				res.status(404).json({ message: "user not found" });
-			} else {
-				res.status(200).json(update);
-			}
-		})
-		.catch(err => {
-			res.status(500).json({ error: "tag could not be updated" });
-		});
+	if (update.tag.length === 0) {
+		res.status(400).json({ message: "Please provide a tag name" });
+	} else {
+		tagDB
+			.update(id, update)
+			.then(count => {
+				if (count === 0) {
+					res.status(404).json({ message: "user not found" });
+				} else {
+					res.status(200).json(update);
+				}
+			})
+			.catch(err => {
+				res.status(500).json({ error: "tag could not be updated" });
+			});
+	}
 });
 
 module.exports = router;

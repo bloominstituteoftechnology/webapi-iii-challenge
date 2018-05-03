@@ -19,6 +19,7 @@ server.get("/", (req, res) => {
 // user route handlers
 server.use("/api/users", userRoutes);
 server.use("/api/tags", tagRoutes);
+// server.use("/api/posts", postRoutes);
 
 // server at port 5000
 server.listen(5000, () => {
