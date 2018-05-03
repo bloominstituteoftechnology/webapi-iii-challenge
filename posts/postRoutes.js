@@ -9,6 +9,16 @@ const router = express.Router();
 
 // ROUTE HANDLERS /tags/tagRoutes
 
-//
+// GET - get list of all posts
+router.get("/", (req, res) => {
+	postDB
+		.get()
+		.then(posts => {
+			res.status(200).json(posts);
+		})
+		.catch(err => {
+			res.status(500).json({ error: err });
+		});
+});
 
-// modules.exports = router;
+module.exports = router;
