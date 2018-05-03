@@ -7,7 +7,7 @@ const router = express.Router();
 const db = require("../helpers/userDb");
 
 // GET all users; root
-router.get("/", (res, req) => {
+router.get("/", (req, res) => {
   db
     .get()
     .then(users => {
