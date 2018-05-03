@@ -68,7 +68,7 @@ router.post("/", (req, res) => {
     });
 });
 
-// PUT update posts by id
+// PUT update posts by id; update
 router.put("/:id", (req, res) => {
   const { id } = req.params;
   const update = req.body;
@@ -89,6 +89,34 @@ router.put("/:id", (req, res) => {
     .catch(error => {
       res.status(500).json({
         error: "There was an error updating the post."
+      });
+    });
+});
+
+// DELETE post; remove
+router.delete("/:id", (req, res) => {
+  const { id } = req.params;
+  let post;
+
+  db
+    .get(id)
+    .then(response => {
+      post = { ...response };
+
+      db
+        .remove(id)
+        .then(response => {
+          res.status(200).json(post);
+        })
+        .catch(error => {
+          res.status(404).json({
+            error: "The specified post could not be found."
+          });
+        });
+    })
+    .catch(error => {
+      res.status(500).json({
+        error: "There was an error removing the post."
       });
     });
 });

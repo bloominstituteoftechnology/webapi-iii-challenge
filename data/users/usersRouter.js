@@ -92,15 +92,15 @@ router.put("/", (req, res) => {
 // REMOVE user
 router.delete("/:id", (req, res) => {
   const { id } = req.params;
-  let post;
+  let user;
 
   db.get(id).then(response => {
-    post = { ...response };
+    user = { ...response };
 
     db
       .remove(id)
       .then(response => {
-        res.status(200).json(post);
+        res.status(200).json(user);
       })
       .catch(error => {
         res.status(404).json({
