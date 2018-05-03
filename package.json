@@ -1,9 +1,12 @@
 {
-    "name": "Node-Blog",
+    "name": "node-blog",
     "version": "1.0.0",
     "main": "index.js",
     "repository": "https://github.com/raaayshell/Node-Blog",
     "author": "Rachelle De Jesus Pestanas <rachelle.pestanas@gmail.com>",
+    "scripts": {
+        "start": "nodemon server.js"
+    },
     "license": "ISC",
     "dependencies": {
         "cors": "^2.8.4",
