@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "cool kids only",
   "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
   "repository": "https://github.com/jayyargh/node-blog",
   "author": "Justin Rigler <justinmrigler[at]gmail[dot]com>",
   "license": "MIT",
