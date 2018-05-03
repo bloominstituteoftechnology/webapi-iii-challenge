@@ -2,20 +2,20 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const dbConfig= require('./data/dbConfig');
-const dbUser = require('./data/helpers/userDb')
-const dbPost = require('./data/helpers/postDb')
-const dbTag = require('./data/helpers/tagDb')
+
 
 const routerPost = require('./Routers/routerPost')
 const routerUser = require('./Routers/routerUser')
+const routerTag = require('./Routers/routerTag')
 const server = express();
 
 server.use(helmet())
 server.use(cors());
 server.use(express.json());
 
-server.use('/user', routerUser)
+server.use('/users', routerUser)
 server.use('/posts',routerPost)
+server.use('/tags', routerTag)
 server.get('/', (req, res)=>{
     res.send('api is running')
 })

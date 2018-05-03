@@ -2,13 +2,13 @@ const express = require("express");
 
 const router = express.Router();
 
-const db = require('../data/helpers/postDb')
+const db = require('../data/helpers/tagDb')
 
 router.get('/',(req,res)=>{
     db
     .get()
-    .then(posts =>{
-        res.json(posts)
+    .then(tags =>{
+        res.json(tags)
     })
     .catch(error=>{
         res.status(500).json({error: "darn this error"})
@@ -20,8 +20,8 @@ router.get('/:id', (req,res) =>{
 
     db
     .get(id)
-    .then(user=>{
-    res.json(user)
+    .then(tag=>{
+    res.json(tag)
 })
 .catch(error =>{
     res.status(500).json({error: "darn this error"})
@@ -29,40 +29,35 @@ router.get('/:id', (req,res) =>{
 
 })
 router.post('/',(req,res)=>{
-    const post = req.body;
+    const tag = req.body;
     db
-    .insert(post)
+    .insert(tag)
     .then(response =>{
-    res.json(response)
-
+        res.json(response)
     })
     .catch(error =>{
         res.status(500).json({error: "darn this error"})
     })
 })
-
 router.delete('/:id', (req,res)=>{
-    const { id } = req.params;
-    let post;
+    const { id } = req. params;
+    let tag;
 
     db
     .get(id)
     .then(response =>{
-        post = { ...response[0] }
+        user = {...response[0]}
         db
         .remove(id)
         .then(response =>{
-            res.status(200).json(post)
+            res.status(200).json(user)
         })
-        
     })
     .catch(err =>{
         res.status(500).json({error:"this darn error"});    
       }); 
 
 })
-
-
 router.put('/:id', (req,res)=>{
     const { id } = req.params
     const update = req.body;
@@ -73,19 +68,19 @@ router.put('/:id', (req,res)=>{
         if(count > 0){
             db
             .get(id)
-            .then(posts =>{
+            .then(tags =>{
             
                 res
                 .status(200)
-                .json(posts[0]);
+                .json(tags[0]);
             })
         } else{
             res.status(400)
-            .json({message:"this post does not exist"})
+            .json({message:"this tag does not exist"})
         }
     })
     .catch(err=>{
-        res.status(400).json({error: "There was an error while saving the post to the database"});
+        res.status(400).json({error: "There was an error while saving the tag to the database"});
     });
 });
 module.exports = router;
