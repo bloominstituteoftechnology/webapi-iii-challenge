@@ -27,4 +27,18 @@ router.get('/:id', (req, res) => {
 });
 
 
+router.post('/', (req, res) => {
+    const tag = req.body.tag;
+
+    if (!tag) {
+        res.status(400).send({error: 'Please provide a name for the tag'});
+    }
+
+    tagDb.insert(req.body).then(tag => {
+        res.status(200).send(req.body)
+    }).catch(err => {
+        res.status(500).send({error: 'There was a error while saving to tag to database'});
+    })
+});
+
 module.exports = router;
