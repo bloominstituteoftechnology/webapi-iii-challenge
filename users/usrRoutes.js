@@ -7,8 +7,6 @@ const dbP = require('../data/helpers/postDb');
 
 const router = express.Router();
 
-// <<< USERS     USERS >>> 
-
 router.post('/users', (req, res, next) => {
     const userInformation = req.body;
     console.log('user information', userInformation);
@@ -24,8 +22,8 @@ router.post('/users', (req, res, next) => {
         });
 });
 
-router.delete('/users', function (req, res) {
-    const { id } = req.query;
+router.delete('/users/:id', function (req, res) {
+const id = req.params.id;
     let user;
     dbU
         .remove(id)
@@ -41,11 +39,12 @@ router.delete('/users', function (req, res) {
         });
 });
 
-
+//<<<NEED TO WORK ON PUT, NEED TO WORK ON PUT >>>>>>>>>>>>>>>>>>>>>>>
 router.put('/users/:id', function (req, res) {
-    const { id } = req.params;
-    const update = req.body;
 
+
+    const update = req.body;
+    const id = update.id;
     dbU
         .update(id, update)
         .then(count => {
@@ -98,7 +97,6 @@ router.get('/users/:id', (req, res) => {
 
 
 
-// <<< TAGS     TAGS >>> 
 
 router.post('/tags', (req, res, next) => {
     const userInformation = req.body;
@@ -109,14 +107,16 @@ router.post('/tags', (req, res, next) => {
             res.status(201).json(response);
         })
         .catch(err => {
-            logErrorToDatabase(err);
+            console.log('error: ',err);
 
             next(err);
         });
 });
 
-router.delete('/tags', function (req, res) {
-    const { id } = req.query;
+//Command executes with 200 OK, but hard to confirm proper execution
+router.delete('/tags/:id', function (req, res) {
+    console.log('inside delete tag, id:', req.params)
+    const id = req.params;
     let user;
     dbT
         .remove(id)
@@ -132,11 +132,12 @@ router.delete('/tags', function (req, res) {
         });
 });
 
-
+// It works but the order is confusing
+// It resolves with server error, but actually executes (updates)
 router.put('/tags/:id', function (req, res) {
-    const { id } = req.params;
+    const id  = req.params.id;
     const update = req.body;
-
+    console.log('this is the tag: ', update);
     dbT
         .update(id, update)
         .then(count => {
@@ -164,7 +165,14 @@ router.get('/tags', (req, res) => {
         });
 });
 
-// <<< POSTS POSTS >>> 
+
+
+
+
+
+
+
+
 router.post('/posts', (req, res, next) => {
     const userInformation = req.body;
     console.log('user information', userInformation);
@@ -180,8 +188,8 @@ router.post('/posts', (req, res, next) => {
         });
 });
 
-router.delete('/posts', function (req, res) {
-    const { id } = req.query;
+router.delete('/posts/:id', function (req, res) {
+    const  id = req.params.id;
     let user;
     dbP
         .remove(id)
@@ -199,9 +207,9 @@ router.delete('/posts', function (req, res) {
 
 
 router.put('/posts/:id', function (req, res) {
-    const { id } = req.params;
+    
     const update = req.body;
-
+    const id = update.userId;
     dbP
         .update(id, update)
         .then(count => {
