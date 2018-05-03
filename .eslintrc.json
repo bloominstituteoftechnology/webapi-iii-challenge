@@ -8,10 +8,5 @@
   "parserOptions": {
     "sourceType": "module"
   },
-  "extends": ["prettier", "airbnb-base"],
-  "plugins": ["prettier"],
-  "rules": {
-    "prettier/prettier": ["error", { "singleQuote": true }],
-    "comma-dangle": "off"
-  }
+  "extends": ["airbnb-base"]
 }
