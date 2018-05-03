@@ -1,20 +1,19 @@
-const express = require("express");
+import express from "express";
+import UserController from "../Controllers/userController";
 
-const router = express.Router();
+const UserRouter = express.Router();
+const {
+  getUser,
+  getUserPosts,
+  createUser,
+  updateUser,
+  removeUser
+} = UserController;
 
-const db = require("../data/helpers/userDb");
-//this code is wrong
-router.get("/", (req, res, next) => {
-  // const { id } = req.query;
-  // let user;
-  // db.get(id).then(foundUser => {
-  //   res.json(foundUser);
-  // });
-  res.send("hello");
-});
+UserRouter.get("/:id", getUser);
+UserRouter.get("/posts/:id/", getUserPosts);
+UserRouter.post("/", createUser);
+UserRouter.put("/:id", updateUser);
+UserRouter.delete("/:id", removeUser);
 
-//router.put
-//router.post
-//router.delete
-
-module.exports = router;
+export default UserRouter;
