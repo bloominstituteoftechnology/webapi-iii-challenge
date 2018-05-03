@@ -52,11 +52,11 @@ router.get('/:id', (req, res) => {
     db.getUserPosts(userId)
       .then(users => {
 //POSSIBLY ADD res MESSAGE IF NO USER FOUND
-// if (users.length === 0) {
-//     res.status(404).json({ message: 'user not found' });
-//   } else {
-//     res.json(users[0]);
-//   }
+if (users.length === 0) {
+    res.status(404).json({ message: 'user not found' });
+  } else {
+    res.json(users[0]);
+  }
 // SOMETHING LIKE THIS ^^^
           res.json(users);
       })
@@ -72,7 +72,7 @@ router.delete('/', (req, res) => {
     db
       .get(id)
       .then(foundUser => {
-          user = { ...foundUser[0] };
+          user = { ...foundUser };
 
     db
       .remove(id)
@@ -109,5 +109,5 @@ router.put('/:id', (req, res) => {
 
 
 
-module.export = router;
+module.exports = router;
 //THIS IS HOW WE EXPORT HERE ^^^

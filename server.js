@@ -13,9 +13,9 @@ server.use(express.json());
 //USER ROUTES HANDLERS GO HERE
 //routes will only care about
 //URLs that begin with /api/users
-// server.use('/api/users', userRoutes);
-server.use(server.router);
-routes.initialize(server);
+server.use('/api/users', userRoutes);
+// server.use(server.router);
+// routes.initialize(server);
 
 //TEST TO SEE IF DEFAULT IS WORKING
 server.get('/', (req, res) => {
