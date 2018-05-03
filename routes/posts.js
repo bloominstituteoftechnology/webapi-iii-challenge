@@ -47,8 +47,8 @@ router.put('/:id', function(req, res) {
     .update(id, req.body)
     .then(count => {
       if (count > 0) {
-        db.get(id).then(user => {
-          res.status(200).json(user);
+        db.get(id).then(post => {
+          res.status(200).json(post);
         });
       } else {
         res.status(404).json({ msg: 'User not found' });
