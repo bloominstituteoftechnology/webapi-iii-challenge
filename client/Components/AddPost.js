@@ -23,7 +23,7 @@ export const AddPost = props => {
 	return (
 		<div>
 			<form className="text" onSubmit={handleSubmit}>
-				<label>New Pos:</label>
+				<label>Post</label>
 				<input type="text" name="user" />
 				<input type="text" name="text" />
 				<input type="submit" value="Submit" />
