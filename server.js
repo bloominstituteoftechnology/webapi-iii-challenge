@@ -32,4 +32,12 @@ server.use(helmet());
 server.get("/", (req, res) => {
   res.send("hello there!");
 });
+
+// function errorHandler(err, req, res, next) {
+//   if (err) {
+//     res.send(500).json({ error: `sometheing went wrong` });
+//   }
+// }
+
+// server.use(errorHandler);
 server.listen(3333, () => console.log("\n== API running on port 3333 ==\n"));
