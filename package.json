@@ -1,0 +1,26 @@
+{
+  "name": "node-blog",
+  "version": "1.0.0",
+  "description": "## Topics",
+  "main": "server.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pfang/Node-Blog.git"
+  },
+  "author": "Node-Blog User <paulxfang@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pfang/Node-Blog/issues"
+  },
+  "homepage": "https://github.com/pfang/Node-Blog#readme",
+  "dependencies": {
+    "knex": "^0.14.6",
+    "sqlite3": "^4.0.0"
+  },
+  "scripts" : {
+    "start": "nodemon"
+  },
+  "devDependencies": {
+    "nodemon": "^1.17.3"
+  }
+}
