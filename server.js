@@ -1,3 +1,4 @@
+
 import express from 'express';
 import UserRouter from './Routes/UserRoutes';
 import PostRouter from './Routes/PostRoutes';
@@ -13,3 +14,4 @@ app.use('/api/tags', TagRouter);
 
 // server.use(errorHandler);
 server.listen(3333, () => console.log('\n== API running on port 3333 ==\n'));
+
