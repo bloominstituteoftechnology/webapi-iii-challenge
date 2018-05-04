@@ -44,7 +44,6 @@ router.post('/', (req, res) => {
       res.json(user);
     })
   })
-
 })
 
 // userDb.update() doesnt work
