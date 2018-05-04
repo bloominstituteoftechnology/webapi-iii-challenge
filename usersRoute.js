@@ -56,21 +56,6 @@ router.get('/:id', (req, res) => {
 // });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 router.post('/', (req, res) => {
     const obj = { name: req.body.name }
 
