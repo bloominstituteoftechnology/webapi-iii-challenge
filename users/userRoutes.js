@@ -71,7 +71,7 @@ router.post("/", (req, res) => {
 	// define id
 	const newUser = req.body;
 
-	if (newUser.name.length === 0) {
+	if (!newUser.name || newUser.name.length === 0) {
 		res.status(400).json({ error: "Please provide the user's name" });
 	} else {
 		userDB

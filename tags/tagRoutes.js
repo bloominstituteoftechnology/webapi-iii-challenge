@@ -1,11 +1,11 @@
 const express = require("express");
 const tagDB = require("../data/helpers/tagDb");
 const router = express.Router();
+const { upperCaseTags } = require("../Middleware");
 
 // DB schema
-// id: number, no need to provide it when creating posts, the database will automatically generate it.
-// userId: number, required, must be the id of an existing user.
-// text: string, no size limit, required.
+// id: number, no need to provide it when creating tags, the database will generate it.
+// tag: string up to 80 characters long, must be a unique value.
 
 // ROUTE HANDLERS /tags/tagRoutes
 
@@ -45,7 +45,7 @@ router.post("/", (req, res) => {
 	// define new tag
 	const newTag = req.body;
 
-	if (newTag.tag.length === 0) {
+	if (!newTag.tag || newTag.tag.length === 0) {
 		res.status(400).json({ error: "Please provide a tag name" });
 	} else {
 		tagDB
@@ -90,7 +90,7 @@ router.put("/:id", (req, res) => {
 	const { id } = req.params;
 	const update = req.body;
 
-	if (update.tag.length === 0) {
+	if (!update.tag || update.tag.length === 0) {
 		res.status(400).json({ message: "Please provide a tag name" });
 	} else {
 		tagDB
