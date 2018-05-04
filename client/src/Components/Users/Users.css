@@ -1,0 +1,16 @@
+.usersHeader {
+    margin-top: 25px;
+}
+
+.usersRow {
+    justify-content: center;
+    margin-top: 50px;
+}
+
+.userCard {
+    text-decoration: none;
+    color: #000;
+    font-size: 15px;
+    width: 33%;
+    margin-bottom: 20px;
+}
