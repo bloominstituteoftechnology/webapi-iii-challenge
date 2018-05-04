@@ -115,7 +115,7 @@ app.post('/api/posts', (req, res) => {
     res.status(400).send({ error: 'Please provide a valid userId and text for the post' })
   }
 })
-
+                                                                                                                              
 app.delete('/api/posts/:id', (req, res) => {
   id = req.params.id
   postDb  
@@ -155,6 +155,15 @@ app.get('/api/tags/:id', (req, res) => {
       ? res.status(404).send({ error: `Tag with id ${id} not found` })
       : res.status(200).send(response))
     .catch(() => res.status(500).send({ error: `Error fetching tag with id ${id}` }))
+})
+
+// Middleware that capitalizes tags
+app.post('/api/tags', (req, res, next) => {
+  body = req.body
+  if (body && body.tag) {
+    body.tag = body.tag.toUpperCase()
+  }
+  next()
 })
 
 app.post('/api/tags', (req, res) => {
