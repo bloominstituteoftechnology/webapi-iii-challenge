@@ -1,10 +1,11 @@
 const express = require('express');
 
+const { tagToUpperCase, getTagToUpperCase } = require('../middlewares');
 const db = require('../data/helpers/tagDb.js');
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
+router.get('/', getTagToUpperCase, (req, res) => {
     db
     .get()
     .then(tags => {
@@ -15,7 +16,7 @@ router.get('/', (req, res) => {
     });
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', getTagToUpperCase, (req, res) => {
     const { id } = req.params;
     db
     .get(id)
@@ -31,7 +32,7 @@ router.get('/:id', (req, res) => {
     });
 });
 
-router.post('/', (req, res) => {
+router.post('/', tagToUpperCase, (req, res) => {
     const tag = req.body;
     if(!tag) {
         res.status(400).json({ error: `Please provide a tag.`});
@@ -46,7 +47,7 @@ router.post('/', (req, res) => {
     }
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', tagToUpperCase, (req, res) => {
     const { id } = req.params;
     const { tag } = req.body;
     const updatedTag = { tag };
