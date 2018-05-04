@@ -8,6 +8,9 @@ const dbTg = require('./data/helpers/tagDb');
 const server = express();
 server.use(bodyParser.json());
 
+const capitolise = (string) => {
+    return string.toUpperCase();
+};
 
 server.get('/', (req, res) => {
     res.send('Api Running');
@@ -77,7 +80,7 @@ server.get('/api/tags', (req, res) => {
 //create a new tag
 server.post('/api/tags/new', (req, res) => {
     const { tag } = req.body
-    const tags = { tag: tag };
+    const tags = { tag: capitolise(tag) };
     dbTg.insert(tags).then(
         res.status(200).json("creation success")
     ).catch(err => {
@@ -99,7 +102,7 @@ server.delete('/api/tags/:id/delete', (req, res) => {
 server.put('/api/tags/:id/update', (req, res) => {
     const id = req.params.id;
     const { tag } = req.body;
-    const tags = { tag: tag };
+    const tags = { tag: capitolise(tag) };
     dbTg.update(id, tags).then(
         res.status(200).json("update success")
     ).catch(err => {
