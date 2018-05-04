@@ -1,4 +1,5 @@
-import express from 'express';
+const express = require('express');
+const data = require('../data/helpers/tagDb');
 import TagController from '../Controllers/TagControllers';
 
 const TagRouter = express.Router();

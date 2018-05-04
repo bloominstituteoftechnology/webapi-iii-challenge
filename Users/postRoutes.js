@@ -1,4 +1,5 @@
-import express from 'express';
+const express = require('express');
+const data = require('../data/helpers/postDb');
 import PostController from '../Controllers/PostControllers';
 
 const PostRouter = express.Router();

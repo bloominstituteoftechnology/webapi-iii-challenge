@@ -1,4 +1,5 @@
-import express from 'express';
+const express = require('express');
+const data = require('../data/helpers/userDb');
 import UserController from '../Controllers/UserControllers';
 
 const UserRouter = express.Router();
