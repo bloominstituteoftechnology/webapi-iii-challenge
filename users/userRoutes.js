@@ -114,18 +114,29 @@ router.put("/:id", (req, res) => {
 	const { id } = req.params;
 	const update = req.body;
 
-	userDB
-		.update(id, update)
-		.then(count => {
-			if (count === 0) {
-				res.status(404).json({ message: "user not found" });
-			} else {
-				res.status(200).json(update);
-			}
-		})
-		.catch(err => {
-			res.status(500).json({ error: "user could not be changed" });
-		});
+	if (!update.name || update.name.length === 0) {
+		res.status(400).json({ message: "please provide a user name" });
+	} else {
+		userDB
+			.get(id)
+			.then(user => {
+				userDB
+					.update(id, update)
+					.then(count => {
+						if (count === 0) {
+							res.status(404).json({ message: "user not found" });
+						} else {
+							res.status(200).json(update);
+						}
+					})
+					.catch(err => {
+						res.status(500).json({ error: "user could not be changed" });
+					});
+			})
+			.catch(err => {
+				res.status(500).json({ error: err });
+			});
+	}
 });
 
 module.exports = router;
