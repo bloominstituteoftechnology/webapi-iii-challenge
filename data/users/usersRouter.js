@@ -122,25 +122,31 @@ router.delete("/:id", (req, res) => {
   const { id } = req.params;
   let user;
 
-  db.get(id).then(response => {
-    user = { ...response };
+  db
+    .get(id)
+    .then(response => {
+      if (response.length > 0) {
+        user = { ...response };
 
-    db
-      .remove(id)
-      .then(response => {
-        res.status(200).json(user);
-      })
-      .catch(error => {
+        db.remove(id).then(response => {
+          res.status(200).json(user);
+        });
+      } else {
         res.status(404).json({
-          error: "Could not find specified user."
+          error: "The user with the specified ID does not exist."
         });
-      })
-      .catch(error => {
-        res.status(500).json({
-          error: "There was an error while removing a new user."
-        });
+      }
+    })
+    .catch(error => {
+      res.status(404).json({
+        error: "Could not find specified user."
       });
-  });
+    })
+    .catch(error => {
+      res.status(500).json({
+        error: "There was an error while removing a new user."
+      });
+    });
 });
 
 module.exports = router;
