@@ -35,8 +35,8 @@ router.get('/:id', (req, res) => {
 })
 
 router.post('/', (req, res) => {
-   const  obj= { tag : req.body.tag}
-        
+    const obj = { tag: req.body.tag }
+
     db
         .insert(obj)
         .then(p => {
@@ -50,7 +50,7 @@ router.post('/', (req, res) => {
 router.put('/:id', (req, res) => {
     const obj = {
         tag: req.body.tag
-      
+
     }
 
     const { id } = req.params
@@ -86,10 +86,4 @@ router.delete("/:id", (req, res) => {
         })
 
 })
-
-
-
-
-
-
 module.exports = router;

@@ -16,28 +16,28 @@ router.get('/', (req, res) => {
         })
 })
 
-router.get('/:id', (req, res)=>{
-   const {id} = req.params
-      db
-          .get(id)
-         .then(pId =>{
-             if ( pId.length === 0){
-                 res.status(404).json({msg: " user not found"})
-             }
-             else{
-                 res.status(200).json(pId)
-             }
-         })
-         .catch( err =>{
-          res.status(404).json({
-              msg: "user not found"
-          })
-         })
+router.get('/:id', (req, res) => {
+    const { id } = req.params
+    db
+        .get(id)
+        .then(pId => {
+            if (pId.length === 0) {
+                res.status(404).json({ msg: " user not found" })
+            }
+            else {
+                res.status(200).json(pId)
+            }
+        })
+        .catch(err => {
+            res.status(404).json({
+                msg: "user not found"
+            })
+        })
 })
 
 
 
-router.get('/postTag/:id', (req, res) => {
+router.get('/:id/postTags', (req, res) => {
     const { id } = req.params
     db
         .getPostTags(id)
@@ -48,66 +48,66 @@ router.get('/postTag/:id', (req, res) => {
             else {
                 res.status(200).json(pId)
             }
-       
+
         })
-        .catch(err =>{
-            res.status(404).json({msg:'user not found'})
+        .catch(err => {
+            res.status(404).json({ msg: 'user not found' })
         })
 })
 
-router.post('/', (req,res) =>{
-    
-        const obj ={
-            text:req.body.text,
-            userId: req.body.userId
-        }
-    db 
-      .insert(obj)
-      .then(p => {
-       res.status(200).json({msg:' a new user is  added'})
-      })
-      .catch( err =>{
-       res.status(500).json({msg: err})
-      })
+router.post('/', (req, res) => {
+
+    const obj = {
+        text: req.body.text,
+        userId: req.body.userId
+    }
+    db
+        .insert(obj)
+        .then(p => {
+            res.status(200).json({ msg: ' a new user is  added' })
+        })
+        .catch(err => {
+            res.status(500).json({ msg: err })
+        })
 })
 
 
-router.put('/:id', (req, res)=>{
+router.put('/:id', (req, res) => {
     const obj = {
         text: req.body.text,
         userId: req.body.userId
     }
 
-    const {id} = req.params
-      db 
-        .update(id,obj)
-        .then( p =>{
-         if( obj.text !== '' && obj.userId !== ''){
-             res.status(200).json({ msg: 'user is updated'})
-         }
-       })
-        .catch( err =>{
-         res.status(404).json( {
-             msg: " user not found"
-         })
+    const { id } = req.params
+    db
+        .update(id, obj)
+        .then(p => {
+            if (obj.text !== '' && obj.userId !== '') {
+                res.status(200).json({ msg: 'user is updated' })
+            }
+        })
+        .catch(err => {
+            res.status(404).json({
+                msg: " user not found"
+            })
         })
 
 })
 
-router.delete("/:id", (req,res)=>{
-    const {id} = req.params 
-    db 
-      .remove(id)
-      .then(p =>{
-          res.status(200).json({
-              msg:` the user with  id:"${id}" is deleted`
-          })
-      })
-      .catch( err =>{
-          res.status(400).json({
-              msg: 'user not found '
-          })
-      })
+router.delete("/:id", (req, res) => {
+    const { id } = req.params
+    db
+        .remove(id)
+        .then(p => {
+            res.status(200).json({
+                msg: ` the user with  id:"${id}" is deleted`
+            })
+        })
+        .catch(err => {
+            res.status(400).json({
+                msg: 'user not found '
+            })
+        })
 
 })
 
