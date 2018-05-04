@@ -1,0 +1,12 @@
+.userContainer {
+    max-width: 600px;
+}
+
+.editUser {
+    display: flex;
+    justify-content: center;
+}
+
+.editUserButton {
+    margin-left: 10px;
+}
