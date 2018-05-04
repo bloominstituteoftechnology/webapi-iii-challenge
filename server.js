@@ -1,36 +1,30 @@
 const express = require('express');
-const helmet = require('helmet'); // 1 yarn add helmet || npm i helmet 
+const helmet = require('helmet');
 const cors = require('cors');
 
-// 2 import db from './data/db';
-const userRoutes = require('./users/userRoutes');
-const postRoutes = require('./users/postRoutes');
-const tagRoutes = require('./user/tagRoutes');
+const userRoutes = require('./users/userRoutes.js');
+const postRoutes = require('./users/postRoutes.js');
+const tagsRoutes = require('./users/tagRoutes.js');
 
 const server = express();
 
-// client -> [error, m1, post, m3] -> [rh1, rh2]
-
+// custom middleware [m1, m2, mn] -> [request handlers]
 function logger(req, res, next) {
-    next();
+  next();
 }
 
-// add middleware
-// server.use(greeter('Lukasz'));
-server.use(logger);
 server.use(helmet());
-server.use(express.json());
 server.use(cors());
+server.use(express.json());
+server.use(logger);
 
-// user route handlers
 server.use('/api/users', userRoutes);
-server.use('./api/posts', postRoutes);
-server.use('./api/tags', tagRoutes);
-
+server.use('/api/posts', postRoutes);
+server.use('/api/tags', tagsRoutes);
 
 server.get('/', function(req, res) {
   res.json({ api: 'Running...' });
 });
 
 const port = 8000;
-server.listen(port, () => console.log(`\n== API Running on port ${port} ==\n`));
+server.listen(port, () => console.log('API Running on port 5000'));
