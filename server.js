@@ -1,5 +1,6 @@
 //importing
 const express = require('express');
+const cors = require('cors');
 
 //server run
 const server = express();
@@ -14,7 +15,7 @@ const tagRoutes = require('./tagRoutes');
 
 // middleware
 server.use(express.json());
-
+server.use(cors());
 //Routes
 server.use('/api/users', userRoutes);
 server.use('/api/posts', postRoutes);
@@ -22,12 +23,11 @@ server.use('/api/tags', tagRoutes);
 
 //get method initial
 server.get('/', (req, res) => {
-    console.log('Running');
-    res.send('Running now!');
+  res.send('Running now!');
 })
-
-
 
 //server attached to a port
 const port = 5000;
-server.listen(port, () => {console.log('== Server is listening on port 5000 ==')});
+server.listen(port, () => {
+  console.log('== Server is listening on port 5000 ==')
+});
