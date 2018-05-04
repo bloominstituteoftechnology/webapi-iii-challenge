@@ -5,7 +5,7 @@
   "main": "knexfile.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon start.js"
+    "start": "nodemon start.js --exec babel-node --presets es2015,stage-2"
   },
   "repository": {
     "type": "git",
@@ -25,6 +25,9 @@
     "sqlite3": "^4.0.0"
   },
   "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
     "nodemon": "^1.17.3"
   }
 }

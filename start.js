@@ -1,19 +1,18 @@
 // DEPENDENCIES
-const express = require('express');
-const helmet = require('helmet');
+import express from 'express';
 const server = express();
 
 
 // ROUTER SETUP
-const userRoutes = require('./components/userRoutes');
-const tagRoutes = require('./components/tagRoutes');
-const postRoutes = require('./components/postRoutes');
+import userRoutes from './routers/userRoutes';
+import tagRoutes from './routers/tagRoutes';
+import postRoutes from './routers/postRoutes';
+
+server.use(express.json());
 server.use('/api/users', userRoutes);
 server.use('/api/tags', tagRoutes);
 server.use('/api/posts', postRoutes);
 
-
-server.use(helmet()); // 3
 server.use(express.json());
 
 // GET SETUP
