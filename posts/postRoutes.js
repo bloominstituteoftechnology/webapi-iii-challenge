@@ -36,14 +36,10 @@ router.get("/postTags/:id", (req, res) => {
 						res.status(200).json(postTags);
 					}
 				});
-			} else {
-				res.status(404).json({ message: "post not found" });
 			}
 		})
 		.catch(err => {
-			res
-				.status(500)
-				.json({ error: "there was an error fetching the tags for this post" });
+			res.status(500).json({ error: "post does not exist" });
 		});
 });
 
