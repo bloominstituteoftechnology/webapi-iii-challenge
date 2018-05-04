@@ -22,10 +22,16 @@ router.get("/", (req, res) => {
 
 // GET user from id
 router.get("/:id", (req, res) => {
+  const { id } = req.params;
+
   db
     .get(id)
     .then(users => {
-      res.status(200).json(users);
+      if (users.length === 0) {
+        res.status(404).json({ error: "The user could not be found." });
+      } else {
+        res.status(200).json(users);
+      }
     })
     .catch(error => {
       res.status(500).json({
