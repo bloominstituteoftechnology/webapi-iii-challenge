@@ -68,6 +68,7 @@ router.get("/:id/posts", (req, res) => {
 router.post("/", (req, res) => {
   const user = req.body;
 
+  // Make sure a name is provided for new user
   if (user.name) {
     db
       .insert(user)
@@ -87,9 +88,16 @@ router.post("/", (req, res) => {
 });
 
 // UPDATE user
-router.put("/", (req, res) => {
+router.put("/:id", (req, res) => {
   const { id } = req.params;
   const update = req.body;
+
+  // Make sure name is provided for updated user.
+  if (!update.name) {
+    res.status(400).json({
+      error: "Please provide a name for the updated user."
+    });
+  }
 
   db
     .update(id, update)
