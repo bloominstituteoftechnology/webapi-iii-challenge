@@ -8,7 +8,6 @@ const tagsRoutes = require('./users/tagRoutes.js');
 
 const server = express();
 
-// custom middleware [m1, m2, mn] -> [request handlers]
 function logger(req, res, next) {
   next();
 }
