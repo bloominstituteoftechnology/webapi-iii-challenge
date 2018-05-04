@@ -28,7 +28,9 @@ router.get("/:id", (req, res) => {
     .get(id)
     .then(users => {
       if (users.length === 0) {
-        res.status(404).json({ error: "The user could not be found." });
+        res.status(404).json({
+          error: "The user could not be found."
+        });
       } else {
         res.status(200).json(users);
       }
@@ -47,7 +49,13 @@ router.get("/:id/posts", (req, res) => {
   db
     .getUserPosts(id)
     .then(posts => {
-      res.status(200).json(posts);
+      if (users.length === 0) {
+        res.status(404).json({
+          error: "The user could not be found."
+        });
+      } else {
+        res.status(200).json(posts);
+      }
     })
     .catch(error => {
       res.status(500).json({
@@ -56,20 +64,26 @@ router.get("/:id/posts", (req, res) => {
     });
 });
 
-// INSERT user to db
+// POST new user to db; insert()
 router.post("/", (req, res) => {
   const user = req.body;
 
-  db
-    .insert(user)
-    .then(response => {
-      res.status(201).json(response);
-    })
-    .catch(error => {
-      res.status(500).json({
-        error: "There was an error while adding a new user."
+  if (user.name) {
+    db
+      .insert(user)
+      .then(response => {
+        res.status(201).json(response);
+      })
+      .catch(error => {
+        res.status(500).json({
+          error: "There was an error while adding a new user."
+        });
       });
+  } else {
+    res.status(400).json({
+      error: "Please provide a name for the new user."
     });
+  }
 });
 
 // UPDATE user
