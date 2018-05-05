@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { getTagToUpperCase } = require('../middlewares');
+const { getTagToUpperCase, getTagsToUpperCase } = require('../middlewares');
 const db = require('../data/helpers/postDb.js');
 
 const router = express.Router();
@@ -32,7 +32,7 @@ router.get('/:id', getTagToUpperCase, (req, res) => {
     });
 });
 
-router.get('/:id/tags', getTagToUpperCase, (req, res) => {
+router.get('/:id/tags', getTagsToUpperCase, (req, res) => {
     const { id } = req.params;
     db
     .getPostTags(id)

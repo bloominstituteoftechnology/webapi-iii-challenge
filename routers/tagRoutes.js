@@ -1,11 +1,15 @@
 const express = require('express');
 
-const { tagToUpperCase, getTagToUpperCase } = require('../middlewares');
+const {
+  tagToUpperCase,
+  getTagToUpperCase,
+  getTagsToUpperCase,
+} = require('../middlewares');
 const db = require('../data/helpers/tagDb.js');
 
 const router = express.Router();
 
-router.get('/', getTagToUpperCase, (req, res) => {
+router.get('/', getTagsToUpperCase, (req, res) => {
     db
     .get()
     .then(tags => {
@@ -16,7 +20,7 @@ router.get('/', getTagToUpperCase, (req, res) => {
     });
 });
 
-router.get('/:id', getTagToUpperCase, (req, res) => {
+router.get('/:id', getTagsToUpperCase, (req, res) => {
     const { id } = req.params;
     db
     .get(id)
