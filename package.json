@@ -4,7 +4,8 @@
   "description": "## Topics",
   "main": "knexfile.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
   },
   "repository": {
     "type": "git",
@@ -18,7 +19,12 @@
   },
   "homepage": "https://github.com/Anthony-Calderaro/Node-Blog#readme",
   "dependencies": {
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "helmet": "^3.12.0",
     "knex": "^0.14.6",
+    "nodemon": "^1.17.3",
     "sqlite3": "^4.0.0"
-  }
+  },
+  "devDependencies": {}
 }
