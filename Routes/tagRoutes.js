@@ -84,18 +84,22 @@ router.delete('/:id', (req, res) => {
   db
     .get(id)
     .then(foundTag => {
-      tag = foundTag;
-      db
-        .remove(id)
-        .then(response => {
-          res.status(200).json(tag);
-        })
-        .catch(err => {
-          res.status(500).json({ error: err });
-        });
+      if (foundTag !== undefined) {
+        tag = foundTag;
+        db
+          .remove(id)
+          .then(response => {
+            res.status(200).json(tag);
+          })
+          .catch(err => {
+            res.status(500).json({ error: err });
+          });
+      } else {
+        res.status(404).json({ message: "A tag with that specific ID does not exist." });
+      }
     })
     .catch(err => {
-      res.status(404).json({ message: "A tag with that specific ID does not exist." });
+      res.status(500).json({ error: err });
     });
 });
 
