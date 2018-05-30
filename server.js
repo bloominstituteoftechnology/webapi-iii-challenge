@@ -80,12 +80,88 @@ entities.forEach(each => {
         }
         
         // for other entities
-        api.endpoints[each].insert({ data, res })
+        api.endpoints[each].insert({ data })
         .then(response => {
             res.status(200).json({ id: response[0], ...data})
         })
         .catch(err => {
             res.status(500).json({ errorMessage: `The ${name} information could not be retrieved.` })
+        })
+    })
+
+    // Delete one object of a specific entity
+    app.delete(`/api/${each}/:id`, (req, res) => {
+        const { id } = req.params
+        api.endpoints[each].remove({id})
+        .then(response => {
+            if (response === 1) {
+                res.status(200).send(`The ${each} have been deleted`)
+            } else{
+                res.status(404).json({ errorMessage: `The ${each} with the specified ID does not exist.` })
+            }
+        })
+        .catch(error => {
+            res.status(500).json({ errorMessage: `The ${each} information could not be retrieved.` })
+        })
+    })
+
+    // Update one object of a specific entity
+    app.put(`/api/${each}/:id`, (req, res) => {
+        const data = req.body
+        const { id } = req.params
+
+        // check if updated object contains all required fields
+        for (let i=0; i < requiredFields[each].length; i++) {
+            const field = requiredFields[each][i]
+            if (!req.body[field]) {
+                res.status(400).json({ errorMessage: `Please provide ${field} for the ${each}.` });
+                return;
+            }
+        }
+
+        // for posts entity
+        if (data.userId) {
+            // extra feat: post's creator only allow update own post.
+            // to-do: check if updated userId is the same current userId 
+
+
+            // check if userId is existed
+            api.endpoints[each].getOne({ id: data.userId })
+            .then(response => {
+                if (response.length > 0) {
+                    // update
+                    api.endpoints[each].update({ id, data})
+                    .then(response => {
+                        if (response === 1) {
+                            res.status(200).send(`The ${each} have been updated`)
+                        } else {
+                            res.status(404).json({ errorMessage: `The ${each} with the specified ID does not exist.` })
+                        }
+                    })
+                    .catch(err => {
+                        res.status(500).json({ errorMessage: `The ${each} information could not be retrieved.` })
+                    })
+                } else{
+                    res.status(404).json({ errorMessage: `The user with the specified ID does not exist.` })
+                }
+            })
+            .catch(error => {
+                res.status(500).json({ errorMessage: `The ${each} information could not be retrieved.` })
+            })
+            return;
+        }
+        
+        // for other entities
+        api.endpoints[each].update({ id, data })
+        .then(response => {
+            if (response === 1) {
+                res.status(200).send(`The ${each} have been updated`)
+            } else {
+                res.status(404).json({ errorMessage: `The ${each} with the specified ID does not exist.` })
+            }
+        })
+        .catch(err => {
+            res.status(500).json({ errorMessage: `The ${each} information could not be retrieved.` })
         })
     })
 
