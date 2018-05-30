@@ -1,10 +1,11 @@
 {
-  "name": "Node-Blog",
+  "name": "nodeblog",
   "version": "1.0.0",
   "description": "## Topics",
   "main": "knexfile.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
   },
   "repository": {
     "type": "git",
@@ -21,7 +22,9 @@
     "nodemon": "^1.17.5"
   },
   "dependencies": {
+    "cors": "^2.8.4",
     "express": "^4.16.3",
+    "helmet": "^3.12.1",
     "knex": "^0.14.6",
     "sqlite3": "^4.0.0"
   }

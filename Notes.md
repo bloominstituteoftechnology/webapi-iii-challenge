@@ -106,6 +106,28 @@
 * cacheable
   * GET, PUT, DELETE should be _idempotent_.
   * normally through ETag header
+* layered system
+    * the client shout not know if it is connected directly to the server (Load Balancers, Server Farm, Logger) 
+* code on demand
+    * The server can change the clients behaviour, or functionality by sending code down the network
+* uniform interfaces
+    * one URL per resource
+
+clients <=> [Load Balance I + Load Balancer II] <=> [Logging] <=> [Caching] <=> [Server Farm (application / API)]
+
+  An API in this context is a server software that publishes a set of **endpoints** that clients can use to manage **resources**.
+
+## Tuesday
+
+### Review
+
+* what is Node.js?
+* what are two advantages of using Node.js to build our APIs?
+* how many request handlers can we have when using Node.js http server module to build web applications?
+* what is Express?
+* why would you use Express instead of raw Node.js to build web applications/APIs?
+* what is the relationship between Node.js and Express?
+  * normally through ETag header
 * layered system.
   * the client should not know if it is connected directly to the server.
 * code on demand.
