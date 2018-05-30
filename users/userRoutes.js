@@ -24,6 +24,7 @@ router.get('/:id', (req, res) => {
             .then(result => {
                 userDb.getUserPosts(id)
                     .then(posts => {
+                        console.log(posts)
                         let obj = {
                             user: result,
                             posts: posts
