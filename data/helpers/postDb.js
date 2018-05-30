@@ -1,7 +1,7 @@
 const db = require('../dbConfig.js');
 
 module.exports = {
-  get: function(id) {
+  get: function (id) {
     let query = db('posts as p');
 
     if (id) {
@@ -12,7 +12,7 @@ module.exports = {
 
       const promises = [query, this.getPostTags(id)]; // [ posts, tags ]
 
-      return Promise.all(promises).then(function(results) {
+      return Promise.all(promises).then(function (results) {
         let [posts, tags] = results;
         let post = posts[0];
         post.tags = tags.map(t => t.tag);
@@ -23,23 +23,23 @@ module.exports = {
 
     return query;
   },
-  getPostTags: function(postId) {
+  getPostTags: function (postId) {
     return db('tags as t')
       .join('posttags as pt', 't.id', 'pt.tagId')
       .select('t.tag')
       .where('pt.postId', postId);
   },
-  insert: function(post) {
+  insert: function (post) {
     return db('posts')
       .insert(post)
       .then(ids => ({ id: ids[0] }));
   },
-  update: function(id, post) {
+  update: function (id, post) {
     return db('posts')
       .where('id', id)
       .update(post);
   },
-  remove: function(id) {
+  remove: function (id) {
     return db('posts')
       .where('id', id)
       .del();
