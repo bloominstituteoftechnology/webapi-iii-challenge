@@ -177,6 +177,74 @@ server.get('/api/post/:id/tags', (req,res) =>{
 })
 
 
+//tags
+
+server.get('/api/tags', (req,res) =>{
+  tagDB.get()
+  .then(tags => {
+    res.status(200).json(tags);
+  })
+  .catch( error => {
+    sendUserError(500, "internal server error!", res)
+  })
+
+})
+
+
+server.post('/api/tags', (req,res) => {
+  const { tag } = req.body;
+  tagDB.insert({ tag })
+  .then(tags => {
+    res.status(201).json(tags);
+  })
+  .catch( error => {
+    sendUserError(500, "internal server error!", res)
+  })
+
+})
+
+server.put('/api/tags/:id', (req,res) => {
+  const { id } = req.params;
+  const { tag } = req.body;
+
+  tagDB.update(id, { tag })
+  .then(tags => {
+    res.status(200).json(tags);
+  })
+  .catch( error => {
+    sendUserError(500, "internal server error!", res)
+  })
+})
+
+
+server.delete('/api/tags/:id', (req,res) => {
+  const { id } = req.params;
+
+  tagDB.remove(id)
+  .then(tags => {
+    res.status(200).json(tags);
+  })
+  .catch( error => {
+    sendUserError(500, "internal server error!", res)
+  })
+
+})
+
+
+server.get('/api/tags/:id/', (req,res) =>{
+  const { id } = req.params;
+
+  tagDB.get(id)
+  .then(users => {
+    res.status(200).json(users);
+  })
+  .catch( error => {
+    sendUserError(500, "internal server error!", res)
+  })
+
+})
+
+
 
 
 
