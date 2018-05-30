@@ -16,15 +16,16 @@ router.get('/', (req, res) => {
 })
 
 router.post('/', (req, res) => {
-    const { text, userID } = req.body
+    let { text, userId } = req.body
     // console.log("fire")
+    // tags === undefined ? tags = [] : tags;
     if (!text) {
         res.status(400).json("BAD REQUEST")
     } else {
         db
-            .insert({ text, userID })
+            .insert({ text, userId })
             .then(response => {
-                // console.log(response)
+                console.log(response)
                 db.get(response.id)
                     .then(post => {
                         res.json(post)
@@ -34,7 +35,7 @@ router.post('/', (req, res) => {
                     })
             })
             .catch(error => {
-                res.json({ error: "There was an error while saving the post to the database" })
+                res.json({ error: `${error}` })
             })
     }
 })

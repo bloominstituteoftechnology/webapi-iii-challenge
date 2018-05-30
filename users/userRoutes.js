@@ -22,7 +22,14 @@ router.get('/:id', (req, res) => {
     if (id) {
         userDb.get(id)
             .then(result => {
-                result.id ? res.json(result) : res.status(404).json({ error: "The User was not found!" })
+                userDb.getUserPosts(id)
+                    .then(posts => {
+                        let obj = {
+                            user: result,
+                            posts: posts
+                        }
+                        res.json(obj)
+                    })
             })
             .catch(err => {
                 res.status(500)(json({ error: "There was an error in the database!" }))
