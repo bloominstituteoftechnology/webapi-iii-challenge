@@ -1,6 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-// const CORS = require('cors');
+const userDb = require('./data/helpers/userDb.js');
+const postDb = require('./data/helpers/postDb.js');
+const CORS = require('cors');
 const API = require('./api.js');
 
 const port = 5000;
@@ -8,7 +10,7 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(CORS());
+app.use(CORS());
 
 const api = new API({ url:'http://localhost:5000/api'})
 const entities = ['users','posts','tags']
@@ -42,6 +44,22 @@ entities.forEach(each => {
         .catch(error => {
             res.status(500).json({ errorMessage: `The ${name} information could not be retrieved.` })
         })
+    })
+
+    // Get all posts of one user
+    app.get(`/api/postsByUser/:id`, (req, res) => {
+        const { id } = req.params
+        userDb.getUserPosts(id)
+        .then(response => res.status(200).json(response))
+        .catch(err => res.status(500).json({ errorMessage: `The ${each} information could not be retrieved.` }))
+    })
+
+    // Get all tags of a post
+    app.get(`/api/tagsByPost/:id`, (req, res) => {
+        const { id } = req.params
+        postDb.getPostTags(id)
+        .then(response => res.status(200).json(response))
+        .catch(err => res.status(500).json({ errorMessage: `The ${each} information could not be retrieved.` }))
     })
 
     // Insert one object to a specific entity
