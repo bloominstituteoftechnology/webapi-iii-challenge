@@ -1,8 +1,6 @@
 const express = require('express'),
-    db = require('../data/helpers/postDb'),
+    db = require('../data/helpers/tagDb'),
     router = express.Router();
-tagDb = require('../data/helpers/tagDb')
-
 
 router.get('/', (req, res) => {
     db
@@ -67,15 +65,9 @@ router.get('/:id', (req, res) => {
     db
         .get(id)
         .then(result => {
+            console.log(result)
             if (result) {
-                db.getPostTags(id)
-                    .then(tags => {
-                        let obj = {
-                            post: result,
-                            tags: tags
-                        }
-                        res.json(obj)
-                    })
+                res.json(result)
             } else {
                 res.status(404).json({ message: "The post with the specified ID does not exist." })
             }
@@ -96,17 +88,10 @@ router.put('/:id', (req, res) => {
                 db
                     .get(id)
                     .then(result => {
-                        db.getPostTags(id)
-                            .then(tags => {
-                                let obj = {
-                                    post: result,
-                                    tags: tags
-                                }
-                                res.json(obj)
-                            })
-                            .catch(error => {
-                                res.json(error)
-                            })
+                        res.json(result)
+                    })
+                    .catch(error => {
+                        res.json(error)
                     })
             } else {
                 res.status(404).json({ message: "The post with the specified ID does not exist." })
@@ -116,6 +101,5 @@ router.put('/:id', (req, res) => {
             res.status(500).json({ error: "The post information could not be modified." })
         })
 })
-
 
 module.exports = router; 
