@@ -14,13 +14,13 @@ router.get('/', (req, res) => {
 })
 
 router.post('/', (req, res) => {
-    const { text, userID } = req.body
+    const { tag } = req.body
     // console.log("fire")
     if (!text) {
         res.status(400).json("BAD REQUEST")
     } else {
         db
-            .insert({ text, userID })
+            .insert({ tag })
             .then(response => {
                 // console.log(response)
                 db.get(response.id)
@@ -66,11 +66,7 @@ router.get('/:id', (req, res) => {
         .get(id)
         .then(result => {
             console.log(result)
-            if (result) {
-                res.json(result)
-            } else {
-                res.status(404).json({ message: "The post with the specified ID does not exist." })
-            }
+            result ? res.json(result) : res.status(404).json({ message: "The post with the specified ID does not exist." })
         })
         .catch(error => {
             console.log(error)
@@ -79,10 +75,10 @@ router.get('/:id', (req, res) => {
 })
 
 router.put('/:id', (req, res) => {
-    const { text } = req.body
-    const id = req.params.id
+    const { tag } = req.body
+    const { id } = req.params
     db
-        .update(id, { text })
+        .update(id, { tag })
         .then(result => {
             if (result) {
                 db
