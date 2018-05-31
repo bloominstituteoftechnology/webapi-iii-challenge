@@ -2,6 +2,9 @@
   "name": "node-blog",
   "version": "1.0.0",
   "main": "index.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
   "repository": "https://github.com/Bradiowave/Node-Blog.git",
   "author": "Bradiowave <divebombwalker@gmail.com>",
   "license": "MIT",
