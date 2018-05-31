@@ -28,6 +28,26 @@ router.get('/:id/posts', (req, res) => {
   const { id } = req.params;
   db.getUserPosts(id)
     .then(data => {
+      if (data.length === 0) {
+        return error(res, 404, 'This user either does not exist or has yet to add any posts');
+      }
+      res.json(data);
+    })
+    .catch(err => error(res, 500, 'Could not process your request. If this issue persists, please contact the owner of the site'));
+})
+
+/*************************
+** POST: / **
+*************************/
+// insert
+router.post('/', (req, res) => {
+  const { name } = req.body;
+  const user = { name };
+  db.insert(user)
+    .then(data => {
+      if (!name) {
+        return error(res, 400, 'Please provide a name before attempting to create a new user');
+      }
       res.json(data);
     })
     .catch(err => error(res, 500, 'Could not process your request. If this issue persists, please contact the owner of the site'));
