@@ -14,7 +14,7 @@ function routerFactory(router, db, errorStatus, errorMessage) {
   });
 
   router.get("/:id", (req, res) => {
-    const {id} = req.params;
+    const { id } = req.params;
     console.log(id);
 
     db
@@ -26,6 +26,20 @@ function routerFactory(router, db, errorStatus, errorMessage) {
       .catch(e => {
         console.log("error", e);
         res.status(errorStatus).json(errorDb);
+      });
+  });
+
+  router.delete("/:id", (req, res) => {
+    const { id } = req.params;
+    console.log(id);
+    db
+      .remove(id)
+      .then(response => {
+        console.log("response", response);
+        res.status(200).json(response);
+      })
+      .catch(e => {
+        console.log("error", e);
       });
   });
 }
