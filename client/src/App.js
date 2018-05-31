@@ -1,18 +1,47 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
+import axios from 'axios';
 import './App.css';
+import { Jumbotron } from 'reactstrap';
 
 class App extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      users: [],
+      posts: [],
+      tags: []
+    };
+  }
+
+  componentDidMount() {
+    axios.get('http://localhost:5555/api/users/').then((result) => {
+      this.setState({ users: result.data.users})
+    })
+
+    axios.get('http://localhost:5555/api/posts/').then((result) => {
+      this.setState({ posts: result.data.post})
+    })
+
+    axios.get('http://localhost:5555/api/tags/').then((result) => {
+      console.log(result);
+      this.setState({ tags: result.data.tag})
+    })
+  }
+
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+        {
+          this.state.users.map((user, index) => {
+            return (
+              <Jumbotron>
+                <h1 className="display-3">{user.name}</h1>
+              </Jumbotron>
+            )
+          })
+        }
       </div>
     );
   }
