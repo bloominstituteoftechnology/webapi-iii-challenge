@@ -11,17 +11,21 @@ const error = require('./helpers/error');
 /*************************
 ** ROUTE: / **
 *************************/
+// get
+router.get('/', (req, res) => {
+  db.get()
+    .then(data => res.json(data))
+    .catch(err => error(res, 500, 'Could not process your request. If this issue persists, please contact the owner of the site'));
+})
+
 // insert
 router.post('/', (req, res) => {
   const { name } = req.body;
-  const user = { name };
-  db.insert(user)
-    .then(data => {
-      if (!name) {
-        return error(res, 400, 'Please provide a name before attempting to create a new user');
-      }
-      res.json(data);
-    })
+  if (!name) {
+    return error(res, 400, 'Please provide a name before attempting to create a new user');
+  }
+  db.insert({ name })
+    .then(data => res.json(data))
     .catch(err => error(res, 500, 'Could not process your request. If this issue persists, please contact the owner of the site'));
 });
 
