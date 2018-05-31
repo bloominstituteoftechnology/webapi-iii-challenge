@@ -104,21 +104,6 @@ server.post('/api/users', (req, res) => {
         })
 })
 
-server.delete('/api/users/:id', (req, res) => {
-    users
-        .remove(req.params.id)
-        .then(user => {
-            if(user === 0){
-                sendUserError(404, 'The user with specified id does not exist', res);
-            } else {
-                res.json({ success: `User with id ${req.params.id} has been removed from system`});
-            }
-        })
-        .catch(err => {
-            sendUserError(500, "The user could not be removed", res)
-        })
-})
-
 server.put('/api/users/:id', (req, res) => {
     const { name } = req.body;
     if(!name){
@@ -135,6 +120,21 @@ server.put('/api/users/:id', (req, res) => {
         })
         .catch(err => {
             sendUserError(500, "The user information could not be modified.", res)
+        })
+})
+
+server.delete('/api/users/:id', (req, res) => {
+    users
+        .remove(req.params.id)
+        .then(user => {
+            if(user === 0){
+                sendUserError(404, 'The user with specified id does not exist', res);
+            } else {
+                res.json({ success: `User with id ${req.params.id} has been removed from system`});
+            }
+        })
+        .catch(err => {
+            sendUserError(500, "The user could not be removed", res)
         })
 })
 
@@ -197,6 +197,26 @@ server.post('/api/posts', (req, res) => {
             sendUserError(500, 'There was an error creating the post', res)
         })
 })
+
+server.put('/api/posts/:id', (req, res) => {
+    const { text, userId } = req.body;
+    if(!text || !userId){
+        sendUserError(400, "Please provide text and a userId for the post", res);
+    }
+    posts
+        .update(req.params.id, {text, userId})
+        .then(post => {
+            if(post === 0){
+                sendUserError(404, "The post with the specified ID does not exist.", res)
+            } else{
+                res.json(post);
+            }
+        })
+        .catch(err => {
+            sendUserError(500, "The post information could not be modified.", res)
+        })
+})
+
 
 server.delete('/api/posts/:id', (req, res) => {
     posts
