@@ -16,25 +16,6 @@ const sendUserError = (status, message, res) => {
     return;
 }
 
-// const searchMiddleWare = (req, res, next) => {
-//     if (!req.query.name) {
-//       next();
-//     }
-//     users
-//       .get()
-//       .then(users => {
-//         const { name } = req.query; 
-//         const filteredUsers = users.filter(
-//           user => user.name.toLowerCase() === name.toLowerCase()
-//         );
-//         req.users = filteredUsers;
-//         next();
-//       })
-//       .catch(err => {
-//         sendUserError(500, 'The users information could not be retrieved.', res);
-//       });
-// };
-
 server.get('/', (req, res) => {
     res.send("Hello from express!");
 })
