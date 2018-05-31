@@ -54,7 +54,6 @@ server.get('/api/users/posts', (req, res) => {
 });
 
 server.post('/api/users', (req, res) => {
-    console.log(req.body);
     const { name } = req.body;
     if (!name) {
         sendUserError(400, "Please provide name of the user.", res);
@@ -67,7 +66,41 @@ server.post('/api/users', (req, res) => {
         })
         .catch( error => {
             sendUserError(500, "The user could not be created.", res);
-            return;
+        });
+});
+
+server.put('/api/users/:id', (req, res) => {
+    const { name } = req.body;
+    const id = req.params.id;
+    console.log(id);
+    console.log(name);
+    users
+        .update(id, { name })
+        .then(user => {
+            if (user.length === 0) {
+                sendUserError(404, 'The post with the specified ID does not exist.', res);
+                return;
+            }
+            res.json(user);
+        })
+        .catch(error => {
+            sendUserError(500, "The user could not be updated.", res);
+        });
+});
+
+server.delete('/api/users/:id', (req, res) => {
+    const id = req.params.id;
+    users
+        .remove(id)
+        .then(user => {
+            if (user.length === 0) {
+                sendUserError(404, 'The post with the specified ID does not exist.', res);
+                return;
+            }
+            res.json(user);
+        })
+        .catch(error => {
+            sendUserError(500, "The user could not be updated.", res);
         });
 });
 /*server.get('/api/users', (req,res) =>{
