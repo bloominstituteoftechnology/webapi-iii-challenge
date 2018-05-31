@@ -4,7 +4,15 @@ const router = express.Router();
 const db = require('../data/helpers/postDb');
 const error = require('./helpers/error');
 
-// GET http://localhost:5000/api/posts/1
+/*************************
+** ROUTE / **
+*************************/
+// get
+router.get('/', (req, res) => {
+  db.get()
+    .then(data => res.json(data))
+    .catch(err => error(res, 500, 'Could not process your request. If this issue persists, please contact the owner of the site'));    
+});
 
 /*************************
 ** ROUTE /:id **
@@ -22,13 +30,11 @@ router.post('/:userId', (req, res) => {
   const { userId } = req.params;
   const { text } = req.body;
   const post = { userId, text };
+  if (!text) {
+    return error(res, 400, 'Please provide some content before attempting to create a new post');
+  }
   db.insert({ userId, text })
-    .then(data => {
-      if (!text) {
-        return error(res, 400, 'Please provide some content before attempting to create a new post');
-      }
-      res.json(data);
-    })
+    .then(data => res.json(data))
     .catch(err => error(res, 500, 'Could not process your request. If this issue persists, please contact the owner of the site'));
 });
 
