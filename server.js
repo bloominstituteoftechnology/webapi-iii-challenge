@@ -105,7 +105,7 @@ server.get('/api/posts/:id', (req, res) => {
     posts   
         .get(req.params.id)
         .then(post => {
-            console.log(post);
+            // console.log(post);
             if(!post){
                 sendUserError(404, 'The post with specified id does not exist', res)
             } else{
@@ -147,7 +147,7 @@ server.get('/api/tags/:id', (req, res) => {
     tags   
         .get(req.params.id)
         .then(tag => {
-            console.log(tag);
+            // console.log(tag);
             if(!tag){
                 sendUserError(404, 'The tag with specified id does not exist', res)
             } else{
@@ -156,6 +156,21 @@ server.get('/api/tags/:id', (req, res) => {
         })
         .catch(err => {
             sendUserError(500, 'There was an error retrieving the tag', res)
+        })
+})
+
+server.post('/api/tags', (req, res) => {
+    const { tag } = req.body;
+    if(!tag){
+        sendUserError(400, "Please provide a name for the user", res);
+    }
+    tags
+        .insert({ tag })
+        .then(tag => {
+            res.json(tag)
+        })
+        .catch(err => {
+            sendUserError(500, 'There was an error creating the tag', res)
         })
 })
 
