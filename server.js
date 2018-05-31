@@ -10,6 +10,7 @@ const server = express();
 server.use(express.json());
 server.use(cors({ origin: 'http://localhost:3000' }));
 
+
 //---------- Get Methods ----------
 
 server.get('/api/users', (req, res) => {
@@ -41,6 +42,7 @@ server.get('/api/tags', (req, res) => {
             res.json({ err })
         })
 });
+
 
 //---------- Get by ID Methods ----------
 
@@ -77,6 +79,7 @@ server.get('/api/tags/:id', (req, res) => {
         })
 });
 
+
 //---------- Post Methods ----------
 
 server.post('/api/users', (req, res) => {
@@ -107,6 +110,42 @@ server.post('/api/tags', (req, res) => {
     tags.insert({ tag })
         .then(idObj => {
             res.json(idObj)
+        })
+        .catch(err => {
+            res.json({ err })
+        })
+});
+
+
+//---------- Delete Methods ----------
+
+server.delete('/api/users', (req, res) => {
+    let { id } = req.body;
+    users.remove(id)
+        .then(num => {
+            res.json({ num })
+        })
+        .catch(err => {
+            res.json({ err })
+        })
+});
+
+server.delete('/api/posts', (req, res) => {
+    let { id } = req.body;
+    posts.remove(id)
+        .then(num => {
+            res.json({ num })
+        })
+        .catch(err => {
+            res.json({ err })
+        })
+});
+
+server.delete('/api/tags', (req, res) => {
+    let { id } = req.body;
+    tags.remove(id)
+        .then(num => {
+            res.json({ num })
         })
         .catch(err => {
             res.json({ err })
