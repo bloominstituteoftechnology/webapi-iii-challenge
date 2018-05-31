@@ -7,7 +7,7 @@ const tags = require('./data/helpers/tagDb.js');
 
 const port = 8000;
 const server = express(); // variable server calls express
-// server.use(cors({origin: 'http://localhost:xxxx'}));
+server.use(cors({origin: 'http://localhost:3000'}));
 server.use(express.json()); //extending middleware into our server
 
 server.get('/api/users', (req, res) => {
@@ -51,16 +51,17 @@ server.get('/api/post/tags/:id', (req, res) => {
 });
 
 
-// server.post('/api/users', (req, res) => {
-//     const { name } = req.body;
-//     users.insert(name)
-//     .then(user => {
-//         res.json( user )
-//     })
-//     .catch(error => {
-//         res.json( {errorMessage: error} )
-//     })
-// })
+server.post('/api/users', (req, res) => {
+    const { name } = req.body;
+    users.insert({name})
+    .then(user => {
+        res.json( user )
+    })
+    .catch(error => {
+        res.json( {errorMessage: error} )
+    })
+})
+
 
 server.delete('/api/users/:id', (req, res) => {
     const { id } = req.params;
@@ -77,17 +78,17 @@ server.delete('/api/users/:id', (req, res) => {
         })
 })
 
-// server.put('/api/users/:id', (req, res) => {
-//     const { id } = req.params;
-//     const { name } = req.body;
-//     users.update(id, name)
-//         .then(response => {
-//             res.json(response)
-//         })
-//         .catch(error => {
-//             console.log(error);
-//         })
-// });
+server.put('/api/users/:id', (req, res) => {
+    const { id } = req.params;
+    const { name } = req.body;
+    users.update(id, {name})
+        .then(response => {
+            res.json(response)
+        })
+        .catch(error => {
+            console.log(error);
+        })
+});
 
 
 //Set up
