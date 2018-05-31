@@ -95,7 +95,6 @@ server.delete('/api/users/:id', (req, res) => {
   users
     .remove(id)
     .then(success => {
-      console.log(success);
       if (success) {
         res.json({ deletedUser });
       }
@@ -143,7 +142,6 @@ server.get('/api/posts/:id', (req, res) => {
   posts
     .get(id)
     .then(post => {
-      console.log(post);
       if (post) {
         res.json({ post });
       }
@@ -155,5 +153,51 @@ server.get('/api/posts/:id', (req, res) => {
       res.status(500).json({ errorMessage: "The post could not be retrieved." });
     })
 });
+
+server.put('/api/posts/:id', (req, res) => {
+  const { userId, text } = req.body;
+  const id = req.params.id;
+  if (!userId || !text) {
+    res.status(400).json({ errorMessage: "Please provide a user id and text for the post." });
+  }
+  else {
+    posts
+      .update(id, { userId, text })
+      .then(success => {
+        if (success) {
+          posts.get(id)
+            .then(post => {
+              res.json({ post });
+            });
+        }
+        else {
+          res.status(404).json({ errorMessage: "The post with the specified ID does not exist." });
+        }
+      })
+      .catch(error => {
+        res.status(500).json({ errorMessage: "The post could not be retrieved." });
+      })
+  }
+});
+
+
+server.delete('/api/posts/:id', (req, res) => {
+  const id = req.params.id;
+  posts
+    .remove(id)
+    .then(success => {
+      if (success) {
+        res.json({ success });
+      }
+      else {
+        res.status(404).json({ errorMessage: "The post with the specified ID does not exist." });
+      }
+    })
+    .catch(error => {
+      res.status(500).json({ errorMessage: "The post could not be removed" });
+    })
+});
+
+
 
 server.listen(port, () => console.log(`Server running on port ${port}`));
