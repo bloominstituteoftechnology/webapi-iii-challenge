@@ -10,6 +10,8 @@ const server = express();
 server.use(express.json());
 server.use(cors({ origin: 'http://localhost:3000' }));
 
+//---------- Get Methods ----------
+
 server.get('/api/users', (req, res) => {
     users.get()
         .then(users => {
@@ -39,5 +41,41 @@ server.get('/api/tags', (req, res) => {
             res.json({ err })
         })
 });
+
+//---------- Get by ID Methods ----------
+
+server.get('/api/users/:id', (req, res) => {
+    let { id } = req.params;
+    users.get(id)
+        .then(user => {
+            res.json({ user })
+        })
+        .catch(err => {
+            res.json({ err })
+        })
+});
+
+server.get('/api/posts/:id', (req, res) => {
+    let { id } = req.params;
+    posts.get(id)
+        .then(post => {
+            res.json({ post })
+        })
+        .catch(err => {
+            res.json({ err })
+        })
+});
+
+server.get('/api/tags/:id', (req, res) => {
+    let { id } = req.params;
+    tags.get(id)
+        .then(tag => {
+            res.json({ tag })
+        })
+        .catch(err => {
+            res.json({ err })
+        })
+});
+
 
 server.listen(port, () => console.log(`Server running on port ${port}`));
