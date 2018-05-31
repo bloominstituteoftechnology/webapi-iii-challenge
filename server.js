@@ -119,6 +119,25 @@ server.delete('/api/users/:id', (req, res) => {
         })
 })
 
+server.put('/api/users/:id', (req, res) => {
+    const { name } = req.body;
+    if(!name){
+        sendUserError(400, "Please provide a name for the user", res);
+    }
+    users
+        .update(req.params.id, {name})
+        .then(user => {
+            if(user === 0){
+                sendUserError(404, "The user with the specified ID does not exist.", res)
+            } else{
+                res.json(user);
+            }
+        })
+        .catch(err => {
+            sendUserError(500, "The user information could not be modified.", res)
+        })
+})
+
 //POSTS
 server.get('/api/posts', (req, res) => {
     posts
