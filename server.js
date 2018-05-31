@@ -263,7 +263,7 @@ server.get('/api/tags/:id', (req, res) => {
 server.post('/api/tags', (req, res) => {
     const { tag } = req.body;
     if(!tag){
-        sendUserError(400, "Please provide a name for the user", res);
+        sendUserError(400, "Please provide a tag for the post", res);
     }
     tags
         .insert({ tag })
@@ -272,6 +272,25 @@ server.post('/api/tags', (req, res) => {
         })
         .catch(err => {
             sendUserError(500, 'There was an error creating the tag', res)
+        })
+})
+
+server.put('/api/tags/:id', (req, res) => {
+    const { tag } = req.body;
+    if(!tag){
+        sendUserError(400, "Please provide a tag for the post", res);
+    }
+    tags
+        .update(req.params.id, {tag})
+        .then(tag => {
+            if(tag === 0){
+                sendUserError(404, "The tag with the specified ID does not exist.", res)
+            } else{
+                res.json(tag);
+            }
+        })
+        .catch(err => {
+            sendUserError(500, "The tag information could not be modified.", res)
         })
 })
 
