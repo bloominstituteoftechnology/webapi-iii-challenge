@@ -40,6 +40,20 @@ server.get('/api/users/:id', (req, res) => {
         res.status(500).json({ error: 'The User Could Not Be Retrieved' })
     })
 })
+server.get('/api/users/:id/posts', (req, res) => {
+    users
+    .getUserPosts(req.params.id)
+    .then(response => {
+        if (!response) {
+            res.status(404).json({ errorMessage: "This Post does not Exist" })
+        } else {
+            res.status(200).json(response)
+        }
+    })
+    .catch(error => {
+        res.status(500).json({ errorMessage: "This Users posts could not be retrieved" })
+    }) 
+})
 server.post('/api/users/', (req, res) => {
     const { name } = req.body;
     if ( name ) {
@@ -100,20 +114,31 @@ server.get('/api/posts/', (req, res) => {
     })
 });
 server.get('/api/posts/:id', (req, res) => {
-    console.log(req.params.id)
     posts
     .get(req.params.id)
     .then(response => {
-        console.log(response)
         if (response.length === 0) {
             res.status(404).json({ errorMessage: 'This Post Does not Exist' })
-            console.log(response);
         } else {
             res.status(200).json(response)
         }
     })
     .catch(error => {
         res.status(500).json({ error: 'The Post Could Not Be Retrieved' })
+    })
+})
+server.get('/api/posts/:id/tags', (req, res) => {
+    posts
+    .getPostTags(req.params.id)
+    .then(response => {
+        if (response.length === 0) {
+            res.status(404).json({ errorMessage: "this doesnt exist" })
+        } else {
+            res.status(200).json(response)
+        }
+    })
+    .catch(error => {
+        res.status(500).json({ errorMessage: "info couldnt be retrieved"})
     })
 })
 server.post('/api/posts/', (req, res) => {
