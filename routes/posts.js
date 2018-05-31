@@ -39,7 +39,7 @@ router.put('/:id', (req, res) => {
   db.update(id, { text })
     .then(data => {
       if (!data) {
-        return error(res, 404, 'This post no longer exists.. or maybe it never did?');
+        return error(res, 404, 'This post does not exist.. or maybe it never did?');
       }
       if (!text) {
         return error(res, 400, 'Please provide some content before attempting to change a post');
@@ -47,7 +47,20 @@ router.put('/:id', (req, res) => {
       res.json(data);
     })
     .catch(err => error(res, 500, 'Could not process your request. If this issue persists, please contact the owner of the site'));
-})
+});
+
+// remove
+router.delete('/:id', (req, res) => {
+  const { id } = req.params;
+  db.remove(id)
+    .then(data => {
+      if (!data) {
+        error(res, 404, 'This post does not exist.. or maybe it never did?');
+      }
+      res.json(data);
+    })
+    .catch(err => error(res, 500, 'Could not process your request. If this issue persists, please contact the owner of the site'));
+});
 
 /*************************
 ** ROUTE /:id/tags **
