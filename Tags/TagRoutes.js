@@ -14,9 +14,10 @@ router.get('/', (req, res) => {
 })
 
 router.post('/', (req, res) => {
-    const { tag } = req.body
+    let { tag } = req.body
+    tag = tag.toUpperCase()
     // console.log("fire")
-    if (!text) {
+    if (!tag) {
         res.status(400).json("BAD REQUEST")
     } else {
         db
