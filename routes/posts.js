@@ -21,8 +21,15 @@ router.get('/', (req, res) => {
 router.get('/:id', (req, res) => {
   const { id } = req.params;
   db.get(id)
-    .then(data => res.json(data))
-    .catch(err => error(res, 500, 'Could not process your request. If this issue persists, please contact the owner of the site'));
+    .then(data => {
+      if (data.length === 0) {
+        error(res, 404, 'This post no longer exists... or maybe it never did?');
+      }
+      res.json(data)
+    })
+    .catch(err => {
+      error(res, 500, 'Could not process your request. If this issue persists, please contact the owner of the site')
+    });
 });
 
 // insert
@@ -82,6 +89,6 @@ router.get('/:id/tags', (req, res) => {
       res.json(data)
     })
     .catch(err => error(res, 500, 'Could not process your request. If this issue persists, please contact the owner of the site'));
-})
+});
 
 module.exports = router;
