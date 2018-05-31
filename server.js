@@ -43,10 +43,9 @@ server.get('/api/users/:id', (req, res) => {
   const id = req.params.id;
   users
     .get(id)
-    .then(users => {
-      console.log(users);
-      if (users) {
-        res.json({ users });
+    .then(user => {
+      if (user) {
+        res.json({ user });
       }
       else {
         res.status(404).json({ errorMessage: "The user with the specified ID does not exist." });
@@ -128,6 +127,33 @@ server.post('/api/posts', (req, res) => {
         res.status(500).json({ errorMessage: "There was an error while saving the post to the database" });
       });
   }
+});
+
+server.get('/api/posts', (req, res) => {
+  posts.get().then(post => {
+    res.json({ post });
+  })
+  .catch(error => {
+    res.status(500).json({ errorMessage: "The post could not be retrieved." });
+  });
+});
+
+server.get('/api/posts/:id', (req, res) => {
+  const id = req.params.id;
+  posts
+    .get(id)
+    .then(post => {
+      console.log(post);
+      if (post) {
+        res.json({ post });
+      }
+      else {
+        res.status(404).json({ errorMessage: "The post with the specified ID does not exist." });
+      }
+    })
+    .catch(error => {
+      res.status(500).json({ errorMessage: "The post could not be retrieved." });
+    })
 });
 
 server.listen(port, () => console.log(`Server running on port ${port}`));
