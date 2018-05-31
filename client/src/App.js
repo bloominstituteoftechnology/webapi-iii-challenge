@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import axios from 'axios';
 import './App.css';
 import { Jumbotron } from 'reactstrap';
-import { Route } from 'react-router-dom';
+import { Route, Link } from 'react-router-dom';
 
 class App extends Component {
 
@@ -33,21 +32,23 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Route exact path="/" render={() => (
+        <Route exact path="/users" render={() => (
           this.state.users.map((user, index) => {
             return (
-              <Jumbotron>
-                <h1 className="display-3">{user.name}</h1>
-              </Jumbotron>
+              <Link key={index} to={`/users/${user.id}`}>
+                <Jumbotron>
+                  <h1 className="display-3">{user.name}</h1>
+                </Jumbotron>
+              </Link>
             )
           })
         )} />
         <Route path="/users/:id" render={(props) => (
           this.state.posts
-            .filter((post) => props.match.params.id == post.userId)
+            .filter((post) => Number(props.match.params.id) === post.userId)
             .map((post, index) => {
               return (
-                <Jumbotron>
+                <Jumbotron key={index}>
                   <h1 className="display-3">{post.text}</h1>
                 </Jumbotron>
               )
