@@ -2,15 +2,15 @@
 const express = require('express');
 const router = express.Router();
 // User Database 
-const db = require('../data/helpers/userDb.js');
+const userDb = require('../data/helpers/userDb.js');
 
-/* --- User Routes --- */
+/* --- '/api/users' Routes --- */
+// POST
 router.post('/', (req, res) => {
-  // Variables
   const { name } = req.body;
-  // Operation
+  //==>
   console.log(name);
-  db.insert({ name })
+  userDb.insert({ name })
     .then(response => {
         res.status(201).json(response);
     })
@@ -25,7 +25,8 @@ router.post('/', (req, res) => {
 });
 
 router.get('/', (req, res) => {
-  db.get()
+  //==>
+  userDb.get()
     .then(users => res.json(users))
     .catch(err => {
       console.log("'/api/users' GET error:",err);
@@ -34,10 +35,9 @@ router.get('/', (req, res) => {
 });
 
 router.get('/:id', (req, res) => {
-  // Variables
   const id = req.params.id;
-  // Operation
-  db.get(id)
+  //==>
+  userDb.get(id)
     .then(user => {
       if (user.length <= 0) {
         res.status(404).json({ message: "The user with the specified ID does not exist." });
@@ -48,34 +48,51 @@ router.get('/:id', (req, res) => {
     .catch(err => res.status(500).json({ message: "The user's information could not be retrieved" }));
 });
 
-// router.delete('/:id', (req, res) => {
-//   // Variables
-//   const { id } = req.params;
-//   // Operation
-//   db.remove(id)
-//     .then(count => {
-//       if (count === 1) {
-//         res.json({ message: "User successfully deleted." });
-//       } else if ( count === 0) {
-//         res.status(404).json({ message: "The user with the specified ID does not exist." });
-//       } else {
-//         res.status(500).json({ message: "Serious Database Error. Contact administrator."});
-//       }
-//     })
-//     .catch(err => res.status(500).json({ error: "The user could not be removed" }));
-// });
+router.get('/:id/posts', (req, res) => {
+  const id = req.params.id;
+  console.log(`'/:id/posts' ID: ${id}`);
+  //==>
+  userDb.getUserPosts(id)
+    .then(posts => {
+      if (posts.length === 0) {
+        res.status(404).json({ error: `No messages found for user ID ${id}.` });
+      } else {
+        res.json(posts);
+      }
+    })
+    .catch(err => {
+      console.log(`'/:id/posts' GET error:`, error);
+      res.status(500).json({ error: `Could not retrieve posts of user id ${id}.` });
+    })
+});
+
+// DELETE
+router.delete('/:id', (req, res) => {
+  const { id } = req.params;
+  // Operation
+  userDb.remove(id)
+    .then(count => {
+      if (count === 1) {
+        res.json({ message: "User successfully deleted." });
+      } else if ( count === 0) {
+        res.status(404).json({ message: "The user with the specified ID does not exist." });
+      } else {
+        res.status(500).json({ message: "Serious Database Error. Contact administrator."});
+      }
+    })
+    .catch(err => res.status(500).json({ error: "The user could not be removed" }));
+});
 
 router.put('/:id', (req, res) => {
-  // Variables
   const { id } = req.params;
   const { name } = req.body;
+  //==>
   console.log("'/api/users/:id' PUT userInfo:",name,"id:",id);
-  // Operation
-  db.update(id, { name })
+  userDb.update(id, { name })
     .then(count => {
       console.log("'/api/users/:id' PUT count",count);
       if (count === 1) {
-        db.get(id)
+        userDb.get(id)
           .then(user => res.json(user))
           .catch(err => res.status(500).json({ error: "User update successful, but could not retrieve record." }));
         } else if ( count === 0) {

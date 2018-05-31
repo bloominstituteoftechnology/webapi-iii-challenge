@@ -10,9 +10,9 @@ const tagDb = require('../data/helpers/tagDb.js');
 /* --- '/api/posts' Endpoints --- */
 // POST
 router.post('/', (req, res) => {
-  const { title, contents } = req.body;
-  // Operation
-  postDb.insert({ title, contents })
+  const { userId, text } = req.body;
+  //==>
+  postDb.insert({ userId, text })
     .then(result => res.json(result))
     .catch(err => {
       console.log(`'/api/posts' POST error: ${err}`);
@@ -27,7 +27,7 @@ router.post('/', (req, res) => {
 // GET
 
 router.get('/', (req, res) => {
-  // Operation
+  //==>
   postDb.get()
     .then(posts => {
       console.log('\'/\' GET posts:',posts);
@@ -42,7 +42,7 @@ router.get('/', (req, res) => {
 router.get('/:id', (req, res) => {
   const id = req.params.id;
   console.log('\'/:id\' GET id:',id);
-  // Operation
+  //==>
   postDb.get(id)
     .then(post => {
       if (post.length === 0) {
@@ -57,24 +57,41 @@ router.get('/:id', (req, res) => {
     })
 })
 
-router.get('/user/:userId', (req, res) => {
-  const { userId } = req.params;
-  // Operation
-  userDb.getUserPosts(userId)
-    .then(posts => {
-      console.log(`'/api/posts/user/${userId}' GET posts:`,posts);
-      res.json(posts);
+// router.get('/user/:userId', (req, res) => {
+//   const { userId } = req.params;
+//   //==>
+//   userDb.getUserPosts(userId)
+//     .then(posts => {
+//       console.log(`'/api/posts/user/${userId}' GET posts:`,posts);
+//       res.json(posts);
+//     })
+//     .catch(err => {
+//       console.log(`'/api/posts/user/${userId}' GET error:`,err);
+//       res.status(500).json({ error: "Unable to retrieve posts from user." });
+//     })
+// })
+
+router.get('/:id/tags', (req, res) => {
+  const id = req.params.id;
+  //==>
+  postDb.getPostTags(id)
+    .then(tags => {
+      if (tags.length < 1) {
+        res.status(404).json({ message: 'The post has no tags to display.'});
+      } else {
+        res.json(tags);
+      }
     })
     .catch(err => {
-      console.log(`'/api/posts/user/${userId}' GET error:`,err);
-      res.status(500).json({ error: "Unable to retrieve posts from user." });
-    })
-})
+      console.log(`'/:id/tags' GET error:`, error);
+      res.status(500).json({ error: `Could not retrieve tags for post ${id}.` });
+    });
+});
 
 // DELETE
 router.delete('/:id', (req, res) => {
   const { id } = req.params;
-  // Operation
+  //==>
   postDb.get(id)
     .then(post => {
       if (post.length === 0) {
@@ -83,12 +100,6 @@ router.delete('/:id', (req, res) => {
         postDb.remove(id)
           .then(count => {
           if (count === 1) {
-            // tagDb.removeByPostId(id)
-            //   .then(count => {
-            //     console.log(`'/api/posts/id' TAGS REMOVE count: ${count}`);
-            //     res.json(post);
-            //   })
-            //   .catch(err => console.log(`tagDb.removeByPostId(${id}) error:`, err));
             res.json(post);
             
           } else if ( count === 0) {
@@ -105,13 +116,12 @@ router.delete('/:id', (req, res) => {
     })
 })
 
-// PUT
+// UPDATE
 router.put('/:id', (req, res) => {
-  // Variables
   const { id } = req.params;
   const { userId, text } = req.body;
   console.log("'/api/posts/:id' PUT userId:",userId,"postInfo:",text,"id:",id);
-  // Operation
+  //==>
   postDb.update(id, { userId, text })
     .then(count => {
       console.log("'/api/posts/:id' PUT count",count);

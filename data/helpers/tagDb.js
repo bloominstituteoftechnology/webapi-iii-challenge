@@ -24,9 +24,4 @@ module.exports = {
       .where('id', id)
       .del();
   },
-  // removeByPostId: function(postId) {
-  //   return db('tags')
-  //     .where('postId', postId)
-  //     .del();
-  // }
 };

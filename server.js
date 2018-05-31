@@ -24,5 +24,5 @@ server.use('/api/tags', tagRoutes);
 
 /* Server Start! */
 const port = 5000;
-server.listen(port, () => console.log(`\n=== Server is listening at port ${port} ===\nSever Start Time: ${Date()}`));
+server.listen(port, () => console.log(`\n=== Server is listening at port ${port} ===\nStart Time: ${Date()}`));
 
