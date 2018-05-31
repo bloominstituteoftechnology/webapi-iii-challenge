@@ -24,7 +24,7 @@ server.post('/api/users', (req, res) => {
           });
       })
       .catch(error => {
-        res.status(500).json({ errorMessage: "There was an error while saving the post to the database" });
+        res.status(500).json({ errorMessage: "There was an error while saving the user to the database" });
       });
   }
 });
@@ -84,6 +84,7 @@ server.put('/api/users/:id', (req, res) => {
   }
 });
 
+
 server.delete('/api/users/:id', (req, res) => {
   const id = req.params.id;
 
@@ -106,6 +107,27 @@ server.delete('/api/users/:id', (req, res) => {
     .catch(error => {
       res.status(500).json({ errorMessage: "The user could not be removed" });
     })
+});
+
+
+server.post('/api/posts', (req, res) => {
+  const { userId, text } = req.body;
+  if (!userId || !text) {
+    res.status(400).json({ errorMessage: "Please provide a user id and text for the post." });
+  }
+  else {
+    posts
+      .insert({ userId, text })
+      .then(response => {
+        posts.get(response.id)
+          .then(post => {
+            res.status(201).json({ post });
+          });
+      })
+      .catch(error => {
+        res.status(500).json({ errorMessage: "There was an error while saving the post to the database" });
+      });
+  }
 });
 
 server.listen(port, () => console.log(`Server running on port ${port}`));
