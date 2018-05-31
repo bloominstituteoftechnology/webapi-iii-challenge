@@ -176,33 +176,44 @@ server.put("/api/users/:id", (req, res) => {
 // Posts CRUD operations
 
 server.post('/api/posts', (req, res) => {
-    const { title, contents } = req.body;
-    if (!title || !contents) {
-      sendUserError(400, 'Must provide title and contents', res);
+    const { userId, text } = req.body;
+    if (!userId || !text) {
+      sendUserError(400, 'Must userId title and text', res);
       return;
     }
-    posts
-        .insert(
-            {
-                title, 
-                contents
-            })
-        .then(response => {
+    users
+        .get(userId)
+        .then(user => {
+            if(user.length === 0) {
+                sendUserError(404,"The user with the specified ID does not exist.", res);
+                return;
+            }
             posts
-                .findById(response.id)
-                .then(post => {
-                    if(post.length === 0) {
-                        sendUserError(404, "The post with the specified ID does not exist.", res);
-                        return;
-                    }
-                    res.status(201).json(post);
+                .insert(
+                    {
+                        userId, 
+                        text
+                    })
+                .then(response => {
+                    posts
+                        .get(response.id)
+                        .then(post => {
+                            if(post.length === 0) {
+                                sendUserError(404, "The post with the specified ID does not exist.", res);
+                                return;
+                            }
+                            res.status(201).json(post);
+                        })
+                        .catch(error => {
+                            sendUserError(500, "The post information could not be retrieved.", res)
+                        })
                 })
                 .catch(error => {
-                    sendUserError(500, "The post information could not be retrieved.", res)
+                    sendUserError(500, '"There was an error while saving the post to the database" ', res);
                 })
         })
         .catch(error => {
-            sendUserError(500, '"There was an error while saving the post to the database" ', res);
+            sendUserError(500, "The user information could not be retrieved.", res)
         })
 })
 
@@ -220,7 +231,7 @@ server.get("/api/posts", (req, res) => {
 server.get("/api/posts/:id", (req, res) => {
     const { id } = req.params;
     posts
-        .findById(id)
+        .get(id)
         .then(post => {
             if(post.length === 0) {
                 sendUserError(404,"The post with the specified ID does not exist.", res);
@@ -236,7 +247,7 @@ server.get("/api/posts/:id", (req, res) => {
 server.delete("/api/posts/:id", (req, res) => {
     const { id } = req.params;
     posts
-        .findById(id)
+        .get(id)
         .then(post => {
             if(post.length === 0) {
                 sendUserError(404,"The post with the specified ID does not exist.", res);
@@ -255,28 +266,28 @@ server.delete("/api/posts/:id", (req, res) => {
                 .catch(error => {
                     sendUserError(500, "The post could not be removed", res);
                 })
+        })
         .catch(error => {
             sendUserError(500, "The post information could not be retrieved.", res)
-        }) 
     })   
 })
 
 server.put("/api/posts/:id", (req, res) => {
     const { id } = req.params;
-    const { title, contents } = req.body;
-    if(!title || !contents) {
-        sendUserError(400, "Please provide title and contents for the post.", res);
+    const { text } = req.body;
+    if(!text) {
+        sendUserError(400, "Please provide text for the post.", res);
         return;
     }
     posts
-        .update(id, {title, contents})
+        .update(id, {text})
         .then(updated => {
             if(!updated) {
                 sendUserError(404, "The post with the specified ID does not exist.", res);
                 return;
             }
             posts
-                .findById(id)
+                .get(id)
                 .then(post => {
                     if(post.length === 0) {
                         sendUserError(404,"The post with the specified ID does not exist.", res);
