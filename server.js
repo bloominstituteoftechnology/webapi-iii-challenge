@@ -22,7 +22,6 @@ const sendUserError = (status, message, res) => {
 server.get('/', (req, res) => {
     res.send('Please work, website.')
 });
-
 server.get('/api/users', (req, res) => {
     userDB
         .get()
@@ -53,7 +52,81 @@ server.get('/api/tags', (req, res) => {
             sendUserError(500, "The tag information could not be retrieved", res)
         })
 })
-
+server.get('/api/posts/:id', (req, res) => {
+    const { id } = req.params
+    postDB
+        .get(id)
+        .then(posts => {
+            if (posts) {
+                res.json({ posts })
+            } else {
+                sendUserError(404, "The post with the specified ID does not exist", res)
+            }
+        })
+        .catch(error => {
+            sendUserError(500, "The post information could not be retrieved.", res)
+        })
+})
+server.get('/api/users/:id', (req, res) => {
+    const { id } = req.params
+    userDB
+        .get(id)
+        .then(user => {
+            if (user) {
+                res.json({ user })
+            } else {
+                sendUserError(404, "The user with the specified ID does not exist", res)
+            }
+        })
+        .catch(error => {
+            sendUserError(500, "The user information could not be retrieved.", res)
+        })
+})
+server.get('/api/users/:id/posts', (req, res) => {
+    const { id } = req.params
+    userDB
+        .getUserPosts(id)
+        .then(posts => {
+            if (posts) {
+                res.json({ posts })
+            } else {
+                sendUserError(404, "The specified user does not exist", res)
+            }
+        })
+        .catch(erorr => {
+            sendUserError(500, "The posts could not be retrieved.", res)
+        })
+})
+server.get('/api/tags/:id', (req, res) => {
+    const { id } = req.params
+    tagDB
+        .get(id)
+        .then(tag => {
+            if (tag) {
+                res.json({ tag })
+            } else {
+                sendUserError(404, "The tag with the specified ID does not exist", res)
+            }
+        })
+        .catch(error => {
+            sendUserError(500, "The tag information could not be retrieved.", res)
+        })
+})
+server.get('/api/posts/:id/tags', (req, res) => {
+    const { id } = req. params;
+    postDB
+        .getPostTags(id)
+        .then(tag => {
+            if (tag) {
+                res.json({ tag })
+            } else {
+                sendUserError(404, "The specified ID does not exist", res)
+            }
+        })
+        .catch(error => {
+            sendUserError(500, "The tags could not be retrieved.", res)
+        })
+})
 server.post('/api/users', (req, res) => {
     const { name } = req.body;
     if (!name) {
@@ -86,20 +159,21 @@ server.post('/api/posts', (req, res) => {
             })
     }
 })
-server.get('/api/posts/:id', (req, res) => {
-    const { id } = req.params
-    postDB
-        .get(id)
-        .then(posts => {
-            if (posts) {
-                res.json({ posts })
-            } else {
-                sendUserError(404, "The post with the specified ID does not exist", res)
-            }
+server.post('/api/tags', (req, res) => {
+    const { tag } = req.body;
+    if (!tag) {
+        sendUserError(400, "Please provide tag for the tag.", res)
+    } else {
+    tagDB
+        .insert({ tag })
+        .then(response => {
+            res.status(201)
+            res.json({ response })
         })
         .catch(error => {
-            sendUserError(500, "The post information could not be retrieved.", res)
-        })
+            sendUserError(500, "There was a error while saving the tag.", res)
+        })}
 })
+
 
 server.listen(port, () => console.log(`Server running on port ${port}`));
