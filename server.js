@@ -7,6 +7,10 @@ const port = 5000;
 
 //Routes
 
+const userRoutes = require("./Users/UserRoutes")
+const tagRoutes = require("./Tags/TagRoutes")
+const postRoutes = require("./Posts/PostRoutes")
+
 //MiddleWare
 
 server.listen(port, () => console.log(`*** Server Running on Port ${port} ***`))
