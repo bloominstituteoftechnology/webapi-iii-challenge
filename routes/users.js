@@ -8,7 +8,7 @@ const error = (res, statusCode, message) => {
 }
 
 /*************************
-** GET: /:id **
+** ROUTE: /:id **
 *************************/
 // get
 router.get('/:id', (req, res) => {
@@ -36,8 +36,22 @@ router.get('/:id/posts', (req, res) => {
     .catch(err => error(res, 500, 'Could not process your request. If this issue persists, please contact the owner of the site'));
 })
 
+// update
+router.put('/:id', (req, res) => {
+  const { id } = req.params;
+  const { name } = req.body;
+  db.update(id, { name })
+    .then(data => res.json(data))
+    .catch(err => {
+      if (!name) {
+        return error(res, 400, 'Please provide a new name when attempting to update your name');
+      }
+      error(res, 500, 'Could not process your request. If this issue persists, please contact the owner of the site')
+    });
+})
+
 /*************************
-** POST: / **
+** ROUTE: / **
 *************************/
 // insert
 router.post('/', (req, res) => {
@@ -51,6 +65,6 @@ router.post('/', (req, res) => {
       res.json(data);
     })
     .catch(err => error(res, 500, 'Could not process your request. If this issue persists, please contact the owner of the site'));
-})
+});
 
 module.exports = router;
