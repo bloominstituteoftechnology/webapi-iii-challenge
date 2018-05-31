@@ -19,14 +19,75 @@ server.get('/api/users/', (req, res) => {
     users
     .get()
     .then(response => {
-        console.log(response)
         res.json(response)
     })
     .catch(error => {
         res.json(error)
     })
 })
-
+server.get('/api/users/:id', (req, res) => {
+    users
+    .get(req.params.id)
+    .then(response => {
+        console.log(response)
+        if (!response) {
+            res.status(404).json({ errorMessage: 'This User Does not Exist' })
+        } else {
+            res.status(200).json(response)
+        }
+    })
+    .catch(error => {
+        res.status(500).json({ error: 'The User Could Not Be Retrieved' })
+    })
+})
+server.post('/api/users/', (req, res) => {
+    const { name } = req.body;
+    if ( name ) {
+        users
+        .insert({ name })
+        .then(response => {
+            res.status(201).json({ id: response.id, name })
+        })
+        .catch(error => {
+            res.status(500).json({ errorMessage: "There was an error adding your User" })
+        })
+    } else {
+        res.status(400).json({ errorMessage: "Please provide a name for your User"})
+    }
+})
+server.delete('/api/users/:id', (req, res) => {
+    users
+    .remove(req.params.id)
+    .then(response => {
+        if(response === 1) {
+        res.status(200).json({ message: "You have sucessfully deleted a User" })
+        } else {
+            res.status(404).json({ errorMessage: "The User you are attempting to delete does not exist" })
+        }
+    })
+    .catch(error => {
+        res.status(500).json({ errorMessage: "Delete Failed"})
+    })
+})
+server.put('/api/users/:id', (req, res) => {
+    const { name } = req.body;
+    if ( name ) {
+        users
+        .update(req.params.id, { name })
+        .then(response => {
+            if (response === 1) {
+            res.status(200).json({ id: response.id, name })
+            } else {
+                res.status(404).json({ errorMessage: "The User you are trying to amend does not exist" })
+            }
+        })
+        .catch(error => {
+            res.status(500).json({ errorMessage: "The User could not be changed"})
+        })
+    } else {
+        res.status(400).json({ errorMessage: "Please provide the User Name"})
+    }
+})
 //Posts
 server.get('/api/posts', (req, res) => {
     posts
