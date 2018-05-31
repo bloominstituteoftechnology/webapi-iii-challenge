@@ -88,6 +88,21 @@ server.post('/api/users', (req, res) => {
         })
 })
 
+server.delete('/api/users/:id', (req, res) => {
+    users
+        .remove(req.params.id)
+        .then(user => {
+            if(user === 0){
+                sendUserError(404, 'The user with specified id does not exist', res);
+            } else {
+                res.json({ success: `User with id ${req.params.id} has been removed from system`});
+            }
+        })
+        .catch(err => {
+            sendUserError(500, "The user could not be removed", res)
+        })
+})
+
 //POSTS
 server.get('/api/posts', (req, res) => {
     posts
