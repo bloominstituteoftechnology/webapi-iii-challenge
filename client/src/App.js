@@ -3,6 +3,7 @@ import logo from './logo.svg';
 import axios from 'axios';
 import './App.css';
 import { Jumbotron } from 'reactstrap';
+import { Route } from 'react-router-dom';
 
 class App extends Component {
 
@@ -25,7 +26,6 @@ class App extends Component {
     })
 
     axios.get('http://localhost:5555/api/tags/').then((result) => {
-      console.log(result);
       this.setState({ tags: result.data.tag})
     })
   }
@@ -33,7 +33,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        {
+        <Route exact path="/" render={() => (
           this.state.users.map((user, index) => {
             return (
               <Jumbotron>
@@ -41,7 +41,18 @@ class App extends Component {
               </Jumbotron>
             )
           })
-        }
+        )} />
+        <Route path="/users/:id" render={(props) => (
+          this.state.posts
+            .filter((post) => props.match.params.id == post.userId)
+            .map((post, index) => {
+              return (
+                <Jumbotron>
+                  <h1 className="display-3">{post.text}</h1>
+                </Jumbotron>
+              )
+            })
+        )} />
       </div>
     );
   }
