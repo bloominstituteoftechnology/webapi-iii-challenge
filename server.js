@@ -49,7 +49,7 @@ server.get('/api/users', (req, res) => {
             if(!user){
                 sendUserError(404, 'The user with specified id does not exist', res)
             } else{
-                res.json({ user });
+                res.json(user);
             }
         })
         .catch(err => {
@@ -65,11 +65,23 @@ server.get('/api/users/:id', (req, res) => {
             if(!user){
                 sendUserError(404, 'The user with specified id does not exist', res)
             } else{
-                res.json({ user });
+                res.json(user);
             }
         })
         .catch(err => {
             sendUserError(500, 'There was an error retrieving the user', res)
+        })
+})
+
+server.post('/api/users', (req, res) => {
+    const { name } = req.body;
+    if(!name){
+        sendUserError(400, "Please provide a name for the user", res);
+    }
+    users
+        .insert({ name })
+        .then(user => {
+            res.json(user)
         })
 })
 
