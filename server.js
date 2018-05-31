@@ -153,4 +153,43 @@ server.delete('/api/tags', (req, res) => {
 });
 
 
+//---------- Put Methods ----------
+
+server.put('/api/users/:id', (req, res) => {
+    let { id } = req.params;
+    let { name } = req.body;
+    users.update(id, { name })
+        .then(count => {
+            res.json({ count })
+        })
+        .catch(err => {
+            res.json({ err })
+        })
+});
+
+server.put('/api/posts/:id', (req, res) => {
+    let { id } = req.params;
+    let { userId, text } = req.body;
+    posts.update(id, { userId, text })
+        .then(count => {
+            res.json({ count })
+        })
+        .catch(err => {
+            res.json({ err })
+        })
+});
+
+server.put('/api/tags/:id', (req, res) => {
+    let { id } = req.params;
+    let { tag } = req.body;
+    tags.update(id, { tag })
+        .then(count => {
+            res.json({ count })
+        })
+        .catch(err => {
+            res.json({ err })
+        })
+});
+
+
 server.listen(port, () => console.log(`Server running on port ${port}`));
