@@ -18,17 +18,29 @@ const sendError = (status, message, res) => {
     res.status(status).json({ errorMessage: message });
 };
 
-const customLogger = (req, res, next) => {
-    const ua = req.headers["user-agent"];
-    const { path } = req;
-    const timeStamp = Date.now();
-    const log = { path, ua, timeStamp };
-    const stringLog = JSON.stringify(log);
-    console.log(stringLog);
-    next();
-};
+const logger = (req, res, next) => {
+    const userAgent = req.headers['user-agent'];
+    const host = req.headers.host;
 
-server.use(customLogger);
+    if (!userEngagement[`${req.socket.remoteAddress}`]) {
+        userEngagement[`${req.socket.remoteAddress}`] = { times: 0, last: Date.now() };
+    }
+    userEngagement[`${req.socket.remoteAddress}`].times += 1;
+    userEngagement[`${req.socket.remoteAddress}`].last = Date.now();
+    console.log('engagement: ', userEngagement);
+    if (userEngagement[`${req.socket.remoteAddress}`].times > 5 && (userEngagement[`${req.socket.remoteAddress}`].last - (Date.now() - 5000)) < 5000) {
+        setTimeout(() => {
+            userEngagement[`${req.socket.remoteAddress}`] = 0;
+            userEngagement[`${req.socket.remoteAddress}`].last = Date.now();
+        }, 5000);
+        res.send({ error: 'Too many Requests!' });
+    } else {
+        console.log('##----------------------##', '\nRequest Time: ', Date.now(), '\nRequest:', req.socket.remoteAddress, '\nUserAgent: ', userAgent, '\nHost: ', host, '\nUrl:', req.url, '\n##----------------------##');
+        next();
+    }
+}
+
+server.use(logger);
 
 server.get("/", (req, res) => {
     // 1st arg: route where a resource can be interacted with
