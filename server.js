@@ -73,6 +73,22 @@ server.get('/api/users/:id', (req, res) => {
         })
 })
 
+server.get('/api/users/:id/posts', (req, res) => {
+    users
+        .getUserPosts(req.params.id)
+        .then(user => {
+            console.log(user);
+            if(!user){
+                sendUserError(404, 'The users posts with specified id do not exist', res)
+            } else{
+                res.json(user);
+            }
+        })
+        .catch(err => {
+            sendUserError(500, 'There was an error retrieving the users posts', res)
+        })
+})
+
 server.post('/api/users', (req, res) => {
     const { name } = req.body;
     if(!name){
