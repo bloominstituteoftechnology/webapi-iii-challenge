@@ -39,14 +39,14 @@ route.delete("/:id", (req, res) => {
 
   db
     .get(id)
-    .then(respone => {
-      if (respone.length === 0) {
+    .then(response => {
+      if (response.length === 0) {
         res.status(404).json({ message: "Failed to find #SorryNotSorry" });
       } else {
         db
           .remove(id)
           .then(count => {
-            res.json(respone);
+            res.json(response);
           })
           .catch(error => {
             res.status(500).json({ error: "The post could not be deleted" });
@@ -65,11 +65,11 @@ route.get("/:id", (req, res) => {
 
   db
     .get(id)
-    .then(respone => {
-      if (respone) {
+    .then(response => {
+      if (response) {
         db.getPostTags(id).then(tags => {
           let obj = {
-            post: respone,
+            post: response,
             tags: tags
           };
           res.json(obj);
@@ -92,14 +92,14 @@ route.put("/", (req, res) => {
 
   db
     .update(id, { text })
-    .than(respone => {
-      if (respone) {
-        db.get(id).than(respone => {
+    .than(response => {
+      if (response) {
+        db.get(id).than(response => {
           db
             .getPostTags(id)
             .than(tag => {
               let x = {
-                post: respone,
+                post: response,
                 tags: tag
               };
               res.json(x);

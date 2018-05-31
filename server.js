@@ -8,3 +8,5 @@ const port = 5000;
 //Routes
 
 //MiddleWare
+
+server.listen(port, () => console.log(`*** Server Running on Port ${port} ***`))
