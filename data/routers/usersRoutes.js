@@ -25,7 +25,7 @@ router.get("/:id", (req, res) => {
     .get(id) // invoke proper db.method(id) passing it the id.
     .then(user => {
       if (user.length === 0) {
-        sendError(404, `User with that id could not found`, res);
+        sendError(404, `User with id ${id} could not found`, res);
         return;
       }
       res.json({ user });

@@ -12,6 +12,6 @@ server.use(express.json());
 server.use(cors());
 server.use("/users", usersRouter);
 server.use("/posts", postsRouter);
-// server.use("/tags", tagsRouter);
+server.use("/tags", tagsRouter);
 
 server.listen(port, () => console.log(`Server running on port ${port}`))
