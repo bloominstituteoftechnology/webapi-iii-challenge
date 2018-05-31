@@ -19,10 +19,10 @@ router.get("/", (req, res) => {
     });
 });
 
-router.get("/api/:id", (req, res) => {
+router.get("/:id", (req, res) => {
   const { id } = req.params; // pull id off of req.params;
   db
-    .findById(id) // invoke proper db.method(id) passing it the id.
+    .get(id) // invoke proper db.method(id) passing it the id.
     .then(user => {
       if (user.length === 0) {
         sendError(404, `User with that id could not found`, res);
@@ -31,7 +31,46 @@ router.get("/api/:id", (req, res) => {
       res.json({ user });
     })
     .catch(error => {
-      sendError(500, "Error looking up post", res);
+      sendError(500, "Error looking up user", res);
+      return;
+    });
+});
+
+router.post("/", (req, res) => {
+  const { name } = req.body;
+  if (!name) {
+    sendError(400, "Must provide name", res);
+    return;
+  }
+  db
+    .insert({ name })
+    .then(response => {
+      //   res.status(201).send(response);
+      //   console.log(response);
+      db.get(response.id).then(user => {
+        res.json({ user });
+      });
+    })
+    .catch(error => {
+      sendError(400, error, res);
+      return;
+    });
+});
+
+router.delete("/:id", (req, res) => {
+  const { id } = req.params;
+  db
+    .remove(id)
+    .then(user => {
+      if (user === 0) {
+        sendError(404, `User with id ${id} could not found, can not delete it.`, res);
+        return;
+      }
+      res.json({ user });
+    })
+    .catch(error => {
+      console.log(error);
+      sendError(500, "Error deleting user", res);
       return;
     });
 });
