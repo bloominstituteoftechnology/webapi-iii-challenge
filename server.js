@@ -53,7 +53,23 @@ server.get('/api/users/posts', (req, res) => {
         });
 });
 
-
+server.post('/api/users', (req, res) => {
+    console.log(req.body);
+    const { name } = req.body;
+    if (!name) {
+        sendUserError(400, "Please provide name of the user.", res);
+        return;
+    }
+    users
+        .insert({ name })
+        .then(user => {
+            res.json(user);
+        })
+        .catch( error => {
+            sendUserError(500, "The user could not be created.", res);
+            return;
+        });
+});
 /*server.get('/api/users', (req,res) =>{
     const { id } = req.query;
     users
