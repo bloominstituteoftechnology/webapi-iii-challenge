@@ -67,7 +67,6 @@ server.get('/api/users/:id', (req, res) => {
             } else{
                 res.json({ user });
             }
-            
         })
         .catch(err => {
             sendUserError(500, 'There was an error retrieving the user', res)
@@ -84,6 +83,22 @@ server.get('/api/posts', (req, res) => {
         })
         .catch(err => {
             sendUserError(500, 'There was an error retrieving the posts', res)
+        })
+})
+
+server.get('/api/posts/:id', (req, res) => {
+    posts   
+        .get(req.params.id)
+        .then(post => {
+            console.log(post);
+            if(!post){
+                sendUserError(404, 'The post with specified id does not exist', res)
+            } else{
+                res.json({ post });
+            }
+        })
+        .catch(err => {
+            sendUserError(500, 'There was an error retrieving the post', res)
         })
 })
 
