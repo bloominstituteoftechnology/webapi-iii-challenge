@@ -13,7 +13,7 @@ server.get('/', (req, res) => {
 	res.send('Hello, Kelly');
 })
 
-//****************postDb****************************
+//****************postDb-crud****************************
 server.post('/api/posts', (req,res) => {
 	if (!req.body.userId || !req.body.text) {
 		res.status(400);
@@ -64,6 +64,25 @@ server.get('/api/posts/:id', (req, res) => {
 		})
 });
 
+// retrieve posts by tag name
+
+server.get('/api/posts/:id/tags', (req, res) => {
+	const id = req.params.id;
+	posts.getPostTags(id)
+		.then(tagList => {
+			if (tagList.length) res.json({ tagList });
+			else {
+				res.status(404);
+				res.json({ errorMessage: "No tags found." });
+			}
+		})
+		.catch(error => {
+			res.status(500);
+			res.json({ errorMessage: "No tag could be retrieved." });
+		})
+});
+
+
 server.put('/api/posts/:id', (req, res) => {
 	const { text, userId } = req.body;
 	const id = req.params.id;
@@ -97,23 +116,28 @@ server.put('/api/posts/:id', (req, res) => {
 
 server.delete('/api/posts/:id', (req, res) => {
 	const { id } = req.params
-	posts.remove(id).then(success => {
-		if (success) {
-			res.status(200);
-			res.json({ success });
-			}
-		else {
-			res.status(404);
-			res.json({ message: "The post with the specified ID does not exist." })
-		}
-	})
+
+	posts.get(id)
+		.then((post) => {
+			let deletedPost = post
+			posts.remove(id).then(success => {
+				if (success) {
+					res.status(200);
+					res.json({ deletedPost });
+				}
+				else {
+					res.status(404);
+					res.json({ message: "The post with the specified ID does not exist." })
+				}
+		})
 		.catch(error => {
 			res.status(500);
 			res.json({ error: "The post could not be removed." });
 			})
-	})
+		})
+})
 
-// **********userDb**********************
+// **********userDb-crud*******************************************
 server.post('/api/users', (req,res) => {
 	if (!req.body.name) {
 		res.status(400);
@@ -164,6 +188,24 @@ server.get('/api/users/:id', (req, res) => {
 		})
 });
 
+// retrieve posts by user
+
+server.get('/api/users/:id/posts', (req, res) => {
+	const id = req.params.id;
+	users.getUserPosts(id)
+		.then(postList => {
+			if (postList.length) res.json({ postList });
+			else {
+				res.status(404);
+				res.json({ errorMessage: "No posts found for this user." });
+			}
+	})
+		.catch(error => {
+			res.status(500);
+			res.json({ errorMessage: "The posts could not be retrieved." });
+		})
+})
+
 server.put('/api/users/:id', (req, res) => {
 	const { name } = req.body;
 	const id = req.params.id;
@@ -196,25 +238,28 @@ server.put('/api/users/:id', (req, res) => {
 })
 
 server.delete('/api/users/:id', (req, res) => {
-	const { id } = req.params
-	users.remove(id).then(success => {
-		if (success) {
-			res.status(200);
-			res.json({ success });
-			}
-		else {
-			res.status(404);
-			res.json({ message: "The user with the specified ID does not exist." })
-		}
-	})
+	const { id } = req.params;
+	users.get(id)
+		.then((user) => {
+			let deletedUser = user
+			users.remove(id).then(success => {
+				if (success) {
+					res.status(200);
+					res.json({ deletedUser });
+				}
+				else {
+					res.status(404);
+					res.json({ message: "The user with the specified ID does not exist." })
+				}
+		})
 		.catch(error => {
 			res.status(500);
 			res.json({ error: "The user could not be removed." });
 			})
 	})
 
-
-//**********************tagDb************************
+})
+//**********************tagDb-crud************************
 
 server.post('/api/tags', (req,res) => {
 	if (!req.body.tag) {
@@ -298,21 +343,25 @@ server.put('/api/tags/:id', (req, res) => {
 })
 
 server.delete('/api/tags/:id', (req, res) => {
-	const { id } = req.params
-	tags.remove(id).then(success => {
-		if (success) {
-			res.status(200);
-			res.json({ success });
-			}
-		else {
-			res.status(404);
-			res.json({ message: "The tag with the specified ID does not exist." })
-		}
-	})
+	const { id } = req.params;
+	tags.get(id)
+		.then((tag) => {
+			let deletedTag = tag
+			tags.remove(id).then(success => {
+				if (success) {
+					res.status(200);
+					res.json({ deletedTag });
+				}
+				else {
+					res.status(404);
+					res.json({ message: "The tag with the specified ID does not exist." })
+				}
+			})
 		.catch(error => {
 			res.status(500);
 			res.json({ error: "The tag could not be removed." });
 			})
-	})
+		})
+})
 
 server.listen(port, () => console.log(`Server running on port ${port}`));
