@@ -17,14 +17,16 @@ router.get('/', (req, res) => {
 // insert
 router.post('/', (req, res) => {
   const { tag } = req.body;
+  if (!tag) {
+    return error(res, 400, 'Please provide a name before attempting to create a new tag');
+  }
   db.insert({ tag })
     .then(data => {
-      if (!tag) {
-        error(res, 400, 'Please provide a name before attempting to create a new tag');
-      }
       res.json(data);
     })
-    .catch(err => error(res, 500, 'Could not process your request. If this issue persists, please contact the owner of the site'));
+    .catch(err => {
+      error(res, 500, 'Could not process your request. If this issue persists, please contact the owner of the site');
+    });
 });
 
 /*************************
@@ -60,6 +62,19 @@ router.put('/:id', (req, res) => {
       }
       error(res, 500, 'Could not process your request. If this issue persists, please contact the owner of the site')
     });
+});
+
+// remove
+router.delete('/:id', (req, res) => {
+  const { id } = req.params;
+  db.remove(id)
+    .then(data => {
+      if (!data) {
+        return error(res, 404, 'This tag may never have existed in the first place, try another one');
+      }
+      res.json(data);
+    })
+    .catch(err => error(res, 500, 'Could not process your request. If this issue persists, please contact the owner of the site'));
 });
 
 module.exports = router;
