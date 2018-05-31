@@ -8,30 +8,90 @@ const server = express();
 server.use(express.json());
 server.use(cors({ origin: 'http://localhost:3000' }));
 
-//users
-// server.get('/api/users', (req, res) => {
-//     users
-//     .get()
-//     .then(users => {
-//         res.json({ users })
-//     })
-//     .catch(error => {
-//         res.status(500)
-//         res.json({ message: "The posts information could not be retrieved." })
-//     }) 
-// })
-// server.get('/api/users/:id', (req, res) => {
-
-// })
-// server.post('/api/users', (req, res) => {
-    
-// })
-// server.put('/api/users/:id', (req, res) => {
-    
-// })
-// server.delete('/api/users/:id', (req, res) => {
-    
-// })
+users
+server.get('/api/users', (req, res) => {
+    users
+    .get()
+    .then(users => {
+        res.json({ users })
+    })
+    .catch(error => {
+        res.status(500)
+        res.json({ message: "The user information could not be retrieved." })
+    }) 
+})
+server.get('/api/users/:id', (req, res) => {
+    const { id } = req.params;
+    if(req.params.id == undefined) {
+        res.status(404)
+        res.json({ message: "The user with the specified ID does not exist." })
+    }
+    else {
+        console.log(id);
+        users
+        .get(id)
+        .then(post => {
+            res.json({ post })
+        })
+        .catch(error => {
+            res.status(500)
+            res.json({ message: "The user information could not be retrieved." })
+        })
+}})
+server.post('/api/users', (req, res) => {
+    const { name } = req.body;
+    if(name == undefined) {
+        user.status(404)
+        user.json({ message: "The user must have have a name." })
+    } 
+    else {
+        users
+        .insert({ name })
+        .then(user => {
+            res.json({ user })
+        })
+        .catch(error => {
+            res.status(500)
+            res.json({ message: "The user information could not be retrieved." })
+        })   
+}})
+server.put('/api/users/:id', (req, res) => {
+    const { text, userId } = req.body;
+    const { id } = req.params;
+        posts
+        .update(req.params.id, req.body)
+        .then(post => {
+            if (!post) {
+                res.status(404);
+                res.json({ message: "The user with the specified ID does not exist." })
+            } 
+            else {
+                res.json({ post })
+            }
+        })
+        .catch(error => {
+            res.status(500)
+            res.json({ error: "The user information could not be modified."});
+        })   
+})
+server.delete('/api/users/:id', (req, res) => {
+    const { id } = req.params;
+        users
+        .remove(id)
+        .then(user => {
+            if (!user) {
+                res.status(404);
+                res.json({ message: "The user with the specified ID does not exist." })
+            } 
+            else {
+                res.json({ user })
+            }
+        })
+        .catch(error => {
+            res.status(500)
+            res.json({ error: "The user could not be removed" })
+        })
+})
 
 
 //posts
@@ -102,11 +162,7 @@ server.put('/api/posts/:id', (req, res) => {
 })
 server.delete('/api/posts/:id', (req, res) => {
     const { id } = req.params;
-    if(id == undefined) {
-        res.status(400);
-        res.json({ errorMessage: "The post with the specified ID does not exist." })
-    }
-    else {
+
         posts
         .remove(id)
         .then(post => {
@@ -122,7 +178,7 @@ server.delete('/api/posts/:id', (req, res) => {
             res.status(500)
             res.json({ error: "The user could not be removed" })
         })
-}})
+})
 
 
 //tags
