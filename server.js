@@ -77,5 +77,41 @@ server.get('/api/tags/:id', (req, res) => {
         })
 });
 
+//---------- Post Methods ----------
+
+server.post('/api/users', (req, res) => {
+    let { name } = req.body;
+    users.insert({ name })
+        .then(idObj => {
+            res.json(idObj)
+        })
+        .catch(err => {
+            res.json({ err })
+        })
+});
+
+server.post('/api/posts/:userId', (req, res) => {
+    let { userId } = req.params;
+    let { text } = req.body;
+    posts.insert({ text, userId})
+        .then(idObj => {
+            res.json(idObj)
+        })
+        .catch(err => {
+            res.json({ err })
+        })
+});
+
+server.post('/api/tags', (req, res) => {
+    let { tag } = req.body;
+    tags.insert({ tag })
+        .then(idObj => {
+            res.json(idObj)
+        })
+        .catch(err => {
+            res.json({ err })
+        })
+});
+
 
 server.listen(port, () => console.log(`Server running on port ${port}`));
