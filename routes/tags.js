@@ -5,7 +5,16 @@ const db = require('../data/helpers/tagDb');
 const error = require('./helpers/error');
 
 /*************************
-** GET /:id **
+** ROUTE / **
+*************************/
+router.get('/', (req, res) => {
+  db.get()
+    .then(data => res.json(data))
+    .catch(err => error(res, 500, 'Could not process your request. If this issue persists, please contact the owner of the site'));
+});
+
+/*************************
+** ROUTE /:id **
 *************************/
 router.get('/:id', (req, res) => {
   const { id } = req.params;
