@@ -87,7 +87,7 @@ server.get("/api/users/:id", (req, res) => {
         })
 })
 
-server.get("/api/userposts/:id", (req, res) => {
+server.get("/api/users/:id/posts", (req, res) => {
     const { id } = req.params;
     users
         .get(id)
