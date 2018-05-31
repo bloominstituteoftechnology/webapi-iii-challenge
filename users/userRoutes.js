@@ -17,7 +17,7 @@ router.post('/', (req, res) => {
     .catch(err => {
       console.log("POST error:",err);
       if (err.errno === 19) {
-        res.status(400).json({ errorMessage: "Please provide BOTH name and bio for the user." });
+        res.status(400).json({ errorMessage: "Please provide a unique for the user." });
       } else {
         res.status(500).json({ error: `There was an error while saving the user to the database\nError Message: ${err}` });
       }

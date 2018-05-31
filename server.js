@@ -1,6 +1,6 @@
+/* --- Dependencies --- */
 const express = require('express');
 const server = express();
-
 // Middleware Dependencies
 const helmet = require('helmet');
 const cors = require('cors');
@@ -9,9 +9,9 @@ const userRoutes = require('./users/userRoutes');
 const postRoutes = require('./posts/postRoutes');
 const tagRoutes = require('./tags/tagRoutes');
 
-/* Middleware */
+/* --- Middleware --- */
 server.use(helmet());
-server.use(cors());
+server.use(cors({ origin: 'http://localhost:3000' }));
 server.use(express.json());
 
 /* --- Endpoints --- */
@@ -24,5 +24,5 @@ server.use('/api/tags', tagRoutes);
 
 /* Server Start! */
 const port = 5000;
-server.listen(port, () => console.log(`\n === Server is listening at port ${port} ===`));
+server.listen(port, () => console.log(`\n=== Server is listening at port ${port} ===\nSever Start Time: ${Date()}`));
 
