@@ -113,6 +113,21 @@ server.get('/api/tags', (req, res) => {
         })
 })
 
+server.get('/api/tags/:id', (req, res) => {
+    tags   
+        .get(req.params.id)
+        .then(tag => {
+            console.log(tag);
+            if(!tag){
+                sendUserError(404, 'The tag with specified id does not exist', res)
+            } else{
+                res.json({ tag });
+            }
+        })
+        .catch(err => {
+            sendUserError(500, 'There was an error retrieving the tag', res)
+        })
+})
 
 
 server.listen(port, () => console.log(`Server is running on port ${port}`));
