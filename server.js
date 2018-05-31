@@ -92,7 +92,7 @@ server.post('/api/users', (req, res) => {
         return;
     }
     usersDb   
-        .insert({ id, name })
+        .insert({ name })
         .then(response => {
             res.status(201).json(response); 
         });    
@@ -117,14 +117,7 @@ server.put('/api/users/:id', (req, res) => {
     usersDb   
         .update(id, {name })
         .then(response => {
-            if (response = 0) {
-                sendUserError (
-                    404,
-                    "The user with the specified ID does not exist.",
-                    res
-                );
-                return;
-            }
+            res.status(201).json(response); 
         });
 }); 
 
