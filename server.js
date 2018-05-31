@@ -89,7 +89,7 @@ server.put('/api/users/:id', (req, res) => {
     }
 })
 //Posts
-server.get('/api/posts', (req, res) => {
+server.get('/api/posts/', (req, res) => {
     posts
     .get()
     .then(response => {
@@ -116,7 +116,7 @@ server.get('/api/posts/:id', (req, res) => {
         res.status(500).json({ error: 'The Post Could Not Be Retrieved' })
     })
 })
-server.post('/api/posts', (req, res) => {
+server.post('/api/posts/', (req, res) => {
     const { text, userID } = req.body;
     if (text && userID) {
         posts
@@ -175,7 +175,71 @@ server.get('/api/tags', (req, res) => {
         res.json(error)
     })
 });
-
+server.get('/api/tags/:id', (req, res) => {
+    console.log(req.params.id)
+    tags
+    .get(req.params.id)
+    .then(response => {
+        console.log(response)
+        if (!response) {
+            res.status(404).json({ errorMessage: 'This Tag Does not Exist' })
+            console.log(response);
+        } else {
+            res.status(200).json(response)
+        }
+    })
+    .catch(error => {
+        res.status(500).json({ error: 'The Tag Could Not Be Retrieved' })
+    })
+})
+server.post('/api/tags/', (req, res) => {
+    const { tag } = req.body;
+    if (tag) {
+        tags
+        .insert({ tag })
+        .then(response => {
+            res.status(201).json({ id: response.id, tag})
+        })
+        .catch(error => {
+            res.status(500).json({ errorMessage: "There was an error saving the Tag to the database"})
+        })
+    } else {
+        res.status(400).json({ errorMessage: "Please provide a tag"})
+    }
+})
+server.delete('/api/tags/:id', (req, res) => {
+    tags
+    .remove(req.params.id)
+    .then(response => {
+        if (response === 1) {
+            res.status(200).json({ message: "Deletion Success"})
+        } else {
+            res.status(404).json({ message: "The tag with the specified ID does not exist." })
+        }
+    })
+    .catch(error => {
+        res.status(500).json({ error: "The tag could not be removed" })
+    })
+})
+server.put('/api/tags/:id', (req, res) => {
+    const { tag } = req.body;
+    if (tag) {
+        tags
+        .update(req.params.id, {tag})
+        .then(response => {
+            if (response === 1) {
+                res.status(200).json({ id: response.id, tag})
+            } else {
+                res.status(404).json({ message: "The tag with the specified ID does not exist." })
+            }
+        })
+        .catch(error => {
+            res.status(500).json({ error: "The tag information could not be modified." })
+        })
+    } else {
+        res.status(400).json({ errorMessage: "Please provide a tag" })
+    }
+})
 
 
 server.listen(port, () => console.log(`Server running on port ${port}`));
