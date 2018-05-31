@@ -306,6 +306,29 @@ server.delete('/api/tags/:id', (req, res) => {
 
 });
 
+server.get('/api/users/:id/posts', (req, res) => {
+  const id = req.params.id;
+  users.getUserPosts(id)
+    .then(postList => {
+      if (postList.length) res.json({ postList });
+      else res.status(404).json({ errorMessage: "No posts found." });
+    })
+    .catch(error => {
+      res.status(500).json({ errorMessage: "The posts could not be retrieved." });
+    })
+});
+
+server.get('/api/posts/:id/tags', (req, res) => {
+  const id = req.params.id;
+  posts.getPostTags(id)
+    .then(tagList => {
+      if (tagList.length) res.json({ tagList });
+      else res.status(404).json({ errorMessage: "No tags found." });
+    })
+    .catch(error => {
+      res.status(500).json({ errorMessage: "The tags could not be retrieved." });
+    })
+});
 
 
 server.listen(port, () => console.log(`Server running on port ${port}`));
