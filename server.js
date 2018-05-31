@@ -1,15 +1,15 @@
 const express = require('express');
-const cors = requite('cors');
+const cors = require('cors');
 
 
-
+const port = 5555;
 const server = express();
-
 
 server.use(express.json());
 server.use(cors());
 
-const userRoutes = require('./users/userRoutes');
-const postRoutes = require('./users/postRoutes');
-const tagRoutes = require('./users/tagRoutes');
+const usersRoutes = require('./users/usersRoutes');
+const postsRoutes = require('./posts/postsRoutes');
+const tagsRoutes = require('./tags/tagsRoutes');
 
+server.listen(port, () => console.log(`Magic Happening on port${port}`));
