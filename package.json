@@ -4,6 +4,9 @@
   "main": "index.js",
   "repository": "https://github.com/AKolumbic/Node-Blog.git",
   "license": "MIT",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
   "dependencies": {
     "cors": "^2.8.4",
     "express": "^4.16.3",
