@@ -222,4 +222,96 @@ server.put("/api/posts/:id", (req, res) => {
   }
 });
 
+//CRUD Operations: Tags
+server.get("/api/tags", (req, res) => {
+  tags
+    .get()
+    .then(tags => {
+      res.json({ tags });
+    })
+    .catch(error => {
+      errorHandler(500, "The tags could not be retrieved.");
+    });
+});
+
+server.get("/api/tags/:id", (req, res) => {
+  const { id } = req.params;
+  tags
+    .get(id)
+    .then(tag => {
+      if (tag.length === 0) {
+        errorHandler(404, "The tag with the specified ID does not exist.", res);
+      } else {
+        res.json({ tag });
+      }
+    })
+    .catch(error => {
+      errorHandler(500, "The tag could not be retrieved.", res);
+    });
+});
+
+server.post("/api/tags", (req, res) => {
+  const { tag } = req.body;
+  if (!tag) {
+    errorHandler(400, "Please provide a tag.", res);
+  } else {
+    tags
+      .insert({ tag })
+      .then(response => {
+        res.status(201).json({ response });
+      })
+      .catch(error => {
+        errorHandler(500, "The tag could not be saved to the database.", res);
+      });
+  }
+});
+
+server.delete("/api/tags/:id", (req, res) => {
+  const { id } = req.params;
+  tags
+    .remove(id)
+    .then(response => {
+      if (response === 0) {
+        errorHandler(404, "The tag with the specified id does not exist.", res);
+      } else {
+        res.json({ response });
+      }
+    })
+    .catch(error => {
+      errorHandler(500, "The tag could not be deleted", res);
+    });
+});
+
+server.put("/api/tags/:id", (req, res) => {
+  const { tag } = req.body;
+  const { id } = req.params;
+  if (!tag) {
+    errorHandler(400, "Please provide a tag.", res);
+  } else {
+    tags
+      .update(id, { tag })
+      .then(response => {
+        if (response === 0) {
+          errorHandler(
+            404,
+            "The tag with the specified id does not exist.",
+            res
+          );
+        } else {
+          tags
+            .get(id)
+            .then(tag => {
+              res.json({ tag });
+            })
+            .catch(error => {
+              errorHandler(500, "The tag could not be retrieved.", res);
+            });
+        }
+      })
+      .catch(error => {
+        errorHandler(500, "The tag could not be updated.", res);
+      });
+  }
+});
+
 server.listen(5000, () => console.log("Server started at port 5000"));
