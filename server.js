@@ -45,21 +45,41 @@ server.get('/api/users', (req, res) => {
     users
         .get()
         .then(user => {
-            console.log(user);
-            res.json({ user })
+            // console.log(user);
+            if(!user){
+                sendUserError(404, 'The user with specified id does not exist', res)
+            } else{
+                res.json({ user });
+            }
         })
         .catch(err => {
-            sendUserError(500, 'There was an error finding the users', res)
+            sendUserError(500, 'There was an error retrieving the users', res)
         })
 })
 
+server.get('/api/users/:id', (req, res) => {
+    users
+        .get(req.params.id)
+        .then(user => {
+            console.log(user);
+            if(!user){
+                sendUserError(404, 'The user with specified id does not exist', res)
+            } else{
+                res.json({ user });
+            }
+            
+        })
+        .catch(err => {
+            sendUserError(500, 'There was an error retrieving the user', res)
+        })
+})
 
 //POSTS
 server.get('/api/posts', (req, res) => {
     posts
         .get()
         .then(post => {
-            console.log(post);
+            // console.log(post);
             res.json({ post });
         })
         .catch(err => {
@@ -73,8 +93,8 @@ server.get('/api/tags', (req, res) => {
     tags
         .get()
         .then(tag => {
-            console.log(tag);
-            res.json({ tag })
+            // console.log(tag);
+            res.json({ tag });
         })
 })
 
