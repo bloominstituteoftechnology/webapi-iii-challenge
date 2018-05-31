@@ -244,6 +244,33 @@ server.get("/api/posts/:id", (req, res) => {
         })
 })
 
+server.get("/api/posts/:id/tags", (req, res) => {
+    const { id } = req.params;
+    posts
+        .get(id)
+        .then(user => {
+            if(user.length === 0) {
+                sendUserError(404,"The post with the specified ID does not exist.", res);
+                return;
+            }
+            posts
+                .getPostTags(id)
+                .then(posts => {
+                    if(posts.length === 0) {
+                        sendUserError(404,"The post doesn't have posts already.", res);
+                        return;
+                    }
+                    res.json(posts);
+                })
+                .catch(error => {
+                    sendUserError(500, "The post information could not be retrieved.", res)
+                })
+        })
+        .catch(error => {
+            sendUserError(500, "The post tags could not be retrieved.", res)
+        })
+})
+
 server.delete("/api/posts/:id", (req, res) => {
     const { id } = req.params;
     posts
