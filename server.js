@@ -198,6 +198,96 @@ server.put('/api/users/:id/posts/:postId', (req, res) => {
         res.status(400).json({ userError: "Please include some text for a post" })
     )
 })
-//server.get('/api/tags')
+
+/**********************
+**** Tag endpoints ****
+***********************/
+server.get('/api/tags', (req, res) => {
+    tags.get()
+        .then( tags => {
+            res.status(200).json(tags)
+        })
+        .catch( error => {
+            res.status(500).json({ error: "Could not get tags" })
+        })
+})
+
+server.get('/api/tags/:id', (req, res) => {
+    const { id } = req.params
+    tags.get(id)
+        .then( tag => {
+            tag ? res.status(200).json(tag) : res.status(404).json({ userError: `Could not find tag with id ${id}` })
+        })
+        .catch( error => {
+            res.status(500).json({ error: `Could not find tag with id ${id}` })
+        })
+})
+
+server.post('/api/tags', (req, res) => {
+    const { tag } = req.body
+    tag ? (
+        tags.insert({ tag })
+            .then( id => {
+                res.status(201)
+                tags.get(id.id)
+                    .then( tag => {
+                        tag ? res.status(200).json(tag) : res.status(404).json({ userError: `Could not find tag with id ${id.id}` })
+                    })
+                    .catch( error => {
+                        res.status(500).json({ error: `Could not find tag with id ${id.id}` })
+                    })
+            })
+            .catch( error => {
+                res.status(500).json({ error: "Unable to create tag" })
+            })
+    ) : (
+        res.status(400).json({ userError: "Please include a tag" })
+    )
+})
+
+server.delete('/api/tags/:id', (req, res) => {
+    const { id } = req.params
+    tags.remove(id)
+        .then( response => {
+            if (response) {
+                res.status(200)
+                tags.get()
+                    .then( tags => {
+                        res.status(200).json(tags)
+                    })
+                    .catch( error => {
+                        res.status(500).json({ error: "Could not get tags" })
+                    })
+            } else {
+                res.status(404).json({ userError: `Could not delete tag with id ${id}` })
+            }
+        })
+        .catch( error => {
+            res.status(500).json({ error: "Could not delete tag" })
+        })
+})
+
+server.put('/api/tags/:id', (req, res) => {
+    const { id } = req.params
+    const { tag } = req.body
+    tag ? (
+        tags.update(id, { tag })
+            .then( response => {
+                if (response) {
+                    tags.get(id)
+                        .then( tag => {
+                            tag ? res.status(200).json(tag) : res.status(404).json({ userError: `Could not find tag with id ${id}` })
+                        })
+                        .catch( error => {
+                            res.status(500).json({ error: `Could not find tag with id ${id}` })
+                        })
+                } else {
+                    res.status(404).json({ userError: `Could not update tag with id ${id}`})
+                }
+            })
+    ) : (
+        res.status(400).json({ userError: "Please include an updated tag" })
+    )
+})
 
 server.listen(port, () => console.log(`listening on port ${port}`));
