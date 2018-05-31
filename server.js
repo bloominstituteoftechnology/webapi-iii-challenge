@@ -80,6 +80,31 @@ server.get('/api/tags/:id', (req, res) => {
 });
 
 
+//---------- Special Get Methods ----------
+
+server.get('/api/users/:id/posts', (req, res) => {
+    let { id } = req.params;
+    users.getUserPosts(id)
+        .then(posts => {
+            res.json({ posts })
+        })
+        .catch(err => {
+            res.json({ err })
+        })
+})
+
+server.get('/api/posts/:id/tags', (req, res) => {
+    let { id } = req.params;
+    posts.getPostTags(id)
+        .then(tags => {
+            res.json({ tags })
+        })
+        .catch(err => {
+            res.json({ err })
+        })
+})
+
+
 //---------- Post Methods ----------
 
 server.post('/api/users', (req, res) => {
