@@ -5,6 +5,9 @@
   "repository": "https://github.com/jesuarva/Node-Blog.git",
   "author": "jesuarva <jean.ariza@jesuarva.com>",
   "license": "MIT",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
   "dependencies": {
     "cors": "^2.8.4",
     "express": "^4.16.3",
