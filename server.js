@@ -148,6 +148,22 @@ server.get('/api/posts/:id', (req, res) => {
         })
 })
 
+server.get('/api/posts/:id/tags', (req, res) => {
+    posts
+        .getPostTags(req.params.id)
+        .then(post => {
+            // console.log(post);
+            if(post.length === 0){
+                sendUserError(404, 'This post does not contain any tags', res)
+            } else{
+                res.json(post);
+            }
+        })
+        .catch(err => {
+            sendUserError(500, 'There was an error retrieving the posts tags', res)
+        })
+})
+
 server.post('/api/posts', (req, res) => {
     const { text, userId } = req.body;
     if(!text || !userId){
