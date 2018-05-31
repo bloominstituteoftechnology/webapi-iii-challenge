@@ -99,7 +99,71 @@ server.get('/api/posts', (req, res) => {
         res.json(error)
     })
 });
-
+server.get('/api/posts/:id', (req, res) => {
+    console.log(req.params.id)
+    posts
+    .get(req.params.id)
+    .then(response => {
+        console.log(response)
+        if (response.length === 0) {
+            res.status(404).json({ errorMessage: 'This Post Does not Exist' })
+            console.log(response);
+        } else {
+            res.status(200).json(response)
+        }
+    })
+    .catch(error => {
+        res.status(500).json({ error: 'The Post Could Not Be Retrieved' })
+    })
+})
+server.post('/api/posts', (req, res) => {
+    const { text, userID } = req.body;
+    if (text && userID) {
+        posts
+        .insert({ text, userID })
+        .then(response => {
+            res.status(201).json({ id: response.id, text, userID })
+        })
+        .catch(error => {
+            res.status(500).json({ errorMessage: "There was an error saving the post to the database"})
+        })
+    } else {
+        res.status(400).json({ errorMessage: "Please provide some content"})
+    }
+})
+server.delete('/api/posts/:id', (req, res) => {
+    posts
+    .remove(req.params.id)
+    .then(response => {
+        if (response === 1) {
+            res.status(200).json({ message: "Deletion Success"})
+        } else {
+            res.status(404).json({ message: "The post with the specified ID does not exist." })
+        }
+    })
+    .catch(error => {
+        res.status(500).json({ error: "The post could not be removed" })
+    })
+})
+server.put('/api/posts/:id', (req, res) => {
+    const { text, userID } = req.body;
+    if (text && userID) {
+        posts
+        .update(req.params.id, {text, userID})
+        .then(response => {
+            if (response === 1) {
+                res.status(200).json({ id: response.id, text, userID})
+            } else {
+                res.status(404).json({ message: "The post with the specified ID does not exist." })
+            }
+        })
+        .catch(error => {
+            res.status(500).json({ error: "The post information could not be modified." })
+        })
+    } else {
+        res.status(400).json({ errorMessage: "Please provide content and a UserID for the post." })
+    }
+})
 //Tags
 server.get('/api/tags', (req, res) => {
     tags
