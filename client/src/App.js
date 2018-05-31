@@ -43,17 +43,27 @@ class App extends Component {
             )
           })
         )} />
-        <Route path="/users/:id" render={(props) => (
-          this.state.posts
-            .filter((post) => Number(props.match.params.id) === post.userId)
-            .map((post, index) => {
-              return (
-                <Jumbotron key={index}>
-                  <h1 className="display-3">{post.text}</h1>
-                </Jumbotron>
-              )
-            })
-        )} />
+        <Route path="/users/:id" render={(props) => {
+          let user = this.state.users.filter((user) => Number(props.match.params.id) === user.id)[0]
+          if (user) return (
+            <div>
+              <h1>{user.name + "\'s posts"}</h1>
+              {
+                this.state.posts
+                  .filter((post) => Number(props.match.params.id) === post.userId)
+                  .map((post, index) => {
+                    return (
+                      <Jumbotron key={index}>
+                        <h1 className="display-5">{post.text}</h1>
+                      </Jumbotron>
+                    )
+                  })
+              }
+              <Link to="/users"><h1>Back</h1></Link>
+            </div>
+          )
+          else return (<div />);
+        }} />
       </div>
     );
   }
