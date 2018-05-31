@@ -83,6 +83,9 @@ server.post('/api/users', (req, res) => {
         .then(user => {
             res.json(user)
         })
+        .catch(err => {
+            sendUserError(500, 'There was an error posting the user', res)
+        })
 })
 
 //POSTS
@@ -111,6 +114,21 @@ server.get('/api/posts/:id', (req, res) => {
         })
         .catch(err => {
             sendUserError(500, 'There was an error retrieving the post', res)
+        })
+})
+
+server.post('/api/posts', (req, res) => {
+    const { text, userId } = req.body;
+    if(!text || !userId){
+        sendUserError(400, "Please provide text and a userId for the post", res);
+    }
+    posts
+        .insert({ text, userId })
+        .then(post => {
+            res.json(post)
+        })
+        .catch(err => {
+            sendUserError(500, 'There was an error creating the post', res)
         })
 })
 
