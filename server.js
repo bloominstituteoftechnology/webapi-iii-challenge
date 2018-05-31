@@ -87,24 +87,25 @@ server.put('/api/users/:id', (req, res) => {
 server.delete('/api/users/:id', (req, res) => {
   const id = req.params.id;
 
-  let deletedUser;
-
   users.get(id)
-    .then((user) => deletedUser = user);
+    .then((user) => {
+      let deletedUser = user
+      users
+        .remove(id)
+        .then(success => {
+          if (success) {
+            res.json({ deletedUser });
+          }
+          else {
+            res.status(404).json({ errorMessage: "The user with the specified ID does not exist." });
+          }
+        })
+        .catch(error => {
+          res.status(500).json({ errorMessage: "The user could not be removed" });
+        })
+    });
 
-  users
-    .remove(id)
-    .then(success => {
-      if (success) {
-        res.json({ deletedUser });
-      }
-      else {
-        res.status(404).json({ errorMessage: "The user with the specified ID does not exist." });
-      }
-    })
-    .catch(error => {
-      res.status(500).json({ errorMessage: "The user could not be removed" });
-    })
+
 });
 
 
@@ -183,19 +184,25 @@ server.put('/api/posts/:id', (req, res) => {
 
 server.delete('/api/posts/:id', (req, res) => {
   const id = req.params.id;
-  posts
-    .remove(id)
-    .then(success => {
-      if (success) {
-        res.json({ success });
-      }
-      else {
-        res.status(404).json({ errorMessage: "The post with the specified ID does not exist." });
-      }
-    })
-    .catch(error => {
-      res.status(500).json({ errorMessage: "The post could not be removed" });
-    })
+
+  posts.get(id)
+    .then((post) => {
+      let deletedPost = post
+      posts
+        .remove(id)
+        .then(success => {
+          if (success) {
+            res.json({ deletedPost });
+          }
+          else {
+            res.status(404).json({ errorMessage: "The post with the specified ID does not exist." });
+          }
+        })
+        .catch(error => {
+          res.status(500).json({ errorMessage: "The post could not be removed" });
+        })
+    });
+
 });
 
 
