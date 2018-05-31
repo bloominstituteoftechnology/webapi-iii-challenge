@@ -75,4 +75,33 @@ router.delete("/:id", (req, res) => {
     });
 });
 
+router.put("/:id", (req, res) => {
+  const { id } = req.params;
+  const { name } = req.body;
+  if (!name) {
+    sendError(400, "Must provide name", res);
+    return;
+  }
+  db
+    .update(id, { name })
+    .then(response => {
+      if (response == 0) {
+        sendError(404, `User with id ${id} could not found.`, res);
+        return;
+      }
+      db.get(id).then(user => {
+        console.log(user);
+        if (user.length === 0) {
+          sendError(404, "User with id ${id} could not found.", res);
+          return;
+        }
+        res.json({ user });
+      });
+    })
+    .catch(message => {
+      sendError(400, message, res);
+      return;
+    });
+});
+
 module.exports = router;

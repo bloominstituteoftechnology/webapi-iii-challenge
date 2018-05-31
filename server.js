@@ -7,12 +7,11 @@ const usersRouter = require('./data/routers/usersRoutes'),
       postsRouter = require('./data/routers/postsRoutes'),
       tagsRouter = require('./data/routers/tagsRoutes');
       
-      console.log(usersRouter)
 
 server.use(express.json());
 server.use(cors());
 server.use("/users", usersRouter);
-// server.use("/posts", postsRouter);
+server.use("/posts", postsRouter);
 // server.use("/tags", tagsRouter);
 
 server.listen(port, () => console.log(`Server running on port ${port}`))
