@@ -2,7 +2,7 @@ const express = require('express');
 //const cors = require('cors');
 const posts = require('./data/helpers/postDb.js');
 const users = require('./data/helpers/userDb.js');
-const tags = require('./data/helpers/userDb.js');
+const tags = require('./data/helpers/tagDb.js');
 
 const port = 5555;
 const server = express();
@@ -215,105 +215,104 @@ server.delete('/api/users/:id', (req, res) => {
 
 
 //**********************tagDb************************
-/*
-server.post('/api/posts', (req,res) => {
-	if (!req.body.userId || !req.body.text) {
+
+server.post('/api/tags', (req,res) => {
+	if (!req.body.tag) {
 		res.status(400);
-		res.json({ errorMessage: "Please provide userId and text for the post." });
+		res.json({ errorMessage: "Please provide a name for the tag." });
 	}
 	else {
 
-	const { text, userId } = req.body;
-	posts.insert({ text, userId })
+	const { tag } = req.body;
+	tags.insert({ tag })
 		.then(response => {
 			res.status(201);
-			posts.get(response.id)
-				.then(posts => {
-					res.json({ posts });
+			tags.get(response.id)
+				.then(tags => {
+					res.json({ tags });
 				});
 		})
 			.catch(error => {
 				res.status(500);
-				res.json({ error: "There was an error saving the post to the database."});
+				res.json({ error: "There was an error saving the tag to the database."});
 			})
 	}
 })
 
-server.get('/api/posts', (req, res) => {
-	posts.get().then(posts => {
-		res.json({ posts });
+server.get('/api/tags', (req, res) => {
+	tags.get().then(tags => {
+		res.json({ tags });
 	})
 		.catch(error => {
 			res.status(500);
-			res.json({ error: "The post information could not be retrieved."});
+			res.json({ error: "The tag information could not be retrieved."});
 		})
 });
 
-server.get('/api/posts/:id', (req, res) => {
+server.get('/api/tags/:id', (req, res) => {
 	const { id } = req.params;
-	posts.get(req.params.id).then(posts => {
-		if (posts) {
-			res.json({ posts });
+	tags.get(req.params.id).then(tags => {
+		if (tags) {
+			res.json({ tags });
 		}
 		else {
 			res.status(404);
-			res.json({ message: " The post with the specified ID does not exist." });
+			res.json({ message: " The tag with the specified ID does not exist." });
 		}
 	})
 		.catch(error => {
 			res.status(500);
-			res.json({ error: "The post information could not be retrieved." });
+			res.json({ error: "The tag information could not be retrieved." });
 		})
 });
 
-server.put('/api/posts/:id', (req, res) => {
-	const { text, userId } = req.body;
+server.put('/api/tags/:id', (req, res) => {
+	const { tag } = req.body;
 	const id = req.params.id;
 
-	if (!userId || !text) {
+	if (!tag) {
 		res.status(400);
-		res.json({ errorMessage: "Please provide the author and text for the post." });
+		res.json({ errorMessage: "Please provide tag name." });
 	}
 	else {
-		posts.update( id, { text, userId } ).then(success => {
+		tags.update( id, { tag } ).then(success => {
 			if (success) {
 				res.status(200);
-				posts.get(id)
-					.then(posts => {
-						res.json({ posts });
+				tags.get(id)
+					.then(tags => {
+						res.json({ tags });
 			});
 		}
 
 			else {
 				res.status(404);
-				res.json({ message: "The post with the specified ID does not exist." });
+				res.json({ message: "The tag with the specified ID does not exist." });
 			}
 		}
 		)
 			.catch(error => {
 				res.status(500);
-				res.json({ error: "The post could not be found." });
+				res.json({ error: "The tag could not be found." });
 			})
 }
 })
 
-server.delete('/api/posts/:id', (req, res) => {
+server.delete('/api/tags/:id', (req, res) => {
 	const { id } = req.params
-	posts.remove(id).then(success => {
+	tags.remove(id).then(success => {
 		if (success) {
 			res.status(200);
 			res.json({ success });
 			}
 		else {
 			res.status(404);
-			res.json({ message: "The post with the specified ID does not exist." })
+			res.json({ message: "The tag with the specified ID does not exist." })
 		}
 	})
 		.catch(error => {
 			res.status(500);
-			res.json({ error: "The post could not be removed." });
+			res.json({ error: "The tag could not be removed." });
 			})
 	})
-*/
 
 server.listen(port, () => console.log(`Server running on port ${port}`));
