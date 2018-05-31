@@ -8,6 +8,23 @@ const error = (res, statusCode, message) => {
 }
 
 /*************************
+** ROUTE: / **
+*************************/
+// insert
+router.post('/', (req, res) => {
+  const { name } = req.body;
+  const user = { name };
+  db.insert(user)
+    .then(data => {
+      if (!name) {
+        return error(res, 400, 'Please provide a name before attempting to create a new user');
+      }
+      res.json(data);
+    })
+    .catch(err => error(res, 500, 'Could not process your request. If this issue persists, please contact the owner of the site'));
+});
+
+/*************************
 ** ROUTE: /:id **
 *************************/
 // get
@@ -62,22 +79,5 @@ router.delete('/:id', (req, res) => {
     })
     .catch(err => error(res, 500, 'Could not process your request. If this issue persists, please contact the owner of the site'));
 })
-
-/*************************
-** ROUTE: / **
-*************************/
-// insert
-router.post('/', (req, res) => {
-  const { name } = req.body;
-  const user = { name };
-  db.insert(user)
-    .then(data => {
-      if (!name) {
-        return error(res, 400, 'Please provide a name before attempting to create a new user');
-      }
-      res.json(data);
-    })
-    .catch(err => error(res, 500, 'Could not process your request. If this issue persists, please contact the owner of the site'));
-});
 
 module.exports = router;
