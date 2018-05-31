@@ -2,10 +2,11 @@ const express = require('express');
 const router = express.Router();
 
 const db = require('../data/helpers/userDb');
+const error = require('./helpers/error');
 
-const error = (res, statusCode, message) => {
-  res.status(statusCode).json({ error: message });
-}
+// const error = (res, statusCode, message) => {
+//   res.status(statusCode).json({ error: message });
+// }
 
 /*************************
 ** ROUTE: / **
