@@ -229,10 +229,111 @@ server.delete('/api/posts/:id', (req, res) => {
         .remove(id)
         .then(response => {
             if(response === 0) {
-                sendUserError(404, `The user with the ID ${id} does not exist.`, res);
+                sendUserError(404, `The post with the ID ${id} does not exist.`, res);
                 return;
             }
-            res.json({ success: `User with ID ${id} removed`});
+            res.json({ success: `Post with ID ${id} removed`});
+        })
+        .catch(error => {
+            sendUserError(500, `There was an error processing your request`, res);
+            return;
+        });
+});
+
+
+
+
+
+
+
+// Tags API
+
+server.get('/api/tags', (req, res) => {
+    tags
+        .get()
+        .then(tags => {
+            res.json({ tags });
+        })
+        .catch(error => {
+            sendUserError(500, `There was an error processing your request`, res);
+            return;
+        });
+});
+
+server.get('/api/tags/:id', (req, res) => {
+    const { id } = req.params;
+    tags
+        .get(id)
+        .then(tag => {
+            if (tag === undefined) {
+                sendUserError(404, `The tag with the ID ${id} does not exist.`, res);
+                return;
+            }
+            res.json(tag);
+        })
+        .catch(error => {
+            sendUserError(500, `There was an error processing your request`, res);
+            return;
+        });
+});
+
+server.post('/api/tags', (req, res) => {
+    const { tag } = req.body;
+    if(!tag) {
+        sendUserError(400, `Must provide tag text for a new tag`, res);
+        return;
+    }
+    tags
+        .insert({tag})
+        .then(response => {
+            res.status(201).json(response);
+        })
+        .catch(error => {
+            sendUserError(500, `There was an error processing your request`, res);
+            return;
+        });
+});
+
+server.put('/api/tags/:id', (req, res) => {
+    const { id } = req.params;
+    const { tag } = req.body;
+    if (!tag) {
+        sendUserError(400, `The tag must have text`, res);
+        return;
+    }
+    tags
+        .update(id, {tag})
+        .then(tag => {
+            if(tag === 0) {
+                sendUserError(404, `The tag with the ID ${id} does not exist.`, res);
+                return;
+            }
+            tags
+                .get(id)
+                .then(tag => {
+                    res.json(tag);
+                })
+                .catch(error => {
+                    sendUserError(500, `There was an error processing your request`, res);
+                    return;
+                })
+        })
+        .catch(error => {
+            sendUserError(500, `There was an error processing your request`, res);
+            return;
+        });
+});
+
+server.delete('/api/tags/:id', (req, res) => {
+    const { id } = req.params;
+    tags
+        .remove(id)
+        .then(response => {
+            if(response === 0) {
+                sendUserError(404, `The tag with the ID ${id} does not exist.`, res);
+                return;
+            }
+            res.json({ success: `Tag with ID ${id} removed`});
         })
         .catch(error => {
             sendUserError(500, `There was an error processing your request`, res);
