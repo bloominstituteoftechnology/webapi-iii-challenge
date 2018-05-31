@@ -52,7 +52,7 @@ server.post('/api/users', (req, res) => {
         })
         .catch(error => {
             res.status(500)
-            res.json({ message: "The user information could not be retrieved." })
+            res.json({ message: "The user information could not be added." })
         })   
 }})
 server.put('/api/users/:id', (req, res) => {
@@ -92,7 +92,24 @@ server.delete('/api/users/:id', (req, res) => {
             res.json({ error: "The user could not be removed" })
         })
 })
-
+server.get('/api/users/:id/posts', (req, res) => {
+    const { id } = req.params;
+    users
+    .getUserPosts(id) 
+    .then(posts => {
+        if(posts.length == undefined) {
+            res.status(404)
+            res.json({ message: "No user posts found." })
+        }
+        else {
+            res.json({ posts });
+        }
+    })
+    .catch(error => {
+        res.status(500)
+        res.json({ error: "The user posts information could not be retrieved." })
+    })
+})
 
 //posts
 server.get('/api/posts', (req, res) => {
@@ -137,7 +154,7 @@ else {
     })
     .catch(error => {
         res.status(500)
-        res.json({ message: "The post information could not be retrieved." })
+        res.json({ message: "The post information could not be added." })
     })
 }})
 server.put('/api/posts/:id', (req, res) => {
@@ -174,25 +191,25 @@ server.delete('/api/posts/:id', (req, res) => {
         })
         .catch(error => {
             res.status(500)
-            res.json({ error: "The post could not be removed" })
+            res.json({ error: "The post could not be removed." })
         })
 })
 server.get('/api/posts/:id/tags', (req, res) => {
     const { id } = req.params;
     posts
     .getPostTags(id) 
-    .then(tags => {
-        if(tags.length == undefined) {
+    .then(tag => {
+        if(tag.length == undefined) {
             res.status(404)
-            res.json({ message: "No tags found." })
+            res.json({ message: "No post tags found." })
         }
         else {
-            res.json({ tags });
+            res.json({ tag });
         }
     })
     .catch(error => {
         res.status(500)
-        res.json({ error: "The tags could not be removed" })
+        res.json({ error: "The post tag information could not be found." })
     })
 })
 
@@ -240,7 +257,7 @@ server.post('/api/tags', (req, res) => {
         })
         .catch(error => {
             res.status(500)
-            res.json({ message: "The tag information could not be retrieved." })
+            res.json({ message: "The tag information could not be added." })
         })  
 }})
 server.put('/api/tags/:id', (req, res) => {
@@ -251,7 +268,7 @@ server.put('/api/tags/:id', (req, res) => {
         .then(tag => {
             if (!tag) {
                 res.status(404);
-                res.json({ message: "The post with the specified ID does not exist." })
+                res.json({ message: "The tag with the specified ID does not exist." })
             } 
             else {
                 res.json({ tag })
@@ -259,7 +276,7 @@ server.put('/api/tags/:id', (req, res) => {
         })
         .catch(error => {
             res.status(500)
-            res.json({ error: "The post information could not be modified."});
+            res.json({ error: "The tag information could not be modified." });
         })
 })
 server.delete('/api/tags/:id', (req, res) => {
@@ -269,7 +286,7 @@ server.delete('/api/tags/:id', (req, res) => {
     .then(tag => {
         if (!tag) {
             res.status(404);
-            res.json({ message: "The user with the specified ID does not exist." })
+            res.json({ message: "The tag with the specified ID does not exist." })
         } 
         else {
             res.json({ tag })
@@ -277,7 +294,7 @@ server.delete('/api/tags/:id', (req, res) => {
     })
     .catch(error => {
         res.status(500)
-        res.json({ error: "The user could not be removed" })
+        res.json({ error: "The tag could not be removed." })
     })
 })
 
