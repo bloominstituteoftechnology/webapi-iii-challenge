@@ -13,6 +13,7 @@ module.exports = {
       const promises = [query, this.getPostTags(id)]; // [ posts, tags ]
 
       return Promise.all(promises).then(function(results) {
+        console.log(`postDb.js results:`,results);
         let [posts, tags] = results;
         let post = posts[0];
         post.tags = tags.map(t => t.tag);
