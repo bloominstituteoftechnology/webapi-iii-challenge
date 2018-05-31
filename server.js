@@ -179,6 +179,21 @@ server.post('/api/posts', (req, res) => {
         })
 })
 
+server.delete('/api/posts/:id', (req, res) => {
+    posts
+        .remove(req.params.id)
+        .then(post => {
+            if(post === 0){
+                sendUserError(404, 'The post with specified id does not exist', res);
+            } else {
+                res.json({ success: `Post with id ${req.params.id} has been removed from system`});
+            }
+        })
+        .catch(err => {
+            sendUserError(500, "The post could not be removed", res)
+        })
+})
+
 
 //TAGS
 server.get('/api/tags', (req, res) => {
@@ -218,6 +233,21 @@ server.post('/api/tags', (req, res) => {
         })
         .catch(err => {
             sendUserError(500, 'There was an error creating the tag', res)
+        })
+})
+
+server.delete('/api/tags/:id', (req, res) => {
+    tags
+        .remove(req.params.id)
+        .then(tag => {
+            if(tag === 0){
+                sendUserError(404, 'The tag with specified id does not exist', res);
+            } else {
+                res.json({ success: `Tag with id ${req.params.id} has been removed from system`});
+            }
+        })
+        .catch(err => {
+            sendUserError(500, "The tag could not be removed", res)
         })
 })
 
