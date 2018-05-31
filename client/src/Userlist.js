@@ -1,7 +1,4 @@
 import React, { Component } from 'react';
-import { Route } from 'react-router-dom';
-import logo from './logo.svg';
-import './App.css';
 import { Table } from 'reactstrap';
 import axios from 'axios';
 
