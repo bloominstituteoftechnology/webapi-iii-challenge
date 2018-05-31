@@ -9,6 +9,6 @@ app.use(express.json());
 app.use(cors());
 app.use('/api/users', api.usersRoutes);
 app.use('/api/posts', api.postsRoutes);
-// app.use('/api/tags', api.tagsRoutes);
+app.use('/api/tags', api.tagsRoutes);
 
 app.listen(port, () => console.log(`Server listening on port: ${ port }`));
