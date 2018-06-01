@@ -23,7 +23,7 @@ router.get('/:id', (req, res) => {
         if(user) {
             res.json(user)
         } else {
-        res.status(404).json({errorMessage: `User with ${id} does not exist`})
+        res.status(404).json({errorMessage: `User with id ${id} does not exist`})
         }
     })
     .catch(error => {
@@ -52,6 +52,25 @@ router.post('/', (req, res) => {
         return;
         });
 });
+
+// DELETE REQUEST
+router.delete('/:id', (req, res) => {
+    const { id } = req.params;
+
+    usersDB
+        .remove(id)
+        .then(response => {
+            // console.log(response) // 1 if deleted, 0 if not deleted
+            if(response) { // if no record was deleted, response is 0...0 evaluates to false
+                res.json({success: `User with id ${id} was deleted successfully.`})
+            } else {
+                res.status(404).json({errorMessage: `User with id ${id} does not exist`})
+            }  
+        })
+        .catch(error => {
+            res.status(500).json({errorMessage: 'There was an error while deleting the user. Please try again.'})
+        })
+})
 
 
 

@@ -13,7 +13,7 @@ const usersRoutes = require('./users/usersRoutes');
 // const tagsRoutes = require('./tags/tagsRoutes');
 
 // route handlers
-server.use('/users', usersRoutes);
+server.use('/api/users', usersRoutes);
 // server.use('/api/tags', tagsRoutes);
 // server.use('/api/posts', postsRoutes);
 
