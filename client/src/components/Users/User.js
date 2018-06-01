@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 
 class User extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: {}
+      user: {},
+      posts: []
     }
   }
   
@@ -13,20 +15,36 @@ class User extends Component {
       const id = Number(this.props.match.params.id);
       for (let user of this.props.users) {
         if (id === user.id) {
-          this.setState({ user });
+          // this.setState({ user });
+          axios.get(`http://localhost:5000/api/users/${ id }/posts`)
+            .then(({ data: posts }) => {
+              this.setState({ user, posts });
+            })
+            .catch(err => console.log(err));
         }
       }
     }
   }
   
   render() {
-    console.log(this.state.user);
+    console.log(this.state);
     return (
       <ul>
         {
           (this.props.match)
           ?
-            <li>{ this.state.user.name }</li>
+            <React.Fragment>
+              <li>{ this.state.user.name }</li>
+              <ul>
+                {
+                  this.state.posts.map(post => {
+                    return (
+                      <li key={ post.id }>{ post.text }</li>
+                    )
+                  })
+                }
+              </ul>
+            </React.Fragment>
           :
             <li>{ this.props.name }</li>
         }
