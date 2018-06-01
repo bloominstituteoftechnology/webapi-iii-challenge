@@ -15,7 +15,7 @@ const updateTag = require('./updateTag');
 tags.post('/', middleware.getTags, middleware.validateRequestData, createTag);
 tags.get('/', getAllTags);
 tags.get('/:id', getSingleTag);
-tags.put('/:id', updateTag);
+tags.put('/:id', middleware.getTags, middleware.validateRequestData, updateTag);
 tags.delete('/:id', deleteTag);
 
 module.exports = tags;
