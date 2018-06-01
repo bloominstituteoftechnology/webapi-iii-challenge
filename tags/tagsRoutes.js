@@ -5,7 +5,7 @@ const tagsDB = require('../data/helpers/tagDb');
 const router = express.Router();
 
 const clickWatchLogger = require("../data/middleware/clickWatchLogger.js");
-// const upperCase = require('../data/middleware/upperCase.js');
+const upperCase = require('../data/middleware/upperCase.js');
 
 const sendError = (status, message, res) => {
   res.status(status).json({ errorMessage: message });
@@ -38,7 +38,7 @@ router.post('/', clickWatchLogger, (req, res) => {
   };
 });
 
-router.get('/', clickWatchLogger, (req, res) => {
+router.get('/', clickWatchLogger, upperCase, (req, res) => {
   tagsDB
     .get()
     .then(tags => {
