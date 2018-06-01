@@ -14,6 +14,9 @@ const errorHandler = (status, message, res) => {
   return res.status(status).json({ error: message });
 };
 
+//Middleware
+getUserPosts = (req, res, next) => {};
+
 //CRUD Operations: Users
 server.get("/api/users", (req, res) => {
   users
@@ -312,6 +315,54 @@ server.put("/api/tags/:id", (req, res) => {
         errorHandler(500, "The tag could not be updated.", res);
       });
   }
+});
+
+//Retrieve the list of posts for a user
+server.get("/api/users/:id/posts", (req, res) => {
+  const { id } = req.params;
+  users
+    .getUserPosts(id)
+    .then(posts => {
+      if (posts.length === 0) {
+        errorHandler(
+          404,
+          "The user with the specified id does not exist.",
+          res
+        );
+      } else {
+        res.json({ posts });
+      }
+    })
+    .catch(error => {
+      errorHandler(
+        500,
+        "The posts could not be retrieved for the user with this id."
+      );
+    });
+});
+
+//Retrieve the list of tags for a post
+server.get("/api/posts/:id/tags", (req, res) => {
+  const { id } = req.params;
+  posts
+    .getPostTags(id)
+    .then(tags => {
+      if (tags.length === 0) {
+        errorHandler(
+          404,
+          "The post with the specified id does not exist.",
+          res
+        );
+      } else {
+        res.json({ tags });
+      }
+    })
+    .catch(error => {
+      errorHandler(
+        500,
+        "The tags could not be retrieved for the posts with this id."
+      );
+    });
 });
 
 server.listen(5000, () => console.log("Server started at port 5000"));
