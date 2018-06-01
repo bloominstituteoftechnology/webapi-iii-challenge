@@ -10,7 +10,7 @@ exports.seed = function(knex, Promise) {
         { name: 'Mithrandir' }, // 5
         { name: 'Boromir' }, // 6
         { name: 'Legolas' }, // 7
-        { name: 'Gimly' }, // 8
+        { name: 'Gimli' }, // 8
         { name: 'Aragorn' }, // 9
       ]);
     });
