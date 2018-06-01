@@ -9,7 +9,7 @@ server.use(express.json());
 // server.use(cors({ origin: "http://localhost:3001" }));
 
 // middleware
-const clickWatchLogger = require('./data/middleware');
+const clickWatchLogger = require('./data/middleware/clickWatchLogger.js');
 // import sub-applications
 const usersRoutes = require('./users/usersRoutes');
 const tagsRoutes = require("./tags/tagsRoutes");

@@ -4,7 +4,7 @@ const usersDB = require('../data/helpers/userDb');
 
 const router = express.Router();
 
-const clickWatchLogger = require('../data/middleware');
+const clickWatchLogger = require('../data/middleware/clickWatchLogger.js');
 
 const sendError = (status, message, res) => {
   res.status(status).json({ errorMessage: message });

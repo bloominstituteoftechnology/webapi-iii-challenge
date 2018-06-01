@@ -4,7 +4,8 @@ const tagsDB = require('../data/helpers/tagDb');
 
 const router = express.Router();
 
-const clickWatchLogger = require("../data/middleware/");
+const clickWatchLogger = require("../data/middleware/clickWatchLogger.js");
+// const upperCase = require('../data/middleware/upperCase.js');
 
 const sendError = (status, message, res) => {
   res.status(status).json({ errorMessage: message });
