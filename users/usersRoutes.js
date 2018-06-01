@@ -21,6 +21,7 @@ router.get('/:id', (req, res) => {
     const { id } = req.params;
     usersDB.get(id)
     .then(user => {
+        console.log(user)
         if(user) {
             res.json(user)
         } else {
@@ -28,7 +29,7 @@ router.get('/:id', (req, res) => {
         }
     })
     .catch(error => {
-        res.status(500).json({errorMessage: 'There was an error while retrieving the list of users.'})
+        res.status(500).json({errorMessage: 'There was an error while retrieving the user.'})
     })
 })
 
