@@ -51,7 +51,7 @@ server.get('/api/users/:id', (req, res) => {
     users.get(id)
         .then(user => {
             if (!user) {
-                res.status(404).json({ errorMessage: `No user with id of ${id}` });
+                res.status(404).json({ errorMessage: `No user found with id of ${id}` });
                 return;
             }
             res.json({ user })
@@ -66,13 +66,13 @@ server.get('/api/posts/:id', (req, res) => {
     posts.get(id)
         .then(post => {
             if (post.length === 0) {
-                res.status(404).json({ errorMessage: `No pot with id of ${id}` });
+                res.status(404).json({ errorMessage: `No post found with id of ${id}` });
                 return;
             }
             res.json({ post })
         })
         .catch(err => {
-            res.json({ errorMessage: `No post with id of ${id}` })
+            res.json({ errorMessage: `No post found with id of ${id}` })
         })
 });
 
@@ -81,7 +81,7 @@ server.get('/api/tags/:id', (req, res) => {
     tags.get(id)
         .then(tag => {
             if (!tag) {
-                res.status(404).json({ errorMessage: `No tag with id of ${id}` });
+                res.status(404).json({ errorMessage: `No tag found with id of ${id}` });
                 return;
             }
             res.json({ tag })
@@ -99,7 +99,7 @@ server.get('/api/users/:id/posts', (req, res) => {
     users.getUserPosts(id)
         .then(posts => {
             if (posts.length === 0) {
-                res.status(404).json({ errorMessage: `No posts under id of ${id}` });
+                res.status(404).json({ errorMessage: `No posts found under id of ${id}` });
                 return;
             }
             res.json({ posts })
@@ -114,7 +114,7 @@ server.get('/api/posts/:id/tags', (req, res) => {
     posts.getPostTags(id)
         .then(tags => {
             if (!tags.length) {
-                res.status(404).json({ errorMessage: `No tags under id of ${id}` });
+                res.status(404).json({ errorMessage: `No tags found under id of ${id}` });
                 return;
             }
             res.json({ tags })
@@ -178,8 +178,13 @@ server.post('/api/tags', (req, res) => {
 
 server.delete('/api/users', (req, res) => {
     let { id } = req.body;
+
     users.remove(id)
         .then(num => {
+            if(num === 0) {
+                res.status(404).json({ errorMessage: `No user found with id of ${id}` });
+                return;
+            }
             res.json({ num })
         })
         .catch(err => {
@@ -191,6 +196,10 @@ server.delete('/api/posts', (req, res) => {
     let { id } = req.body;
     posts.remove(id)
         .then(num => {
+            if(num === 0) {
+                res.status(404).json({ errorMessage: `No post found with id of ${id}` });
+                return;
+            }
             res.json({ num })
         })
         .catch(err => {
@@ -202,6 +211,10 @@ server.delete('/api/tags', (req, res) => {
     let { id } = req.body;
     tags.remove(id)
         .then(num => {
+            if(num === 0) {
+                res.status(404).json({ errorMessage: `No tag found with id of ${id}` });
+                return;
+            }
             res.json({ num })
         })
         .catch(err => {
@@ -215,6 +228,10 @@ server.delete('/api/tags', (req, res) => {
 server.put('/api/users/:id', (req, res) => {
     let { id } = req.params;
     let { name } = req.body;
+    if (!name) {
+        res.status(400).json({ errorMessage: `Please provide a new name for the user` });
+        return;
+    }
     users.update(id, { name })
         .then(count => {
             res.json({ count })
@@ -227,6 +244,10 @@ server.put('/api/users/:id', (req, res) => {
 server.put('/api/posts/:id', (req, res) => {
     let { id } = req.params;
     let { userId, text } = req.body;
+    if (!text) {
+        res.status(400).json({ errorMessage: `Please provide new text for the post` });
+        return;
+    }
     posts.update(id, { userId, text })
         .then(count => {
             res.json({ count })
@@ -239,6 +260,10 @@ server.put('/api/posts/:id', (req, res) => {
 server.put('/api/tags/:id', (req, res) => {
     let { id } = req.params;
     let { tag } = req.body;
+    if (!tag) {
+        res.status(400).json({ errorMessage: `Please provide a new tag` });
+        return;
+    }
     tags.update(id, { tag })
         .then(count => {
             res.json({ count })
