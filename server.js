@@ -172,7 +172,7 @@ server.put('/api/tags/:id', (req, res) => {
     })
 })
 
-server.get("/api/users/:id/posts", (req, res) => {
+server.get('/api/users/:id/posts', (req, res) => {
     const { id } = req.params;
     console.log(id);
     userDb
@@ -184,7 +184,22 @@ server.get("/api/users/:id/posts", (req, res) => {
         res.status(500).json({ message: "no posts found for this user" });
       });
   });
-
+  
+  
+  //tag list
+  server.get('/api/posts/:id', (req, res) => {
+    const id = req.params.id;
+    postDb
+    .getPostTags(id)
+    .then(response => {
+        console.log(response);
+        console.log(id);
+        res.status(200).json({ response })
+    })
+    .catch(err => {
+        res.status(500).json({ Error: err })
+    })
+})
 
 
 
