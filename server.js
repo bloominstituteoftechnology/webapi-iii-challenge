@@ -20,29 +20,31 @@ server.use(express.json());
 
 server.use(cors());
 
-+server.get('/', (req, res) => {
+server.get('/', (req, res) => {
     	res.send('Hello, David');
     })
 
 
-//****************postDb****************************
-+server.post('/api/posts', (req,res) => {
+//****************postDb-crud****************************
+server.post('/api/posts', (req, res) => {
+    const { text, userId } = req.body;
+
     	if (!req.body.userId || !req.body.text) {
     		res.status(400).json({ errorMessage: "Please provide userId and text for the post." });
     	}
     	else {
     
-    	const { text, userId } = req.body;
     	posts.insert({ text, userId })
     		.then(response => {
+                console.log(response.id);
     			res.status(201);
-    			posts.get(response.id)
+    			posts.get(response.id) 
     				.then(posts => {
     					res.json({ posts });
     				});
     		})
     			.catch(error => {
-    				res.status(500).json({ error: "There was an error saving the post to the database."});
+    				res.status(500).json({ error});
     			})
     	}
     })
@@ -58,7 +60,7 @@ server.use(cors());
     
     server.get('/api/posts/:id', (req, res) => {
     	const { id } = req.params;
-    	posts.get(req.params.id).then(posts => {
+    	posts.get(id).then(posts => {
     		if (posts) {
     			res.json({ posts });
     		}
@@ -115,26 +117,26 @@ server.use(cors());
     			})
     	})
     
-    // **********userDb**********************
+    // **********userDb-crud**********************
     server.post('/api/users', (req,res) => {
-    	if (!req.body.name) {
-    		res.status(400).json({ errorMessage: "Please provide user name." });
-    	}
-    	else {
+        if (!req.body.name) {
+            res.status(400).json({ errorMessage: "Please provide user name." });
+        }
+        else {
     
-    	const { name } = req.body;
-    	users.insert({ name })
-    		.then(response => {
-    			res.status(201);
-    			users.get(response.id)
-    				.then(users => {
-    					res.json({ users });
-    				});
-    		})
-    			.catch(error => {
-    				res.status(500).json({ error: "There was an error saving the user to the database."});
-    			})
-    	}
+        const { name } = req.body;
+        users.insert({ name })
+            .then(response => {
+                res.status(201);
+                users.get(response.id)
+                    .then(users => {
+                        res.json({ users });
+                    });
+            })
+                .catch(error => {
+                    res.status(500).json({ error: "There was an error saving the user to the database."});
+                })
+        }
     })
     
     server.get('/api/users', (req, res) => {
@@ -163,31 +165,27 @@ server.use(cors());
     
     server.put('/api/users/:id', (req, res) => {
     	const { name } = req.body;
-    	const id = req.params.id;
-    
+    	const id = req.params.id;    
     	if (!name) {
     		res.status(400).json({ errorMessage: "Please provide the name for the user." });
-    	}
-    	else {
-    		users.update( id, { name } ).then(success => {
+            return;
+    	}    	
+    		users.update( id, { name }).then(success => {
     			if (success) {
     				res.status(200);
     			users.get(id)
     					.then(users => {
     						res.json({ users });
     			});
-    		}
-    
-    			else {
+    		}    
+    		else {
     				res.status(404).json({ message: "The user with the specified ID does not exist." });
     			}
-    		}
-    		)
+    		})
     			.catch(error => {
-    				res.status(500);
-    				res.json({ error: "The user could not be found." });
+    				res.status(500).json({ errorMessage: `The user could not be found/n error${error}`});
     			})
-    }
+    
     })
     
     server.delete('/api/users/:id', (req, res) => {
@@ -205,4 +203,103 @@ server.use(cors());
     			res.status(500).json({ error: "The user could not be removed." });
     			})
     	})
+
+
+        //**********************tagDb-crud************************
+
+server.post('/api/tags', (req,res) => {
+	if (!req.body.tag) {
+		res.status(400).json({ errorMessage: "Please provide a name for the tag." });
+	}
+	else {
+
+	const { tag } = req.body;
+	tags.insert({ tag })
+		.then(response => {
+			res.status(201);
+			tags.get(response.id)
+				.then(tags => {
+					res.json({ tags });
+				});
+		})
+			.catch(error => {
+				res.status(500).json({ error: "There was an error saving the tag to the database."});
+			})
+	}
+})
+
+server.get('/api/tags', (req, res) => {
+	tags.get().then(tags => {
+		res.json({ tags });
+	})
+		.catch(error => {
+			res.status(500).json({ error: "The tag information could not be retrieved."});
+		})
+});
+
+server.get('/api/tags/:id', (req, res) => {
+	const { id } = req.params;
+	tags.get(req.params.id).then(tags => {
+		if (tags) {
+			res.json({ tags });
+		}
+		else {
+			res.status(404).json({ message: " The tag with the specified ID does not exist." });
+		}
+	})
+		.catch(error => {
+			res.status(500).json({ error: "The tag information could not be retrieved." });
+		})
+});
+
+server.put('/api/tags/:id', (req, res) => {
+	const { tag } = req.body;
+	const id = req.params.id;
+
+	if (!tag) {
+		res.status(400).json({ errorMessage: "Please provide tag name." });
+	}
+	else {
+		tags.update( id, { tag } ).then(success => {
+			if (success) {
+				res.status(200);
+				tags.get(id)
+					.then(tags => {
+						res.json({ tags });
+			});
+		}
+
+			else {
+				res.status(404).json({ message: "The tag with the specified ID does not exist." });
+			}
+		}
+		)
+			.catch(error => {
+				res.status(500).json({ error: "The tag could not be found." });
+			})
+}
+})
+
+server.delete('/api/tags/:id', (req, res) => {
+	const { id } = req.params;
+	tags.get(id)
+		.then((tag) => {
+			let deletedTag = tag
+			tags.remove(id).then(success => {
+				if (success) {
+					res.status(200);
+					res.json({ deletedTag });
+				}
+				else {
+					res.status(404).json({ message: "The tag with the specified ID does not exist." })
+				}
+			})
+		.catch(error => {
+			res.status(500).json({ error: "The tag could not be removed." });
+			})
+		})
+})
+
+
+
 server.listen(port, () => console.log(`Server running on port ${port}`));
