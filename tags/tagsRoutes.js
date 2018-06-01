@@ -11,14 +11,14 @@ const sendError = (status, message, res) => {
 router.post('/', (req, res) => {
   const newTag = req.body;
 
-  if (!newTag.tag || !newTag.tag.length > 0 || !newTag.tag.length < 80) {
+  if (!newTag.tag || newTag.tag.length < 0 || !newTag.tag.length > 80) {
     sendError(404, "Tag must be unique with 1 - 80 characters.");
     return;
   } else {
     tagsDB
       .insert(newTag)
       .then(tag => {
-        res.json(newTag);
+        res.json(tag);
       })
       .catch(error => {
         sendError(500, "Something went terribly wrong!", res);
@@ -32,6 +32,24 @@ router.get('/', (req, res) => {
     .get()
     .then(tags => {
       res.json(tags);
+    })
+    .catch(error => {
+      sendError(500, "Something went terribly wrong!", res);
+    });
+});
+
+router.get('/:id', (req, res) => {
+  const { id } = req.params;
+
+  tagsDB
+    .get(id)
+    .then(tag => {
+      if (tag) {
+        res.json(tag);
+      } else {
+        sendError(404, "Tag can not be found.", res);
+        return;
+      }
     })
     .catch(error => {
       sendError(500, "Something went terribly wrong!", res);
