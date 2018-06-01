@@ -10,6 +10,19 @@ const server = express();
 server.use(express.json());
 server.use(cors({ origin: "http://localhost:3000" }));
 
+// Middleware
+const tagUpperCase = (req, res, next) => {
+    tags
+    .get()
+    .then(tag => {
+        tag.map((tag, i) => {
+            tag.tag.toUpperCase();
+        })
+    })
+    next()
+};
+
+
 server.get('/', (req, res) => {
         res.json('Howdy!')
 });
@@ -29,7 +42,6 @@ server.get('/api/users/:id', (req, res) => {
     users
     .get(req.params.id)
     .then(response => {
-        console.log(response)
         if (!response) {
             res.status(404).json({ errorMessage: 'This User Does not Exist' })
         } else {
@@ -201,14 +213,11 @@ server.get('/api/tags', (req, res) => {
     })
 });
 server.get('/api/tags/:id', (req, res) => {
-    console.log(req.params.id)
     tags
     .get(req.params.id)
     .then(response => {
-        console.log(response)
         if (!response) {
             res.status(404).json({ errorMessage: 'This Tag Does not Exist' })
-            console.log(response);
         } else {
             res.status(200).json(response)
         }
