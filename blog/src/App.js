@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { Route } from 'react-router-dom';
 
+import Header from './components/Header';
 import Users from './components/Users';
 import Posts from './components/Posts';
 
-import logo from './logo.svg';
 import './App.css';
 
 
@@ -62,12 +62,12 @@ componentDidMount() {
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
+        <Header />
+        <Route exact path="/">
+          <h1>Keep is Secret you fool!</h1>
+        </Route>
         <Route path="/user" render={() => <Users users={this.state.users} />} />
-        <Route exact path="/" render={() => <Posts posts={this.state.posts} users={this.state.users} findUser={this.findUser} />} />
+        <Route exact path="/posts" render={() => <Posts posts={this.state.posts} users={this.state.users} findUser={this.findUser} />} />
 
       </div>
     );
