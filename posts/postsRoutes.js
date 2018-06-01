@@ -83,6 +83,49 @@ router.get('/:id', (req, res) => {
     });
 });
 
+router.put('/:id', (req, res) => {
+  const { id } = req.params;
+  const update = req.body;
 
+  if (!update.userId || update.text.length === 0) {
+    sendError(400, "User ID and text is required for post update.", res);
+  } else {
+    postsDB
+      .update(id, update)
+      .then(result => {
+        if (result === 0) {
+          sendError(404, "Cannot find post to update.", res);
+          return;
+        } else {
+          res.json(update);
+        }
+      })
+      .catch(error => {
+        sendError(500, "Something went terribly wrong!", res);
+      });
+  };
+});
+
+router.delete('/:id', (req, res) => {
+  const { id } = req.params;
+
+  postsDB
+    .get(id)
+    .then(post => {
+      postsDB
+        .remove(id)
+        .then(result => {
+          if (result === 0) {
+            sendError(404, "Post could not be found for destruction.", res);
+            return;
+          } else {
+            res.json(post);
+          }
+        })
+        .catch(error => {
+          sendError(500, "Something went terribly wrong!", res);
+        });
+    });
+});
 
 module.exports = router;
