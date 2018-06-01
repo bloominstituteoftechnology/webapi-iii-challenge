@@ -16,7 +16,7 @@ let errorHandler = (status, message, res) => {
 };
 
 app.get('/', (req, res) => {
-    res.send('Hello there.')
+    res.send('Server successfully started.')
 });
 
 
