@@ -44,6 +44,26 @@ router.get('/', (req, res) => {
     });
 });
 
-// server.get('/api/users/:id');
+router.get('/:id', (req, res) => {
+  const { id } = req.params;
+
+  usersDB
+    .get(id)
+    .then(user => {
+      if (user) {
+        res.json(user);
+      } else {
+        sendError(
+          404,
+          `The user id of ${id} was not found.`,
+          res
+        );
+        return;
+      }
+    })
+    .catch(error => {
+      sendError(500, "Something went terribly wrong!", res);
+    });
+});
 
 module.exports = router;
