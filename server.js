@@ -172,6 +172,7 @@ server.put('/api/tags/:id', (req, res) => {
     })
 })
 
+//posts list
 server.get('/api/users/:id/posts', (req, res) => {
     const { id } = req.params;
     console.log(id);
