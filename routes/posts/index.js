@@ -16,7 +16,7 @@ const updatePost = require('./updatePost');
 posts.post('/', middleware.getUsers, middleware.validateRequestData, createPost);
 posts.get('/', getAllPosts);
 posts.get('/:id', getSinglePost);
-posts.put('/:id', updatePost);
+posts.put('/:id', middleware.getUsers, middleware.validateRequestData, updatePost);
 posts.delete('/:id', deletePost);
 
 module.exports = posts;
