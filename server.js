@@ -25,7 +25,8 @@ Server Requests Below
 /***********
  USERS 
  **********/
- //GET
+ 
+//GET
 server.get(`/api/users`, (req, res) => {
     users
     .get()
@@ -57,21 +58,56 @@ server.get('/api/users/:id', (req, res) => {
     }
 })
 
-
 //POST
- server.post(`/api/users`, (req, res) => {
+server.post(`/api/users`, (req, res) => {
     const { name } = req.body
-    if (name) {
-
+    if (name === undefined) {
+        user.status(404)
+        user.json({ message: "The user with the specified ID does not exist." })
+    } else {
         users
         .insert({name})
         .then(res => {
             res.status(201).json({name})
         })
         .catch(error => {
-            res.status(500).json({message: "Please provide title and contents for the post."});
+            res.status(500).json({ error: "There was an error while saving the user to the database" })
         })
     }
  });
+
+//PUT
+server.put('/api/users/:id', (req, res) => {
+    const {text, userID} = req.body;
+    const {id} = req.params;
+    posts.update(req.params.id, req.body)
+    .then(post => {
+        if (!post){
+            res.status(404).json({ message: "The user with the specified ID does not exist." })
+        } else {
+            res.json({post})
+        }
+    })
+    .catch(error => {
+        res.status(500).json({ error: "The user information could not be modified." })
+    })
+})
+
+//DELETE
+server.delete('/api/users/:id', (req, res) => {
+    const {id} = req.params;
+    users
+    .remove(id)
+    .then(user => {
+        if(!user) {
+            res.status(404).json({ message: "The user with the specified ID does not exist." })
+        } else {
+            res.json({user})
+        }
+    })
+    .catch(error => {
+        res.status(500).json({ error: "The user information could not be modified." })
+    })
+})
 
 server.listen(port, () => console.log(`Server is running on port ${port}`));
