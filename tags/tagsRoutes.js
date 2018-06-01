@@ -42,7 +42,7 @@ router.get('/', clickWatchLogger, upperCase, (req, res) => {
   tagsDB
     .get()
     .then(tags => {
-      res.json(tags);
+      res.json(req.body.tags);
     })
     .catch(error => {
       sendError(
@@ -53,14 +53,14 @@ router.get('/', clickWatchLogger, upperCase, (req, res) => {
     });
 });
 
-router.get('/:id', clickWatchLogger, (req, res) => {
+router.get('/:id', clickWatchLogger, upperCase, (req, res) => {
   const { id } = req.params;
 
   tagsDB
     .get(id)
     .then(tag => {
       if (tag) {
-        res.json(tag);
+        res.json(req.body.tags);
       } else {
         sendError(
           404,

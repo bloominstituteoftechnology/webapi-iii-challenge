@@ -5,14 +5,24 @@ const sendError = (status, message, res) => {
 };
 
 const upperCase = (req, res, next) => {
+  const { id } = req.params;
   tagsDB
     .get()
-    .then(tags => { // tags is an array of objects
-      tags = tags.map(obj => {
-        return Object.assign({}, obj, { tag: obj["tag"].toUpperCase() });
-      });
-      console.log("tags: ", tags);
-      res.json(tags);
+    .then(tags => {
+      let tagsCopy;
+      if (id) {
+        tagsCopy = tags.filter(obj => {
+          return obj.id == id;
+        });
+        tagsCopy[0].tag = tagsCopy[0].tag.toUpperCase();
+        tagsCopy = tagsCopy[0];
+      } else {
+        tagsCopy = tags.map(obj => {
+          return Object.assign({}, obj, { tag: obj["tag"].toUpperCase() });
+        });
+      }
+      console.log("tags: ", tagsCopy);
+      req.body.tags = tagsCopy;
     })
     .catch(error => {
       sendError(
