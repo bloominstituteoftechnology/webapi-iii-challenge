@@ -15,7 +15,7 @@ const Users = props => {
         props.users.map(user => {
           return (
             <Link to={ `/${ user.id }` } key={ user.id }>
-              <User renderCorrectUser={ () => props.renderCorrectUser(user.id) } name={ user.name } />
+              <User name={ user.name } />
             </Link>
           );
         })

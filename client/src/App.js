@@ -10,18 +10,7 @@ import './App.css';
 class App extends Component {
   state = {
     users: [],
-    user: []
   };
-  
-  renderCorrectUser = id => {
-    const selectUser = [];
-    for (let user of this.state.users) {
-      if (id === user.id) {
-        selectUser.push(user);
-      }
-    }
-    this.setState({ user: [ ...selectUser ] }, () => console.log(this.state));
-  }
   
   componentDidMount() {
     axios.get('http://localhost:5000/api/users')
@@ -32,8 +21,8 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Route exact path='/' render={ props => <Users { ...props } users={ this.state.users } renderCorrectUser={ this.renderCorrectUser } /> } />
-        <Route path='/:id' component={ props => <User { ...props } user={ this.state.user } /> } />
+        <Route exact path='/' render={ props => <Users { ...props } users={ this.state.users } /> } />
+        <Route path='/:id' component={ props => <User { ...props } users={ this.state.users } /> } />
       </div>
     );
   }
