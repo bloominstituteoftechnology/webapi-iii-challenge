@@ -10,7 +10,7 @@ const sendError = (status, message, res) => {
   res.status(status).json({ errorMessage: message });
 };
 
-router.post('/', (req, res) => {
+router.post('/', clickWatchLogger, (req, res) => {
   const { id } = req.params;
   const newPost = req.body;
 
@@ -29,7 +29,7 @@ router.post('/', (req, res) => {
   };
 });
 
-router.get('/', (req, res) => {
+router.get('/', clickWatchLogger, (req, res) => {
   postsDB
     .get()
     .then(posts => {
@@ -41,7 +41,7 @@ router.get('/', (req, res) => {
 });
 
 // get posts by user tag id
-router.get('/userPosts/:id', (req, res) => {
+router.get('/userPosts/:id', clickWatchLogger, (req, res) => {
   const { id } = req.params;
 
   postsDB
@@ -65,7 +65,7 @@ router.get('/userPosts/:id', (req, res) => {
 });
 
 // get posts by post id
-router.get('/:id', (req, res) => {
+router.get('/:id', clickWatchLogger, (req, res) => {
   const { id } = req.params;
 
   postsDB
@@ -83,7 +83,7 @@ router.get('/:id', (req, res) => {
     });
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', clickWatchLogger, (req, res) => {
   const { id } = req.params;
   const update = req.body;
 
@@ -106,7 +106,7 @@ router.put('/:id', (req, res) => {
   };
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', clickWatchLogger, (req, res) => {
   const { id } = req.params;
 
   postsDB
