@@ -195,6 +195,53 @@ server.get('/api/posts/:id', (req, res) => {
     });
 });
 
+server.post('/api/posts', (req, res) => {
+    const { text, userId } = req.body;
+    if (!text ) {
+        res.status(400).json({ errorMessage: 'No text or id' });
+        return;
+    } 
+    posts
+        .insert({ text, userId })
+        .then(id => {
+            res.status(201).send(id)
+        })
+        .catch(err => {
+            console.log(err);
+    })
+})
+
+server.delete('/api/posts/:id', (req, res) => {
+    const { id } = req.params;
+    posts
+        .remove(id)
+        .then(count => {
+            if (count === 0) {
+                res.status(400).json({ errorMessage: 'Did not delete'});
+            } else {
+                res.status(201).json({message: 'successfully deleted'});
+            }
+    })
+})
+
+server.put('/api/posts/:id', (req, res) =>{
+    const { id } = req.params;
+    const { text } = req.body;
+    posts
+        .update(id, { text })
+        .then(count => {
+            if (count !== 1) {
+                res.status(400).json({errorMessage: "Did not update"});
+            } else {
+                res.status(210).json({id, text});
+            }
+        })
+        .catch(err => {
+            console.log(err);
+        })
+})
+
+
 
 
 server.listen(port, () => console.log(`Server running on port ${port}`));
