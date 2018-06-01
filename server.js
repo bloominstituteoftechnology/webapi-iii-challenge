@@ -202,25 +202,43 @@ server.put('/api/users/:id/posts/:postId', (req, res) => {
 /**********************
 **** Tag endpoints ****
 ***********************/
-server.get('/api/tags', (req, res) => {
-    tags.get()
-        .then( tags => {
-            res.status(200).json(tags)
-        })
-        .catch( error => {
-            res.status(500).json({ error: "Could not get tags" })
-        })
+const upperCaseMiddleWare = (req, res, next) => {
+    const { id } = req.params
+    id ? (
+        tags.get(id)
+            .then( tag => {
+                if (tag) {
+                    const capitalTag = { id: tag.id, tag: tag.tag.toUpperCase() }
+                    req.tag = capitalTag
+                    next()
+                } else {
+                    res.status(404).json({ userError: `Could not find tag with id ${id}` })
+                }
+            })
+            .catch( error => {
+                res.status(500).json({ error: `Could not find tag with id ${id}` })
+            })
+    ) : (
+        tags.get()
+            .then( tags => {
+                const capitalTags = tags.map( tag => {
+                    return {id: tag.id, tag: tag.tag.toUpperCase()}
+                })
+                req.tags = capitalTags
+                next()
+            })
+            .catch( error => {
+                res.status(500).json({ error: "Could not get tags" })
+            })
+    )
+}
+
+server.get('/api/tags', upperCaseMiddleWare, (req, res) => {
+    res.status(200).json(req.tags)
 })
 
-server.get('/api/tags/:id', (req, res) => {
-    const { id } = req.params
-    tags.get(id)
-        .then( tag => {
-            tag ? res.status(200).json(tag) : res.status(404).json({ userError: `Could not find tag with id ${id}` })
-        })
-        .catch( error => {
-            res.status(500).json({ error: `Could not find tag with id ${id}` })
-        })
+server.get('/api/tags/:id', upperCaseMiddleWare, (req, res) => {
+    res.status(200).json(req.tag)
 })
 
 server.post('/api/tags', (req, res) => {
@@ -228,7 +246,6 @@ server.post('/api/tags', (req, res) => {
     tag ? (
         tags.insert({ tag })
             .then( id => {
-                res.status(201)
                 tags.get(id.id)
                     .then( tag => {
                         tag ? res.status(200).json(tag) : res.status(404).json({ userError: `Could not find tag with id ${id.id}` })
