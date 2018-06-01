@@ -37,6 +37,23 @@ router.get('/:id', (req, res) => {
         })
 })
 
+// POST REQUEST
+router.post('/', (req, res) => {
+    const { userId, text } = req.body;
+    if (!userId || text.length === 0) {
+        res.status(400).json({errorMessage: "Missing userId or post text. Please try again."})
+    }
+
+    postsDB
+        .insert({userId, text})
+        .then(response => {
+            res.status(201).json(response)
+        })
+        .catch(error => {
+            res.status(500).json({errorMessage: 'The new post could not be added at this time. Please try again later.'})
+        })
+})
+
 
 
 module.exports = router;
