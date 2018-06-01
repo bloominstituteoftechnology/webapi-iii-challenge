@@ -12,12 +12,19 @@ server.use(express.json());
 server.use(cors({ origin: 'http://localhost:3000' }));
 
 const serverLogger = (req, res, next) => {
-  console.log(`\n\n\nIncoming Request:\n\nurl: ${req.url}\nmethod: ${req.method}\nbody:`);
+  console.log(`\n\n\nIncoming Request:\n\nurl: ${req.url}\n\nmethod: ${req.method}\n\nbody:`);
   console.log(req.body);
   next();
 }
 
 server.use(serverLogger)
+
+const upperCaseTags = (req, res, next) => {
+  if (req.body.tag) req.body.tag = req.body.tag.toUpperCase();
+  next();
+}
+
+server.use(upperCaseTags);
 
 
 
