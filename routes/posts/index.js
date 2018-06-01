@@ -1,0 +1,21 @@
+const posts = require('express').Router();
+
+// Middleware
+posts.use(require('express').json());
+
+// Requests
+const createPost = require('./createPost');
+const deletePost = require('./deletePost');
+const getAllPosts = require('./getAllPosts');
+const getSinglePost = require('./getSinglePost');
+const getTagsByPost = require('./getTagsByPost');
+const updatePost = require('./updatePost');
+
+// Routes
+posts.post('/', createPost);
+posts.get('/', getAllPosts);
+posts.get('/:id', getSinglePost);
+posts.put('/:id', updatePost);
+posts.delete('/:id', deletePost);
+
+module.exports = posts;
