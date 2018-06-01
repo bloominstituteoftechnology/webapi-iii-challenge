@@ -11,7 +11,11 @@ const sendError = (status, message, res) => {
 router.post('/', clickWatchLogger, (req, res) => {
   const { name } = req.body;
   if (name.length < 1 || name.length > 128) {
-    sendError(400, "Please provide a name that is between 1 and 128 characters long.", res);
+    sendError(
+      400,
+      "Please provide a name that is between 1 and 128 characters long.",
+      res
+    );
     return;
   }
   usersDB
@@ -64,7 +68,11 @@ router.get('/:id', clickWatchLogger, (req, res) => {
       }
     })
     .catch(error => {
-      sendError(500, "Something went terribly wrong!", res);
+      sendError(
+        500,
+        "Something went terribly wrong!",
+        res
+      );
     });
 });
 
@@ -78,19 +86,31 @@ router.get('/userposts/:id', clickWatchLogger, (req, res) => {
         usersDB.getUserPosts(id)
           .then(userPosts => {
             if (userPosts.length === 0) {
-              sendError(404, "The user's posts could not be found.", res);
+              sendError(
+                404,
+                "The user's posts could not be found.",
+                res
+              );
               return;
             } else {
               res.json(userPosts);
             }
           })
       } else {
-        sendError(404, "This user could not be found.", res);
+        sendError(
+          404,
+          "This user could not be found.",
+          res
+        );
         return;
       }
     })
     .catch(error => {
-      sendError(500, "Something went wrong with the server.", res);
+      sendError(
+        500,
+        "Something went wrong with the server.",
+        res
+      );
     });
 });
 
@@ -99,7 +119,11 @@ router.put('/:id', clickWatchLogger, (req, res) => {
   const update = req.body;
 
   if (!update.name || update.name.length === 0) {
-    sendError(400, "The user name could does not exist.", res);
+    sendError(
+      400,
+      "The user name could does not exist.",
+      res
+    );
     return;
   } else {
     usersDB
@@ -109,19 +133,31 @@ router.put('/:id', clickWatchLogger, (req, res) => {
           .update(id, update)
           .then(result => {
             if (result === 0) {
-              sendError(404, "Update not possible.", res);
+              sendError(
+                404,
+                "Update not possible.",
+                res
+              );
               return;
             } else {
               res.json(update);
             }
           })
           .catch(error => {
-            sendError(500, "Something went terribly wrong!", res);
+            sendError(
+              500,
+              "Something went terribly wrong!",
+              res
+            );
             return;
           })
       })
       .catch(error => {
-        sendError(500, "Critical server failure.", res);
+        sendError(
+          500,
+          "Critical server failure.",
+          res
+        );
       });
   };
 });
@@ -138,13 +174,21 @@ router.delete('/:id', clickWatchLogger, (req, res) => {
           if (result) {
             res.json(user);
           } else {
-            sendError(404, "User does not exist.", res);
+            sendError(
+              404,
+              "User does not exist.",
+              res
+            );
             return;
           }
         })
     })
     .catch(error => {
-      sendError(500, "Something went terribly wrong!", res);
+      sendError(
+        500,
+        "Something went terribly wrong!",
+        res
+      );
     });
 });
 
