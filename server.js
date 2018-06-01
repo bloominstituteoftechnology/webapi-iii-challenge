@@ -50,6 +50,10 @@ server.get('/api/users/:id', (req, res) => {
     let { id } = req.params;
     users.get(id)
         .then(user => {
+            if (!user) {
+                res.status(404).json({ errorMessage: `No user with id of ${id}`});
+                return;
+            }
             res.json({ user })
         })
         .catch(err => {
@@ -61,6 +65,10 @@ server.get('/api/posts/:id', (req, res) => {
     let { id } = req.params;
     posts.get(id)
         .then(post => {
+            if (post.length === 0) {
+                res.status(404).json({ errorMessage: `No post with id of ${id}`});
+                return;
+            }
             res.json({ post })
         })
         .catch(err => {
@@ -72,6 +80,10 @@ server.get('/api/tags/:id', (req, res) => {
     let { id } = req.params;
     tags.get(id)
         .then(tag => {
+            if (!tag) {
+                res.status(404).json({ errorMessage: `No tag with id of ${id}`});
+                return;
+            }
             res.json({ tag })
         })
         .catch(err => {
@@ -86,6 +98,10 @@ server.get('/api/users/:id/posts', (req, res) => {
     let { id } = req.params;
     users.getUserPosts(id)
         .then(posts => {
+            if (posts.length === 0) {
+                res.status(404).json({ errorMessage: `No posts under id of ${id}`});
+                return;
+            }
             res.json({ posts })
         })
         .catch(err => {
@@ -97,6 +113,10 @@ server.get('/api/posts/:id/tags', (req, res) => {
     let { id } = req.params;
     posts.getPostTags(id)
         .then(tags => {
+            if (tags.length === 0) {
+                res.status(404).json({ errorMessage: `No tags under id of ${id}`});
+                return;
+            }
             res.json({ tags })
         })
         .catch(err => {
