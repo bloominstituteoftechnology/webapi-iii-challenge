@@ -1,5 +1,4 @@
 const userEngagement = {};
-
 const clickWatchLogger = (req, res, next) => {
   const userAgent = req.headers['user-agent'];
   const host = req.headers.host;

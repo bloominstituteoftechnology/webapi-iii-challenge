@@ -2,11 +2,13 @@ const express = require('express');
 const usersDB = require('../data/helpers/userDb');
 const router = express.Router();
 
+const clickWatchLogger = require('../data/middleware');
+
 const sendError = (status, message, res) => {
   res.status(status).json({ errorMessage: message });
 };
 
-router.post("/", (req, res) => {
+router.post("/", clickWatchLogger, (req, res) => {
   const { name } = req.body;
   if (name.length < 1 || name.length > 128) {
     sendError(400, "Please provide a name that is between 1 and 128 characters long.", res);
@@ -28,7 +30,7 @@ router.post("/", (req, res) => {
     });
 });
 
-router.get('/', (req, res) => {
+router.get('/', clickWatchLogger, (req, res) => {
 
   usersDB
     .get()
@@ -44,7 +46,7 @@ router.get('/', (req, res) => {
     });
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', clickWatchLogger, (req, res) => {
   const { id } = req.params;
 
   usersDB
@@ -66,7 +68,7 @@ router.get('/:id', (req, res) => {
     });
 });
 
-router.get('/userposts/:id', (req, res) => {
+router.get('/userposts/:id', clickWatchLogger, (req, res) => {
   const { id } = req.params;
 
   usersDB
@@ -89,6 +91,59 @@ router.get('/userposts/:id', (req, res) => {
     })
     .catch(error => {
       sendError(500, "Something went wrong with the server.", res);
+    });
+});
+
+router.put('/:id', clickWatchLogger, (req, res) => {
+  const { id } = req.params;
+  const update = req.body;
+
+  if (!update.name || update.name.length === 0) {
+    sendError(400, "The user name could does not exist.", res);
+    return;
+  } else {
+    usersDB
+      .get(id)
+      .then(user => {
+        usersDB
+          .update(id, update)
+          .then(result => {
+            if (result === 0) {
+              sendError(404, "Update not possible.", res);
+              return;
+            } else {
+              res.json(update);
+            }
+          })
+          .catch(error => {
+            sendError(500, "Something went terribly wrong!", res);
+            return;
+          })
+      })
+      .catch(error => {
+        sendError(500, "Critical server failure.", res);
+      });
+  };
+});
+
+router.delete('/:id', clickWatchLogger, (req, res) => {
+  const { id } = req.params;
+
+  usersDB
+    .get(id)
+    .then(user => {
+      usersDB
+        .remove(id)
+        .then(result => {
+          if (result) {
+            res.json(user);
+          } else {
+            sendError(404, "User does not exist.", res);
+          }
+        })
+    })
+    .catch(error => {
+      sendError(500, "Something went terribly wrong!", res);
     });
 });
 

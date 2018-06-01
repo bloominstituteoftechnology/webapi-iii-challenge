@@ -9,7 +9,6 @@ server.use(express.json());
 
 // middleware
 const clickWatchLogger = require('./data/middleware');
-
 // import sub-applications
 const usersRoutes = require('./users/usersRoutes');
 // const tagsRoutes = require("./tags/tagsRoutes");
@@ -19,7 +18,6 @@ const usersRoutes = require('./users/usersRoutes');
 server.use('/users', usersRoutes);
 // server.use("/tags", tagsRoutes);
 // server.use("/posts", postsRoutes);
-
 server.use(clickWatchLogger);
 
 server.listen(port, () => console.log(`Server is running on port ${port}`));
