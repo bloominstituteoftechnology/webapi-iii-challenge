@@ -331,6 +331,124 @@ server.put("/api/posts/:id", (req, res) => {
         })
 })
 
+// Tags CRUD operations
+
+server.post('/api/tags', (req, res) => {
+    const { tag } = req.body;
+    if (!tag) {
+      sendUserError(400, 'Must provide a tag', res);
+      return;
+    }
+    tags
+        .insert(
+            {
+                tag
+            })
+        .then(response => {
+            tags
+                .get(response.id)
+                .then(tag => {
+                    if(tag.length === 0) {
+                        sendUserError(404, "The tag with the specified ID does not exist.", res);
+                        return;
+                    }
+                    res.status(201).json(tag);
+                })
+                .catch(error => {
+                    sendUserError(500, "The tag information could not be retrieved.", res)
+                })
+        })
+        .catch(error => {
+            sendUserError(500, '"There was an error while saving the tag to the database" ', res);
+        })
+})
+
+server.get("/api/tags", (req, res) => {
+    tags
+        .get()
+        .then(tags => {
+            res.json(tags);
+        })
+        .catch(error => {
+            sendUserError(500, "The posts information could not be retrieved.", res)
+        })
+})
+
+server.get("/api/tags/:id", (req, res) => {
+    const { id } = req.params;
+    tags
+        .get(id)
+        .then(tag => {
+            if(tag.length === 0) {
+                sendUserError(404,"The tag with the specified ID does not exist.", res);
+                return;
+            }
+            res.json(tag);
+        })
+        .catch(error => {
+            sendUserError(500, "The tag information could not be retrieved.", res)
+        })
+})
+
+server.delete("/api/tags/:id", (req, res) => {
+    const { id } = req.params;
+    tags
+        .get(id)
+        .then(tag => {
+            if(tag.length === 0) {
+                sendUserError(404,"The tag with the specified ID does not exist.", res);
+                return;
+            }
+            tags
+                .remove(id)
+                .then(isRemoved => {
+                    if(isRemoved === 0) {
+                        sendUserError(404, "The tag with the specified ID does not exist.", res);
+                        return;
+                    }
+                    res.json(tag);
+                })
+                .catch(error => {
+                    sendUserError(500, "The tag could not be removed", res);
+                })
+        })
+        .catch(error => {
+            sendUserError(500, "The tag information could not be retrieved.", res)
+    })   
+})
+
+server.put("/api/tags/:id", (req, res) => {
+    const { id } = req.params;
+    const { tag } = req.body;
+    if(!tag) {
+        sendUserError(400, "Please provide tag for the tag.", res);
+        return;
+    }
+    tags
+        .update(id, {tag})
+        .then(updated => {
+            if(!updated) {
+                sendUserError(404, "The tag with the specified ID does not exist.", res);
+                return;
+            }
+            tags
+                .get(id)
+                .then(tag => {
+                    if(tag.length === 0) {
+                        sendUserError(404,"The tag with the specified ID does not exist.", res);
+                        return;
+                    }
+                    res.json(tag);
+                })
+                .catch(error => {
+                    sendUserError(500, "The tag information could not be retrieved.", res)
+                })
+        })
+        .catch(error => {
+            sendUserError(500, "The tag information could not be modified.", res);
+        })
+})
+
 
 server.listen(port, () => console.log(`Server running on port ${port}`));
 
