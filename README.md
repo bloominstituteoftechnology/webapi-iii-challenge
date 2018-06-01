@@ -30,7 +30,7 @@ Use Node.js and Express to design and build an API that performs CRUD operations
 
 The `/data/helpers` folder includes helper files that you can use to manage the persistence of users, posts and tags data. These files are `userDb.js`, `postDb.js` and `tagDb.js`. All three of them publish the following api, that you can use to store, modify and retrieve each resource:
 
-* `get()`: calling find returns a promise that resolves to an array of all the resources contained in the database. If you pass an `id` to this method it will return the resource with that id if found.
+* `get()`: calling get returns a promise that resolves to an array of all the resources contained in the database. If you pass an `id` to this method it will return the resource with that id if found.
 * `insert()`: calling insert passing it a resource object will add it to the database and return an object with the id of the inserted resource. The object looks like this: `{ id: 123 }`.
 * `update()`: accepts two arguments, the first is the `id` of the resource to update and the second is an object with the `changes` to apply. It returns the count of updated records. If the count is 1 it means the record was updated correctly.
 * `remove()`: the remove method accepts an `id` as it's first parameter and, upon successfully deleting the resource from the database, returns the number of records deleted.

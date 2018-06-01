@@ -2,10 +2,11 @@ const db = require('../dbConfig.js');
 
 module.exports = {
   get: function(id) {
+    //let query = db('posts').where({ id: Number(id) })
     let query = db('posts as p');
 
     if (id) {
-      query
+      return query
         .join('users as u', 'p.userId', 'u.id')
         .select('p.text', 'u.name as postedBy')
         .where('p.id', id);
