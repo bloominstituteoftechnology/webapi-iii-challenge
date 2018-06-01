@@ -1,0 +1,23 @@
+export const FETCHING_USERS = 'FETCHING_USERS';
+export const USERS_FETCHED = 'USERS_FETCHED';
+export const FETCHING_USER_POSTS = 'FETCHING_USER_POSTS';
+export const USER_POSTS_FETCHED = 'USER_POSTS_FETCHED';
+export const ADDING_USER = 'ADDING_USER';
+export const USER_ADDED = 'USER_ADDED';
+export const USER_ERROR = 'USER_ERROR';
+
+export const FETCHING_TAGS = 'FETCHING_TAGS';
+export const TAGS_FETCHED = 'TAGS_FETCHED';
+export const ADDING_TAG = 'ADDING_TAG';
+export const TAG_ADDED = 'TAG_ADDED';
+export const TAG_ERROR = 'TAG_ERROR';
+
+export const FETCHING_POSTS = 'FETCHING_POSTS';
+export const POSTS_FETCHED = 'POSTS_FETCHED';
+export const FETCHING_POST = 'FETCHING_POST';
+export const POST_FETCHED = 'POST_FETCHED';
+export const FETCHING_POST_TAGS = 'FETCHING_POST_TAGS';
+export const POST_TAGS_FETCHED = 'POST_TAGS_FETCHED';
+export const ADDING_POST = 'ADDING_POST';
+export const POST_ADDED = 'POST_ADDED';
+export const POST_ERROR = 'POST_ERROR';
