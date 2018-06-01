@@ -2,7 +2,7 @@
 // cors
 
 const express = require('express');
-const cors = require('cors');
+// const cors = require('cors');
 
 // database helpers
 // const posts = require('./data/helpers/postDb.js')
@@ -12,6 +12,8 @@ const cors = require('cors');
 const usersDb = require('./data/helpers/userDb.js');
 const postsDb = require('./data/helpers/postDb.js');
 const tagsDb = require('./data/helpers/tagDb.js');
+
+// Initialize server
 
 const port = 5353;
 const server = express();
