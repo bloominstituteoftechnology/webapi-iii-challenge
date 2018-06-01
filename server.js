@@ -19,7 +19,7 @@ const tagUpperCase = (req, res, next) => {
             tag.tag.toUpperCase();
         })
     })
-    next()
+    next();
 };
 
 
@@ -202,7 +202,7 @@ server.put('/api/posts/:id', (req, res) => {
     }
 })
 //Tags
-server.get('/api/tags', (req, res) => {
+server.get('/api/tags', tagUpperCase, (req, res) => {
     tags
     .get()
     .then(response => {
@@ -212,7 +212,7 @@ server.get('/api/tags', (req, res) => {
         res.json(error)
     })
 });
-server.get('/api/tags/:id', (req, res) => {
+server.get('/api/tags/:id', tagUpperCase, (req, res) => {
     tags
     .get(req.params.id)
     .then(response => {
@@ -226,7 +226,7 @@ server.get('/api/tags/:id', (req, res) => {
         res.status(500).json({ error: 'The Tag Could Not Be Retrieved' })
     })
 })
-server.post('/api/tags/', (req, res) => {
+server.post('/api/tags/', tagUpperCase, (req, res) => {
     const { tag } = req.body;
     if (tag) {
         tags
@@ -241,7 +241,7 @@ server.post('/api/tags/', (req, res) => {
         res.status(400).json({ errorMessage: "Please provide a tag"})
     }
 })
-server.delete('/api/tags/:id', (req, res) => {
+server.delete('/api/tags/:id', tagUpperCase, (req, res) => {
     tags
     .remove(req.params.id)
     .then(response => {
@@ -255,7 +255,7 @@ server.delete('/api/tags/:id', (req, res) => {
         res.status(500).json({ error: "The tag could not be removed" })
     })
 })
-server.put('/api/tags/:id', (req, res) => {
+server.put('/api/tags/:id', tagUpperCase, (req, res) => {
     const { tag } = req.body;
     if (tag) {
         tags
