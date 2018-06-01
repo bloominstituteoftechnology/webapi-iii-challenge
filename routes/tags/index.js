@@ -1,6 +1,7 @@
 const tags = require('express').Router();
 
 // Middleware
+const middleware = require('./helpers');
 tags.use(require('express').json());
 
 // Requests
@@ -11,7 +12,7 @@ const getSingleTag = require('./getSingleTag');
 const updateTag = require('./updateTag');
 
 // Routes
-tags.post('/', createTag);
+tags.post('/', middleware.getTags, middleware.validateRequestData, createTag);
 tags.get('/', getAllTags);
 tags.get('/:id', getSingleTag);
 tags.put('/:id', updateTag);
