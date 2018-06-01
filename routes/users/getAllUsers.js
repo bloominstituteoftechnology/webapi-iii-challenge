@@ -1,8 +1,7 @@
 const users = require('../../data/helpers/userDb');
 
 module.exports = (req, res) => {
-  users
-    .get()
+  users.get()
     .then(users => {
       res.status(200).json(users);
     })
