@@ -159,13 +159,13 @@ server.get('/api/posts/:id', (req, res) => {
         });
 });
 
-server.get('/api/posts/:id/tags', (req, res) => {
+server.get('/api/posts/:id/posts', (req, res) => {
     const { id } = req.params;
     posts
         .getPostTags(id)
-        .then(tags => {
-            if(tags.length === 0) {
-                sendUserError(404, `The post with the ID ${id} has no tags.`, res);
+        .then(post => {
+            if(post.length === 0) {
+                sendUserError(404, `The post with the ID ${id} does not exist.`, res);
                 return;
             }
             res.json({ tags });

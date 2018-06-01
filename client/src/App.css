@@ -1,28 +1,29 @@
+* {
+  box-sizing: border-box;
+}
+
 .App {
-  text-align: center;
+  display: flex;
+  flex-flow: column wrap;
+  align-items: center;
+  background: #e9e9e9;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+.post-list {
+  display: flex;
+  flex-flow: column wrap;
+  width: 100%;
+  max-width: 500px;
 }
 
-.App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
+.post {
+  display: flex;
+  flex-flow: column wrap;
+  align-items: flex-start;
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+  background: white;
+  border-radius: 2px;
 }
 
-.App-title {
-  font-size: 1.5em;
-}
-
-.App-intro {
-  font-size: large;
-}
-
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
