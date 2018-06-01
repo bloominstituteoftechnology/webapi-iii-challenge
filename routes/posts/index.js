@@ -1,6 +1,7 @@
 const posts = require('express').Router();
 
 // Middleware
+const middleware = require('./helpers');
 posts.use(require('express').json());
 
 // Requests
@@ -12,7 +13,7 @@ const getTagsByPost = require('./getTagsByPost');
 const updatePost = require('./updatePost');
 
 // Routes
-posts.post('/', createPost);
+posts.post('/', middleware.getUsers, middleware.validateRequestData, createPost);
 posts.get('/', getAllPosts);
 posts.get('/:id', getSinglePost);
 posts.put('/:id', updatePost);

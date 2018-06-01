@@ -2,8 +2,7 @@ const users = require('../../data/helpers/userDb');
 
 module.exports = (req, res) => {
   const { id } = req.params;
-  users
-    .get(id)
+  users.get(id)
     .then(user => {
       if(user){
         res.status(200).json(user);
