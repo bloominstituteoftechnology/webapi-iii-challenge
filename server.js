@@ -2,33 +2,33 @@
 //cors
 const express = require('express');
 const cors = require('cors'); 
+const postsDb = require('./data/helpers/postDb.js')
+const usersDb = require('./data/helpers/userDb.js')
+const tagsDb = require('./data/helpers/tagDb.js')
 
 const port = 5555;
 const server = express(); 
 server.use(express.json()); 
 server.use(cors({ origin: 'http://localhost:3000'})); 
 
-//database helpers
-const posts = require('./data/helpers/postDb.js')
-const usersDb = require('./data/helpers/userDb.js')
-const tags = require('./data/helpers/tagDb.js')
+//database helpers & MiddleWare
 
 const sendUserError = (status, message, res) => {
-    res.status(status).json({ errorMessage: message});
+    res.status(status).json({ errorMessage: message });
     return; 
 }; 
 
-const customLogger = (req, res, next) => {
-    const ua = req.headers['user-agent'];
-    const { path } = req;
-    const timeStamp = Date.now();
-    const log = { path, ua, timeStamp };
-    const stringLog = JSON.stringify(log); 
-    console.log(stringLog);
-    next();    
-}; 
+// const customLogger = (req, res, next) => {
+//     const ua = req.headers['user-agent'];
+//     const { path } = req;
+//     const timeStamp = Date.now();
+//     const log = { path, ua, timeStamp };
+//     const stringLog = JSON.stringify(log); 
+//     console.log(stringLog);
+//     next();        
+// }; 
 
-server.use(customLogger); 
+// server.use(customLogger); 
 
 const searchMiddleWare = (req, res, next) => {
     if (!req.query.name) {
@@ -49,6 +49,8 @@ const searchMiddleWare = (req, res, next) => {
         });
 }; 
 
+//CRUD for Users
+
 server.get('/',searchMiddleWare, (req, res) => {
     console.log(req.query); 
     console.log(req.users); 
@@ -63,6 +65,7 @@ server.get('/',searchMiddleWare, (req, res) => {
         res.json({ users }); 
     }
 });
+
 
 server.get('/api/users', (req, res) => {
     usersDb
@@ -81,8 +84,16 @@ server.get('/api/users/:id', (req, res) => {
     usersDb
         .getUserPosts(id)
         .then(user => {
+            if (user.length === 0) {
+                sendUserError(400, "User with that id not found.", res); 
+                return; 
+            }
             res.json(user); 
-        });
+        })
+        .catch(error => {
+            sendUserError(500, "Error looking up user", res);
+            return; 
+        }); 
 });
 
 server.post('/api/users', (req, res) => {
@@ -95,7 +106,10 @@ server.post('/api/users', (req, res) => {
         .insert({ name })
         .then(response => {
             res.status(201).json(response); 
-        });    
+        })
+        .catch(error => {
+            console.log(error); 
+        });     
 });
 
 server.delete('/api/users/:id', (req, res) => {
@@ -103,7 +117,14 @@ server.delete('/api/users/:id', (req, res) => {
     usersDb   
         .remove(id)
         .then(response => {
+            if (response === 0) {
+                sendUserError(404, "The user with that ID does not exist.", res);
+                return; 
+            } 
             res.json({ success: `User with id: ${id} removed from system.`}); 
+        })
+        .catch(error => {
+            console.log(error);
         });
 });
 
@@ -118,11 +139,101 @@ server.put('/api/users/:id', (req, res) => {
         .update(id, {name })
         .then(response => {
             res.status(201).json(response); 
+        })
+        .catch(error => {
+            sendUserError(500, "An error happened in the database.", res)
+            return; 
+        })
+}); 
+
+//CRUD for Posts
+
+// server.get('/api/posts')
+
+server.get('/api/posts', (req, res) => {
+    postsDb
+        .get()
+        .then(posts => {
+            res.json({ posts }); 
+        })
+        .catch(error => {
+            sendUserError(500, 'The post could not be retrieved.', res);
+            return;
         });
 }); 
 
+server.get('/api/posts/:id', (req, res) => {
+    const { id } = req.params; 
+    postsDb
+        .getPostTags(id)
+        .then(post => {
+            if (post.length === 0) {
+                sendUserError(400, "Post with that id not found.", res); 
+                return; 
+            }
+            res.json(post); 
+        })
+        .catch(error => {
+            sendUserError(500, "Error looking up post", res);
+            return; 
+        }); 
+});
 
-// server.get('/api/posts')
+server.post('/api/posts', (req, res) => {
+    const { userId, text } = req.body;
+    if(!userId || !text) {
+        sendUserError(400, 'Must provide userId and text.', res);
+        return;
+    }
+    postsDb   
+        .insert({ userId, text })
+        .then(response => {
+            res.status(201).json(response); 
+        })
+        .catch(error => {
+            console.log(error); 
+        });     
+});
+
+server.delete('/api/posts/:id', (req, res) => {
+    const { id } = req.params;
+    usersDb   
+        .remove(id)
+        .then(response => {
+            if (response === 0) {
+                sendUserError(404, "The post with that ID does not exist.", res);
+                return; 
+            } 
+            res.json({ success: `Post with id: ${id} removed from system.`}); 
+        })
+        .catch(error => {
+            console.log(error);
+        });
+});
+
+server.put('/api/posts/:id', (req, res) => {
+    const { id } = req.params;
+    const { userId, text } = req.body; 
+    if (!userId || !text) {
+        sendUserError(400, "Must provide user id and text.", res);
+        return;
+    }
+    postsDb   
+        .update(id, { userId, text })
+        .then(response => {
+            res.status(201).json(response); 
+        })
+        .catch(error => {
+            sendUserError(500, "An error happened in the database.", res)
+            return; 
+        })
+}); 
+
+
+
+
+//CRUD for Tags
+
 // server.get('api/tags')
 
 server.listen(port, () => console.log(`Server running on port ${port}`));
