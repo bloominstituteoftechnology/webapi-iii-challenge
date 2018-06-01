@@ -45,6 +45,25 @@ function routerFactory(router, db, errorStatus, errorMessage) {
 
   router.post("/", areArgumentsValid, insertDb);
 
+  router.put("/", isIdValid, areArgumentsValid, (req, res) => {
+    console.log("insede PUT last handler");
+
+    const { id } = req.body;
+    const { ...obj } = req.obj;
+    const toUpdate = { ...obj, id };
+    console.log(toUpdate);
+    db
+      .update(id, obj)
+      .then(response => {
+        console.log("response", response);
+        res.status(200).json(`${response} registers updated!`);
+      })
+      .catch(e => {
+        console.log("error", e);
+        res.status(500).json("Something went wrong updating!");
+      });
+  });
+
   /**
    * MIDDLEWEARS: List of middlewears use in routes.
    */
@@ -54,7 +73,7 @@ function routerFactory(router, db, errorStatus, errorMessage) {
     console.log(obj);
 
     // This line ensure that the tags are uppercased before they are processed by the request handlers.
-    obj.tag ? obj.tag = obj.tag.toUpperCase() : null;
+    obj.tag ? (obj.tag = obj.tag.toUpperCase()) : null;
 
     db
       .insert(obj)
@@ -64,6 +83,7 @@ function routerFactory(router, db, errorStatus, errorMessage) {
       })
       .catch(e => {
         console.log("error", e);
+        res.status(500).json("Database Error: Impossible to insert new register");
       });
   }
 
@@ -101,6 +121,23 @@ function routerFactory(router, db, errorStatus, errorMessage) {
         }
         break;
     }
+  }
+
+  function isIdValid(req, res, next) {
+    const { id } = req.body;
+    console.log(("isIdValid", id));
+    db
+      .get()
+      .then(response => {
+        const isIdInData = response.filter(data => data.id === Number(id));
+        console.log("isIdInData", isIdInData);
+        isIdInData[0]
+          ? next()
+          : res.status(400).json("Please, provide a vlaid Id");
+      })
+      .catch(e => {
+        console.log("error", e);
+      });
   }
 }
 
