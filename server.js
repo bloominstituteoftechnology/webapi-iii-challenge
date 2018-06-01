@@ -9,7 +9,8 @@ const postRouter = require('./routers/postRouter.js');
 
 const server = express();
 
-// custom middleware 
+// custom middleware
+
 function logger(req, res, next) {
 
   console.log('body: ', req.body);
@@ -25,13 +26,20 @@ server.use(cors());
 server.use(express.json());
 server.use(logger);
 
+// use cors on port
+server.use(cors({
+  origin: 'http://localhost:3000'
+}));
+
 server.use('/api/users', userRouter);
 server.use('/api/tags', tagRouter);
 server.use('/api/posts', postRouter);
 
-server.get('/', function(req, res) {
-  res.json({ api: 'Running...' });
+server.get('/', function (req, res) {
+  res.json({
+    api: 'Running...'
+  });
 });
 
 const port = 5000;
-server.listen(port, () => console.log('API Running on port 5000'));
+server.listen(port, () => console.log(`API Running on ${port}`));

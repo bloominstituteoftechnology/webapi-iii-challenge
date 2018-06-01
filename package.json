@@ -4,6 +4,7 @@
   "description": "* Building RESTful APIs.\r * Performing CRUD Operations on Multiple Resources.\r * Configuring CORS.\r * Writing Custom Middleware.\r * Using Express Routers to Modularize Application.",
   "main": "server.js",
   "dependencies": {
+    "axios": "^0.18.0",
     "cors": "^2.8.4",
     "express": "^4.16.3",
     "helmet": "^3.12.0",
