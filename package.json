@@ -1,10 +1,14 @@
 {
-  "name": "Node-Blog",
+  "name": "node-blog",
   "version": "1.0.0",
   "main": "index.js",
   "repository": "https://github.com/AquilaVirtual/Node-Blog.git",
   "author": "David <AquilaVirtual>",
   "license": "MIT",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
   "dependencies": {
     "cors": "^2.8.4",
     "express": "^4.16.3",
