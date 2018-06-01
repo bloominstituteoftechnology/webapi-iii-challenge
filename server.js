@@ -20,6 +20,16 @@ server.get('/', (req, res) => {
     res.send("Hello from express!");
 })
 
+const tagUpperCase = (req, res, next) => {
+    tags
+        .get()
+        .then(tag => {
+            tag.map((tag, i) => {
+                tag.tag.toUpperCase();
+            })
+        })
+    next();
+}
 
 // USERS
 server.get('/api/users', (req, res) => {
@@ -198,7 +208,6 @@ server.put('/api/posts/:id', (req, res) => {
         })
 })
 
-
 server.delete('/api/posts/:id', (req, res) => {
     posts
         .remove(req.params.id)
@@ -214,9 +223,8 @@ server.delete('/api/posts/:id', (req, res) => {
         })
 })
 
-
 //TAGS
-server.get('/api/tags', (req, res) => {
+server.get('/api/tags', tagUpperCase, (req, res) => {
     tags
         .get()
         .then(tag => {
@@ -225,7 +233,7 @@ server.get('/api/tags', (req, res) => {
         })
 })
 
-server.get('/api/tags/:id', (req, res) => {
+server.get('/api/tags/:id', tagUpperCase, (req, res) => {
     tags   
         .get(req.params.id)
         .then(tag => {
@@ -241,7 +249,7 @@ server.get('/api/tags/:id', (req, res) => {
         })
 })
 
-server.post('/api/tags', (req, res) => {
+server.post('/api/tags', tagUpperCase, (req, res) => {
     const { tag } = req.body;
     if(!tag){
         sendUserError(400, "Please provide a tag for the post", res);
@@ -256,7 +264,7 @@ server.post('/api/tags', (req, res) => {
         })
 })
 
-server.put('/api/tags/:id', (req, res) => {
+server.put('/api/tags/:id', tagUpperCase, (req, res) => {
     const { tag } = req.body;
     if(!tag){
         sendUserError(400, "Please provide a tag for the post", res);
@@ -275,7 +283,7 @@ server.put('/api/tags/:id', (req, res) => {
         })
 })
 
-server.delete('/api/tags/:id', (req, res) => {
+server.delete('/api/tags/:id', tagUpperCase, (req, res) => {
     tags
         .remove(req.params.id)
         .then(tag => {
@@ -289,6 +297,5 @@ server.delete('/api/tags/:id', (req, res) => {
             sendUserError(500, "The tag could not be removed", res)
         })
 })
-
 
 server.listen(port, () => console.log(`Server is running on port ${port}`));
