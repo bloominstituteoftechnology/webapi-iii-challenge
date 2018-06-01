@@ -197,7 +197,7 @@ server.post('/api/posts', (req, res) => {
 
 server.delete('/api/posts/:id', (req, res) => {
     const { id } = req.params;
-    usersDb   
+    postsDb   
         .remove(id)
         .then(response => {
             if (response === 0) {
@@ -229,12 +229,88 @@ server.put('/api/posts/:id', (req, res) => {
         })
 }); 
 
-
-
-
 //CRUD for Tags
 
 // server.get('api/tags')
+
+server.get('/api/tags', (req, res) => {
+    tagsDb
+        .get()
+        .then(tags => {
+            res.json({ tags }); 
+        })
+        .catch(error => {
+            sendUserError(500, 'The tag could not be retrieved.', res);
+            return;
+        });
+}); 
+
+server.get('/api/tags/:id', (req, res) => {
+    const { id } = req.params; 
+    postsDb
+        .getPostTags(id)
+        .then(tag => {
+            if (tag.length === 0) {
+                sendUserError(400, "Tag with that id not found.", res); 
+                return; 
+            }
+            res.json(tag); 
+        })
+        .catch(error => {
+            sendUserError(500, "Error looking up tag", res);
+            return; 
+        }); 
+});
+
+server.post('/api/tags', (req, res) => {
+    const { tag } = req.body;
+    if(!tag) {
+        sendUserError(400, 'Must provide tag.', res);
+        return;
+    }
+    tagsDb   
+        .insert({ tag })
+        .then(response => {
+            res.status(201).json(response); 
+        })
+        .catch(error => {
+            console.log(error); 
+        });     
+});
+
+server.delete('/api/tags/:id', (req, res) => {
+    const { id } = req.params;
+    postsDb   
+        .remove(id)
+        .then(response => {
+            if (response === 0) {
+                sendUserError(404, "The tag with that ID does not exist.", res);
+                return; 
+            } 
+            res.json({ success: `Tag with id: ${id} removed from system.`}); 
+        })
+        .catch(error => {
+            console.log(error);
+        });
+});
+
+server.put('/api/tags/:id', (req, res) => {
+    const { id } = req.params;
+    const { tag } = req.body; 
+    if (!tag) {
+        sendUserError(400, "Must provide user tag.", res);
+        return;
+    }
+    postsDb   
+        .update(id, { tag })
+        .then(response => {
+            res.status(201).json(response); 
+        })
+        .catch(error => {
+            sendUserError(500, "An error happened in the database.", res)
+            return; 
+        })
+}); 
 
 server.listen(port, () => console.log(`Server running on port ${port}`));
 
