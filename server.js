@@ -19,8 +19,8 @@ const sendUserError = (status, message, res) => {
 
 server.get('/api/users', (req, res) => {
     users.get()
-    .then(getUsers => {
-        res.json(getUsers) ;
+    .then(users => {
+        res.json(users) ;
     })
     .catch(error => {
         sendUserError(500, 'The posts information could not be retrieved.', res);
@@ -28,7 +28,7 @@ server.get('/api/users', (req, res) => {
     });
 });
 
-server.get('/api/users/:id', (req, res) => {
+/*server.get('/api/users/:id', (req, res) => {
     const { id } = req.params;
     users
     .get(id)
@@ -42,7 +42,7 @@ server.get('/api/users/:id', (req, res) => {
         .catch(error => {
             sendUserError(500, 'The post information could not be retrieved.', res);
     });
-});
+});*/
 
 server.post('/api/users', (req, res) => {
     const { name } = req.body;
@@ -89,6 +89,18 @@ server.delete('/api/users/:id', (req, res) => {
             }
     })
 })
+
+server.get('/api/users/:id', (req, res) => {
+    const { id } = req.params;    users
+    .getUserPosts(id)
+    .then(posts => {
+        res.json(posts) ;
+    })
+    .catch(error => {
+        sendUserError(500, 'The posts information could not be retrieved.', res);
+        return;
+    });
+});
 
 
 
@@ -180,7 +192,7 @@ server.get('/api/posts', (req, res) => {
     });
 });
 
-server.get('/api/posts/:id', (req, res) => {
+/*server.get('/api/posts/:id', (req, res) => {
     const { id } = req.params;
     posts.get(id)
     .then(post => {
@@ -193,7 +205,21 @@ server.get('/api/posts/:id', (req, res) => {
         .catch(error => {
             sendUserError(500, 'The post information could not be retrieved.', res);
     });
+});*/
+
+server.get('/api/posts/:id', (req, res) => {
+    const { id } = req.params;
+    posts    
+    .getPostTags(id)
+    .then(tags => {
+        res.json(tags) ;
+    })
+    .catch(error => {
+        sendUserError(500, 'The posts information could not be retrieved.', res);
+        return;
+    });
 });
+
 
 server.post('/api/posts', (req, res) => {
     const { text, userId } = req.body;
