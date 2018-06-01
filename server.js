@@ -4,10 +4,23 @@ const posts = require('./data/helpers/postDb.js');
 const users = require('./data/helpers/userDb.js');
 const tags = require('./data/helpers/tagDb.js');
 
+
+
 const port = 5555;
 const server = express();
 server.use(express.json());
 server.use(cors({ origin: 'http://localhost:3000' }));
+
+const serverLogger = (req, res, next) => {
+  console.log(`\n\n\nIncoming Request:\n\nurl: ${req.url}\nmethod: ${req.method}\nbody:`);
+  console.log(req.body);
+  next();
+}
+
+server.use(serverLogger)
+
+
+
 
 server.post('/api/users', (req, res) => {
   const { name } = req.body;
@@ -329,6 +342,9 @@ server.get('/api/posts/:id/tags', (req, res) => {
       res.status(500).json({ errorMessage: "The tags could not be retrieved." });
     })
 });
+
+
+
 
 
 server.listen(port, () => console.log(`Server running on port ${port}`));

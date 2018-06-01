@@ -47,7 +47,7 @@ class App extends Component {
           let user = this.state.users.filter((user) => Number(props.match.params.id) === user.id)[0]
           if (user) return (
             <div>
-              <h1>{user.name + "\'s posts"}</h1>
+              <h1>{user.name + "'s posts"}</h1>
               {
                 this.state.posts
                   .filter((post) => Number(props.match.params.id) === post.userId)
