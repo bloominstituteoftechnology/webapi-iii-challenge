@@ -1,7 +1,7 @@
 {
   "name": "Node-Blog",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "repository": "https://github.com/MatthiasBakken/Node-Blog.git",
   "author": "Matthias Bakken <matthias.bakken@gmail.com>",
   "license": "MIT",
