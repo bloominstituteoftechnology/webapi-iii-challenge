@@ -11,7 +11,7 @@ const sendError = (status, message, res) => {
 router.post('/', (req, res) => {
   const newTag = req.body;
 
-  if (!newTag.tag || newTag.tag.length < 0 || !newTag.tag.length > 80) {
+  if (!newTag.tag || newTag.tag.length < 0 || newTag.tag.length > 80) {
     sendError(404, "Tag must be unique with 1 - 80 characters.");
     return;
   } else {
@@ -50,6 +50,52 @@ router.get('/:id', (req, res) => {
         sendError(404, "Tag can not be found.", res);
         return;
       }
+    })
+    .catch(error => {
+      sendError(500, "Something went terribly wrong!", res);
+    });
+});
+
+router.put('/:id', (req, res) => {
+  const { id } = req.params;
+  const update = req.body;
+
+  if (!update.tag || update.tag.length < 0 || update.tag.length > 80) {
+    sendError(400, "Tag must be unique with 1 - 80 characters.", res);
+    return;
+  } else {
+    tagsDB
+      .update(id, update)
+      .then(result => {
+        if (result === 0) {
+          sendError(404, "Unable to find tag in server.", res);
+          return;
+        } else {
+          res.json(update);
+        }
+      })
+      .catch(error => {
+        sendError(500, "Something went terribly wrong!", res);
+      });
+  };
+});
+
+router.delete('/:id', (req, res) => {
+  const { id } = req.params;
+
+  tagsDB
+    .get(id)
+    .then(destroy => {
+      tagsDB
+        .remove(id)
+        .then(result => {
+          if (result) {
+            res.json(destroy);
+          } else {
+            sendError(404, "Cannot find tags to destroy!", res);
+            return;
+          }
+        })
     })
     .catch(error => {
       sendError(500, "Something went terribly wrong!", res);

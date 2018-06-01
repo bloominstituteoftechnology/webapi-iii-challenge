@@ -139,6 +139,7 @@ router.delete('/:id', clickWatchLogger, (req, res) => {
             res.json(user);
           } else {
             sendError(404, "User does not exist.", res);
+            return;
           }
         })
     })
