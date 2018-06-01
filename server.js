@@ -270,16 +270,8 @@ server.delete('/api/users/:id', (req, res) => {
 });
 server.delete('/api/posts/:id', (req, res) => {
     const { id } = req.params;
-    let deletedPost;
-    let deletedPostTags;
     postDB
-        .get(id)
-        .then((post) => deletedPost = post)
-    postDB
-        .getPostTags(id)
-        .then((postTag) => deletedPostTags = postTag)
-    postDB
-        .remove(id, deletedPostTags)
+        .remove(id)
         .then(postRemoved => {
             if (postRemoved === 0) {
                 return sendUserError(404, "No post was found with that specific ID.", res)
