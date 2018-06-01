@@ -14,9 +14,10 @@ class User extends Component {
     if (this.props.match) {
       const id = Number(this.props.match.params.id);
       for (let user of this.props.users) {
+        console.log(user);
         if (id === user.id) {
           // this.setState({ user });
-          axios.get(`http://localhost:5000/api/users/${ id }/posts`)
+          return axios.get(`http://localhost:5000/api/users/${ id }/posts`)
             .then(({ data: posts }) => {
               this.setState({ user, posts });
             })
