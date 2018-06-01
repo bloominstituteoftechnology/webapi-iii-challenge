@@ -44,60 +44,6 @@ server.get('/api/users/:id', (req, res) => {
     });
 });
 
-
-server.get('/api/tags', (req, res) => {
-    tags.get()
-    .then(tags => {
-        res.json(tags) ;
-    })
-    .catch(error => {
-        sendUserError(500, 'The posts information could not be retrieved.', res);
-        return;
-    });
-});
-
-server.get('/api/tags/:id', (req, res) => {
-    const { id } = req.params;
-    tags.get(id)
-    .then(tag => {
-        if (tag.length === 0) {
-            sendUserError(404, 'The post with the specified ID does not exist.', res);
-            return;
-        }
-        res.json(tag); 
-    })
-        .catch(error => {
-            sendUserError(500, 'The post information could not be retrieved.', res);
-    });
-});
-
-
-server.get('/api/posts', (req, res) => {
-    posts.get()
-    .then(posts => {
-        res.json(posts) ;
-    })
-    .catch(error => {
-        sendUserError(500, 'The posts information could not be retrieved.', res);
-        return;
-    });
-});
-
-server.get('/api/posts/:id', (req, res) => {
-    const { id } = req.params;
-    posts.get(id)
-    .then(post => {
-        if (post.length === 0) {
-            sendUserError(404, 'The post with the specified ID does not exist.', res);
-            return;
-        }
-        res.json(post); 
-    })
-        .catch(error => {
-            sendUserError(500, 'The post information could not be retrieved.', res);
-    });
-});
-
 server.post('/api/users', (req, res) => {
     const { name } = req.body;
     if (!name) {
@@ -145,6 +91,109 @@ server.delete('/api/users/:id', (req, res) => {
 })
 
 
+
+
+
+server.get('/api/tags', (req, res) => {
+    tags.get()
+    .then(tags => {
+        res.json(tags) ;
+    })
+    .catch(error => {
+        sendUserError(500, 'The posts information could not be retrieved.', res);
+        return;
+    });
+});
+
+server.get('/api/tags/:id', (req, res) => {
+    const { id } = req.params;
+    tags.get(id)
+    .then(tag => {
+        if (tag.length === 0) {
+            sendUserError(404, 'The post with the specified ID does not exist.', res);
+            return;
+        }
+        res.json(tag); 
+    })
+        .catch(error => {
+            sendUserError(500, 'The post information could not be retrieved.', res);
+    });
+});
+
+server.post('/api/tags', (req, res) => {
+    const { tag } = req.body;
+    if (!tag) {
+        res.status(400).json({ errorMessage: 'No tag' });
+        return;
+    } 
+    tags
+        .insert({ tag })
+        .then(id => {
+            res.status(201).send(id)
+        })
+        .catch(err => {
+            console.log(err);
+    })
+})
+
+server.delete('/api/tags/:id', (req, res) => {
+    const { id } = req.params;
+    tags
+        .remove(id)
+        .then(count => {
+            if (count === 0) {
+                res.status(400).json({ errorMessage: 'Did not delete'});
+            } else {
+                res.status(201).json({message: 'successfully deleted'});
+            }
+    })
+})
+
+server.put('/api/tags/:id', (req, res) =>{
+    const { id } = req.params;
+    const { tag } = req.body;
+    tags
+        .update(id, { tag })
+        .then(count => {
+            if (count !== 1) {
+                res.status(400).json({errorMessage: "Did not update"});
+            } else {
+                res.status(210).json({id, tag});
+            }
+        })
+        .catch(err => {
+            console.log(err);
+        })
+})
+
+
+
+
+server.get('/api/posts', (req, res) => {
+    posts.get()
+    .then(posts => {
+        res.json(posts) ;
+    })
+    .catch(error => {
+        sendUserError(500, 'The posts information could not be retrieved.', res);
+        return;
+    });
+});
+
+server.get('/api/posts/:id', (req, res) => {
+    const { id } = req.params;
+    posts.get(id)
+    .then(post => {
+        if (post.length === 0) {
+            sendUserError(404, 'The post with the specified ID does not exist.', res);
+            return;
+        }
+        res.json(post); 
+    })
+        .catch(error => {
+            sendUserError(500, 'The post information could not be retrieved.', res);
+    });
+});
 
 
 
