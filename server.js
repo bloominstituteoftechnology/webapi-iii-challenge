@@ -15,6 +15,13 @@ function logger(req, res, next) {
 
   console.log('body: ', req.body);
 
+  next();
+}
+
+function tagToUpperCase(req, res, next) {
+  if (req.body.tag) {
+    req.body.tag = req.body.tag.toUpperCase();
+  }
 
   next();
 }
