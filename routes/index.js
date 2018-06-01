@@ -4,7 +4,7 @@ const tags = require('./tags');
 const users = require('./users');
 
 routes.use('/api/posts', posts);
-// routes.use('/api/tags', tags);
+routes.use('/api/tags', tags);
 routes.use('/api/users', users);
 
 routes.get('/', (req, res) => {
