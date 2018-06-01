@@ -10,6 +10,10 @@ const server = express();
 server.use(express.json());
 server.use(cors({ origin: 'http://localhost:3000' }));
 
+const tagToUpper = (req, res, next) => {
+    req.body.tag = req.body.tag.toUpperCase();
+    next();
+};
 
 //---------- Get Methods ----------
 
@@ -158,7 +162,7 @@ server.post('/api/posts/:userId', (req, res) => {
         })
 });
 
-server.post('/api/tags', (req, res) => {
+server.post('/api/tags', tagToUpper, (req, res) => {
     let { tag } = req.body;
     if (!tag) {
         res.status(400).json({ errorMessage: `Please provide a tag` });
@@ -257,7 +261,7 @@ server.put('/api/posts/:id', (req, res) => {
         })
 });
 
-server.put('/api/tags/:id', (req, res) => {
+server.put('/api/tags/:id', tagToUpper, (req, res) => {
     let { id } = req.params;
     let { tag } = req.body;
     if (!tag) {
