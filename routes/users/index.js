@@ -16,6 +16,7 @@ const updateUser = require('./updateUser');
 users.post('/', middleware.validateRequestData, createUser);
 users.get('/', getAllUsers);
 users.get('/:id', getSingleUser);
+users.get('/:id/posts', getPostsByUser);
 users.put('/:id', middleware.validateRequestData, updateUser);
 users.delete('/:id', deleteUser);
 
