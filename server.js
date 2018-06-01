@@ -22,12 +22,15 @@ const tagUpperCase = (req, res, next) => {
     next();
 };
 
-
+// Home
 server.get('/', (req, res) => {
         res.json('Howdy!')
 });
 
-//Users
+
+//Users ###############################################################################
+//#####################################################################################
+
 server.get('/api/users/', (req, res) => {
     users
     .get()
@@ -114,7 +117,11 @@ server.put('/api/users/:id', (req, res) => {
         res.status(400).json({ errorMessage: "Please provide the User Name"})
     }
 })
-//Posts
+
+
+//Posts ##################################################################################
+//########################################################################################
+
 server.get('/api/posts/', (req, res) => {
     posts
     .get()
@@ -201,7 +208,11 @@ server.put('/api/posts/:id', (req, res) => {
         res.status(400).json({ errorMessage: "Please provide content and a UserID for the post." })
     }
 })
-//Tags
+
+
+//Tags #############################################################################################
+//##################################################################################################
+
 server.get('/api/tags', tagUpperCase, (req, res) => {
     tags
     .get()
