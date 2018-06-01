@@ -16,6 +16,7 @@ const updatePost = require('./updatePost');
 posts.post('/', middleware.getUsers, middleware.validateRequestData, createPost);
 posts.get('/', getAllPosts);
 posts.get('/:id', getSinglePost);
+posts.get('/:id/tags', getTagsByPost);
 posts.put('/:id', middleware.getUsers, middleware.validateRequestData, updatePost);
 posts.delete('/:id', deletePost);
 
