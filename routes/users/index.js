@@ -1,5 +1,8 @@
 const users = require('express').Router();
 
+// Middleware
+const middleware = require('./helpers');
+
 // Requests
 const createUser = require('./createUser');
 const deleteUser = require('./deleteUser');
@@ -11,7 +14,7 @@ const updateUser = require('./updateUser');
 users.use(require('express').json());
 
 // Routes
-users.post('/', createUser);
+users.post('/', middleware.validateRequestData, createUser);
 users.get('/', getAllUsers);
 users.get('/:id', getSingleUser);
 users.put('/:id', updateUser);
