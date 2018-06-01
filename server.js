@@ -9,11 +9,14 @@ const server = express();
 server.use(express.json());
 server.use(cors({ origin: 'http://localhost:3000' }));
 
+//just to make sure the server is working
 server.get('/', (req, res) => {
 	res.send('Hello, Kelly');
 })
 
 //****************postDb-crud****************************
+// honestly, I mostly copied this from yesterday and updated it with the correct info for this project
+
 server.post('/api/posts', (req,res) => {
 	if (!req.body.userId || !req.body.text) {
 		res.status(400);
@@ -64,7 +67,7 @@ server.get('/api/posts/:id', (req, res) => {
 		})
 });
 
-// retrieve posts by tag name
+// retrieve list of posts with a particular tag name
 
 server.get('/api/posts/:id/tags', (req, res) => {
 	const id = req.params.id;
@@ -114,6 +117,8 @@ server.put('/api/posts/:id', (req, res) => {
 }
 })
 
+// I worked on my delete since I just realized that it is supposed to display what you deleted and not just the fact that deleting was successful. Zach helped me on this by explaining that you have to get the post first so you have the info and then delete it.
+
 server.delete('/api/posts/:id', (req, res) => {
 	const { id } = req.params
 
@@ -138,6 +143,8 @@ server.delete('/api/posts/:id', (req, res) => {
 })
 
 // **********userDb-crud*******************************************
+// This is basically just like above. At some point I would like to figure out how to put these in separate files and call them from somewhere because the number of lines in this file is kind of ridiculous. Sorry.
+
 server.post('/api/users', (req,res) => {
 	if (!req.body.name) {
 		res.status(400);
@@ -260,15 +267,18 @@ server.delete('/api/users/:id', (req, res) => {
 
 })
 //**********************tagDb-crud************************
+//this is also similar to CRUD operations for post and users
+//just noticed that we needed to ensure that the tags are upper-cased before being processed so I'm trying to write that in now.
 
 server.post('/api/tags', (req,res) => {
-	if (!req.body.tag) {
+	let { tag } = req.body
+	tag = tag.toUpperCase()
+	if (!tag) {
 		res.status(400);
 		res.json({ errorMessage: "Please provide a name for the tag." });
 	}
 	else {
 
-	const { tag } = req.body;
 	tags.insert({ tag })
 		.then(response => {
 			res.status(201);
@@ -282,6 +292,11 @@ server.post('/api/tags', (req,res) => {
 				res.json({ error: "There was an error saving the tag to the database."});
 			})
 	}
+})
+
+server.get('/api/tags', function (req, res, next) {
+	console.log('middleware')
+	next()
 })
 
 server.get('/api/tags', (req, res) => {
