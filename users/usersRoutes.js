@@ -8,7 +8,7 @@ const sendError = (status, message, res) => {
   res.status(status).json({ errorMessage: message });
 };
 
-router.post("/", clickWatchLogger, (req, res) => {
+router.post('/', clickWatchLogger, (req, res) => {
   const { name } = req.body;
   if (name.length < 1 || name.length > 128) {
     sendError(400, "Please provide a name that is between 1 and 128 characters long.", res);

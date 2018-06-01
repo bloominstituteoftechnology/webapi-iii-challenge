@@ -11,12 +11,12 @@ server.use(express.json());
 const clickWatchLogger = require('./data/middleware');
 // import sub-applications
 const usersRoutes = require('./users/usersRoutes');
-// const tagsRoutes = require("./tags/tagsRoutes");
+const tagsRoutes = require("./tags/tagsRoutes");
 // const postsRoutes = require("./posts/postsRoutes");
 
 // route handlers
 server.use('/users', usersRoutes);
-// server.use("/tags", tagsRoutes);
+server.use('/tags', tagsRoutes);
 // server.use("/posts", postsRoutes);
 server.use(clickWatchLogger);
 

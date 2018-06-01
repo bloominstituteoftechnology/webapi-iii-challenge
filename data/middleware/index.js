@@ -21,7 +21,7 @@ const clickWatchLogger = (req, res, next) => {
     console.log('##----------------------##', '\nRequest Time: ', Date.now(),
       '\nRequest:', req.socket.remoteAddress, '\nUserAgent: ', userAgent,
       '\nHost: ', host, '\nUrl:', req.url, '\n##----------------------##');
-    next();
+  next();
   };
 };
 
