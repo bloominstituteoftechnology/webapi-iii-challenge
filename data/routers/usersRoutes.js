@@ -45,8 +45,6 @@ router.post("/", (req, res) => {
   db
     .insert({ name })
     .then(response => {
-      //   res.status(201).send(response);
-      //   console.log(response);
       db.get(response.id).then(user => {
         res.json({ user });
       });

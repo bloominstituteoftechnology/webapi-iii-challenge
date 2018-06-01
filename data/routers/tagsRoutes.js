@@ -1,3 +1,4 @@
+
 const express = require("express");
 const router = express.Router();
 const db = require("../helpers/tagDb.js");
@@ -7,28 +8,72 @@ const sendError = (statusCode, message, res) => {
   return;
 };
 
-router.get("/", (req, res) => {
+// const convertToUpper = (req, res, next) => {
+//   const sent = res.send
+//   // console.log(res.send)
+//   res.send = data => {
+//     // console.log(JSON.parse(data)["tags"]);
+//     let copyArray = Array.from(JSON.parse(data)["tags"]);
+//     // console.log('copy', copyArray)
+//     let tags = copyArray.map(obj => {
+//       return Object.assign({}, obj, { tag: obj["tag"].toUpperCase() });
+//     });
+//     console.log(tags)
+
+//     sent.apply(res, tags);
+//   }
+//   next();
+// }
+
+const convertToUpper = (req, res, next) => {
+  const { id } = req.params;
+  db.get()
+    .then(tags => { // tags is an array of objects
+        let tagsCopy;
+      if(id) {
+        tagsCopy = tags.filter(obj => {
+          return obj.id == id
+        });
+          tagsCopy[0].tag = tagsCopy[0].tag.toUpperCase();
+          tagsCopy = tagsCopy[0]
+      }else{
+        tagsCopy = tags.map(obj => {
+          return Object.assign({}, obj, { tag: obj["tag"].toUpperCase() });
+        });
+      }
+      console.log("tags: ", tagsCopy);
+      console.log(req.body)
+      req.body.tags = tagsCopy;
+      // res.json(tagsCopy);
+    })
+    .catch(error => {
+      sendError(500, "Something went terribly wrong!", res);
+    });
+  next();
+};
+
+router.get("/", convertToUpper, (req, res) => {
   db
     .get()
     .then(tags => {
-      res.json({ tags });
+      res.json( req.body.tags );
     })
     .catch(error => {
-      sendError(500, "The tags information could no tbe retrieved", res);
+      sendError(500, "The tags information could not be retrieved", res);
       return;
     });
 });
 
-router.get("/:id", (req, res) => {
-  const { id } = req.params; // pull id off of req.params;
+router.get("/:id", convertToUpper,(req, res) => {
+  const { id } = req.params; 
   db
-    .get(id) // invoke proper db.method(id) passing it the id.
+    .get(id)
     .then(tag => {
       if (tag.length === 0) {
         sendError(404, `Tag with id ${id} could not found`, res);
         return;
       }
-      res.json({ tag });
+      res.json(req.body.tags);
     })
     .catch(error => {
       sendError(500, "Error looking up tag", res);

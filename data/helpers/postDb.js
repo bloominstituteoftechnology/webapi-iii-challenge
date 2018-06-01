@@ -3,7 +3,6 @@ const db = require('../dbConfig.js');
 module.exports = {
   get: function(id) {
     let query = db('posts as p');
-
     if (id) {
       query
         .join('users as u', 'p.userId', 'u.id')
@@ -14,6 +13,7 @@ module.exports = {
 
       return Promise.all(promises).then(function(results) {
         let [posts, tags] = results;
+        // console.log(results)
         let post = posts[0];
         post.tags = tags.map(t => t.tag);
 

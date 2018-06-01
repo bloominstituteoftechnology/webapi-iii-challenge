@@ -21,16 +21,19 @@ router.get("/", (req, res) => {
 
 router.get("/:id", (req, res) => {
   const { id } = req.params;
+  console.log(id)
   db
     .get(id) 
     .then(post => {
-      if (post.length === 0) {
-        sendError(404, `Post with that id could not found`, res);
+        console.log(post)
+      if (post === 0) {
+        sendError(404, `Post with id ${id} could not found`, res);
         return;
       }
       res.json({ post });
     })
     .catch(error => {
+        console.log(error)
       sendError(500, "Error looking up post", res);
       return;
     });
@@ -55,6 +58,7 @@ router.get("/:postId/tags", (req, res) => {
 
 router.post("/", (req, res) => {
   const { text, userId } = req.body;
+  console.log(req.body)
   if (!text || !userId) {
     sendError(400, "Must provide text and userId", res);
     return;
