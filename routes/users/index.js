@@ -17,7 +17,7 @@ users.use(require('express').json());
 users.post('/', middleware.validateRequestData, createUser);
 users.get('/', getAllUsers);
 users.get('/:id', getSingleUser);
-users.put('/:id', updateUser);
+users.put('/:id', middleware.validateRequestData, updateUser);
 users.delete('/:id', deleteUser);
 
 module.exports = users;
