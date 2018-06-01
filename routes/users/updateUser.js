@@ -10,7 +10,7 @@ module.exports = (req, res) => {
       if(recordsUpdated > 0){
         getUpdatedUsers(req, res);
       } else {
-        res.status(500).json({ error: 'The user with the specified ID does not exist.' });
+        res.status(404).json({ error: 'The user with the specified ID does not exist.' });
       }
     })
     .catch(error => {

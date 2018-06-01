@@ -8,7 +8,7 @@ module.exports = (req, res) => {
       if(user){
         res.status(200).json(user);
       } else {
-        res.status(500).json({ error: 'The user with the specified ID does not exist.' });
+        res.status(404).json({ error: 'The user with the specified ID does not exist.' });
       }
     })
     .catch(error => {
