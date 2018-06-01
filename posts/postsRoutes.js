@@ -65,6 +65,24 @@ router.get('/userPosts/:id', (req, res) => {
 });
 
 // get posts by post id
+router.get('/:id', (req, res) => {
+  const { id } = req.params;
+
+  postsDB
+    .get(id)
+    .then(post => {
+      if (post) {
+        res.json(post);
+      } else {
+        sendError(404, "Post cannot be found.", res);
+        return;
+      }
+    })
+    .catch(error => {
+      sendError(500, "Something went terribly wrong!", res);
+    });
+});
+
 
 
 module.exports = router;
