@@ -1,19 +1,13 @@
 const express = require('express');
-const cors = require('cors');
-//const db = require('./data/dbConfig.js');
+//const cors = require('cors');
+const posts = require('./data/helpers/postDb.js');
+const users = require('./data/helpers/userDb.js');
+const tags = require('./data/helpers/tagDb.js');
 
 const port = 5555;
 const server = express();
 server.use(express.json());
 //server.use(cors({ orign: 'https://localhost:3000' }));
-
-
-//database helpers
-
-const posts = require('./data/helpers/postDb.js');
-const users = require('./data/helpers/userDb.js');
-const tags = require('./data/helpers/tagDb.js');
-
 server.get('/api/users');
 server.get('/api/posts');
 server.get('/api/tags');
@@ -103,6 +97,55 @@ server.get('/api/posts/:id', (req, res) => {
             sendUserError(500, 'The post information could not be retrieved.', res);
     });
 });
+
+server.post('/api/users', (req, res) => {
+    const { name } = req.body;
+    if (!name) {
+        res.status(400).json({ errorMessage: 'No name' });
+        return;
+    } 
+    users
+        .insert({ name })
+        .then(id => {
+            res.status(201).send(id)
+        })
+        .catch(err => {
+            console.log(err);
+    })
+})
+
+server.put('/api/users/:id', (req, res) =>{
+    const { id } = req.params;
+    const { name } = req.body;
+    users
+        .update(id, { name })
+        .then(count => {
+            if (count !== 1) {
+                res.status(400).json({errorMessage: "Did not update"});
+            } else {
+                res.status(210).json({id, name});
+            }
+        })
+        .catch(err => {
+            console.log(err);
+        })
+})
+
+server.delete('/api/users/:id', (req, res) => {
+    const { id } = req.params;
+    users
+        .remove(id)
+        .then(count => {
+            if (count === 0) {
+                res.status(400).json({ errorMessage: 'Did not delete'});
+            } else {
+                res.status(201).json({message: 'successfully deleted'});
+            }
+    })
+})
+
+
+
 
 
 server.listen(port, () => console.log(`Server running on port ${port}`));
