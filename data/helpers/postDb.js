@@ -5,7 +5,7 @@ module.exports = {
     let query = db('posts as p');
 
     if (id) {
-      query
+      return query
         .join('users as u', 'p.userId', 'u.id')
         .select('p.text', 'u.name as postedBy')
         .where('p.id', id);
