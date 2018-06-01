@@ -38,7 +38,7 @@ router.get('/', (req, res) => {
     .catch(error => {
       sendError(
         500,
-        "There was an error while saving the post to the database.",
+        "There was an error while retrieving the user from the database.",
         res
       );
     });
@@ -63,6 +63,32 @@ router.get('/:id', (req, res) => {
     })
     .catch(error => {
       sendError(500, "Something went terribly wrong!", res);
+    });
+});
+
+router.get('/userposts/:id', (req, res) => {
+  const { id } = req.params;
+
+  usersDB
+    .get(id)
+    .then(user => {
+      if (user) {
+        usersDB.getUserPosts(id)
+          .then(userPosts => {
+            if (userPosts.length === 0) {
+              sendError(404, "The user's posts could not be found.", res);
+              return;
+            } else {
+              res.json(userPosts);
+            }
+          })
+      } else {
+        sendError(404, "This user could not be found.", res);
+        return;
+      }
+    })
+    .catch(error => {
+      sendError(500, "Something went wrong with the server.", res);
     });
 });
 
