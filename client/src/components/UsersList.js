@@ -19,9 +19,12 @@ class UsersList extends Component {
 
     render() { 
         return (
-            this.state.users.map( user => {
-                return <UserCard key={user.id} user={user}/>
-            })
+            <div className="container">
+                <p className="section-heading">Users:</p>
+                {this.state.users.map( user => {
+                    return <UserCard key={user.id} user={user}/>
+                })}
+            </div>
         )
     }
 }

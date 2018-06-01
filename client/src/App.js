@@ -13,6 +13,11 @@ class App extends Component {
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Lambda Blog</h1>
+          <navbar className="navBar">
+            <nav>Home</nav>
+            <nav>All Posts</nav>
+            <nav>Tags</nav>
+          </navbar>
         </header>
         <Route exact path="/" component={UsersList}/>
         <Route path="/users/:id/posts" component={PostsList}/>

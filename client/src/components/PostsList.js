@@ -22,9 +22,11 @@ class PostsList extends Component {
 
     render() { 
         return (
-            this.state.posts.map( post => {
-                return <Post key={post.id} post={post}/>
-            })
+            <div className="container">
+                {this.state.posts.map( post => {
+                    return <Post key={post.id} post={post}/>
+                })}
+            </div>
         )
     }
 }

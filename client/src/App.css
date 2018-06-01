@@ -1,28 +1,70 @@
+@import "./styles/UserCard.css";
+@import "./styles/Post.css";
+
 .App {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgb(228, 228, 228);
+  min-height: 100vh;
 }
 
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+  height: 70px;
 }
 
 .App-header {
   background-color: #222;
-  height: 150px;
-  padding: 20px;
+  height: 120px;
+  padding: 15px 50px;
   color: white;
+  margin-bottom: 30px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  box-sizing: border-box;
+}
+
+.navBar {
+  margin: 0 50px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  max-width: 70vw;
+  min-width: 400px;
+}
+
+nav {
+  cursor: pointer;
+}
+
+nav:hover {
+  text-decoration: underline;
 }
 
 .App-title {
-  font-size: 1.5em;
+  font-size: 1.5rem;
+  text-align: center;
 }
 
-.App-intro {
-  font-size: large;
+.section-heading {
+  font-size: 1.5rem;
+  width: 100%;
 }
 
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 1024px;
+  margin: 0 5% auto;
+  justify-content: space-between;
+  width: 90%;
 }
