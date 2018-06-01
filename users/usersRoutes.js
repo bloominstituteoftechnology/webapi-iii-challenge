@@ -1,5 +1,7 @@
 const express = require('express');
+
 const usersDB = require('../data/helpers/userDb');
+
 const router = express.Router();
 
 const clickWatchLogger = require('../data/middleware');
