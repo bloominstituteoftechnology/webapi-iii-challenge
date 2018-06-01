@@ -67,5 +67,4 @@ export const createUser = userObj => {
         });
       });
   }
-  }
 }
