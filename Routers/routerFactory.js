@@ -45,10 +45,17 @@ function routerFactory(router, db, errorStatus, errorMessage) {
 
   router.post("/", areArgumentsValid, insertDb);
 
+  /**
+   * MIDDLEWEARS: List of middlewears use in routes.
+   */
   function insertDb(req, res) {
     const { ...obj } = req.obj;
     const path = req.baseUrl;
     console.log(obj);
+
+    // This line ensure that the tags are uppercased before they are processed by the request handlers.
+    obj.tag ? obj.tag = obj.tag.toUpperCase() : null;
+
     db
       .insert(obj)
       .then(response => {
