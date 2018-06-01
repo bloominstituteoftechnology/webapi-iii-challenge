@@ -9,13 +9,14 @@ server.use(cors());
 
 // sub-applications
 const usersRoutes = require('./users/usersRoutes');
-// const postsRoutes = require('./posts/postsRoutes');
+const postsRoutes = require('./posts/postsRoutes');
 // const tagsRoutes = require('./tags/tagsRoutes');
 
 // route handlers
 server.use('/api/users', usersRoutes);
+server.use('/api/posts', postsRoutes);
 // server.use('/api/tags', tagsRoutes);
-// server.use('/api/posts', postsRoutes);
+
 
 
 
