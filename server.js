@@ -22,6 +22,3 @@ server.use('/posts', postsRoutes);
 server.use(clickWatchLogger);
 
 server.listen(port, () => console.log(`Server is running on port ${port}`));
-
-// const posts = require('./data/helpers/postDb.js');
-// const tags = require('./data/helpers/tagDb.js');
