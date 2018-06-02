@@ -2,6 +2,7 @@
   "name": "Node-Blog",
   "version": "1.0.0",
   "main": "app.js",
+  "homepage": "https://bbenefield89.github.io/Node-Blog",
   "repository": "git@github.com:bbenefield89/Node-Blog.git",
   "author": "bbenefield89 <bsquared18@gmail.com>",
   "license": "MIT",
