@@ -1,0 +1,20 @@
+{
+  "name": "Node-Blog",
+  "version": "1.0.0",
+  "main": "server.js",
+  "repository": "https://github.com/MatthiasBakken/Node-Blog.git",
+  "author": "Matthias Bakken <matthias.bakken@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "knex": "^0.14.6",
+    "sqlite3": "^4.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.17.5"
+  },
+  "scripts": {
+    "start": "nodemon server.js"
+  }
+}
