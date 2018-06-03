@@ -16,7 +16,6 @@
   },
   "devDependencies": {},
   "scripts": {
-    "dev": "concurrently \"nodemon\" \"npm run start --prefix client\"",
     "start": "node app.js",
     "heroku-postbuild": "cd client && yarn && yarn run build"
   }
