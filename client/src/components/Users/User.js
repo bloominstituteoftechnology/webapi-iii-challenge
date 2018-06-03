@@ -1,5 +1,7 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import axios from 'axios';
+
+import './style/User.css';
 
 class User extends Component {
   constructor(props) {
@@ -14,10 +16,8 @@ class User extends Component {
     if (this.props.match) {
       const id = Number(this.props.match.params.id);
       for (let user of this.props.users) {
-        console.log(user);
         if (id === user.id) {
-          // this.setState({ user });
-          return axios.get(`http://localhost:5000/api/users/${ id }/posts`)
+          return axios.get(`/api/users/${ id }/posts`)
             .then(({ data: posts }) => {
               this.setState({ user, posts });
             })
@@ -28,29 +28,31 @@ class User extends Component {
   }
   
   render() {
-    console.log(this.state);
+    const { posts, user } = this.state;
+    const { match, name } = this.props;
+    
+    const users = posts.map(post => {
+      return (
+        <li key={ post.id } className='user__post'>{ post.text }</li>
+      );
+    });
+    
     return (
-      <ul>
+      <ul className='user-container__user'>
         {
-          (this.props.match)
+          (match)
           ?
-            <React.Fragment>
-              <li>{ this.state.user.name }</li>
-              <ul>
-                {
-                  this.state.posts.map(post => {
-                    return (
-                      <li key={ post.id }>{ post.text }</li>
-                    )
-                  })
-                }
+            <Fragment>
+              <li className='user__name single'>{ user.name }</li>
+              <ul className='user__posts-container'>
+                { users }
               </ul>
-            </React.Fragment>
+            </Fragment>
           :
-            <li>{ this.props.name }</li>
+            <li className='user__name'>{ name }</li>
         }
       </ul>
-    )
+    );
   }
 }
  

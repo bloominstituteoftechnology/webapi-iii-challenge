@@ -1,0 +1,10 @@
+.App__user-container {
+    margin: 2rem auto;
+    text-align: center;
+    max-width: 590px;
+    width: 100%;
+}
+
+.user-container__link {
+    text-decoration: none;
+}

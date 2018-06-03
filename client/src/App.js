@@ -13,7 +13,7 @@ class App extends Component {
   };
   
   componentDidMount() {
-    axios.get('http://localhost:5000/api/users')
+    axios.get('/api/users')
       .then(({ data }) => this.setState({ users: [ ...data ] }))
       .catch(err => console.log(`ERR: ${ err }`));
   }
@@ -21,6 +21,9 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+        <div className='App__header-container'>
+          <h1 className='header-container__h1'>Lord of The Posts</h1>
+        </div>
         <Route exact path='/' render={ props => <Users { ...props } users={ this.state.users } /> } />
         <Route path='/:id' component={ props => <User { ...props } users={ this.state.users } /> } />
       </div>
