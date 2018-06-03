@@ -11,11 +11,10 @@
     "cors": "^2.8.4",
     "express": "^4.16.3",
     "knex": "^0.14.6",
+    "nodemon": "^1.17.5",
     "sqlite3": "^4.0.0"
   },
-  "devDependencies": {
-    "nodemon": "^1.17.5"
-  },
+  "devDependencies": {},
   "scripts": {
     "dev": "concurrently \"nodemon\" \"npm run start --prefix client\"",
     "start": "concurrently \"node app.js\" \"npm run start --prefix client\""
