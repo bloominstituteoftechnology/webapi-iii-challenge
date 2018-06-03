@@ -17,7 +17,7 @@
     "nodemon": "^1.17.5"
   },
   "scripts": {
-    "heroku-dev": "concurrently \"npm run start\" \"npm run start --prefix client\"",
-    "start": "nodemon"
+    "dev": "concurrently \"nodemon\" \"npm run start --prefix client\"",
+    "start": "concurrently \"node app.js\" \"npm run start --prefix client\""
   }
 }
