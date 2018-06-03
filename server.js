@@ -84,6 +84,15 @@ const postResources = (helper, helperStr, req, res) => {
         obj.text = text;
         obj.userId = userId;
     }
+    else if (helperStr === 'tags') {
+        const { tag } = req.body;
+
+        if (!tag) {
+            return sendUserError(404, 'Please provide a name for the tag.', res);
+        }
+
+        obj.tag = tag;
+    }
 
     helper.insert(obj)
         .then(insert_response => {
@@ -127,6 +136,15 @@ const putResources = (helper, helperStr, req, res) => {
         obj.text = text;
         obj.userId = userId;
     }
+    else if (helperStr === 'tags') {
+        const { tag } = req.body; 
+
+        if (!tag) {
+            return sendUserError(404, 'Please provide a name for the tag.', res); 
+        }
+
+        obj.tag = tag; 
+    }
 
     helper.update(id, obj)
         .then(update_response => {
@@ -158,16 +176,32 @@ const deleteResources = (helper, helperStr, req, res) => {
             del = get_response;
             helper.remove(id)
                 .then(remove_response => {
-                    if(remove_response === 0) {
-                        return sendUserError(404, `The ${helperStr} with the specified ID does not not exist.`, res); 
+                    if (remove_response === 0) {
+                        return sendUserError(404, `The ${helperStr} with the specified ID does not not exist.`, res);
                     }
                     else {
-                        res.json(del); 
+                        if (helperStr === 'user') {
+                            posts.get()
+                                .then(get_response => {
+                                    get_response.map((post) => {
+                                        if (post.userId === del.id) {
+                                            posts.remove(post.id)
+                                                .catch(error => {
+                                                    sendUserError(404, 'The post with the specified ID does not exist.', res);
+                                                })
+                                        }
+                                    })
+                                })
+                                .catch(error => {
+                                    sendUserError(500, `The was an error while deleting any posts submitted by ${del.name}.`, res);
+                                })
+                        }
+                        res.json(del);
                     }
                 })
                 .catch(error => {
-                    sendUserError(500, `The ${helperStr} information could not be removed.`, res); 
-                })  
+                    sendUserError(500, `The ${helperStr} information could not be removed.`, res);
+                })
         })
         .catch(error => {
             sendUserError(404, `The ${helperStr} with the specified ID does not exist.`, res);
@@ -176,7 +210,7 @@ const deleteResources = (helper, helperStr, req, res) => {
 
 // #################### Endpoints ####################
 
-server.get('/api/users', (req, res) => {
+server.get('/api/users/', (req, res) => {
     getResources(users, 'users', null, res, null);
 });
 
@@ -200,6 +234,14 @@ server.get('/api/posts/:id/tags', (req, res) => {
     getResources(posts, ['tags', 'post'], req, res, posts.getPostTags);
 });
 
+server.get('/api/tags/', (req, res) => {
+    getResources(tags, 'tags', null, res, null);
+});
+
+server.get('/api/tags/:id', (req, res) => {
+    getResources(tags, 'tag', req, res);
+});
+
 server.post('/api/users/', (req, res) => {
     postResources(users, 'users', req, res)
 });
@@ -208,12 +250,20 @@ server.post('/api/posts/', (req, res) => {
     postResources(posts, 'posts', req, res);
 });
 
+server.post('/api/tags/', (req, res) => {
+    postResources(tags, 'tags', req, res);
+})
+
 server.put('/api/users/:id', (req, res) => {
     putResources(users, 'users', req, res);
 });
 
 server.put('/api/posts/:id', (req, res) => {
     putResources(posts, 'posts', req, res);
+});
+
+server.put('/api/tags/:id', (req, res) => {
+    putResources(tags, 'tags', req, res);
 });
 
 server.delete('/api/users/:id', (req, res) => {
@@ -224,5 +274,8 @@ server.delete('/api/posts/:id', (req, res) => {
     deleteResources(posts, 'post', req, res);
 });
 
+server.delete('/api/tags/:id', (req, res) => {
+    deleteResources(tags, 'tag', req, res);
+});
 
 server.listen(port, () => console.log(`Server is running on port ${port}.`));
