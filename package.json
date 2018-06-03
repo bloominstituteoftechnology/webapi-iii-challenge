@@ -7,6 +7,7 @@
   "author": "bbenefield89 <bsquared18@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "concurrently": "^3.5.1",
     "cors": "^2.8.4",
     "express": "^4.16.3",
     "knex": "^0.14.6",
@@ -16,6 +17,7 @@
     "nodemon": "^1.17.5"
   },
   "scripts": {
+    "heroku-dev": "concurrently \"npm run start\" \"npm run start --prefix client\"",
     "start": "nodemon"
   }
 }
