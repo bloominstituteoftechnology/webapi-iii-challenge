@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import './App.css';
 import axios from "axios";
-import { Link, Route } from "react-router-dom";
-import Post from "./Post.js";
+import { Route } from "react-router-dom";
+import User from "./User.js";
+import PostList from "./PostList.js";
 
 class App extends Component {
   constructor() {
@@ -14,16 +15,10 @@ class App extends Component {
   }
 
   getUsers = () => {
-    axios.get('http://localhost:5000/api/users')
-      .then(response => {
-        this.setState({ users: response.data.users })
-      });
+    return axios.get('http://localhost:5000/api/users');
   }
   getPosts = () => {
-    axios.get('http://localhost:5000/api/posts')
-      .then(response => {
-        this.setState({ posts: response.data.posts })
-      });
+    return axios.get('http://localhost:5000/api/posts');
   }
 
   replaceUserId = () => {
@@ -37,6 +32,10 @@ class App extends Component {
   componentDidMount() {
     axios.all([this.getUsers(), this.getPosts()])
       .then(axios.spread((users, posts) => {
+        this.setState({
+          users: users.data,
+          posts: posts.data
+        })
       }))
       .catch(error => {
         console.log(error);
@@ -44,20 +43,11 @@ class App extends Component {
   }
   
   render() {
-    this.replaceUserId();
     return (
       <div className="App">
-        <div className="post-list">
-          {this.state.posts.map(post => {
-            return (
-              <Link to="/users/:id" key={post.id} className="post">
-                <h4>{post.userId}</h4>
-                <p>{post.text}</p>
-              </Link>
-            );
-          })}
-        </div>
-        <Route path="/users/:id" render={props => <Post users={this.state.users}/>}/>
+        <Route exact path="/" render={props => <PostList {...this.state} replaceUserId={this.replaceUserId}/>}/>
+        <Route path="/users/:id" render={({match}) => <User match={match} users={this.state.users}/>}/>
+        {/* <Route path="/users/:id" render={({ match }) => <User users={this.state.users} match={match}/>}/> */}
       </div>
     );
   }
