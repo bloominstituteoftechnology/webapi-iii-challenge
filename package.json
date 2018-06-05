@@ -1,0 +1,28 @@
+{
+  "name": "node-blog",
+  "version": "0.0.1",
+  "description": "LambdaSchool Blog using Node.js and Express",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iamthuypham/Node-Blog.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/iamthuypham/Node-Blog/issues"
+  },
+  "homepage": "https://github.com/iamthuypham/Node-Blog#readme",
+  "dependencies": {
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "knex": "^0.14.6",
+    "sqlite3": "^4.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.17.5"
+  }
+}
