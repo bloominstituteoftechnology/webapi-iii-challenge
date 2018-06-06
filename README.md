@@ -82,7 +82,7 @@ Design and build the necessary endpoints to:
 
 #####endpoints
 method| endpoint| what it is|done
---- | --- | ---|---
+--- | --- | --- | ---
  get:   | `/api/users ` |   list of users| X
  get:   | `/api/users/:id`|  A user
  post:  | `/api/users`| add user
