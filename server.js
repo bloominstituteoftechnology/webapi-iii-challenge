@@ -20,12 +20,14 @@ server.get('/api/users', (req, res)=>{
         .then(users=>{
             if(users.length===0){
                 sendUserError(404, "Users could not be found", res);
+                return;
             } else{
             res.json({ users });
             }
         })
         .catch(err =>{
             sendUserError(500, "There was an error in retrieving users information");
+            return;
         });
 });
 
@@ -35,14 +37,15 @@ server.get('/api/posts', (req, res) =>{
         .then(posts=>{
             if(posts.length===0){
                 sendUserError(404, "Posts could not be found", res);
+                return;
             } else{
             res.json({ posts })
             }
         })
         .catch(err =>{
             sendUserError(500, "Post information could not be retrieved", res)
-
-        })
+            return;
+        });
 })
 
 server.get('/api/tags', (req, res) =>{
@@ -56,14 +59,16 @@ server.get('/api/tags', (req, res) =>{
             }
         })
         .catch(err =>{
-            sendUserError(500, "Tag information could not be retrieved", res)
-        })
+            sendUserError(500, "Tag information could not be retrieved", res);
+            return;
+        });
 })
 
 server.post('/api/users', (req, res) =>{
     const { name } = req.body;
     if(!name){
         sendUserError(400, "Must include name", res)
+        return;
     }
     userDb
         .insert(name)
@@ -72,6 +77,7 @@ server.post('/api/users', (req, res) =>{
         })
         .catch(err =>{
             sendUserError(500, "User could not be saved", res);
+            return;
         })
 })
 
@@ -79,6 +85,7 @@ server.post('/api/posts', (req, res) =>{
     const { text } = req.body;
         if(!text){
             sendUserError(400, "Must include text", res);
+            return;
         }
     postDb
         .insert(text) 
@@ -87,6 +94,7 @@ server.post('/api/posts', (req, res) =>{
         })
         .catch(err =>{
             sendUserError(500, "Post could not be saved", res);
+            return;
         });
 })
 
@@ -94,6 +102,7 @@ server.post('/api/tags', (req, res) =>{
     const { tag } = req.body;
         if(!tag){
             sendUserError(400, "Must include tag", res);
+            return;
         }
     postDb
         .insert(tag) 
@@ -102,6 +111,7 @@ server.post('/api/tags', (req, res) =>{
         })
         .catch(err =>{
             sendUserError(500, "Tag could not be saved", res);
+            return;
         });
 })
 
@@ -111,11 +121,11 @@ server.get('/api/users/:id', (req, res) =>{
     userDb
         .get(id)
         .then(user =>{
-            console.log("user", user);
-            // if(user.length===0){
-            //     sendUserError(404, "The requested ID could not be found", res)
-            // } 
-            res.json(user);
+            if(!user){
+                sendUserError(404, "user could not be found", res);
+                return;
+            }
+            res.json({user: user});
         })
         .catch(err =>{
             sendUserError(500, "The requested ID could not be retrieved", res)
@@ -129,9 +139,10 @@ server.get('/api/posts/:id', (req, res) =>{
         .get(id)
         .then(post =>{
             console.log("post", post);
-            // if(post.length===0){
-            //     sendUserError(404, "The requested ID could not be found", res)
-            // } 
+            if(!post){
+                sendUserError(404, "post could not be found", res);
+                return;
+            }
             res.json(post);
         })
         .catch(err =>{
@@ -146,11 +157,12 @@ server.get('/api/tags/:id', (req, res) =>{
         .get(id)
         .then(tag =>{
             console.log("tag", tag);
-            // if(tag.length===0){
-            //     sendUserError(404, "The requested ID could not be found", res)
-            // } 
-            res.json(tag);
-        })
+            if(!tag){
+                sendUserError(404, "tag could not be found", res);
+                return;
+            }
+            res.json(tag)
+            })
         .catch(err =>{
             sendUserError(500, "The requested tag ID could not be retrieved", res)
         });
