@@ -81,19 +81,21 @@ Design and build the necessary endpoints to:
 * Add styling!
 
 #####endpoints
-method| endpoint| what it is|done
---- | --- | --- | ---
- get:   | `/api/users ` |   list of users| X
- get:   | `/api/users/:id`|  A user
- post:  | `/api/users`| add user
- delete:| `/api/users/:id`| delete a user
- get:   | `/api/posts`    | list of posts |X
- get:   | `/api/posts/:id`| A post
- post:   | `/api/posts`   | add post
- delete: | `/api/posts/:id`| delete a post
- get:    | `/api/tags`    | list of tags| X
- get:    | `/api/tags/:id`| A tag
- post:   | `/api/tags `   | add tag
- delete: | `/api/tags/:id` | delete a tag
- get:    | `/api/postsbyid/:id` | list of posts by a specific user ID
- get:    | `/api/posttags/:id ` |  list of tags by post ID
+
+
+method| *endpoint*| what it is|done
+---- | ---- | :----: | ----:
+|get:   | `/api/users ` |   list of  | |users| X
+|get:   | `/api/users/:id`|  A user |
+| post:  | `/api/users`| add user |
+|delete:| `/api/users/:id`| delete a user |
+|get:   | `/api/posts`    | list of posts |X |
+|get:   | `/api/posts/:id`| A post |
+|post:   | `/api/posts`   | add post |
+|delete: | `/api/posts/:id`| delete a post |
+|get:    | `/api/tags`    | list of tags| X |
+|get:    | `/api/tags/:id`| A tag |
+|post:   | `/api/tags `   | add tag |
+|delete: | `/api/tags/:id` | delete a tag |
+|get:    | `/api/postsbyid/:id` | list of posts by a specific user ID |
+|get:    | `/api/posttags/:id ` |  list of tags by post ID |
