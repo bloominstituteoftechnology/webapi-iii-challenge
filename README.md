@@ -76,6 +76,24 @@ Design and build the necessary endpoints to:
 ## Stretch Goal
 
 * Use `create-react-app` to create an application inside the root folder, name it `client`.
-* From the React application connect to the `/api/users` endpoint in the API and show the list of users.
+* From the React application connect to th|e `/api/users` endpoint in the API and show the list of users.
 * Add functionality to show the details of a user, including their posts, when clicking a user name in the list. Use React Router to navigate to a `/users/:id` route to show the user details.
 * Add styling!
+
+#####endpoints
+method| endpoint| what it is|done
+--- | --- | ---|---
+ get:   | `/api/users ` |   list of users| X
+ get:   | `/api/users/:id`|  A user
+ post:  | `/api/users`| add user
+ delete:| `/api/users/:id`| delete a user
+ get:   | `/api/posts`    | list of posts |X
+ get:   | `/api/posts/:id`| A post
+ post:   | `/api/posts`   | add post
+ delete: | `/api/posts/:id`| delete a post
+ get:    | `/api/tags`    | list of tags| X
+ get:    | `/api/tags/:id`| A tag
+ post:   | `/api/tags `   | add tag
+ delete: | `/api/tags/:id` | delete a tag
+ get:    | `/api/postsbyid/:id` | list of posts by a specific user ID
+ get:    | `/api/posttags/:id ` |  list of tags by post ID
