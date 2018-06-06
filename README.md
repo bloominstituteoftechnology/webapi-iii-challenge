@@ -86,15 +86,15 @@ Design and build the necessary endpoints to:
 method      | *endpoint*               | what it is         |route handler  |client err |server err|
 ----        | ----                     | :----:             | ----:| ----      | ----|
 |get:       | `/api/users `            |   list of users    |  X   |   X       | X   |
-|get:       | `/api/users/:id`         |  A user            |      |           |     |
+|get:       | `/api/users/:id`         |  A user            |  X   |           | X   |
 |post:      | `/api/users`             | add user           |  X   |   X       | X   |
 |delete:    | `/api/users/:id`         | delete a user      |      |           |     |
 |get:       | `/api/posts`             | list of posts      |  X   |   X       | X   |
-|get:       | `/api/posts/:id`         | A post             |      |           |     |
+|get:       | `/api/posts/:id`         | A post             |  X   |           | X   |
 |post:      | `/api/posts`             | add post           |  X   |   X       | X   |
 |delete:    | `/api/posts/:id`         | delete a post      |      |           |     |
 |get:       | `/api/tags`              | list of tags       |  X   |   X       | X   |
-|get:       | `/api/tags/:id`          | A tag              |      |           |     |
+|get:       | `/api/tags/:id`          | A tag              |  X   |           | X   |
 |post:      | `/api/tags `             | add tag            |      |           |     |
 |delete:    | `/api/tags/:id`          | delete a tag       |      |           |     |
 |get:       | `/api/postsbyid/:id`     |posts :userID       |      |           |     |

@@ -90,4 +90,54 @@ server.post('/api/posts', (req, res) =>{
         });
 })
 
+server.get('/api/users/:id', (req, res) =>{
+    const { id } = req.params;
+    
+    userDb
+        .get(id)
+        .then(user =>{
+            console.log("user", user);
+            // if(user.length===0){
+            //     sendUserError(404, "The requested ID could not be found", res)
+            // } 
+            res.json(user);
+        })
+        .catch(err =>{
+            sendUserError(500, "The requested ID could not be retrieved", res)
+        });
+})
+
+server.get('/api/posts/:id', (req, res) =>{
+    const { id } = req.params;
+    
+    postDb
+        .get(id)
+        .then(post =>{
+            console.log("post", post);
+            // if(post.length===0){
+            //     sendUserError(404, "The requested ID could not be found", res)
+            // } 
+            res.json(post);
+        })
+        .catch(err =>{
+            sendUserError(500, "The requested post ID could not be retrieved", res)
+        });
+})
+
+server.get('/api/tags/:id', (req, res) =>{
+    const { id } = req.params;
+    
+    tagDb
+        .get(id)
+        .then(tag =>{
+            console.log("tag", tag);
+            // if(tag.length===0){
+            //     sendUserError(404, "The requested ID could not be found", res)
+            // } 
+            res.json(tag);
+        })
+        .catch(err =>{
+            sendUserError(500, "The requested tag ID could not be retrieved", res)
+        });
+})
 server.listen(port, () =>{ console.log(`Server is listening on ${port}`)});
