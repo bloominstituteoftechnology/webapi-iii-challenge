@@ -89,6 +89,7 @@ server.put( '/api/users/:id', ( req, res ) =>
             res.json( { error } );
         } );
     console.log( req.body );
+    // The following is a test to check if it works.
     //res.send( 'Success!' );
 } );
 
