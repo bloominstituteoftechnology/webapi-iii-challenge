@@ -21,9 +21,6 @@ server.use( CORS() );
 
 // TODO USERS
 // get: /api/users | list of users
-// get: /api/users /: id | a user matching ID
-// post: /api/users | add a user to the users table
-// delete: /api/users /: id | delete a user from the users table based on the ID
 server.get( '/api/users', ( req, res ) =>
 {
     userDb
@@ -40,13 +37,12 @@ server.get( '/api/users', ( req, res ) =>
         // res.json( 'testing get' );
 } );
 
-// Returns the user object with the specified id.
+// get: /api/users /: id | a user matching ID
 server.get( '/api/users/:id', ( req, res ) =>
 {
     const { id } = req.params;
-    const { name } = req.params;
     userDb
-        .findById( { name, bio } )
+        .get( `${ id }` )
         .then( users =>
         {
             res.json( { users } );
@@ -55,10 +51,10 @@ server.get( '/api/users/:id', ( req, res ) =>
         {
             res.json( { error } );
         } );
-    res.json( 'Success!' );
+    //res.json( 'Success!' );
 } );
 
-// Creates a user using the information sent inside the request body.
+// post: /api/users | add a user to the users table
 server.post( '/api/users', ( req, res ) =>
 {
     const { name, bio } = req.body;
@@ -94,7 +90,7 @@ server.put( '/api/users/:id', ( req, res ) =>
     res.send( 'Success!' );
 } );
 
-// Removes the user with the specified id and returns the deleted user.
+// delete: /api/users /: id | delete a user from the users table based on the ID
 server.delete( '/api/users/:id', ( req, res ) =>
 {
     const { id } = req.params;
