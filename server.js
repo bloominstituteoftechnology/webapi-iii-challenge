@@ -53,4 +53,17 @@ server.get( '/api/tags', ( req, res ) =>
 
 } );
 
-server.get
+server.get( '/api/posts', ( req, res ) =>
+{
+    posts
+
+        .get()
+        .then( posts =>
+        {
+            res.json( posts );
+        } )
+        .catch( eror =>
+        {
+            res.status( 500 ).json( error );
+        } );
+} );
