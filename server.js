@@ -69,6 +69,7 @@ server.post( '/api/users', ( req, res ) =>
         {
             res.json( { error } );
         } );
+    // The following is a test to check if it works.
     //res.json( 'testing post' );
 } );
 
@@ -76,9 +77,9 @@ server.post( '/api/users', ( req, res ) =>
 server.put( '/api/users/:id', ( req, res ) =>
 {
     const { id } = req.params;
-    const { name, bio } = req.body;
+    const { name } = req.body;
     userDb
-        .update( { name, bio } )
+        .update( id, { name } )
         .then( users =>
         {
             res.json( { users } );
@@ -88,7 +89,7 @@ server.put( '/api/users/:id', ( req, res ) =>
             res.json( { error } );
         } );
     console.log( req.body );
-    res.send( 'Success!' );
+    //res.send( 'Success!' );
 } );
 
 // delete: /api/users /: id | delete a user from the users table based on the ID
