@@ -51,15 +51,16 @@ server.get( '/api/users/:id', ( req, res ) =>
         {
             res.json( { error } );
         } );
+    // The following is a test to check if it works.
     //res.json( 'Success!' );
 } );
 
 // post: /api/users | add a user to the users table
 server.post( '/api/users', ( req, res ) =>
 {
-    const { name, bio } = req.body;
+    const { name } = req.body;
     userDb
-        .insert( { name, bio } )
+        .insert( { name } )
         .then( users =>
         {
             res.json( { users } );
@@ -68,7 +69,7 @@ server.post( '/api/users', ( req, res ) =>
         {
             res.json( { error } );
         } );
-    res.json( 'testing post' );
+    //res.json( 'testing post' );
 } );
 
 // Updates the user with the specified id using data from the request body. Returns the modified document, NOT the original.
