@@ -90,6 +90,21 @@ server.post('/api/posts', (req, res) =>{
         });
 })
 
+server.post('/api/tags', (req, res) =>{
+    const { tag } = req.body;
+        if(!tag){
+            sendUserError(400, "Must include tag", res);
+        }
+    postDb
+        .insert(tag) 
+        .then(res => {
+            res.status(201).json(res);
+        })
+        .catch(err =>{
+            sendUserError(500, "Tag could not be saved", res);
+        });
+})
+
 server.get('/api/users/:id', (req, res) =>{
     const { id } = req.params;
     
