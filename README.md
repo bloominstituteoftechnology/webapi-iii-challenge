@@ -83,7 +83,7 @@ Design and build the necessary endpoints to:
 ##endpoints
 
 
-method      | *endpoint*               | what it is         |done  |client err |server err|
+method      | *endpoint*               | what it is         |route handler  |client err |server err|
 ----        | ----                     | :----:             | ----:| ----      | ----|
 |get:       | `/api/users `            |   list of users    |  X   |   X       | X   |
 |get:       | `/api/users/:id`         |  A user            |      |           |     |
