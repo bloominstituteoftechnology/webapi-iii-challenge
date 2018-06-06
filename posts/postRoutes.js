@@ -14,7 +14,7 @@ const userError = (status, message, res) => {
 router.post('/', (req, res) => {
     const { id } = req.params;
     const newPost = req.body;
-    if (!newPost.userId || newPost.text.legnth < 1) {
+    if (!newPost.userId || newPost.text.length < 1) {
         userError(400, "Missing ID or text", res);
         return;
     }
@@ -34,7 +34,7 @@ router.get('/', (req, res) => {
     postDb
         .get()
         .then(posts => {
-            res.json({ posts })
+            res.json(posts)
         })
         .catch(error => {
             userError(500, 'Somethings wrong', res);
@@ -113,7 +113,7 @@ router.put('/:id', (req, res) => {
     const update = req.body;
 
     if(!update.userId || update.text.length === 0) {
-        userError(400, "Please add user ID and text to post")
+        userError(400, "Please add user ID and text to post", res)
     }else {
         postDb
         .update(id, update)
