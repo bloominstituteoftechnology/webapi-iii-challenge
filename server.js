@@ -22,7 +22,7 @@ server.get('/api/users', (req, res)=>{
                 sendUserError(404, "Users could not be found", res);
                 return;
             } else{
-            res.json({ users });
+            res.status(200).json({ users });
             }
         })
         .catch(err =>{
@@ -39,7 +39,7 @@ server.get('/api/posts', (req, res) =>{
                 sendUserError(404, "Posts could not be found", res);
                 return;
             } else{
-            res.json({ posts })
+            res.status(200).json({ posts })
             }
         })
         .catch(err =>{
@@ -55,7 +55,7 @@ server.get('/api/tags', (req, res) =>{
             if(tags.length===0){
                 sendUserError(404, "Posts could not be found", res);
             } else{
-            res.json({tags})
+            res.status(200).json({tags})
             }
         })
         .catch(err =>{
@@ -71,14 +71,14 @@ server.post('/api/users', (req, res) =>{
         return;
     }
     userDb
-        .insert(name)
+        .insert({ name })
         .then(res =>{
-            res.status(201).json(res);
+           console.log(res.status(201).json(res));
         })
         .catch(err =>{
-            sendUserError(500, "User could not be saved", res);
+            sendUserError(500, "User could not be saved", res)
             return;
-        })
+        });
 })
 
 server.post('/api/posts', (req, res) =>{
@@ -88,7 +88,7 @@ server.post('/api/posts', (req, res) =>{
             return;
         }
     postDb
-        .insert(text) 
+        .insert({ text }) 
         .then(res => {
             res.status(201).json(res);
         })
@@ -101,17 +101,15 @@ server.post('/api/posts', (req, res) =>{
 server.post('/api/tags', (req, res) =>{
     const { tag } = req.body;
         if(!tag){
-            sendUserError(400, "Must include tag", res);
-            return;
+            return sendUserError(400, "Must include tag", res);
         }
-    postDb
-        .insert(tag) 
+    tagDb
+        .insert({ tag }) 
         .then(res => {
-            res.status(201).json(res);
+            res.json(res);
         })
         .catch(err =>{
-            sendUserError(500, "Tag could not be saved", res);
-            return;
+            return sendUserError(500, "Tag could not be saved", res);
         });
 })
 
@@ -122,8 +120,7 @@ server.get('/api/users/:id', (req, res) =>{
         .get(id)
         .then(user =>{
             if(!user){
-                sendUserError(404, "user could not be found", res);
-                return;
+                return sendUserError(404, "user could not be found", res);
             }
             res.json({user: user});
         })
