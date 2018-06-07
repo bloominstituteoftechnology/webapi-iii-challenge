@@ -167,4 +167,47 @@ server.get('/api/tags/:id', (req, res) =>{
             sendUserError(500, "The requested tag ID could not be retrieved", res)
         });
 })
+
+server.delete('/api/users/:id', (req, res) =>{
+    const { id } = req.params;
+    userDb
+        .remove(id)
+            .then(res =>{
+                res.status(204).json({Success:"This user was successfully deleted"});
+            })
+            .catch(err =>{
+                sendUserError(500, "There was an error in deleting this user", res)
+                return;
+            });
+
+})
+
+server.delete('/api/posts/:id', (req, res) =>{
+    const { id } = req.params;
+    postDb
+        .remove(id)
+            .then(res =>{
+                res.status(204).json({Success:"This post was successfully deleted"});
+            })
+            .catch(err =>{
+                sendUserError(500, "There was an error in deleting this post", res)
+                return;
+            });
+
+})
+
+server.delete('/api/tags/:id', (req, res) =>{
+    const { id } = req.params;
+    tagDb
+        .remove(id)
+            .then(res =>{
+                res.status(204).json({Success:"This tag was successfully deleted"});
+            })
+            .catch(err =>{
+                sendUserError(500, "There was an error in deleting this tag", res)
+                return;
+            });
+
+})
+
 server.listen(port, () =>{ console.log(`Server is listening on ${port}`)});

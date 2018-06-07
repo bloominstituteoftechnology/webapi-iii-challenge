@@ -88,14 +88,14 @@ method      | *endpoint*               | what it is         |route handler  |cli
 |get:       | `/api/users `            |   list of users    |  X   |   X       | X   |
 |get:       | `/api/users/:id`         |  A user            |  X   |   X       | X   |
 |post:      | `/api/users`             | add user           |  X   |   X       | X   |
-|delete:    | `/api/users/:id`         | delete a user      |      |           |     |
+|delete:    | `/api/users/:id`         | delete a user      |  X   |   X       | X   |
 |get:       | `/api/posts`             | list of posts      |  X   |   X       | X   |
 |get:       | `/api/posts/:id`         | A post             |  X   |   X       | X   |
 |post:      | `/api/posts`             | add post           |  X   |   X       | X   |
-|delete:    | `/api/posts/:id`         | delete a post      |      |           |     |
+|delete:    | `/api/posts/:id`         | delete a post      |  X   |   X       | X   |
 |get:       | `/api/tags`              | list of tags       |  X   |   X       | X   |
 |get:       | `/api/tags/:id`          | A tag              |  X   |   X       | X   |
 |post:      | `/api/tags `             | add tag            |  X   |   X       | X   |
-|delete:    | `/api/tags/:id`          | delete a tag       |      |           |     |
+|delete:    | `/api/tags/:id`          | delete a tag       |  X   |   X       | X   |
 |get:       | `/api/postsbyid/:id`     |posts :userID       |      |           |     |
 |get:       | `/api/posttags/:id `     |tags by post ID     |      |           |     |
