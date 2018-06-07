@@ -10,9 +10,17 @@ const tagRoutes = require('./tags/tagRoutes');
 const postRoutes = require('./posts/postRoutes');
 
 // Add Middleware
+function thisUppercase(req, res, next) {
+    if(req.body.tag) {
+        req.body.tag = req.body.tag.toUpperCase();
+    }
+    next();
+}
+
 server.use(helmet());
 server.use(cors());
 server.use(express.json());
+server.use(thisUppercase);
 
 server.use('/api/users', userRoutes);
 server.use('/api/tags', tagRoutes);
