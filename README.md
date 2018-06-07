@@ -100,5 +100,5 @@ method      | *endpoint*               | what it is         |route handler  |cli
 |get:       | `/api/postsbyid/:userId` |posts :userID       |  X   |   X       | X   |
 |get:       | `/api/posttags/:id `     |tags by post ID     |  X   |   X       | X   |
 |put:       | `/api/users/:id`         |  A user            |  X   |   X       | X   |
-|put:       | `/api/posts/:id`         | A post             |      |           |     |
-|put:       | `/api/tags/:id`          | A tag              |      |           |     |
+|put:       | `/api/posts/:id`         | A post             |  X   |   X       | X   |
+|put:       | `/api/tags/:id`          | A tag              |  X   |   X       | X   |
