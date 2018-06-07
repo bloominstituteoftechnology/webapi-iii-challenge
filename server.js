@@ -113,11 +113,6 @@ server.delete( '/api/users/:id', ( req, res ) =>
 } );
 
 // * Posts
-
-
-// post: /api/posts | add a post to the posts table
-// delete: /api/posts /: id | delete a post from the posts table based on the ID
-
 // get: /api/posts | list of posts
 server.get( '/api/posts', ( req, res ) =>
 {
@@ -173,7 +168,7 @@ server.post( '/api/posts', ( req, res ) =>
 
 
 // Updates the post with the specified id using data from the request body. 
-// ! Returns the modified document, NOT the original.
+// Returns the modified document, NOT the original.
 server.put( '/api/posts/:id', ( req, res ) =>
 {
     const { id } = req.params;
@@ -192,6 +187,27 @@ server.put( '/api/posts/:id', ( req, res ) =>
     // The following is a test to check if it works.
     // res.send( 'Success!' );
 } );
+
+// delete: /api/posts /: id | delete a post from the posts table based on the ID
+server.delete( '/api/posts/:id', ( req, res ) =>
+{
+    const { id } = req.params;
+    const { post, text } = req.body;
+    postDb
+        .remove( id, { post, text } )
+        .then( posts =>
+        {
+            res.json( { posts } );
+        } )
+        .catch( error =>
+        {
+            res.json( { error } );
+        } );
+    console.log( req.body );
+    // The following is a test to check if it works.
+    // res.json( 'testing delete' );
+} );
+
 
 // * Tags
 // get: /api/tags | list of tags
