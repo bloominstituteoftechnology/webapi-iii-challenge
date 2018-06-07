@@ -211,13 +211,24 @@ server.delete( '/api/posts/:id', ( req, res ) =>
 
 // * Tags
 // get: /api/tags | list of tags
+server.get()
+
 // get: /api/tags /: id | a tag matching ID
+server.get()
+
 // post: /api/tags | add a tag to the tags table
+server.post()
+
 // delete: /api/tags /: id | delete a tag from the tags table based on the ID
+server.delete()
+
 
 // get: /api/postsbyid /: id | lists of posts by a speciffic user ID
-// get: /api/posttags /: id | a list of tags by a speciffic post ID
+server.get()
 
+
+// get: /api/posttags /: id | a list of tags by a speciffic post ID
+server.get()
 
 server.listen( port, () =>
 {
