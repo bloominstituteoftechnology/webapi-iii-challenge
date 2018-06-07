@@ -43,6 +43,18 @@ server.get('/api/users/:id', (req, res) => {
         })
 })
 
+server.post('/api/users', (req, res) => {
+    const { name } = req.body;
+    users
+        .insert({ name })
+        .then(newUser => {
+            res.status(201).json({ newUser })
+        })
+        .catch(error => {
+            console.error(error);
+        })
+})
+
 //----------- posts end point -----------//
 
 server.get('/api/posts', (req, res) => {
@@ -68,6 +80,19 @@ server.get('/api/posts/:id', (req, res) => {
         })
 })
 
+server.post('/api/posts/:userId', (req, res) => {
+    const { userId } = req.params;
+    const { text } = req.body;
+    posts
+        .insert({ userId, text })
+        .then(newPost => {
+            res.status(201).json({ newPost })
+        })
+        .catch(error => {
+            console.error(error);
+        })
+})
+
 //----------- tags end point -----------//
 
 server.get('/api/tags', (req, res) => {
@@ -87,6 +112,18 @@ server.get('/api/tags/:id', (req, res) => {
         .get(id)
         .then(tags => {
             res.json({ tags })
+        })
+        .catch(error => {
+            console.error(error);
+        })
+})
+
+server.post('/api/tags', (req, res) => {
+    const { tag } = req.body;
+    tags
+        .insert({ tag })
+        .then(newTag => {
+            res.status(201).json({ newTag })
         })
         .catch(error => {
             console.error(error);
