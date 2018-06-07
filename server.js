@@ -55,7 +55,7 @@ server.get( '/api/users/:id', ( req, res ) =>
             res.status( 500 ).json( error );
         } );
 } );
-//post not work
+//post  works
 server.post( '/api/users', ( req, res ) =>
 {
     const { name } = req.body;
@@ -76,12 +76,14 @@ server.post( '/api/users', ( req, res ) =>
 
             } );
         
-
+//put not working yet
 server.put( '/api/users/:id', (req, res ) =>
 {
     const { id } = req.params;
     const { name } = req.body;
+
     users
+        
         .update( id, { name } )
         .then( users =>
         {
@@ -93,10 +95,30 @@ server.put( '/api/users/:id', (req, res ) =>
         } );
 });
 
-//try toget delete button to work
-server.delete( '/api/users/:id', ( req, res ) =>{
+//  got delete  works for users
+server.delete( '/api/users/:id', ( req, res ) =>
+{
+    const { id } = req.params;
     
-})
+
+    users
+        .remove( id )
+        .then( userRemoved =>
+        {
+            if ( userRemoved === 0 )
+            {
+                return error( 404, 'no such user found' );
+            
+            } else
+            {
+                res.json( { success: 'User Removed' } )
+            }
+        } )
+        .catch( err =>
+        {
+            return error( 500 );
+        } );
+} );
 
 //get all tags
 server.get( '/api/tags', ( req, res ) =>
@@ -154,6 +176,30 @@ server.post( '/api/tags', ( req, res ) =>
 
 
 } );
+//delete works for tags
+server.delete( '/api/tags/:id', ( req, res ) =>
+{
+    const { id } = req.params;
+
+
+    tags
+        .remove( id )
+        .then( tagRemoved =>
+        {
+            if ( tagRemoved === 0 )
+            {
+                return error( 404, 'no such tag found' );
+
+            } else
+            {
+                res.json( { success: 'tag Removed' } )
+            }
+        } )
+        .catch( err =>
+        {
+            return error( 500 );
+        } );
+} );
 
 //get all posts
 server.get( '/api/posts', ( req, res ) =>
@@ -206,6 +252,30 @@ server.post( '/api/posts', ( req, res ) =>
             res.json( { error } );
         } );
 
+} );
+//delete works for posts
+server.delete( '/api/posts/:id', ( req, res ) =>
+{
+    const { id } = req.params;
+
+
+    posts
+        .remove( id )
+        .then( postRemoved =>
+        {
+            if ( postRemoved === 0 )
+            {
+                return error( 404, 'no such post found' );
+
+            } else
+            {
+                res.json( { success: ' post Removed' } )
+            }
+        } )
+        .catch( err =>
+        {
+            return error( 500 );
+        } );
 } );
 
     server.listen( port, () =>{( `server running....${ port }` );} )
