@@ -243,4 +243,87 @@ server.get('/api/posts/:postId/tags', (req, res) =>{
             });
 });
 
+server.put('/api/users/:id', (req, res) =>{
+    const { id } = req.params;
+    const { name } = req.body;
+
+    userDb
+        .get(id)
+        .then(user =>{
+            if(!user){
+                sendUserError(404, "the user with the specified ID does not exist", res)
+            }
+            else{
+                if(!name){
+                    sendUserError(400, "Name is required for user")
+                }
+                userDb
+                    .update(id, { name })
+                    .then(resolve =>{
+                        res.json(resolve)
+                    })
+                    .catch(err =>{
+                        sendUserError(500, "User information could not be updated" 
+                        )
+                    })
+            }
+        });
+});
+
+server.put('/api/posts/:id', (req, res) =>{
+    const { id } = req.params;
+    const { text } = req.body;
+
+    postDb
+        .get(id)
+        .then(response =>{
+            if(!response){
+                sendUserError(404, "the post with the specified ID does not exist", res)
+            }
+            else{
+                if(!text){
+                    sendUserError(400, "Text is required for post")
+                }
+                postDb
+                    .update(id, { text })
+                    .then(post =>{
+                        
+                        res.json(post)
+                    })
+                    .catch(err =>{
+                        sendUserError(500, "Post information could not be updated" 
+                        )
+                    })
+            }
+        });
+});
+
+server.put('/api/tags/:id', (req, res) =>{
+    const { id } = req.params;
+    const { tag } = req.body;
+    
+
+    tagDb
+        .get(id)
+        .then(response =>{
+            if(!response){
+                sendUserError(404, "the tag with the specified ID does not exist", res)
+            }
+            else{
+                tagDb
+                    .update(id, { tag })
+                    .then(res =>{
+                        if(!res){
+                            sendUserError(400, "Tag is required")
+                        }
+                        res.json(res)
+                    })
+                    .catch(err =>{
+                        sendUserError(500, "tag information could not be updated" 
+                        )
+                    })
+            }
+        });
+});
+
 server.listen(port, () =>{ console.log(`Server is listening on ${port}`)});
