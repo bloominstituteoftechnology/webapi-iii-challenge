@@ -191,6 +191,27 @@ postsDb
     } );
 } );
 
+//----TAGS-----
+/*get:       /api/tags               |       list of tags
+get:       /api/tags/:id        |    a tag matching ID
+post:     /api/tags            |    add a tag to the tags table
+delete:    /api/tags/:id        |    delete a tag from the tags table based on the ID*/
+
+
+// get(): calling find returns a promise that resolves to an array of all the resources contained in the database. If you pass an id to this method it will return the resource with that id if found.
+server.get('/api/tags', (req, res) => {
+    tagsDb
+        .get()
+        .then(users => {
+            res.json({ users });
+        })
+        .catch(error => {
+            res.json({ error });
+        });
+    // res.json('testing get');
+});
+
+
 server.listen( port, () =>
 {
     console.log( `Server listening on port ${ port }` );
