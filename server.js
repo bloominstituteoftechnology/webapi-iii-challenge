@@ -167,19 +167,29 @@ server.put('/api/posts/:id', (req, res) => {
 });
 
 // remove(): the remove method accepts an id as it's first parameter and, upon successfully deleting the resource from the database, returns the number of records deleted.
-server.delete('/api/users/:id', (req, res) => {
-    const { id } = req.params;
-    const { name } = req.body;
-    postsDb
-        .remove(id, { name })
-        .then(users => {
-            res.json({ users });
-        })
-        .catch(error => {
-            res.json({ error });
-        });
-    // res.json('testing delete');
-});
+server.delete( '/api/posts/:id', ( req, res ) =>
+{
+const { id } = req.params;
+
+
+postsDb
+    .remove( id )
+    .then( postRemoved =>
+    {
+        if ( postRemoved === 0 )
+        {
+            return error( 404, 'no such post found' );
+
+        } else
+        {
+            res.json( { success: ' post Removed' } )
+        }
+    } )
+    .catch( err =>
+    {
+        return error( 500 );
+    } );
+} );
 
 server.listen( port, () =>
 {
