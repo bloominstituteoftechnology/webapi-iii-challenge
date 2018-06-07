@@ -6,8 +6,8 @@ const cors = require('cors');
 const server = express();
 
 const userRoutes = require('./users/userRoutes');
-const tagRoutes = require('./users/tagRoutes');
-const postRoutes = require('./users/postRoutes');
+const tagRoutes = require('./tags/tagRoutes');
+const postRoutes = require('./posts/postRoutes');
 
 // Add Middleware
 server.use(helmet());
