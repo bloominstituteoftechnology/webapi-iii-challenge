@@ -211,24 +211,42 @@ server.delete( '/api/posts/:id', ( req, res ) =>
 
 // * Tags
 // get: /api/tags | list of tags
-server.get()
+server.get( '/api/tags', ( req, res ) =>
+{
+    
+})
 
 // get: /api/tags /: id | a tag matching ID
-server.get()
+server.get( '/api/tags/:id', ( req, res ) =>
+{
+
+})
 
 // post: /api/tags | add a tag to the tags table
-server.post()
+server.post( '/api/tags', ( req, res ) =>
+{
+
+})
 
 // delete: /api/tags /: id | delete a tag from the tags table based on the ID
-server.delete()
+server.delete( '/api/tags/:id', ( req, res ) =>
+{
+
+})
 
 
 // get: /api/postsbyid /: id | lists of posts by a speciffic user ID
-server.get()
+server.get( '/api/postsbyid/:id', ( req, res ) =>
+{
+
+})
 
 
 // get: /api/posttags /: id | a list of tags by a speciffic post ID
-server.get()
+server.get('/api/posttags/:id', ( req, res ) =>
+{
+
+})
 
 server.listen( port, () =>
 {
