@@ -30,7 +30,7 @@ server.get('/api/users', (req, res) => {
     // res.json('testing get');
 });
 
-// Returns the user object with the specified id.
+// get(): calling find returns a promise that resolves to an array of all the resources contained in the database. If you pass an id to this method it will return the resource with that id if found.
 server.get('/api/users/:id', (req, res) => {
     const { id } = req.params;
     const { name } = req.body;
@@ -45,7 +45,7 @@ server.get('/api/users/:id', (req, res) => {
     // res.json('Success!');
 });
 
-// Creates a user using the information sent inside the request body.
+// insert(): calling insert passing it a resource object will add it to the database and return an object with the id of the inserted resource. The object looks like this: { id: 123 }.
 server.post('/api/users', (req, res) => {
     const { name } = req.body;
     usersDb
@@ -59,7 +59,7 @@ server.post('/api/users', (req, res) => {
     // res.json('testing post');
 });
 
-// Updates the user with the specified id using data from the request body. Returns the modified document, NOT the original.
+// update(): accepts two arguments, the first is the id of the resource to update and the second is an object with the changes to apply. It returns the count of updated records. If the count is 1 it means the record was updated correctly.
 server.put('/api/users/:id', (req, res) => {
     const { id } = req.params;
     const { name } = req.body;
@@ -75,20 +75,20 @@ server.put('/api/users/:id', (req, res) => {
     // res.send('Success!');
 });
 
-// // Removes the user with the specified id and returns the deleted user.
-// server.delete('/api/users/:id', (req, res) => {
-//     const { id } = req.params;
-//     const { name, bio } = req.body;
-//     db
-//         .remove({ name, bio })
-//         .then(users => {
-//             res.json({ users });
-//         })
-//         .catch(error => {
-//             res.json({ error });
-//         });
-//     res.json('testing delete');
-// });
+// remove(): the remove method accepts an id as it's first parameter and, upon successfully deleting the resource from the database, returns the number of records deleted.
+server.delete('/api/users/:id', (req, res) => {
+    const { id } = req.params;
+    const { name } = req.body;
+    usersDb
+        .remove(id, { name })
+        .then(users => {
+            res.json({ users });
+        })
+        .catch(error => {
+            res.json({ error });
+        });
+    // res.json('testing delete');
+});
 
 
 // server.post('/api/users', (req, res) => {
