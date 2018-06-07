@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 
 //const db = require('./data/db.js) --> if there's only one db.js in data folder
-//but it's becoz we have helper folder where keep the data so we like below.
+//but it's becoz the data are kepts in helper folder so we have to get the data as below.
 const users = require('./data/helpers/userDb.js');
 const posts = require('./data/helpers/postDb.js');
 const tags = require('./data/helpers/tagDb.js');
@@ -67,7 +67,18 @@ server.delete('/api/users/:id', (req, res) => {
         })
 })
 
-
+server.put('/api/users/:id', (req, res) => {
+    const { id } = req.params;
+    const { name } = req.body;
+    users
+        .update(id, { name })
+        .then( updatedUser => {
+            res.json({ updatedUser });
+        })
+        .catch(error => {
+            console.error(error);
+        })
+})
 
 //----------- posts end point -----------//
 
@@ -119,6 +130,19 @@ server.delete('/api/posts/:id', (req, res) => {
         })
 })
 
+server.put('/api/posts/:id', (req, res) => {
+    const { id } = req.params;
+    const { text } = req.body;
+    posts
+        .update(id, { text })
+        .then( updatedPost => {
+            res.json({ updatedPost });
+        })
+        .catch(error => {
+            console.error(error);
+        })
+})
+
 //----------- tags end point -----------//
 
 server.get('/api/tags', (req, res) => {
@@ -162,6 +186,19 @@ server.delete('/api/tags/:id', (req, res) => {
         .remove(id)
         .then(deletedTag => {
             res.json({ deletedTag })
+        })
+        .catch(error => {
+            console.error(error);
+        })
+})
+
+server.put('/api/tags/:id', (req, res) => {
+    const { id } = req.params;
+    const { tag } = req.body;
+    tags
+        .update(id, { tag })
+        .then( updatedTag => {
+            res.json({ updatedTag });
         })
         .catch(error => {
             console.error(error);
