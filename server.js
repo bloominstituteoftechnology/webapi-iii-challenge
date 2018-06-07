@@ -5,6 +5,7 @@ const posts = require( './data/helpers/postDb.js' );
 const tags = require( './data/helpers/tagDb.js' );
 const users = require( './data/helpers/userDb.js' );
 
+
 const port = 5000;
 const server = express();
 server.get( '/api/users' );
@@ -12,6 +13,7 @@ server.get( '/api/posts' );
 server.get( '/api/tags' );
 server.use( express.json() );
 server.use( cors() );
+
 
 // server.get( '/', ( req, res ) =>
 // {
@@ -45,7 +47,8 @@ server.get( '/api/users/:id', ( req, res ) =>
     users
 
         .get( id )
-        .then( users =>{
+        .then( users =>
+        {
 
             res.json( users );
         } )
@@ -63,21 +66,21 @@ server.post( '/api/users', ( req, res ) =>
     users
         .insert( { name } )
         .then( users =>
-{
-            
+        {
+
             res.json( { users } );
         } )
         .catch( error => 
         {
             res.json( { error } );
         } );
-            
-            
 
-            } );
-        
+
+
+} );
+
 //put working  yet
- server.put( '/api/users/:id', ( req, res ) =>
+server.put( '/api/users/:id', ( req, res ) =>
 {
     const { id } = req.params;
     const { name } = req.body;
@@ -92,15 +95,15 @@ server.post( '/api/users', ( req, res ) =>
         {
             res.json( { error } );
         } );
-    
-    
+
+
 } );
 
 //  got delete  works for users
 server.delete( '/api/users/:id', ( req, res ) =>
 {
     const { id } = req.params;
-    
+
 
     users
         .remove( id )
@@ -109,7 +112,7 @@ server.delete( '/api/users/:id', ( req, res ) =>
             if ( userRemoved === 0 )
             {
                 return error( 404, 'no such user found' );
-            
+
             } else
             {
                 res.json( { success: 'User Removed' } )
@@ -224,7 +227,7 @@ server.delete( '/api/tags/:id', ( req, res ) =>
         } );
 } );
 //get tags by id (specail)
- 
+
 //get all posts
 server.get( '/api/posts', ( req, res ) =>
 {
@@ -235,7 +238,7 @@ server.get( '/api/posts', ( req, res ) =>
         {
             res.json( posts );
         } )
-        .catch( eror =>
+        .catch( error =>
         {
             res.status( 500 ).json( error );
         } );
@@ -262,14 +265,15 @@ server.get( '/api/posts/:id', ( req, res ) =>
 // posts for posts
 server.post( '/api/posts', ( req, res ) =>
 {
-    const {  text, userid } = req.body;
+    const { text, userid } = req.body;
 
     posts
-        
-        .insert( { text, userid } )
-        .then( posts =>{
 
-            res.json( { posts  } );
+        .insert( { text, userid } )
+        .then( posts =>
+        {
+
+            res.json( { posts } );
         } )
         .catch( error => 
         {
@@ -285,10 +289,10 @@ server.put( '/api/posts/:id', ( req, res ) =>
     const { text } = req.body;
 
     posts
-        .update( id, {text } )
+        .update( id, { text } )
         .then( posts =>
         {
-            res.json(  posts  );
+            res.json( posts );
         } )
         .catch( error =>
         {
@@ -323,4 +327,29 @@ server.delete( '/api/posts/:id', ( req, res ) =>
         } );
 } );
 
-    server.listen( port, () =>{( `server running....${ port }` );} )
+server.get( '/api/posts/tags/:id', ( req, res ) =>
+{
+    const { id  } = req.params;
+    
+
+    posts
+        .getPostTags(id)
+        .then(postTags =>
+        {
+            if ( postTags === 0 )
+            {
+                return error( 404 );
+            } 
+                res.json( postTags );
+                
+            } )
+        
+        .catch( error =>
+        {
+
+            res.status( 500 ).json( error );
+        } );
+
+
+} );
+server.listen( port, () => { ( `server running....${ port }` ); } )
