@@ -13,13 +13,13 @@ server.use( bodyParser.json() );
 server.use( bodyParser.urlencoded( { extended: true } ) );
 server.use( CORS() );
 
-// TEST
+// ! TEST
 // server.get( '/', ( req, res ) => {
 //     res.send(`Your server is running on port ${ port }`);
 // })
 
 
-// TODO USERS
+// * USERS
 // get: /api/users | list of users
 server.get( '/api/users', ( req, res ) =>
 {
@@ -108,22 +108,54 @@ server.delete( '/api/users/:id', ( req, res ) =>
         {
             res.json( { error } );
         } );
-    // res.json( 'testing delete' );
+        // The following is a test to check if it works.
+        // res.json( 'testing delete' );
 } );
 
-
-server.post( '/api/users', ( req, res ) =>
-{
-    const { name, bio } = req.body;
-    console.log( userDb.insert( { name, bio } ) );
-} );
+// * Posts
 
 
-// get: /api/posts | list of posts
-// get: /api/posts /: id | a post matching ID
 // post: /api/posts | add a post to the posts table
 // delete: /api/posts /: id | delete a post from the posts table based on the ID
 
+// get: /api/posts | list of posts
+server.get( '/api/posts', ( req, res ) =>
+{
+    postDb
+        .get()
+        .then( posts =>
+        {
+            res.json( { posts } );
+        } )
+        .catch( error =>
+        {
+            res.json( { error } );
+        } );
+    // The following is a test to check if it works.
+    // res.json( 'testing get' );
+} );
+
+// get: /api/posts /: id | a post matching ID
+server.get( '/api/posts/:id', ( req, res ) =>
+{
+    const { id } = req.params;
+    postDb
+        .get( `${ id }` )
+        .then( posts =>
+        {
+            res.json( { posts } );
+        } )
+        .catch( error =>
+        {
+            res.json( { error } );
+        } );
+    // The following is a test to check if it works.
+    //res.json( 'Success!' );
+} );
+
+
+
+// * Tags
 // get: /api/tags | list of tags
 // get: /api/tags /: id | a tag matching ID
 // post: /api/tags | add a tag to the tags table
