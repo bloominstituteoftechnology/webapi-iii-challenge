@@ -55,6 +55,20 @@ server.post('/api/users', (req, res) => {
         })
 })
 
+server.delete('/api/users/:id', (req, res) => {
+    const { id } = req.params;
+    users
+        .remove(id)
+        .then(deletedUser => {
+            res.json({ deletedUser })
+        })
+        .catch(error => {
+            console.error(error);
+        })
+})
+
+
+
 //----------- posts end point -----------//
 
 server.get('/api/posts', (req, res) => {
@@ -93,6 +107,18 @@ server.post('/api/posts/:userId', (req, res) => {
         })
 })
 
+server.delete('/api/posts/:id', (req, res) => {
+    const { id } = req.params;
+    posts
+        .remove(id)
+        .then(deletedPost => {
+            res.json({ deletedPost })
+        })
+        .catch(error => {
+            console.error(error);
+        })
+})
+
 //----------- tags end point -----------//
 
 server.get('/api/tags', (req, res) => {
@@ -124,6 +150,18 @@ server.post('/api/tags', (req, res) => {
         .insert({ tag })
         .then(newTag => {
             res.status(201).json({ newTag })
+        })
+        .catch(error => {
+            console.error(error);
+        })
+})
+
+server.delete('/api/tags/:id', (req, res) => {
+    const { id } = req.params;
+    tags
+        .remove(id)
+        .then(deletedTag => {
+            res.json({ deletedTag })
         })
         .catch(error => {
             console.error(error);
