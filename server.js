@@ -22,6 +22,7 @@ server.get('/', (req, res) => {
 // post:     /api/users            |    add a user to the users table
 // delete:    /api/users/:id        |    delete a user from the users table based on the ID
 
+//get(): calling find returns a promise that resolves to an array of all the resources contained in the database. 
 server.get('/api/users', (req, res) => {
     usersDb
         .get()
@@ -35,7 +36,7 @@ server.get('/api/users', (req, res) => {
     // res.json('testing get');
 });
 
-// get(): calling find returns a promise that resolves to an array of all the resources contained in the database. If you pass an id to this method it will return the resource with that id if found.
+// get(): if you pass an id to this method it will return the resource with that id if found.
 server.get('/api/users/:id', (req, res) => {
     const { id } = req.params;
     const { name } = req.body;
@@ -118,6 +119,21 @@ server.get('/api/posts', (req, res) => {
         });
     // res.json('testing get');
 });
+
+server.get('/api/users/:id', (req, res) => {
+    const { id } = req.params;
+    const { name } = req.body;
+    postssDb
+        .get(`${ id }`)
+        .then(users => {
+            res.json({ users });
+        })
+        .catch(error => {
+            res.json({ error });
+        });
+    // res.json('Success!');
+});
+
 
 
 server.listen( port, () =>
