@@ -203,6 +203,33 @@ server.delete('/api/tags/:id', (req, res) =>{
                 return;
             });
 
-})
+});
+
+server.get('/api/postsbyid/:userId', (req, res) =>{
+    const { userId } = req.params;
+    const { text } = req.body;
+   
+    userDb
+        .getUserPosts(userId)
+            .then(result =>{
+                console.log(result);
+                res.status(200).json(result);
+            })
+            .catch(err =>{
+                sendUserError(500, `There was an error in retrieving #${userId}'s posts.`, res)
+            });
+});
+    // server.get('/api/posts', (res, req) =>{
+    //     postDb
+    //          console.log(postDb.postId)
+
+    //         .getPostTags(postId)
+    //         .then(result =>{
+    //             res.status(200).json(result);
+    //         })
+    //         .catch(err =>{
+    //             sendUserError(500, "There was an error in retrieving this posts tags", res)
+    //         })
+    //     // })
 
 server.listen(port, () =>{ console.log(`Server is listening on ${port}`)});
