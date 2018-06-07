@@ -7,6 +7,7 @@ const userDb = require("./data/helpers/userDb");
 const port = 5000;
 const server = express();
 server.use(express.json());
+
 server.use(cors({origin: "http://localhost:3000"}));
 
 const sendUserError = (status, message, res) =>{
