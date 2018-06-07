@@ -230,7 +230,19 @@ server.get('/api/tags/:id', (req, res) => {
     // res.json('Success!');
 });
 
-
+// insert(): calling insert passing it a resource object will add it to the database and return an object with the id of the inserted resource. The object looks like this: { id: 123 }.
+server.post('/api/tags', (req, res) => {
+    const { tag } = req.body;
+    tagsDb
+        .insert({ tag })
+        .then(tags => {
+            res.json({ tags });
+        })
+        .catch(error => {
+            res.json({ error });
+        });
+    // res.json('testing post');
+});
 
 server.listen( port, () =>
 {
