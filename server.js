@@ -153,6 +153,25 @@ server.get( '/api/posts/:id', ( req, res ) =>
     //res.json( 'Success!' );
 } );
 
+// post: /api/posts | add a post to the posts table
+server.post( '/api/posts', ( req, res ) =>
+{
+    const { post, text, postedBy } = req.body;
+    postDb
+        .insert( { post } )
+        .then( posts =>
+        {
+            res.json( { posts } );
+        } )
+        .catch( error =>
+        {
+            res.json( { error } );
+        } );
+    // The following is a test to check if it works.
+    // res.json( 'testing post' );
+} );
+
+
 // Updates the post with the specified id using data from the request body. 
 // ! Returns the modified document, NOT the original.
 server.put( '/api/posts/:id', ( req, res ) =>
