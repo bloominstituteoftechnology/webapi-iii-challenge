@@ -153,7 +153,26 @@ server.get( '/api/posts/:id', ( req, res ) =>
     //res.json( 'Success!' );
 } );
 
-
+// Updates the post with the specified id using data from the request body. 
+// ! Returns the modified document, NOT the original.
+server.put( '/api/posts/:id', ( req, res ) =>
+{
+    const { id } = req.params;
+    const { post, text } = req.body;
+    postDb
+        .update( id, { post, text } )
+        .then( posts =>
+        {
+            res.json( { posts } );
+        } )
+        .catch( error =>
+        {
+            res.json( { error } );
+        } );
+    console.log( req.body );
+    // The following is a test to check if it works.
+    // res.send( 'Success!' );
+} );
 
 // * Tags
 // get: /api/tags | list of tags
