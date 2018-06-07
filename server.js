@@ -70,7 +70,7 @@ server.post( '/api/users', ( req, res ) =>
             res.json( { error } );
         } );
     // The following is a test to check if it works.
-    //res.json( 'testing post' );
+    // res.json( 'testing post' );
 } );
 
 // Updates the user with the specified id using data from the request body. Returns the modified document, NOT the original.
@@ -90,16 +90,16 @@ server.put( '/api/users/:id', ( req, res ) =>
         } );
     console.log( req.body );
     // The following is a test to check if it works.
-    //res.send( 'Success!' );
+    // res.send( 'Success!' );
 } );
 
 // delete: /api/users /: id | delete a user from the users table based on the ID
 server.delete( '/api/users/:id', ( req, res ) =>
 {
     const { id } = req.params;
-    const { name, bio } = req.body;
+    const { name } = req.body;
     userDb
-        .remove( { name, bio } )
+        .remove( id, { name } )
         .then( users =>
         {
             res.json( { users } );
@@ -108,7 +108,7 @@ server.delete( '/api/users/:id', ( req, res ) =>
         {
             res.json( { error } );
         } );
-    res.json( 'testing delete' );
+    // res.json( 'testing delete' );
 } );
 
 
