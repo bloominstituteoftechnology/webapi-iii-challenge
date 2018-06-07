@@ -73,7 +73,7 @@ server.post('/api/users', (req, res) =>{
     userDb
         .insert({ name })
         .then(res =>{
-           console.log(res.status(201).json(res));
+           res.status(201).json(res);
         })
         .catch(err =>{
             sendUserError(500, "User could not be saved", res)
