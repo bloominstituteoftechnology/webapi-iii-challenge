@@ -51,6 +51,10 @@ server.get('/api/users/:id', (req, res) => {
     // res.json('Success!');
 });
 
+//get(): if you pass an id to this method it will return the resource with that id if found.
+
+
+
 // insert(): calling insert passing it a resource object will add it to the database and return an object with the id of the inserted resource. The object looks like this: { id: 123 }.
 server.post('/api/users', (req, res) => {
     const { name } = req.body;
@@ -210,6 +214,22 @@ server.get('/api/tags', (req, res) => {
         });
     // res.json('testing get');
 });
+
+// get(): if you pass an id to this method it will return the resource with that id if found.
+server.get('/api/tags/:id', (req, res) => {
+    const { id } = req.params;
+    const { name } = req.body;
+    tagsDb
+        .get(`${ id }`)
+        .then(users => {
+            res.json({ users });
+        })
+        .catch(error => {
+            res.json({ error });
+        });
+    // res.json('Success!');
+});
+
 
 
 server.listen( port, () =>
