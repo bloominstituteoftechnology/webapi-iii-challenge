@@ -99,3 +99,6 @@ method      | *endpoint*               | what it is         |route handler  |cli
 |delete:    | `/api/tags/:id`          | delete a tag       |  X   |   X       | X   |
 |get:       | `/api/postsbyid/:userId` |posts :userID       |  X   |   X       | X   |
 |get:       | `/api/posttags/:id `     |tags by post ID     |  X   |   X       | X   |
+|put:       | `/api/users/:id`         |  A user            |  X   |   X       | X   |
+|put:       | `/api/posts/:id`         | A post             |      |           |     |
+|put:       | `/api/tags/:id`          | A tag              |      |           |     |
