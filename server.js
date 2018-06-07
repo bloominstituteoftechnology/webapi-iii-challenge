@@ -12,11 +12,17 @@ const server = express();
 server.use(express.json());
 server.use(cors({ origin: 'http://localhost:3000'}));
 
+const errorAlert = (status, message, res) => {
+    res.status(status).json({ errorMessage: message });
+}
+
+
 //----------- all end point starts here -----------//
 
 server.get('/', (reg, res) => {
     res.send('Hello from Server Port 5000 (^_^)');
 })
+
 
 //----------- users end point -----------//
 
@@ -27,7 +33,7 @@ server.get('/api/users', (req, res) => {
             res.json({ users })
         })
         .catch(error => {
-            console.error(error);
+            errorAlert(500, 'The user information could not be retrieved.', res);
         })
 })
 
@@ -36,22 +42,29 @@ server.get('/api/users/:id', (req, res) => {
     users
         .get(id)
         .then(users => {
+            if(users.length === 0 ) {
+                errorAlert(404, 'The user name with the specified ID does not exist.', res);
+                return;
+            }
             res.json({ users })
         })
         .catch(error => {
-            console.error(error);
+            errorAlert(500, 'The user information could not be retrieved.', res);
         })
 })
 
 server.post('/api/users', (req, res) => {
     const { name } = req.body;
+    if(!name) {
+        errorAlert(400, 'Please provide user name', res);
+    }
     users
         .insert({ name })
         .then(newUser => {
             res.status(201).json({ newUser })
         })
         .catch(error => {
-            console.error(error);
+            errorAlert(500, 'There was an error while saving the user name to the database.', res);
         })
 })
 
@@ -60,25 +73,47 @@ server.delete('/api/users/:id', (req, res) => {
     users
         .remove(id)
         .then(deletedUser => {
+            if(deletedUser === 0) {
+                errorAlert(404, 'The user name with the specified ID does not exist.', res);
+            }
             res.json({ deletedUser })
         })
         .catch(error => {
-            console.error(error);
+            errorAlert(500, 'The post could not be removed.', res);
         })
 })
 
 server.put('/api/users/:id', (req, res) => {
     const { id } = req.params;
     const { name } = req.body;
+    if(!name) {
+        errorAlert(400, 'Please provide user name', res);
+    }
     users
         .update(id, { name })
-        .then( updatedUser => {
-            res.json({ updatedUser });
+        .then(updatedUser => {
+            if(updatedUser == 0) {
+                errorAlert(404, 'The user name with the specified ID does not exist.', res);
+                return;
+            }
+            users
+                .get(id)
+                .then(users => {
+                    if(users.length === 0 ) {
+                        errorAlert(404, 'The user name with the specified ID does not exist.', res);
+                        return;
+                    }
+                res.json({ users })
+                })
+                .catch(error => {
+                    errorAlert(500, 'The user information could not be retrieved.', res);
+                })
         })
         .catch(error => {
-            console.error(error);
+            errorAlert(500, 'The user name could not be modified.', res);
         })
 })
+
 
 //----------- posts end point -----------//
 
@@ -89,7 +124,7 @@ server.get('/api/posts', (req, res) => {
             res.json({ posts })
         })
         .catch(error => {
-            console.error(error);
+            errorAlert(500, 'The post could not be retrieved.', res);
         })
 })
 
@@ -98,10 +133,14 @@ server.get('/api/posts/:id', (req, res) => {
     posts
         .get(id)
         .then(posts => {
+            if(posts.length === 0 ) {
+                errorAlert(404, 'The post with the specified ID does not exist.', res);
+                return;
+            }
             res.json({ posts })
         })
         .catch(error => {
-            console.error(error);
+            errorAlert(500, 'The post you are looking for could not be retrieved.', res);
         })
 })
 
@@ -114,7 +153,7 @@ server.post('/api/posts/:userId', (req, res) => {
             res.status(201).json({ newPost })
         })
         .catch(error => {
-            console.error(error);
+            errorAlert(500, 'There was an error while saving the post to the database.', res);
         })
 })
 
@@ -126,7 +165,7 @@ server.delete('/api/posts/:id', (req, res) => {
             res.json({ deletedPost })
         })
         .catch(error => {
-            console.error(error);
+            errorAlert(500, 'The post could not be removed.', res);
         })
 })
 
@@ -139,9 +178,10 @@ server.put('/api/posts/:id', (req, res) => {
             res.json({ updatedPost });
         })
         .catch(error => {
-            console.error(error);
+            errorAlert(500, 'The post could not be modified.', res);
         })
 })
+
 
 //----------- tags end point -----------//
 
@@ -152,7 +192,7 @@ server.get('/api/tags', (req, res) => {
             res.json({ tags })
         })
         .catch(error => {
-            console.error(error);
+            errorAlert(500, 'The tag could not be retrieved.', res);
         })
 })
 
@@ -161,10 +201,14 @@ server.get('/api/tags/:id', (req, res) => {
     tags
         .get(id)
         .then(tags => {
+            if(tags.length === 0 ) {
+                errorAlert(404, 'The tag with the specified ID does not exist.', res);
+                return;
+            }
             res.json({ tags })
         })
         .catch(error => {
-            console.error(error);
+            errorAlert(500, 'The tag could not be retrieved.', res);
         })
 })
 
@@ -176,7 +220,7 @@ server.post('/api/tags', (req, res) => {
             res.status(201).json({ newTag })
         })
         .catch(error => {
-            console.error(error);
+            errorAlert(500, 'There was an error while saving the tag to the database.', res);
         })
 })
 
@@ -188,7 +232,7 @@ server.delete('/api/tags/:id', (req, res) => {
             res.json({ deletedTag })
         })
         .catch(error => {
-            console.error(error);
+            errorAlert(500, 'The tag could not be removed.', res);
         })
 })
 
@@ -201,7 +245,7 @@ server.put('/api/tags/:id', (req, res) => {
             res.json({ updatedTag });
         })
         .catch(error => {
-            console.error(error);
+            errorAlert(500, 'The tag could not be modified.', res);
         })
 })
 
