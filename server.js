@@ -213,7 +213,18 @@ server.delete( '/api/posts/:id', ( req, res ) =>
 // get: /api/tags | list of tags
 server.get( '/api/tags', ( req, res ) =>
 {
-    
+    tagDb
+        .get()
+        .then( tags =>
+        {
+            res.json( { tags } );
+        } )
+        .catch( error =>
+        {
+            res.json( { error } );
+        } );
+        // The following is a test to check if it works.
+        // res.json( 'testing get' );
 })
 
 // get: /api/tags /: id | a tag matching ID
@@ -225,7 +236,6 @@ server.get( '/api/tags/:id', ( req, res ) =>
 // post: /api/tags | add a tag to the tags table
 server.post( '/api/tags', ( req, res ) =>
 {
-
 })
 
 // delete: /api/tags /: id | delete a tag from the tags table based on the ID
