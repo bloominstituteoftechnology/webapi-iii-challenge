@@ -17,6 +17,11 @@ server.get('/', (req, res) => {
 
 
 //-------USERS-----------
+// get:       /api/users           |       list of users
+// get:       /api/users/:id        |    a user matching ID
+// post:     /api/users            |    add a user to the users table
+// delete:    /api/users/:id        |    delete a user from the users table based on the ID
+
 server.get('/api/users', (req, res) => {
     usersDb
         .get()
@@ -96,11 +101,23 @@ server.delete('/api/users/:id', (req, res) => {
 //     console.log(db.insert({ name, bio }));
 // });
 
-// get:       /api/users           |       list of users
-// get:       /api/users/:id        |    a user matching ID
-// post:     /api/users            |    add a user to the users table
-// delete:    /api/users/:id        |    delete a user from the users table based on the ID
+//----------POSTS---------
+// get:       /api/posts           |       list of posts
+// get:       /api/posts/:id        |    a post matching ID
+// post:     /api/posts            |    add a post to the posts table
+// delete:    /api/posts/:id        |    delete a post from the posts table based on the ID
 
+server.get('/api/posts', (req, res) => {
+    postsDb
+        .get()
+        .then(users => {
+            res.json({ users });
+        })
+        .catch(error => {
+            res.json({ error });
+        });
+    // res.json('testing get');
+});
 
 
 server.listen( port, () =>
