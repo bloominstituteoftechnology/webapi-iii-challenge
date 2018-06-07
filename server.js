@@ -97,6 +97,9 @@ server.delete('/api/users/:id', (req, res) => {
 });
 
 
+
+
+
 // server.post('/api/users', (req, res) => {
 //     const { name, bio } = req.body; 
 //     console.log(db.insert({ name, bio }));
@@ -147,6 +150,36 @@ server.post('/api/posts', (req, res) => {
     // res.json('testing post');
 });
 
+// update(): accepts two arguments, the first is the id of the resource to update and the second is an object with the changes to apply. It returns the count of updated records. If the count is 1 it means the record was updated correctly.
+server.put('/api/posts/:id', (req, res) => {
+    const { id } = req.params;
+    const { text } = req.body;
+    postsDb
+        .update( id, { text })
+        .then(posts => {
+            res.json({ posts });
+        })
+        .catch(error => {
+            res.json({ error });
+        });
+    console.log(req.body);
+    res.send('Success!');
+});
+
+// remove(): the remove method accepts an id as it's first parameter and, upon successfully deleting the resource from the database, returns the number of records deleted.
+server.delete('/api/users/:id', (req, res) => {
+    const { id } = req.params;
+    const { name } = req.body;
+    postsDb
+        .remove(id, { name })
+        .then(users => {
+            res.json({ users });
+        })
+        .catch(error => {
+            res.json({ error });
+        });
+    // res.json('testing delete');
+});
 
 server.listen( port, () =>
 {
