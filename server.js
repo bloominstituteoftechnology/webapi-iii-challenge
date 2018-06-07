@@ -12,14 +12,11 @@ server.get( '/api/posts' );
 server.get( '/api/tags' );
 server.use( express.json() );
 server.use( cors() );
-server.listen( 5000, () =>
-{
-    ( `server running....${ port }` );
-} )
-server.get( '/', ( req, res ) =>
-{
-    res.send( 'hello from server' );
-} );
+
+// server.get( '/', ( req, res ) =>
+// {
+//     res.send( 'hello from server' );
+// } );
 //get list of users
 server.get( '/api/users', ( req, res ) =>
 {
@@ -58,7 +55,48 @@ server.get( '/api/users/:id', ( req, res ) =>
             res.status( 500 ).json( error );
         } );
 } );
+//post not work
+server.post( '/api/users', ( req, res ) =>
+{
+    const { name } = req.body;
 
+    users
+        .insert( { name } )
+        .then( users =>
+{
+            
+            res.json( { users } );
+        } )
+        .catch( error => 
+        {
+            res.json( { error } );
+        } );
+            
+            
+
+            } );
+        
+
+server.put( '/api/users/:id', (req, res ) =>
+{
+    const { id } = req.params;
+    const { name } = req.body;
+    users
+        .update( id, { name } )
+        .then( users =>
+        {
+            res.json( { users } );
+        } )
+        .catch( error =>
+        {
+            res.json( { error } );
+        } );
+});
+
+//try toget delete button to work
+server.delete( '/api/users/:id', ( req, res ) =>{
+    
+})
 
 //get all tags
 server.get( '/api/tags', ( req, res ) =>
@@ -96,7 +134,28 @@ server.get( '/api/tags/:id', ( req, res ) =>
             res.status( 500 ).json( error );
         } );
 } );
+//post for tags
+server.post( '/api/tags', ( req, res ) =>
+{
+    const { tag } = req.body;
 
+    tags
+        .insert( { tag } )
+        .then( tags =>
+        {
+
+            res.json( { tags } );
+        } )
+        .catch( error => 
+        {
+            res.json( { error } );
+        } );
+
+
+
+} );
+
+//get all posts
 server.get( '/api/posts', ( req, res ) =>
 {
     posts
@@ -130,3 +189,23 @@ server.get( '/api/posts/:id', ( req, res ) =>
             res.status( 500 ).json( error );
         } );
 } );
+// posts for posts
+server.post( '/api/posts', ( req, res ) =>
+{
+    const { userId, text } = req.body;
+
+    posts
+        
+        .insert( { userId, text } )
+        .then( response =>{
+
+            res.json( { response  } );
+        } )
+        .catch( error => 
+        {
+            res.json( { error } );
+        } );
+
+} );
+
+    server.listen( port, () =>{( `server running....${ port }` );} )
