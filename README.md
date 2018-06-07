@@ -14,26 +14,26 @@ Use Node.js and Express to design and build an API that performs CRUD operations
 
 ### Download Project Files and Install Dependenciesnpm 
 
-* **Fork** and **Clone** this repository.
-* **CD into the folder** where you cloned the repository.
-* Do your magic!
+x * **Fork** and **Clone** this repository.
+x * **CD into the folder** where you cloned the repository.
+x * Do your magic!
 
 ### Implement Requirements
 
-* Take the steps necessary to create a `package.json` to keep a record of our dependencies.
-* use _yarn_ or _npm_ to add **knex** and **sqlite3** as dependencies to the project. **This is required for database access**.
-* Configure an _npm script_ named _"start"_ that will execute your code using _nodemon_ so that the server restarts on changes. Make _nodemon_ be a development time dependency only, it shouldn't be deployed to production.
-* Design and build a set of endpoints that satisfy the API requirements.
-* **Use _Postman_ to test the API as you work through the exercises.**
+ x* Take the steps necessary to create a `package.json` to keep a record of our dependencies.
+ x* use _yarn_ or _npm_ to add **knex** and **sqlite3** as dependencies to the project. **This is required for database access**.
+ x* Configure an _npm script_ named _"start"_ that will execute your code using _nodemon_ so that the server restarts on changes. Make _nodemon_ be a development time dependency only, it shouldn't be deployed to production.
+ x* Design and build a set of endpoints that satisfy the API requirements.
+ x* **Use _Postman_ to test the API as you work through the exercises.**
 
 ### Database Persistence Helpers
 
 The `/data/helpers` folder includes helper files that you can use to manage the persistence of users, posts and tags data. These files are `userDb.js`, `postDb.js` and `tagDb.js`. All three of them publish the following api, that you can use to store, modify and retrieve each resource:
 
-* `get()`: calling find returns a promise that resolves to an array of all the resources contained in the database. If you pass an `id` to this method it will return the resource with that id if found.
-* `insert()`: calling insert passing it a resource object will add it to the database and return an object with the id of the inserted resource. The object looks like this: `{ id: 123 }`.
+ x * `get()`: calling find returns a promise that resolves to an array of all the resources contained in the database. If you pass an `id` to this method it will return the resource with that id if found.
+x * `insert()`: calling insert passing it a resource object will add it to the database and return an object with the id of the inserted resource. The object looks like this: `{ id: 123 }`.
 * `update()`: accepts two arguments, the first is the `id` of the resource to update and the second is an object with the `changes` to apply. It returns the count of updated records. If the count is 1 it means the record was updated correctly.
-* `remove()`: the remove method accepts an `id` as it's first parameter and, upon successfully deleting the resource from the database, returns the number of records deleted.
+ x * `remove()`: the remove method accepts an `id` as it's first parameter and, upon successfully deleting the resource from the database, returns the number of records deleted.
 
 The `postDb.js` helper includes an extra method called `getPostTags()` that when passed a post id as it's only argument, returns a list of all the _tags_ for the post.
 

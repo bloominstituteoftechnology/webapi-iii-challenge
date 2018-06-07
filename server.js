@@ -76,14 +76,12 @@ server.post( '/api/users', ( req, res ) =>
 
             } );
         
-//put not working yet
-server.put( '/api/users/:id', (req, res ) =>
+//put working  yet
+ server.put( '/api/users/:id', ( req, res ) =>
 {
     const { id } = req.params;
-    const { name } = req.body;
 
     users
-        
         .update( id, { name } )
         .then( users =>
         {
@@ -93,7 +91,9 @@ server.put( '/api/users/:id', (req, res ) =>
         {
             res.json( { error } );
         } );
-});
+    
+    
+} );
 
 //  got delete  works for users
 server.delete( '/api/users/:id', ( req, res ) =>
@@ -200,7 +200,8 @@ server.delete( '/api/tags/:id', ( req, res ) =>
             return error( 500 );
         } );
 } );
-
+//get tags by id (specail)
+ 
 //get all posts
 server.get( '/api/posts', ( req, res ) =>
 {
