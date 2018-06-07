@@ -205,31 +205,42 @@ server.delete('/api/tags/:id', (req, res) =>{
 
 });
 
-server.get('/api/postsbyid/:userId', (req, res) =>{
+server.get('/api/users/:userId/posts', (req, res) =>{
     const { userId } = req.params;
     const { text } = req.body;
    
     userDb
         .getUserPosts(userId)
             .then(result =>{
-                console.log(result);
-                res.status(200).json(result);
+                if (result.length > 0){
+                    res.json(result);
+                }
+                else{
+                    sendUserError(404, "User post is not found", res);
+                }
             })
             .catch(err =>{
                 sendUserError(500, `There was an error in retrieving #${userId}'s posts.`, res)
             });
 });
-    // server.get('/api/posts', (res, req) =>{
-    //     postDb
-    //          console.log(postDb.postId)
 
-    //         .getPostTags(postId)
-    //         .then(result =>{
-    //             res.status(200).json(result);
-    //         })
-    //         .catch(err =>{
-    //             sendUserError(500, "There was an error in retrieving this posts tags", res)
-    //         })
-    //     // })
+server.get('/api/posts/:postId/tags', (req, res) =>{
+    const { postId } = req.params;
+
+    postDb
+        .getPostTags(postId)
+            .then(result => {
+                if(result.length > 0){
+                    res.json({result});
+                }
+                else{
+                    sendUserError(404, "Post Tag is not found", res);
+
+                }
+            })
+            .catch(err =>{
+                sendUserError(500, "There was an error in retrieving postTags", res)
+            });
+});
 
 server.listen(port, () =>{ console.log(`Server is listening on ${port}`)});
