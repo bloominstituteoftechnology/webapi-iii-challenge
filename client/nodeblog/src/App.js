@@ -24,6 +24,7 @@ class App extends Component {
         <header className="App-header">
           <h1 className="App-title">Welcome to Lambda Node Blog</h1>
             <p>Lord of the Rings Wiki</p>
+            
             <div className="nav-bar">
               <h4>Blog</h4>
               <h4>Characters</h4>
