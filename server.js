@@ -352,4 +352,30 @@ server.get( '/api/posts/tags/:id', ( req, res ) =>
 
 
 } );
+
+server.get( '/api/users/posts/:id', ( req, res ) =>
+{
+    const { id } = req.params;
+
+
+    users
+        .getUserPosts( id )
+        .then( userPost =>
+        {
+            if ( userPost === 0 )
+            {
+                return error( 404 );
+            }
+            res.json( userPost );
+
+        } )
+
+        .catch( error =>
+        {
+
+            res.status( 500 ).json( error );
+        } );
+
+
+} );
 server.listen( port, () => { ( `server running....${ port }` ); } )
