@@ -156,12 +156,12 @@ server.get( '/api/posts/:id', ( req, res ) =>
 // post: /api/posts | add a post to the posts table
 server.post( '/api/posts', ( req, res ) =>
 {
-    const { post, text, postedBy } = req.body;
+    const { postedBy, text } = req.body;
     postDb
-        .insert( { post } )
+        .insert( { postedBy, text } )
         .then( posts =>
         {
-            res.json( { posts } );
+            res.json( {posts}  );
         } )
         .catch( error =>
         {
