@@ -15,8 +15,8 @@ class App extends Component {
     axios
       .get('http://localhost:5000/api/users/')
       .then(res => {
-        console.log("data: ", res.data)
-        // this.setState({ users: res.data.users })
+        console.log("data: ", res.data.users)
+        this.setState({ users: res.data.users })
       })
       .catch(error => {
         console.log(error);
@@ -30,7 +30,7 @@ class App extends Component {
           <h1 className="App-title">LOTR</h1>
         </header>
         <div className="App-intro">
-          <UsersList />
+          <UsersList users={this.state.users}/>          
         </div>
       </div>
     );
