@@ -54,6 +54,18 @@ server.get('/api/users/:id', (req, res) => {
         })
 })
 
+server.get('/api/users/posts/:userId', (req, res) => {
+    const { userId } = req.params;
+    users
+        .getUserPosts(userId)
+        .then(userIdPosts => {
+            res.json({ userIdPosts });
+        })
+        .catch(error => {
+            return errorAlert(500, 'The posts could not be retrieved.', res);
+        })
+})
+
 server.post('/api/users', (req, res) => {
     const { name } = req.body;
     if(!name) {
@@ -140,6 +152,18 @@ server.get('/api/posts/:id', (req, res) => {
         })
         .catch(error => {
             return errorAlert(500, 'The post you are looking for could not be retrieved.', res);
+        })
+})
+
+server.get('/api/posts/tags/:id', (req, res) => {
+    const { id } = req.params;
+    posts
+        .getPostTags(id)
+        .then(postTags => {
+            res.json({ postTags })
+        })
+        .catch(error => {
+            return errorAlert(500, 'The list of tags you are looking for could not be retrieved.', res);
         })
 })
 
