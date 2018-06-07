@@ -230,7 +230,19 @@ server.get( '/api/tags', ( req, res ) =>
 // get: /api/tags /: id | a tag matching ID
 server.get( '/api/tags/:id', ( req, res ) =>
 {
-
+    const { id } = req.params;
+    tagDb
+        .get( `${ id }` )
+        .then( tags =>
+        {
+            res.json( { tags } );
+        } )
+        .catch( error =>
+        {
+            res.json( { error } );
+        } );
+    // The following is a test to check if it works.
+    //res.json( 'Success!' );
 })
 
 // post: /api/tags | add a tag to the tags table
