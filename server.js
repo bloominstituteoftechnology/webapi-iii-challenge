@@ -72,8 +72,8 @@ server.post('/api/users', (req, res) =>{
     }
     userDb
         .insert({ name })
-        .then(res =>{
-           res.status(201).json(res);
+        .then(result =>{
+           res.status(201).json(result);
         })
         .catch(err =>{
             sendUserError(500, "User could not be saved", res)
@@ -89,8 +89,8 @@ server.post('/api/posts', (req, res) =>{
         }
     postDb
         .insert({ text }) 
-        .then(res => {
-            res.status(201).json(res);
+        .then(result => {
+            res.status(201).json(result);
         })
         .catch(err =>{
             sendUserError(500, "Post could not be saved", res);
@@ -105,8 +105,8 @@ server.post('/api/tags', (req, res) =>{
         }
     tagDb
         .insert({ tag }) 
-        .then(res => {
-            res.json(res);
+        .then(result => {
+            res.json(result);
         })
         .catch(err =>{
             return sendUserError(500, "Tag could not be saved", res);
@@ -135,7 +135,6 @@ server.get('/api/posts/:id', (req, res) =>{
     postDb
         .get(id)
         .then(post =>{
-            console.log("post", post);
             if(!post){
                 sendUserError(404, "post could not be found", res);
                 return;
@@ -153,7 +152,6 @@ server.get('/api/tags/:id', (req, res) =>{
     tagDb
         .get(id)
         .then(tag =>{
-            console.log("tag", tag);
             if(!tag){
                 sendUserError(404, "tag could not be found", res);
                 return;
