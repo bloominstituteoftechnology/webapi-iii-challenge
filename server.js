@@ -80,6 +80,7 @@ server.post( '/api/users', ( req, res ) =>
  server.put( '/api/users/:id', ( req, res ) =>
 {
     const { id } = req.params;
+    const { name } = req.body;
 
     users
         .update( id, { name } )
@@ -176,6 +177,28 @@ server.post( '/api/tags', ( req, res ) =>
 
 
 } );
+
+//put  for tags
+server.put( '/api/tags/:id', ( req, res ) =>
+{
+    const { id } = req.params;
+    const { tag } = req.body;
+
+    tags
+        .update( id, { tag } )
+        .then( users =>
+        {
+            res.json( { tags } );
+        } )
+        .catch( error =>
+        {
+            res.json( { error } );
+        } );
+
+
+} );
+
+
 //delete works for tags
 server.delete( '/api/tags/:id', ( req, res ) =>
 {
@@ -239,14 +262,14 @@ server.get( '/api/posts/:id', ( req, res ) =>
 // posts for posts
 server.post( '/api/posts', ( req, res ) =>
 {
-    const { userId, text } = req.body;
+    const {  text, userid } = req.body;
 
     posts
         
-        .insert( { userId, text } )
-        .then( response =>{
+        .insert( { text, userid } )
+        .then( posts =>{
 
-            res.json( { response  } );
+            res.json( { posts  } );
         } )
         .catch( error => 
         {
@@ -254,6 +277,27 @@ server.post( '/api/posts', ( req, res ) =>
         } );
 
 } );
+
+//put  for posts
+server.put( '/api/posts/:id', ( req, res ) =>
+{
+    const { id } = req.params;
+    const { text } = req.body;
+
+    posts
+        .update( id, {text } )
+        .then( posts =>
+        {
+            res.json(  posts  );
+        } )
+        .catch( error =>
+        {
+            res.json( { error } );
+        } );
+
+
+} );
+
 //delete works for posts
 server.delete( '/api/posts/:id', ( req, res ) =>
 {
