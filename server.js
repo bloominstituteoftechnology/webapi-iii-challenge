@@ -9,6 +9,7 @@ const tags = require('./data/helpers/tagDb.js');
 
 const port = 5000;
 const server = express();
+
 server.use(express.json());
 server.use(cors({ origin: 'http://localhost:3000'}));
 
