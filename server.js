@@ -120,10 +120,10 @@ server.get('/api/posts', (req, res) => {
     // res.json('testing get');
 });
 
-server.get('/api/users/:id', (req, res) => {
+server.get('/api/posts/:id', (req, res) => {
     const { id } = req.params;
     const { name } = req.body;
-    postssDb
+    postsDb
         .get(`${ id }`)
         .then(users => {
             res.json({ users });
@@ -134,6 +134,18 @@ server.get('/api/users/:id', (req, res) => {
     // res.json('Success!');
 });
 
+server.post('/api/posts', (req, res) => {
+    const { text, userid } = req.body;
+    postsDb
+        .insert({ text, userid })
+        .then(posts => {
+            res.json({ posts });
+        })
+        .catch(error => {
+            res.json({ error });
+        });
+    // res.json('testing post');
+});
 
 
 server.listen( port, () =>
