@@ -244,6 +244,29 @@ server.post('/api/tags', (req, res) => {
     // res.json('testing post');
 });
 
+//update(): accepts two arguments, the first is the id of the resource to update and the second is an object with the changes to apply. It returns the count of updated records. If the count is 1 it means the record was updated correctly.
+server.put('/api/tags', (req, res) => {
+    const { id } = req.params;
+    const { tag } = req.body;
+    postsDb
+        .update( id, { tag })
+        .then(posts => {
+            res.json({ posts });
+        })
+        .catch(error => {
+            res.json({ error });
+        });
+    console.log(req.body);
+    res.send('Success!');
+});
+
+
+
+
+// get:    /api/postsbyid/:id    |    lists of posts by a speciffic user ID
+// get:    /api/posttags/:id    |    a list of tags by a speciffic post ID
+
+
 server.listen( port, () =>
 {
     console.log( `Server listening on port ${ port }` );
