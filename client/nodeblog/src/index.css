@@ -5,3 +5,53 @@ body {
   background-image: url('./85585.jpg');
   background-size: cover;
 }
+.jumbo{
+  width:1200px;
+  display:flex;
+  margin: 0 auto;
+  margin-top: 30px;
+  flex-direction:column;
+  
+}
+.display-3{
+  display:flex;
+  font-family: 'Cinzel Decorative', cursive;
+  font-size:60px; 
+  font-weight:bolder;
+  justify-content: center;
+}
+.primary{
+  width:100px;
+  height:30px;
+  align-self:center;
+  background-color:aliceblue;
+  color: darkslategray;
+  margin: 10px;
+}
+.list-of-users{
+  display:flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  max-width: 1500px;
+  margin: 0 auto;
+  margin-top:10px;
+  
+
+}
+.card-container{
+  height:30px;
+  width:300px;
+  display:flex;
+  flex-direction:column;
+  flex-wrap:flex;
+  justify-content: space-around;
+  border: 1px solid grey;
+  background-color: aliceblue;
+}
+.route{
+  display:flex;
+  justify-content: center;
+}
+.char-list{
+  font-family: 'Cinzel Decorative', cursive;
+}

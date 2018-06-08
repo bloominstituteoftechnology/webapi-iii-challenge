@@ -27,25 +27,3 @@
   justify-content: space-around;
   margin-top:40px;
 }
-.list-of-users{
-  display:flex;
-  flex-direction: column;
-  justify-content: center;
-  align-content:space-around;
-  flex-wrap: wrap;
-  max-width: 1500px;
-  margin: 0 auto;
-  margin-top:10px;
-  
-
-}
-.card-container{
-  height:30px;
-  width:300px;
-  display:flex;
-  flex-direction:column;
-  flex-wrap:flex;
-  justify-content: space-around;
-  border: 1px solid grey;
-  background-color: aliceblue;
-}

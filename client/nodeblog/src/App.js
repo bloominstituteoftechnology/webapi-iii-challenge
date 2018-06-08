@@ -1,24 +1,16 @@
 import React, { Component } from 'react';
 import './App.css';
 import axios from 'axios';
+import Header from './Header';
+import UserList from './UserList';
+import { Route, Switch } from "react-router-dom";
+import UserPosts from './UserPosts';
+import UserCard from './UserCard';
 
 class App extends Component {
-  constructor(props){
-    super(props);
-    this.state ={
-      users:[{}]
-    }
-  }
 
-  componentDidMount(){
-    axios.get('http://localhost:5000/api/users')
-      .then( res =>{
-        console.log(this.state, "before CWM");
-        this.setState(res.data)
-          console.log(this.state.users, "after CWM")
-      })
-  }
-  render() {
+
+      render() {
     return (
       <div className="App">
         <header className="App-header">
@@ -34,17 +26,15 @@ class App extends Component {
               <h4>Contact Me!</h4>
           </div>
         </header>
-        <div className="list-of-users">
-          {this.state.users.map(user =>{
-            return(
-              <div className="card-container">
-              <div key={user.id}>
-                {user.name}
-              </div>
-              </div>
-            )
-          })}
+        <div className="route">
+          <Switch>
+            <Route exact path="/" component={Header} />
+            <Route path="/users" component={UserList}/>
+            <Route path="/posts" component={UserPosts}/>
+            <Route path="/users/:id" component={UserCard}/>
+          </Switch>
         </div>
+        
       </div>
     );
   }
