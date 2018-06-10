@@ -17,6 +17,28 @@ const errorAlert = (status, message, res) => {
     res.status(status).json({ errorMessage: message });
 }
 
+//------------- middleware -----------------------//
+
+const tagToUpperCase = (req, res, next) => {
+    tags
+        .get()
+        .then(tags => {
+            tags.forEach(element => {
+                let upperCase = element.tag.toUpperCase();
+                element.tag = upperCase;
+            });
+            console.log(tags)
+            req.body.tags = tags;
+            next();
+        })
+        .catch(error => {
+            res.status(500).json({ error: 'database crashed...sorry'})
+        })
+}
+
+const sendOurTags = (req, res) => {
+    res.send(req.body.tags);
+}
 
 //----------- all end point starts here -----------//
 
@@ -39,23 +61,25 @@ server.get('/api/users', (req, res) => {
 })
 
 server.get('/api/users/:id', (req, res) => {
+    console.log('req: ', req.params)
     const { id } = req.params;
+    // const id = req.params.id
     users
         .get(id)
-        .then(users => {
-            // console.log('user id:', users.id);
-            if(users === undefined) {
-                return errorAlert(404, 'The user name with the specified ID does not exist.', res);
+        .then(user => {
+            console.log('users: ', user);
+            if(!user) {
+               return errorAlert(404, 'The user name with the specified ID does not exist.', res);
             }
-            res.json({ users });
+            res.json({ user });
         })
         .catch(error => {
             console.log('errer:', error)
-            return errorAlert(500, 'The user information could not be retrieved.', res);
+                return errorAlert(500, 'The user information could not be retrieved.', res);
         })
 })
 
-server.get('/api/users/posts/:userId', (req, res) => {
+server.get('/api/users/:userId/posts', (req, res) => {
     const { userId } = req.params;
     users
         .getUserPosts(userId)
@@ -110,12 +134,9 @@ server.put('/api/users/:id', (req, res) => {
                 return errorAlert(404, 'The user name with the specified ID does not exist.', res);
             }
             users
-                .findById(id)
+                .find(id)
                 .then(users => {
-                    if(users === 0) {
-                        return errorAlert(404, 'The user name with the specified ID does not exist.', res);
-                    }
-                res.json({ users })
+                    res.json({ users })
                 })
                 .catch(error => {
                     return errorAlert(500, 'The user information could not be retrieved.', res);
@@ -212,6 +233,8 @@ server.put('/api/posts/:id', (req, res) => {
 
 
 //----------- tags end point -----------//
+
+server.get('/api/tags', tagToUpperCase, sendOurTags)
 
 server.get('/api/tags', (req, res) => {
     tags
