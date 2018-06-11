@@ -86,7 +86,7 @@ server.delete('/api/users/:id', (req, res) => {
     .remove(id)
     .then(user => {
         if(!user) {
-            res.status(400);
+            res.status(404);
             res.json({errorMessage: 'user id not found'})
         }
         else {
@@ -95,28 +95,99 @@ server.delete('/api/users/:id', (req, res) => {
     })
     .catch(error => {
         res.status(500)
-        res/kspm({errorMessage: 'user could not be deleted'})
+        res.json({ errorMessage: 'user could not be deleted' })
     })
 })
 
-/* server.get('/api/posts', (req, res) => {
+ server.get('/api/posts', (req, res) => {
+     posts
+     .get
+     .then(posts => {
+         res.json(posts)
+     })
+     .catch(error => {
+        res.status(500)
+        res.json({ errorMessage: 'post not found' })
+     })
 
 })
 
 server.get('/api/posts/:id', (req, res) => {
-
+    const { id } = req.params;
+    if(req.params.id == undefined) {
+        res.status(404)
+        res.json({ errorMessage: 'post id not found'})
+    }
+    else {
+        console.log(id);
+        posts
+        .get(id)
+        .then(post => {
+            res.json({ post })
+        })
+        .catch(error => {
+            res.status(500)
+            res.json({errorMessage: 'post not found'})
+        })
+    }
 })
 
 server.post('/api/posts', (req, res) => {
-
+    const { id } = req.params;
+    if(text == undefined || userId == undefined) {
+        user.status(404)
+        user.json({errorMessage: 'post id not found'})
+    }
+    else {
+        posts
+        .insert({ text, userId })
+        .then(post => {
+            res.json({ post })
+        })
+        .catch(error => {
+            res.status(500)
+            res.json({errorMessage: 'post not found'})
+        })
+    }
 })
 
 server.put('/api/posts/:id', (req, res) => {
-
+    const { text, userId} = req.body;
+    const { id } = req.params;
+        posts
+        .update(req.params.id, req.body)
+        .then(post => {
+            if(!post) {
+                res.status(404)
+                res.json({ errorMessage: 'post id not found'})
+            }
+            else {
+                res.json({post})
+            }
+        })
+        .catch(error => {
+            res.status(500)
+            res.json({errorMessage: 'post not found'})
+        })
+    
 })
 
 server.delete('/api/posts/:id', (req, res) => {
-
+    const { id } = req.params;
+    posts.remove(id)
+    .then(posts => {
+        if(!posts) {
+            res.status(404)
+            res.json({errorMessage: 'post id not found'})
+        }
+        else {
+            res.json({ post })
+        }
+    })
+    .catch(error => {
+        res.status(500)
+        res.json({errorMessage: 'post could not be deleted'})
+    })
 })
 /*
 server.get('/api/tags', (req, res) => {
