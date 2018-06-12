@@ -1,20 +1,45 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+
 import './App.css';
+import axios  from 'axios';
 
 class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
-    );
+ constructor(props) {
+ super(props);
+ this.state = {
+   users:[{}],
+   posts:[{}],
+   tags:[{}]
+  };
+ }
+
+ componentDidMount() {
+   axios
+    .get('http://localhost:5000/api/users')
+    .then( response => {
+        this.setState({ users: response.data.users})
+    })
+    /* axios
+    .get('http://localhost:5000/api/posts')
+    .then( response => {
+        this.setState({ posts: response.data.posts})
+    })
+    axios
+    .get('http://localhost:5000/api/tags')
+    .then( response => {
+        this.setState({ tags: response.data.tags})
+    }) */
+ }
+
+ render() {
+   console.log(this.state)
+   return(
+      <div className = 'App'>
+        {this.state.users.map(user => {
+          return <div key={user.id+user.name}>{user.name}</div>
+        })}
+        </div>
+   );
   }
 }
 

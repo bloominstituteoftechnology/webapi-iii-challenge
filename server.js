@@ -7,9 +7,9 @@ const server = express();
 const port = 5000;
 
 server.use(express.json());
-server.use(cors({orgin: 'http://localhost:3000'}));
+server.use(cors());
 
-server.get('/api/users'), (req, res) => {
+server.get('/api/users', (req, res) => {
     users
     .get()
     .then(users => {
@@ -20,7 +20,7 @@ server.get('/api/users'), (req, res) => {
         res.status(500)
         res.json({errrorMessage: error})
     })
-}
+})
 server.get('/api/users/:id', (req, res) => {
     const { id } = req.params;
     if(req.params.id == undefined) {
@@ -234,7 +234,7 @@ server.post('/api/tags', (req, res) => {
         })
         .catch(error => {
             res.status(500)
-            res.json({message: 'tag not found'})
+            res.json({errorMessage: 'tag not found'})
         })
     }
 })
