@@ -189,25 +189,91 @@ server.delete('/api/posts/:id', (req, res) => {
         res.json({errorMessage: 'post could not be deleted'})
     })
 })
-/*
-server.get('/api/tags', (req, res) => {
 
+server.get('/api/tags', (req, res) => {
+    tags
+    .get()
+    .then(tags => {
+        res.json({tags})
+    })
+    .catch(error => {
+        res.status(500)
+        res.json({errorMessage: 'tag not found'})
+    })
 })
 
 server.get('/api/tags/:id', (req, res) => {
-
+    const { id } = req.params;
+    if(req.params.id == undefined) {
+        res.status(404)
+        res.json({errorMessage: 'tag id not found'})
+    }
+    else {
+        tags.get(id)
+        .then(tag => {
+            res.json({tag})
+        })
+        .catch(error => {
+            res.status(500)
+            res.json({errorMessage: 'tag not found'})
+        })
+    }
 })
 
 server.post('/api/tags', (req, res) => {
-
+    const { tag } = req.body
+    if(tag == undefined) {
+        user.status(404)
+        res.json({errorMessage: 'tag id not found'})
+    }
+    else {
+        tags.insert({ tag})
+        .then(tag => {
+            res.json({ tag })
+        })
+        .catch(error => {
+            res.status(500)
+            res.json({message: 'tag not found'})
+        })
+    }
 })
 
 server.put('/api/tags/:id', (req, res) => {
-
+    const { tag } = req.body
+    const { id } = req.params
+    tags
+    .update(req.params.id, req.body)
+    .then(tag => {
+        if(!tag) {
+            res.status(404)
+            res.json({errorMessage: 'tag id not found'})
+        }
+        else {
+            res.json({ tag })
+        }
+    })
+    .catch(error=> {
+        res.status(500)
+        res.json({errorMessage: 'tag not found'})
+    })
 })
 
 server.delete('/api/tags/:id', (req, res) => {
-
+    const { id } = req.paramstags
+    .remove(id)
+    .then(tag => {
+        if(!tag) {
+            res.status(404)
+            res.json({errorMessage:'tag id not found'})
+        }
+        else {
+            res.json({ tag })
+        }
+    })
+    .catch(error => {
+        res.status(500)
+        res.json({errorMessage: 'tag could not be removed'})
+    })
 })
- */
+ 
 server.listen(port, () => console.log (`Server running on port ${port}`));
