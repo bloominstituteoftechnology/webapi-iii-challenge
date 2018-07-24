@@ -80,6 +80,15 @@ server.delete('/api/users/:id', (req, res) => {
 
 // END OF USERS
 
+server.post('/api/posts', (req, res) => {
+    const { userId, text } = req.body;
+    if (!userId || !text) return res.status(400).json({ errorMessage: "Please provide userId and text for the post." });
+    posts
+        .insert({ userId, text })
+        .then(posts => res.status(201).json(posts))
+        .catch(err => res.status(500).json({ error: 'There was an error while saving the post to the database.' }));
+})
+
 server.get('/api/posts', (req, res) => {
     posts
         .get()
