@@ -32,4 +32,15 @@ server.get('/api/users/:id', (req, res) => {
         .catch(err => res.status(500).json({ error: 'The user information could not be retrieved.' }))
 })
 
+server.get('/api/users/posts/:id', (req, res) => {
+    console.log(req.params.id);
+    users
+        .getUserPosts(req.params.id)
+        .then(posts => {
+            if (posts === 0) return res.status(404, { message: 'This user has no posts!' });
+            res.status(200).json(posts);
+        })
+        .catch(err => res.status(500).json({ error: 'The user information could not be retrieved.' }))
+})
+
 server.listen(8000, () => console.log('API is running on port 8000'));
