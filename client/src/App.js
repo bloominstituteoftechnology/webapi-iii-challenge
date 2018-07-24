@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import Users from './components/Users';
+import User from './components/User';
 import axios from 'axios';
 import { Route } from 'react-router-dom';
 
@@ -29,6 +30,7 @@ class App extends Component {
           <h1 className="App-title">Welcome to React</h1>
         </header>
         <Route exact path='/' render={props => <Users {...props} users={this.state.users} />} />
+        <Route exact path='/users/:id' component={User} />
       </div>
     );
   }
