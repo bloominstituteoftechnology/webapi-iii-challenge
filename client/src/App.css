@@ -31,3 +31,8 @@
   margin: 10px;
   border: 1px solid black;
 }
+
+.user-link {
+  text-decoration: none;
+  color: black;
+}
