@@ -7,7 +7,8 @@ class User extends React.Component {
         super();
 
         this.state = {
-            user: []
+            user: [],
+            userPosts: []
         }
     }
 
@@ -16,12 +17,17 @@ class User extends React.Component {
             .get(`http://localhost:8000/api/users/${this.props.match.params.id}`)
             .then(response => this.setState({ user: response.data }))
             .catch(err => console.log(err));
+
+        axios
+            .get(`http://localhost:8000/api/users/posts/${this.props.match.params.id}`)
+            .then(response => this.setState({ userPosts: response.data }))
+            .catch(err => console.log(err));
     }
 
     render() {
         return (
             <div>
-                <UserCard user={this.state.user} />
+                <UserCard user={this.state.user} posts={this.state.userPosts} />
             </div >
         )
     }
