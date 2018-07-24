@@ -153,6 +153,15 @@ server.delete('/api/posts/:id', (req, res) => {
 
 // END OF POSTS
 
+server.post('/api/tags', (req, res) => {
+    const { tag } = req.body;
+    if (!tag) return res.status(400).json({ errorMessage: "Please provide a tag." });
+    tags
+        .insert({ tag })
+        .then(tags => res.status(201).json(tags))
+        .catch(err => res.status(500).json({ error: 'There was an error while saving the tag to the database.' }));
+})
+
 server.get('/api/tags', (req, res) => {
     tags
         .get()
