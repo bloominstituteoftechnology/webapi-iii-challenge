@@ -97,4 +97,60 @@ server.get('/api/users/posts/:id', (req, res) => {
         })
   })
 
+  // POST users, posts, tags
+
+  server.post('/api/users', (req, res) => {
+
+    const {name} = req.body;
+    if (!name) {
+      res.status(400).json({error: "Please provide a name for the user."});
+    return; 
+    }
+  
+    users
+        .insert({name})
+        .then(users => {
+              res.status(201).json(users);
+        })
+        .catch(errorMessage => {
+            res.status(500).json({error: "There was an error while saving the user to the database"})
+        })
+  })
+
+  server.post('/api/posts', (req, res) => {
+
+    const {text, userId} = req.body;
+    if (!text || !userId) {
+      res.status(400).json({error: "Please provide text and a userId for the post."});
+    return; 
+    }
+  
+    posts
+        .insert({text, userId})
+        .then(posts => {
+              res.status(201).json(posts);
+        })
+        .catch(errorMessage => {
+            res.status(500).json({error: "There was an error while saving the post to the database"})
+        })
+  })
+
+  server.post('/api/tags', (req, res) => {
+
+    const {tag} = req.body;
+    if (!tag) {
+      res.status(400).json({error: "Please provide a tag before submitting."});
+    return; 
+    }
+  
+    tags
+        .insert({tag})
+        .then(tags => {
+              res.status(201).json(tags);
+        })
+        .catch(errorMessage => {
+            res.status(500).json({error: "There was an error while saving the tag to the database"})
+        })
+  })
+
 server.listen(port, () => console.log(`Server is listening to port ${port}`));
