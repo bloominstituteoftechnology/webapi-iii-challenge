@@ -26,7 +26,8 @@ class User extends React.Component {
 
     render() {
         return (
-            <div>
+            <div >
+                <button onClick={() => this.props.history.push('/')}>Home</button>
                 <UserCard user={this.state.user} posts={this.state.userPosts} />
             </div >
         )
