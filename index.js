@@ -78,4 +78,13 @@ server.delete('/api/users/:id', (req, res) => {
         .catch(err => res.status(500).json({ error: "The user information could not be retrieved." }))
 })
 
+// END OF USERS
+
+server.get('/api/posts', (req, res) => {
+    posts
+        .get()
+        .then(posts => res.status(200).json(posts))
+        .catch(err => res.status(500).json({ error: 'The posts information could not be retrieved.' }));
+})
+
 server.listen(8000, () => console.log('API is running on port 8000'));
