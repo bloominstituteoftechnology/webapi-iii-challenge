@@ -57,7 +57,7 @@ server.put('/api/users/:id', (req, res) => {
                     if (user.length === 0) return res.status(404).json({ message: "The user with the specified ID does not exist." });
                     res.status(200).json(user);
                 })
-                .catch(err => res.status(500).json({ error: 'The post information could not be retrieved.' }));
+                .catch(err => res.status(500).json({ error: 'The user information could not be retrieved.' }));
         })
         .catch(err => res.status(500).json({ error: "The users information could not be modified." }));
 })
@@ -114,6 +114,25 @@ server.get('/api/posts/tags/:id', (req, res) => {
             res.status(200).json(tags);
         })
         .catch(err => res.status(500).json({ error: 'The post information could not be retrieved.' }));
+})
+
+server.put('/api/posts/:id', (req, res) => {
+    const { id } = req.params;
+    const { userId, text } = req.body;
+    if (!userId || !text) return res.status(400).json({ errorMessage: "Please provide userId and text for the post." });
+    posts
+        .update(id, { userId, text })
+        .then(response => {
+            if (response === 0) return res.status(404).json({ message: 'The post with the specified ID does not exist.' });
+            posts
+                .get(id)
+                .then(post => {
+                    if (post.length === 0) return res.status(404).json({ message: "The post with the specified ID does not exist." });
+                    res.status(200).json(post);
+                })
+                .catch(err => res.status(500).json({ error: 'The post information could not be retrieved.' }));
+        })
+        .catch(err => res.status(500).json({ error: "The posts information could not be modified." }));
 })
 
 server.listen(8000, () => console.log('API is running on port 8000'));
