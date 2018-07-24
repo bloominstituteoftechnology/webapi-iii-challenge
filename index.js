@@ -22,7 +22,7 @@ server.get('/api/users', (req, res) => {
         })
 })
 
-server.get('/api/posts', (req, res) => {
+server.get('/api/users/posts', (req, res) => {
     posts
         .get()
         .then(posts => {
@@ -43,5 +43,58 @@ server.get('/api/tags', (req, res) => {
             res.status(500).json({error: "The tags information could not be retrieved."})
         })
 })
+
+// GET users, posts, tags by ID
+
+server.get('/api/users/:id', (req, res) => {
+    const id = req.params.id;
+    
+    users
+        .get(id)
+        .then(users => {
+            if (users.length === 0) {
+                res.status(404).json({ message: "This user with this specified ID does not exist." });
+            } else {
+                res.status(200).json(users);
+            }
+        })
+        .catch (message => {
+            res.status(500).json({ message: "This user information could not be retrieved." })
+        })
+  })
+
+server.get('/api/users/posts/:id', (req, res) => {
+    const id = req.params.id;
+    
+    users
+        .getUserPosts(id)
+        .then(posts => {
+            if (posts.length === 0) {
+                res.status(404).json({ message: "This user's posts do not exist." });
+            } else {
+                res.status(200).json(posts);
+            }
+        })
+        .catch (message => {
+            res.status(500).json({ message: "The post information could not be retrieved." })
+        })
+  })
+
+  server.get('/api/tags/:id', (req, res) => {
+    const id = req.params.id;
+    
+    tags
+        .get(id)
+        .then(tags => {
+            if (tags.length === 0) {
+                res.status(404).json({ message: "This tag with this specified ID does not exist." });
+            } else {
+                res.status(200).json(tags);
+            }
+        })
+        .catch (message => {
+            res.status(500).json({ message: "This tag information could not be retrieved." })
+        })
+  })
 
 server.listen(port, () => console.log(`Server is listening to port ${port}`));
