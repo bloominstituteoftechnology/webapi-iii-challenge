@@ -36,7 +36,7 @@ server.get('/api/users/posts/:id', (req, res) => {
     users
         .getUserPosts(req.params.id)
         .then(posts => {
-            if (posts === 0) return res.status(404, { message: 'This user has no posts!' });
+            if (posts.length === 0) return res.status(404).json({ message: 'This user has no posts!' });
             res.status(200).json(posts);
         })
         .catch(err => res.status(500).json({ error: 'The user information could not be retrieved.' }));
@@ -102,6 +102,16 @@ server.get('/api/posts/:id', (req, res) => {
         .then(post => {
             if (post.length === 0) return res.status(404).json({ message: "The post with the specified ID does not exist." });
             res.status(200).json(post);
+        })
+        .catch(err => res.status(500).json({ error: 'The post information could not be retrieved.' }));
+})
+
+server.get('/api/posts/tags/:id', (req, res) => {
+    posts
+        .getPostTags(req.params.id)
+        .then(tags => {
+            if (tags.length === 0) return res.status(404).json({ message: 'This post has no tags!' });
+            res.status(200).json(tags);
         })
         .catch(err => res.status(500).json({ error: 'The post information could not be retrieved.' }));
 })
