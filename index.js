@@ -151,4 +151,13 @@ server.delete('/api/posts/:id', (req, res) => {
         .catch(err => res.status(500).json({ error: "The post information could not be retrieved." }))
 })
 
+// END OF POSTS
+
+server.get('/api/tags', (req, res) => {
+    tags
+        .get()
+        .then(tags => res.status(200).json(tags))
+        .catch(err => res.status(500).json({ error: 'The tags information could not be retrieved.' }));
+})
+
 server.listen(8000, () => console.log('API is running on port 8000'));
