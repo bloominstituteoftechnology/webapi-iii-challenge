@@ -12,24 +12,24 @@ server.post('/api/users', (req, res) => {
     users
         .insert({ name })
         .then(users => res.status(201).json(users))
-        .catch(err => res.status(500).json({ error: 'There was an error while saving the user to the database.' }))
+        .catch(err => res.status(500).json({ error: 'There was an error while saving the user to the database.' }));
 })
 
 server.get('/api/users', (req, res) => {
     users
         .get()
         .then(users => res.status(200).json(users))
-        .catch(err => res.status(500).json({ error: 'The users information could not be retrieved.' }))
+        .catch(err => res.status(500).json({ error: 'The users information could not be retrieved.' }));
 })
 
 server.get('/api/users/:id', (req, res) => {
     users
         .get(req.params.id)
         .then(user => {
-            if (user.length === 0) return res.status(404).json({ message: "The user with the specified ID does not exist." })
-            res.status(200).json(user)
+            if (user.length === 0) return res.status(404).json({ message: "The user with the specified ID does not exist." });
+            res.status(200).json(user);
         })
-        .catch(err => res.status(500).json({ error: 'The user information could not be retrieved.' }))
+        .catch(err => res.status(500).json({ error: 'The user information could not be retrieved.' }));
 })
 
 server.get('/api/users/posts/:id', (req, res) => {
@@ -39,7 +39,7 @@ server.get('/api/users/posts/:id', (req, res) => {
             if (posts === 0) return res.status(404, { message: 'This user has no posts!' });
             res.status(200).json(posts);
         })
-        .catch(err => res.status(500).json({ error: 'The user information could not be retrieved.' }))
+        .catch(err => res.status(500).json({ error: 'The user information could not be retrieved.' }));
 })
 
 server.put('/api/users/:id', (req, res) => {
@@ -54,12 +54,28 @@ server.put('/api/users/:id', (req, res) => {
             users
                 .get(id)
                 .then(user => {
-                    if (user.length === 0) return res.status(404).json({ message: "The user with the specified ID does not exist." })
+                    if (user.length === 0) return res.status(404).json({ message: "The user with the specified ID does not exist." });
                     res.status(200).json(user);
                 })
                 .catch(err => res.status(500).json({ error: 'The post information could not be retrieved.' }));
         })
         .catch(err => res.status(500).json({ error: "The users information could not be modified." }));
+})
+
+server.delete('/api/users/:id', (req, res) => {
+    users
+        .get(req.params.id)
+        .then(user => {
+            if (user.length === 0) return res.status(404).json({ message: "The user with the specified ID does not exist." });
+            res.status(200).json(user);
+            users
+                .remove(req.params.id)
+                .then(response => {
+                    if (response === 0) return res.status(404).json({ message: "The user with the specified ID does not exist." });
+                })
+                .catch(err => res.status(500).json({ error: "The user could not be removed" }));
+        })
+        .catch(err => res.status(500).json({ error: "The user information could not be retrieved." }))
 })
 
 server.listen(8000, () => console.log('API is running on port 8000'));
