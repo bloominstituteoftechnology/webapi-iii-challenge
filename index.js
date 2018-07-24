@@ -198,4 +198,20 @@ server.put('/api/tags/:id', (req, res) => {
         .catch(err => res.status(500).json({ error: "The tags information could not be modified." }));
 })
 
+server.delete('/api/tags/:id', (req, res) => {
+    tags
+        .get(req.params.id)
+        .then(tag => {
+            if (tag.length === 0) return res.status(404).json({ message: "The tag with the specified ID does not exist." });
+            res.status(200).json(tag);
+            tags
+                .remove(req.params.id)
+                .then(response => {
+                    if (response === 0) return res.status(404).json({ message: "The tag with the specified ID does not exist." });
+                })
+                .catch(err => res.status(500).json({ error: "The tag could not be removed" }));
+        })
+        .catch(err => res.status(500).json({ error: "The tag information could not be retrieved." }))
+})
+
 server.listen(8000, () => console.log('API is running on port 8000'));
