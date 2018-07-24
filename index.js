@@ -169,4 +169,14 @@ server.get('/api/tags', (req, res) => {
         .catch(err => res.status(500).json({ error: 'The tags information could not be retrieved.' }));
 })
 
+server.get('/api/tags/:id', (req, res) => {
+    tags
+        .get(req.params.id)
+        .then(tag => {
+            if (tag.length === 0) return res.status(404).json({ message: "The tag with the specified ID does not exist." });
+            res.status(200).json(tag);
+        })
+        .catch(err => res.status(500).json({ error: 'The tag information could not be retrieved.' }));
+})
+
 server.listen(8000, () => console.log('API is running on port 8000'));
