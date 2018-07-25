@@ -179,6 +179,29 @@ server.post('/api/tags', (req, res) => {
         })
 })
 //UPDATE USER
+server.put('/api/users', (req, res) => {
+    const id = req.body.id;
+    const name = req.body.name;
+    // let updateUser = {
+    //     id,
+    //     name
+    // };
+    userDb.update(id, name)
+        .then(response => {
+            res.status(200).json({
+                "success": "new user created",
+                "post": newUser,
+                "new_user_id": response
+            })
+        })
+        .catch(err => {
+            res.status(500).json({
+                "failed": "user was not updated",
+                "error": err
+            })
+        })
+})
+
 //UPDATE POST
 //UPDATE TAGS
 
