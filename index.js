@@ -173,4 +173,76 @@ server.delete('/api/tags/:id', async (req, res) => {
     }
 });
 
+// USERS CRUD operations
+server.get('/api/users', async (req, res) => {
+    try {
+        const users = await userDb.get();
+        res.status(200).json(users);
+    } catch(err) {
+        res.status(500).json({error: 'The users information could not be retrieved.'});
+    }
+});
+
+server.get('/api/users/:id', async (req, res) => {
+    try {
+        const {id} = req.params;
+        const user = await userDb.get(id);
+        if(user) {
+            res.status(200).json(user);
+        } else {
+            res.status(404).json({error: 'The user with the specified ID does not exist.'});
+        }
+    } catch(err) {
+        res.status(500).json({error: 'The user information could not be retrieved.'});
+    }
+});
+
+server.post('/api/users', async (req, res) => {
+    try {
+        const user = {...req.body};
+        if(user.name) {
+            const newUser = await userDb.insert(user);
+            res.status(201).json(user);
+        } else {
+            res.status(400).json({error: 'Please provide name for the user.'});
+        }
+    } catch(err) {
+        res.status(500).json({error: 'There was an error while saving the user to the database.'});
+    }
+});
+
+server.put('/api/users/:id', async (req, res) => {
+    try {
+        const {id} = req.params;
+        const user = req.body;
+        let findUser = await userDb.get(id);
+        if(findUser && (user.name)) {
+            const updateUser = await userDb.update(id, user);
+            findUser = await userDb.get(id);
+            res.status(200).json(findUser);
+        } else if (!findUser) {
+            res.status(404).json({error: 'The user with the specified ID does not exist.'});
+        } else {
+            res.status(400).json({error: 'Please provide name for the user.'});
+        }
+    } catch(err) {
+        res.status(500).json({error: 'The user information could not be modified.'});
+    }
+});
+
+server.delete('/api/users/:id', async (req, res) => {
+    try {
+        const {id} = req.params;
+        const user = await userDb.get(id);
+        if(user) {
+            const delUser = await userDb.remove(id);
+            res.status(200).json(user);
+        } else {
+            res.status(404).json({error: 'The user with the specified ID does not exist.'});
+        }
+    } catch(err) {
+        res.status(500).json({error: 'The user could not be removed.'});
+    }
+});
+
 server.listen(port, () => console.log(`Server running @ localhost:${port}`));
