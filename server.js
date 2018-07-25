@@ -222,6 +222,54 @@ server.post('/posts/:userId', (req, res) => {
   }
 })
 
+server.post('/tags', (req, res) => {
+  const newTag = req.body.tag;
+  if(!newTag) {
+    res
+      .status(400)
+      .json({ error: `Please provide a tag.` })
+      .end()
+  } else if(newTag.length > 80) {
+    res
+      .status(400)
+      .json({ error: `The provided tag is greater than 80 characters.` })
+      .end()
+  } else {
+    tagDb
+      .get()
+      .then(response => {
+        response.forEach(tag => {
+          if(tag.tag === newTag) {
+            res
+              .status(400)
+              .json({ error: `The provided tag already exist.` })
+              .end()
+          }
+        });
+      })
+      .catch(() => {
+        res
+          .status(500)
+          .json({ error: `The tag could not be posted.` })
+          .end()
+      })
+    tagDb
+      .insert(newTag)
+      .then(response => {
+        res
+          .status(200)
+          .json(response)
+          .end()
+      })
+      .catch((err) => {
+        res
+          .status(500)
+          .json(err)
+          .end()
+      })
+  }
+})
+
 
 
 server.listen(8000, () => console.log(`... API is running on port 8000 ...`));
