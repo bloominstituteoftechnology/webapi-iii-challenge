@@ -1,6 +1,8 @@
 const express = require('express');
 const dbpost = require('./data/helpers/postDb');
 const dbuser = require('./data/helpers/userDb');
+const dbtag = require('./data/helpers/tagDb');
+
 
 const server = express();
 
@@ -12,7 +14,7 @@ server.get('/', (req, res) => {
 });
 
 
-server.get('/api/posts', (req, res) => {
+server.get('/posts', (req, res) => {
         const request = dbpost.get();
 
         request.then(response => {
@@ -25,8 +27,41 @@ server.get('/api/posts', (req, res) => {
 
 });
 
+server.get('/tags', (req, res) => {
+        const request = dbtag.get();
 
-server.get('/api/users/:id', (req, res) => {
+        request.then(response => {
+        res.status(200).json(response);
+        })
+
+        .catch(err => {
+        res.status(404).json({error: "The tags information could not be retrieved."});
+        })
+
+});
+
+server.get('/tags/:id', (req, res) => {
+        const id = req.params.id;
+
+       const request = dbtag.get(id);
+
+        request.then(response => {
+        if(response.length==0) res.status(404).json({ error: "The tag with the specified ID does not exist." });
+         else {
+                 response.id = id;
+                 res.status(200).json(response);
+         }
+
+        })
+
+        .catch(err => {
+        res.status(404).json({error: "The tag with the specified ID does not exist."});
+        })
+
+});
+
+
+server.get('/users/:id', (req, res) => {
         const id = req.params.id;
 
        const request = dbuser.get(id);
@@ -47,7 +82,7 @@ server.get('/api/users/:id', (req, res) => {
 });
 
 
-server.get('/api/users', (req, res) => {
+server.get('/users', (req, res) => {
         const request = dbuser.get();
 
         request.then(response => {
@@ -61,7 +96,7 @@ server.get('/api/users', (req, res) => {
 });
 
 
-server.get('/api/posts/:id', (req, res) => {
+server.get('/posts/:id', (req, res) => {
         const id = req.params.id;
 
        const request = dbpost.get(id);
@@ -125,7 +160,7 @@ server.get('/:id', (req, res) => {
 
 
 
-server.post('/api/posts', (req, res) => {
+server.post('/posts', (req, res) => {
 
         const {text, userId} = req.body;
         const post = {text, userId};
@@ -147,12 +182,43 @@ server.post('/api/posts', (req, res) => {
         })
 
         .catch(error => {
+        res.status(500).json({ message: "There was an error while saving the post to the database" });
+        })
+
+        }  });
+
+server.post('/users', (req, res) => {
+
+        const {name} = req.body;
+        const post = {name};
+
+        if (!name) {
+                res.status(400).json({errorMessage: "Please provide a name for the user."});
+        }
+
+        else{
+
+        const request = dbuser.insert(post);
+
+        request.then(response => {
+                response.text = post.name;
+                response.message ="Successfully added a new user";
+
+                res.status(201).json(response);
+        })
+
+        .catch(error => {
         res.status(500).json({ message: "There was an error while saving the user to the database" });
         })
 
         }  });
 
-server.delete('/api/posts/:id', (req, res) => {
+
+
+
+
+
+server.delete('/posts/:id', (req, res) => {
         const id = req.params.id;
         const request = dbpost.remove(id);
 
@@ -175,7 +241,7 @@ server.delete('/api/posts/:id', (req, res) => {
   });
 
 
-server.delete('/api/users/:id', (req, res) => {
+server.delete('/users/:id', (req, res) => {
         const id = req.params.id;
         const request = dbuser.remove(id);
 
@@ -199,7 +265,7 @@ server.delete('/api/users/:id', (req, res) => {
 
 
 
-server.put('/api/posts/:id', (req, res) => {
+server.put('/posts/:id', (req, res) => {
   const { text} = req.body;
 
   const id =  req.params.id;
@@ -210,6 +276,7 @@ if (!text) {
                 res.status(400).json({errorMessage: "Please provide text for the post."});
 }
 
+else{
  const request = dbpost.update(id, post);
 
 
@@ -225,9 +292,11 @@ if (!text) {
         .catch(error => {
         res.status(500).json({ message: "Couldn't update the post" });
         })
+}	
 });
 
-server.put('/api/users/:id', (req, res) => {
+
+server.put('/users/:id', (req, res) => {
   const {name} = req.body;
 
   const id =  req.params.id;
@@ -238,6 +307,7 @@ if (!name) {
                 res.status(400).json({errorMessage: "Please provide a name for the user."});
 }
 
+else {
  const request = dbuser.update(id, post);
 
 
@@ -245,7 +315,7 @@ if (!name) {
                 if(response===0)  res.status(404).json({ message: "The user with the specified ID does not exist." });
                 else{
                         let responseObject ={};
-                        responseObject.message= `Successfully updated user name with id ${id}`
+                        responseObject.message= `Successfully updated user name who id is ${id}`
                         res.status(200).json(responseObject);
                 }
         })
@@ -253,6 +323,8 @@ if (!name) {
         .catch(error => {
         res.status(500).json({ message: "Couldn't update the user" });
         })
+}
+
 });
 
 
