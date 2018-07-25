@@ -1,0 +1,27 @@
+{
+  "name": "Node-Blog",
+  "version": "1.0.0",
+  "description": "## Topics",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tgreenhalgh/Node-Blog.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tgreenhalgh/Node-Blog/issues"
+  },
+  "homepage": "https://github.com/tgreenhalgh/Node-Blog#readme",
+  "dependencies": {
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "helmet": "^3.13.0",
+    "knex": "^0.15.2",
+    "sqlite3": "^4.0.2"
+  }
+}
