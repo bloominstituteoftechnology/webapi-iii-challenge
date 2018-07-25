@@ -12,12 +12,22 @@ server.use(express.json());
 
 // create endpoints
 // postDb
+
+server.get("/api/post/:id/tags", async (req, res) => {
+  try {
+    const response = await postDb.getPostTags(req.params.id);
+    res.status(200).json(response);
+  } catch (error) {
+    res.status(500).send({ message: "ERROR PROCESSING REQUEST", error: error });
+  }
+});
+
 server.get("/api/post/:id", async (req, res) => {
   try {
     const response = await postDb.get(req.params.id);
     res.status(200).json(response);
   } catch (error) {
-    res.status(500).send({ error: "ERROR PROCESSING REQUEST", error });
+    res.status(500).send({ message: "ERROR PROCESSING REQUEST", error: error });
   }
 });
 
