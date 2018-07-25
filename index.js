@@ -153,4 +153,45 @@ server.get('/api/users/posts/:id', (req, res) => {
         })
   })
 
+  // Delete user, post, tag by id
+
+  server.delete('/api/users/:id', (req, res) => {
+    const {id} = req.params
+    
+    users
+        .remove(id)
+        .then(response => {
+            res.status(204).json(response);
+        })
+        .catch(err => {
+            res.status(500).json({message: "The user with the specified ID does not exist."})
+        })
+})
+
+server.delete('/api/users/posts/:id', (req, res) => {
+    const {id} = req.params
+    
+    posts
+        .remove(id)
+        .then(response => {
+            res.status(204).json(response);
+        })
+        .catch(err => {
+            res.status(500).json({message: "The user post with the specified ID does not exist."})
+        })
+})
+
+server.delete('/api/tags/:id', (req, res) => {
+    const {id} = req.params
+    
+    tags
+        .remove(id)
+        .then(response => {
+            res.status(204).json(response);
+        })
+        .catch(err => {
+            res.status(500).json({message: "The tag with the specified ID does not exist."})
+        })
+})
+
 server.listen(port, () => console.log(`Server is listening to port ${port}`));
