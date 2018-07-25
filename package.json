@@ -1,0 +1,12 @@
+{
+  "name": "Blog",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/nchen0/Node-Blog",
+  "author": "Nicky Chen <nicky.chen0@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "knex": "^0.15.2",
+    "sqlite3": "^4.0.2"
+  }
+}
