@@ -16,8 +16,13 @@ const conErr = (err) => { //Logs the compiler error to the console
   console.log("Console Error:", err);
 }
 
-server.use(express.json());
+function upperCaser(req, res, next) {
+  console.log("UpperCase is working"); //Verify to the console that local middleware is working
+  req.body.tag = req.body.tag.toUpperCase();
+  next()
+}
 
+server.use(express.json());
 
 //BEGIN USERS CRUD
 server.get('/api/users/', async (req, res) => {
@@ -208,11 +213,11 @@ server.get('/api/tags/:id', async (req, res) => {
   }
 })
 
-server.post('/api/tags/', async (req, res) => {
+server.post('/api/tags/', upperCaser, async (req, res) => {
   const { tag } = req.body;
   if (!tag) return sendUserError(400, `Bad Request: Please provide text for your tag`);
   try {
-    const tags = await tagDb.get();
+    // const tags = await tagDb.get();
     // console.log(tags.entries());
     // if (tags.includes(tag)) return sendUserError(400, `Bad request: "${tag}" is already in the database choose a unique value`, res);
     //Must include code to cancel request if there is a duplicate
@@ -241,7 +246,7 @@ server.delete('/api/tags/:id', async (req, res) => {
   }
 });
 
-server.put('/api/tags/:id', async (req, res) => {
+server.put('/api/tags/:id', upperCaser, async (req, res) => {
   const { tag } = req.body;
   try {
     const result = await tagDb.update(req.params.id, {tag});
@@ -253,6 +258,6 @@ server.put('/api/tags/:id', async (req, res) => {
     return sendUserError(500, `Server Error: Tag ${req.params.id} could not be updated`, res);
   }
 });
-//END TAGS CRUC
+//END TAGS CRUD
 
 server.listen(8000, () => console.log('App is listening...'));
