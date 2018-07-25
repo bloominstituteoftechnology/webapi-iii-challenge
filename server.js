@@ -219,6 +219,45 @@ server.get('/tags/:id', async (req, res) => {
   }
 });
 
+// add a new tag
+server.post('/tags', async (req, res) => {
+  const TAG = req.body.tag;
+
+  if (!TAG) {
+    res.status(400).json({
+      error: 'Please provide the tag.',
+    });
+    return;
+  }
+
+  const tag = { tag: TAG };
+
+  try {
+    const response = await tagDB.insert(tag);
+    // reponse is { id: # }
+    console.log('TAG RESPONSE', response);
+    return res.status(200).json(`Tag id:${response.id} has been added.`);
+  } catch (err) {
+    return res.status(500).json({ error: `The tag could not be added.` });
+  }
+});
+
+// delete a tag
+server.delete('/tags/:id', async (req, res) => {
+  const ID = req.params.id;
+
+  try {
+    const response = await tagDB.remove(ID);
+    // if deleted, response = 1, otherwise = 0
+    if (response) return res.status(200).json(`Tag id:${ID} has been deleted.`);
+    else return res.status(400).json(`Tag id:${ID} does not exist.`);
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ error: `Tag id:${ID} could not be deleted.` });
+  }
+});
+
 server.use((req, res) =>
   res.status(404).send(`<h1>404: resource "${req.url}" not found</h1>`),
 );
