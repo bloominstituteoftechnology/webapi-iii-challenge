@@ -217,7 +217,7 @@ if (!text) {
                 if(response===0)  res.status(404).json({ message: "The post with the specified ID does not exist." });
                 else{ 
 			let responseObject ={};
-			responseObject.message= `Successfully updated post with id ${id}`
+			responseObject.message= `Successfully updated post text with id ${id}`
 			res.status(200).json(responseObject);
 		}
 	})
@@ -226,6 +226,35 @@ if (!text) {
         res.status(500).json({ message: "Couldn't update the post" });
         })
 });
+
+server.put('/api/users/:id', (req, res) => {
+  const {name} = req.body;
+
+  const id =  req.params.id;
+  const post = {name};
+
+
+if (!name) {
+                res.status(400).json({errorMessage: "Please provide a name for the user."});
+}
+
+ const request = dbuser.update(id, post);
+
+
+        request.then(response => {
+                if(response===0)  res.status(404).json({ message: "The user with the specified ID does not exist." });
+                else{
+                        let responseObject ={};
+                        responseObject.message= `Successfully updated user name with id ${id}`
+                        res.status(200).json(responseObject);
+                }
+        })
+
+        .catch(error => {
+        res.status(500).json({ message: "Couldn't update the user" });
+        })
+});
+
 
 
 server.use(function(req, res) {
