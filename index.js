@@ -12,7 +12,6 @@ server.use(express.json());
 
 // create endpoints
 // postDb
-
 server.get("/api/post/:id/tags", async (req, res) => {
   try {
     const response = await postDb.getPostTags(req.params.id);
@@ -28,6 +27,26 @@ server.get("/api/post/:id", async (req, res) => {
     res.status(200).json(response);
   } catch (error) {
     res.status(500).send({ message: "ERROR PROCESSING REQUEST", error: error });
+  }
+});
+
+server.post("/api/post", async (req, res) => {
+  if (
+    !"text" in req.body &&
+    !"postedBy" in req.body &&
+    !"tags" in request.body
+  ) {
+    res.status(400).send({
+      message: "PLEASE CHECK THE STRUCTURE OF YOUR POST AND TRY AGAIN"
+    });
+  }
+  try {
+    await postDb.insert(req.body);
+    res.status(200).json(req.body);
+  } catch (error) {
+    res
+      .status(500)
+      .send({ message: "ERROR PROCESSING REQUEST", error: error.message });
   }
 });
 
