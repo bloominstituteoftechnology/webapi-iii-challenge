@@ -121,6 +121,18 @@ server.put("/api/tag/:id", async (req, res) => {
   }
 });
 
+server.delete("/api/tag/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const response = tagDb.remove(id);
+    res.status(200).send(response);
+  } catch (error) {
+    res
+      .status(500)
+      .send({ error: "EROR PROCESSING REQUEST", error: error.message });
+  }
+});
+
 // userDb
 
 // catch all 404
