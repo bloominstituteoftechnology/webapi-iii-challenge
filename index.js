@@ -51,8 +51,8 @@ server.get('/api/users/:id', (req, res) => {
     .then((user) => {
       user === undefined
         ? res.status(404).json({
-          message: `user with id of ${req.params.id} does not exist`
-        })
+            message: `user with id of ${req.params.id} does not exist`
+          })
         : res.status(200).json(user)
     })
     .catch((err) =>
@@ -81,12 +81,28 @@ server.get('/api/tags/:id', (req, res) => {
     .then((tag) => {
       tag === undefined
         ? res.status(404).json({
-          message: `tag with id of ${req.params.id} does not exist`
-        })
+            message: `tag with id of ${req.params.id} does not exist`
+          })
         : res.status(200).json(tag)
     })
     .catch((err) =>
       res.status(500).json({ error: 'Tag information could not be retrieved.' })
+    )
+})
+
+// endpoints for DELETE method
+server.delete('/api/users/:id', (req, res) => {
+  userDb
+    .remove(req.params.id)
+    .then((user) => {
+      user == 0
+        ? res
+            .status(404)
+            .json({ message: 'The user with the specified ID does not exist.' })
+        : res.status(200).json(user)
+    })
+    .catch((err) =>
+      res.status(500).json({ error: 'The post could not be removed' })
     )
 })
 
