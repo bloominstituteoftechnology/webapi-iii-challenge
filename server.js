@@ -163,5 +163,74 @@ server.put('/api/posts/:id', async (req, res) => {
     return sendUserError(500, `Server Error: Post ${postId.id} could not be updated`, res);
   }
 })
+//END POSTS CRUD
+
+//BEGIN TAGS CRUD
+server.get('/api/tags/', async (req, res) => {
+  try {
+    const tags = await tagDb.get();
+    res.status(200).json(tags);
+  } catch(err) {
+    conErr(err);
+    return sendUserError(500, `Server Error: Tags could not be retrieved`, res);
+  }
+});
+
+server.get('/api/tags/:id', async (req, res) => {
+  try {
+    const tag = await tagDb.get(req.params.id);
+    res.status(200).json(tag);
+  } catch(err) {
+    conErr(err);
+    return sendUserError(404, `Server Error: Tag ${req.params.id} could not be retrieved`, res);
+  }
+})
+
+server.post('/api/tags/', async (req, res) => {
+  const { tag } = req.body;
+  if (!tag) return sendUserError(400, `Bad Request: Please provide text for your tag`);
+  try {
+    const tags = await tagDb.get();
+    // console.log(tags.entries());
+    // if (tags.includes(tag)) return sendUserError(400, `Bad request: "${tag}" is already in the database choose a unique value`, res);
+    //Must include code to cancel request if there is a duplicate
+    const tagId = await tagDb.insert({tag});
+    try {
+      const tag = await tagDb.get(tagId.id);
+      res.status(201).json(tag);
+    } catch(err) {
+      conErr(err);
+      return sendUserError(404, `Not Found: Could not created tag with ID ${tagId.id}`, res);
+    }
+  } catch(err) {
+    conErr(err);
+    return sendUserError(500, `Server Error: Tag could not be created`);
+  }
+})
+
+server.delete('/api/tags/:id', async (req, res) => {
+  try {
+    const result = await tagDb.remove(req.params.id);
+    if (result === 0) return sendUserError(404, `Not Found: No tag found with ID ${req.params.id}`, res);
+    res.status(200).json({"Message":`Success! Tag ${req.params.id} succesfully deleted`})
+  } catch(err) {
+    conErr(err);
+    return sendUserError(500, `Server error: tag ${req.params.id} could not be deleted`);
+  }
+});
+
+server.put('/api/tags/:id', async (req, res) => {
+  const { tag } = req.body;
+  try {
+    const result = await tagDb.update(req.params.id, {tag});
+    if (result === 0) return sendUserError(404, `Not Found: Could not find tag with ID ${req.params.id}`, res);
+    const updatedTag = await tagDb.get(req.params.id);
+    res.status(200).json(updatedTag);
+  } catch(err) {
+    conErr(err);
+    return sendUserError(500, `Server Error: Tag ${req.params.id} could not be updated`, res);
+  }
+});
+//END TAGS CRUC
 
 server.listen(8000, () => console.log('App is listening...'));
