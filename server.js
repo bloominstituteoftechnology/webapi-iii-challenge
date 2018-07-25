@@ -197,10 +197,23 @@ server.delete('/api/tags/:id', async (req,res) => {
  */
 server.put('/api/tags/:id', async (req,res) => {
   try{
-    if (!req.body.userId || !req.body.text){
-      res.status(400).json({errorMessage: 'An id and text property is required in the request body.'})
-    }else if (typeof(req.body.userId) != 'number'){
-      res.status(400).json({errorMessage: 'The id property must be a number'})
+    //Check if tag exists:
+    if (!req.body.tag){
+      res.status(400).json({errorMessage: 'A unique tag (body) and id (url params) is required in the request body.'})
+    }
+
+    const tags = await tagDB.get()
+    console.log(tags)
+    
+    //Check Uniqueness
+    if (tags.some( tag => tag.tag === req.body.tag)){
+      res.status(400).json({errorMessage: 'Please specify a unique tag. This tag already exists.'})
+    
+    //Check if string length is < 80 characters long
+    }else if (req.body.tag.length > 80){
+      res.status(400).json({errorMessage: 'The tag must be less than 80 characters'})
+    
+    //Good to go!
     }else {
       const tag = await tagDB.update(req.params.id, req.body)  
       if (tag == 0){
