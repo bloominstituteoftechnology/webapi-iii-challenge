@@ -31,6 +31,45 @@ server.get('/users', async (req, res) => {
   }
 });
 
+// add a new user
+server.post('/users', async (req, res) => {
+  const NAME = req.body.name;
+
+  if (!NAME) {
+    res.status(400).json({
+      error: 'Please provide a name for the new user.',
+    });
+    return;
+  }
+
+  try {
+    const response = await userDB.insert({ NAME });
+    // reponse is { id: # }
+    return res.status(200).json(`The user ${NAME} has been added.`);
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ error: `The user ${NAME} could not be added.` });
+  }
+});
+
+// delete a user
+server.delete('/users/:id', async (req, res) => {
+  const ID = req.params.id;
+
+  try {
+    const response = await userDB.remove(ID);
+    // if deleted, response = 1, otherwise = 0
+    if (response)
+      return res.status(200).json(`User id:${ID} has been deleted.`);
+    else return res.status(400).json(`User id:${ID} does not exist.`);
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ error: `User id:${ID} could not be deleted.` });
+  }
+});
+
 // display an individual user
 server.get('/users/:id', async (req, res) => {
   const ID = req.params.id;
@@ -66,12 +105,12 @@ server.get('/users/:id/posts', async (req, res) => {
     } catch (err) {
       return res
         .status(500)
-        .json({ error: `The user with id:${ID} could not be retrieved.` });
+        .json({ error: `User id:${ID} could not be retrieved.` });
     }
   } catch (err) {
     return res
       .status(500)
-      .json({ error: `The user with id:${ID} could not be retrieved.` });
+      .json({ error: `User id:${ID} could not be retrieved.` });
   }
 });
 
@@ -97,7 +136,58 @@ server.get('/posts/:id', async (req, res) => {
   } catch (err) {
     return res
       .status(500)
-      .json({ error: `The post with id:${ID} could not be retrieved.` });
+      .json({ error: `Post id:${ID} could not be retrieved.` });
+  }
+});
+
+// add a new post
+server.post('/posts/:id', async (req, res) => {
+  const ID = req.params.id;
+  const TEXT = req.body.text;
+
+  if (!TEXT) {
+    res.status(400).json({
+      error: 'Please provide the text for the new post.',
+    });
+    return;
+  }
+
+  const post = { userId: ID, text: TEXT };
+
+  // make sure user exists
+  try {
+    const response = await userDB.get(ID);
+    if (typeof response === 'undefined')
+      return res.status(404).json({ error: `No user id:${ID} exists.` });
+    // user exists, add the post
+    try {
+      const response = await postDB.insert(post);
+      // reponse is { id: # }
+      return res.status(200).json(`A post for user id:${ID} has been added.`);
+    } catch (err) {
+      return res.status(500).json({ error: `The post could not be added.` });
+    }
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ error: `User id:${ID} could not be retrieved.` });
+  }
+});
+
+// delete a post
+server.delete('/posts/:id', async (req, res) => {
+  const ID = req.params.id;
+
+  try {
+    const response = await postDB.remove(ID);
+    // if deleted, response = 1, otherwise = 0
+    if (response)
+      return res.status(200).json(`Post id:${ID} has been deleted.`);
+    else return res.status(400).json(`Post id:${ID} does not exist.`);
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ error: `Post id:${ID} could not be deleted.` });
   }
 });
 
