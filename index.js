@@ -80,4 +80,13 @@ server.put('/users/:id', async (req, res) => {
     }
 })
 
+server.get('/posts', async (req, res)=> {
+    try {
+        const users = await postDb.get();
+        res.status(200).json(users);
+    } catch(err) {
+        res.status(500).json({ error: 'Posts could not be retrieved.'})
+    }
+    });
+
 server.listen(8000, () => console.log('API running on port 8000'));
