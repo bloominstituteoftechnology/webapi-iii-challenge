@@ -1,0 +1,20 @@
+{
+  "name": "node-blog",
+  "version": "1.0.0",
+  "description": "Learning about Node.js",
+  "private": true,
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "helmet": "^3.13.0",
+    "knex": "^0.15.2",
+    "morgan": "^1.9.0",
+    "nodemon": "^1.18.3",
+    "sqlite3": "^4.0.2"
+  }
+}
