@@ -35,3 +35,18 @@ server.get('/api/users/:id', async (req, res) => {
         res.status(NOT_FOUND_CODE).json({ error: 'Users cannot be found' });
     }
 })
+
+server.post('/api/users', async (req, res) => {
+    try {
+        if(req.body.name === undefined) {
+            res.status(BAD_REQUEST_CODE).json({error: 'Cannot create user without a name'});
+            res.end();
+            return;
+        }
+        const postResponse = await userDb.insert(req.body);
+        res.status(CREATED_CODE).json(postResponse);
+    } 
+    catch (err) {
+        res.status(INTERNAL_SERVER_ERROR_CODE).json({error: 'Error creating user either this is a server problem or there is a user that already exists by that name'})
+    }
+})
