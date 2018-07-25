@@ -39,7 +39,10 @@ server.get('/users/:id', async (req, res) => {
   
   try {
     const user = await userDb.get(id)
-    res.status(200).json(user)
+    
+     user ? res.status(200).json(user)
+          : res.status(404).json({ message: "user not found" })
+
   } catch(e) {
     res.status(500).json({ error: "couldn't retrieve user" })
   }
@@ -73,6 +76,31 @@ server.delete('/users/:id', async (req, res) => {
   }
 })
 
+server.post('/posts', async (req, res) => {
+  if (!req.body || !req.body.userId || ! req.body.text)
+    res.status(400).json({ 
+      message: "you need to provide text and an existing userId"
+    })
 
+  const { userId, text } = req.body
+
+  try { 
+    const user = await userDb.get(Number(req.body.userId))
+
+    // if a valid user was found, a user object would be returned
+    // an array of all users is returned if individual user wasn't found
+    if (!user) 
+      res.status(400).json({ message: "please provide a valid userID" })
+   
+    const { id } = await postDb.insert({ userId, text }) 
+
+    // this is also a short check to see if `id` has a truthy value
+    id && res.status(200).json({ id, userId, text })
+       
+  } catch(e) {
+    res.status(500).json({ message: "couldn't save post to db" }) 
+  }
+
+})
 
 server.listen(8080, () => console.log('💵:8080'))
