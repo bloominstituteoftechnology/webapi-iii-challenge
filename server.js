@@ -177,24 +177,20 @@ server.post('/api/tags', async (req,res) => {
   }
 })
 
-
-
 /**
  *   DELETE tags by id
  */
 server.delete('/api/tags/:id', async (req,res) => {
   try{
-    const post = await tagDB.remove(req.params.id);
-    console.log(post)
-    post == 0 ? res.status(400).json({ message: "The post with the specified ID does not exist." }) :
-      res.status(200).send(`${post} record(s) were deleted`);
+    const tag = await tagDB.remove(req.params.id);
+    console.log(tag)
+    tag == 0 ? res.status(400).json({ message: "The tag with the specified ID does not exist." }) :
+      res.status(200).send(`${tag} record(s) were deleted`);
     }
   catch (err){
-    res.status(500).json({ error: "There was an error while deleting the post to the database" })
+    res.status(500).json({ error: "There was an error while deleting the tag to the database" })
   }
 })
-
-
 
 /**
  *   PUT tags by id
@@ -206,18 +202,18 @@ server.put('/api/tags/:id', async (req,res) => {
     }else if (typeof(req.body.userId) != 'number'){
       res.status(400).json({errorMessage: 'The id property must be a number'})
     }else {
-      const post = await tagDB.update(req.params.id, req.body)  
-      if (post == 0){
-        res.status(400).json({ message: "The post with the specified ID does not exist." })
+      const tag = await tagDB.update(req.params.id, req.body)  
+      if (tag == 0){
+        res.status(400).json({ message: "The tag with the specified ID does not exist." })
       } else {
-        const updatedPost = await tagDB.get(req.params.id)
-        res.status(200).json(updatedPost);
+        const updatedTag = await tagDB.get(req.params.id)
+        res.status(200).json(updatedTag);
       } 
     }
   }
   
   catch (err){
-    res.status(500).json({ error: "There was an error while saving the post to the database" })
+    res.status(500).json({ error: "There was an error while saving the tag to the database" })
   }
 })
 
