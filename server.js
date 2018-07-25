@@ -202,5 +202,20 @@ server.put('/posts/:id', async (req, res) => {
 })
 
 
+server.delete('/posts/:id', async (req, res) => {
+  const id = Number(req.params.id)
+
+  try {
+  
+    const numberOfDeletedPosts = await postDb.remove(id)
+    res.status(200).json({ message: `deleted post:${id}` })
+
+  } catch(e) {
+    res.status(500).json({ error: "couldn't delete post", e: e.message})
+  }
+
+})
+
+
 
 server.listen(8080, () => console.log('💵:8080'))
