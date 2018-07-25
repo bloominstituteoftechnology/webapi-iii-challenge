@@ -195,6 +195,33 @@ server.post('/users', (req, res) => {
   }
 })
 
+server.post('/posts/:userId', (req, res) => {
+  const userId = req.params.userId;
+  const text = req.body.text;
+  const post = { userId, text };
+  if(!userId || !text) {
+    res
+      .status(400)
+      .json({ error: `Please provide both the userId and text.` })
+      .end()
+  } else {
+    postDb
+      .insert(post)
+      .then(response => {
+        res
+          .status(200)
+          .json(response)
+          .end()
+      })
+      .catch(() => {
+        res
+          .status(404)
+          .json({ error: `The specified User ID does not exist.` })
+          .end()
+      })
+  }
+})
+
 
 
 server.listen(8000, () => console.log(`... API is running on port 8000 ...`));
