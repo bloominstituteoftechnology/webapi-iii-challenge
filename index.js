@@ -31,7 +31,16 @@ server.get('/api/posts', (req, res) => {
     .catch((err) =>
       res
         .status(500)
-        .json({ error: 'The posts information could not be retrieved.' })
+        .json({ error: 'The post information could not be retrieved.' })
+    )
+})
+
+server.get('/api/tags', (req, res) => {
+  tagDb
+    .get()
+    .then((tags) => res.status(200).json(tags))
+    .catch((err) =>
+      res.status(500).json({ error: 'Tag information could not be retrieved.' })
     )
 })
 
