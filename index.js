@@ -12,7 +12,7 @@ const express = require('express');
 
 const server = express();
 server.use(express.json());
-
+//userDb
 server.get('/api/users', async (req, res) => {
     try {
     const users = await userDb.get();
@@ -106,4 +106,5 @@ server.delete('/api/users/:id', async (req, res) => {
         }
     }
 });
+//postsDb
 server.listen(8001);
