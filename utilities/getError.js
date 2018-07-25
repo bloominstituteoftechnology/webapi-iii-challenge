@@ -2,14 +2,15 @@
 // a reqType is "get", "put", etc.
 // a errType is 'data', 'database', or 'client', and describes the flaw that caused the error
 // a targetKeys describes the noteworthy keys on the json object being requested.
+// an id is an optional parameter referring to the data object the request is dealing with
 
-function getError(errType, target, reqType) {
+function getError(errType, target, reqType, id = null) {
   let problem = '';
   let upshot = '';
   let code;
   switch (errType) {
     case 'database':
-      problem = 'Database server request failed.';
+      problem = `Your ${reqType} to the database server request failed.`;
       code = 500;
       switch (reqType) {
         case 'post':
@@ -18,10 +19,20 @@ function getError(errType, target, reqType) {
         case 'delete':
           upshot = 'Requested data was note deleted.';
           break;
+        case 'getById':
+          upshot = 'Ensure requested ID exists on server. Otherwise contact your database administrator.';
+          break;
         default:
           upshot = 'Please contact your database administrator';
           break;
       }
+      break;
+
+    case 'partialSuccess':
+      problem = `Your ${reqType} to the database server was saved, but object could not be returned.`;
+      upshot = `Please request the object directly with a get request to the server, using the id of ${id}`
+      code = 201;
+      break;
 
     case 'data':
       problem = 'Data not found.';
