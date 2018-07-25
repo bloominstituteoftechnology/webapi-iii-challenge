@@ -79,4 +79,15 @@ server.put('/users/:id', async (req, res) => {
     }
 })
 
+// DELETE CRUD
+server.delete('/users/:id', async (req, res) => {
+    try {
+        const result = await userDb.remove(req.params.id)
+        if (result > 0)
+            res.status(200).json({ message: 'User has been successfully delete.' })
+    } catch (error) {
+        res.status(500).json({ error: 'Unable to delete user.' })
+    }
+})
+
 server.listen(8000, () => console.log('API running on port 8000'));
