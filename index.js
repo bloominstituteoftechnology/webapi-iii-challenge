@@ -108,6 +108,19 @@ server.post("/api/tag", async (req, res) => {
   }
 });
 
+server.put("/api/tag/:id", async (req, res) => {
+  try {
+    const post = req.body;
+    const id = req.params.id;
+    const response = tagDb.update(post, id);
+    res.status(200).send(response);
+  } catch (error) {
+    res
+      .status(500)
+      .send({ error: "ERROR PROCESSING REQUEST", error: error.message });
+  }
+});
+
 // userDb
 
 // catch all 404
