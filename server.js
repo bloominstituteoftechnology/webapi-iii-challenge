@@ -18,7 +18,10 @@ server.get('/api/users', (req, res) => {
             res.status(200).json(userData);
         })
         .catch(err => {
-            res.status(500).json({"error": err, "message":"The users could not be retrieved."})
+            res.status(500).json({
+                "error": err,
+                "message": "The users could not be retrieved."
+            })
         })
 });
 //GET SPECIFIC USER
@@ -42,7 +45,10 @@ server.get('/api/posts', (req, res) => {
             res.status(200).json(postData);
         })
         .catch(err => {
-            res.status(500).json({"error": err, "message":"The posts could not be retrieved."})
+            res.status(500).json({
+                "error": err,
+                "message": "The posts could not be retrieved."
+            })
         })
 });
 //GET TAGS
@@ -83,13 +89,13 @@ server.get('/api/users/:userId/posts/:postId', (req, res) => {
         .catch(err => {
             res.status(500).json({
                 "error": err,
-                "message": "The posts from that user could not be retrieved."
+                "message": "The tags from that post could not be retrieved."
             })
         })
 });
 //GET TAGS FOR SPECIFIC POST 
-server.get('/api/users/:userId/posts/:postId/tags/', (req, res) => {
-    const userId = req.params.userId;
+server.get('/api/posts/:postId/tags/', (req, res) => {
+    // const userId = req.params.userId;
     const postId = req.params.postId;
     postDb.getPostTags(postId)
         .then(userPostData => {
@@ -104,9 +110,74 @@ server.get('/api/users/:userId/posts/:postId/tags/', (req, res) => {
 });
 
 //NEW USER
-//NEW POST
-//NEW TAG
+server.post('/api/users', (req, res) => {
 
+    const name = req.body.name;
+    let newUser = {
+        name
+    };
+    userDb.insert(newUser)
+        .then(response => {
+            res.status(200).json({
+                "success": "new user created",
+                "post": newUser,
+                "new_user_id": response
+            })
+        })
+        .catch(err => {
+            res.status(500).json({
+                "failed": "new post was not created",
+                "error": err
+            })
+        })
+})
+
+//NEW POST
+server.post('/api/posts', (req, res) => {
+
+    const userId = req.body.userId;
+    const text = req.body.text;
+    let newPost = {
+        userId,
+        text
+    };
+    postDb.insert(newPost)
+        .then(response => {
+            res.status(200).json({
+                "success": "new post created",
+                "post": newPost,
+                "response": response
+            })
+        })
+        .catch(err => {
+            res.status(500).json({
+                "failed": "new post was not created",
+                "error": err
+            })
+        })
+})
+
+//NEW TAG
+server.post('/api/tags', (req, res) => {
+    const tag = req.body.tag;
+    let newTag = {
+        tag
+    };
+    tagDb.insert(newTag)
+        .then(response => {
+            res.status(200).json({
+                "success": "new tag created",
+                "tag": newTag,
+                "new_tag_id": response
+            })
+        })
+        .catch(err => {
+            res.status(500).json({
+                "failed": "new tag was not created",
+                "error": err
+            })
+        })
+})
 //UPDATE USER
 //UPDATE POST
 //UPDATE TAGS
