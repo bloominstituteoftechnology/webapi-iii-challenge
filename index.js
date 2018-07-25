@@ -15,6 +15,7 @@ server.get('/', (req, res) => {
     res.status(200).send('Server running...');
 });
 
+// POSTS CRUD operations
 server.get('/api/posts', async (req, res) => {
     try {
         const posts = await postDb.get();
@@ -97,6 +98,78 @@ server.delete('/api/posts/:id', async (req, res) => {
         }
     } catch(err) {
         res.status(500).json({error: 'The post could not be removed.'});
+    }
+});
+
+// TAGS CRUD operations
+server.get('/api/tags', async (req, res) => {
+    try {
+        const tags = await tagDb.get();
+        res.status(200).json(tags);
+    } catch(err) {
+        res.status(500).json({error: 'The tags information could not be retrieved.'});
+    }
+});
+
+server.get('/api/tags/:id', async (req, res) => {
+    try {
+        const {id} = req.params;
+        const tag = await tagDb.get(id);
+        if(tag) {
+            res.status(200).json(tag);
+        } else {
+            res.status(404).json({error: 'The tag with the specified ID does not exist.'});
+        }
+    } catch(err) {
+        res.status(500).json({error: 'The tag information could not be retrieved.'});
+    }
+});
+
+server.post('/api/tags', async (req, res) => {
+    try {
+        const tag = {...req.body};
+        if(tag.tag) {
+            const newTag = await tagDb.insert(tag);
+            res.status(201).json(tag);
+        } else {
+            res.status(400).json({error: 'Please provide tag for the tag.'});
+        }
+    } catch(err) {
+        res.status(500).json({error: 'There was an error while saving the tag to the database.'});
+    }
+});
+
+server.put('/api/tags/:id', async (req, res) => {
+    try {
+        const {id} = req.params;
+        const tag = req.body;
+        let findTag = await tagDb.get(id);
+        if(findTag && (tag.tag)) {
+            const updateTag = await tagDb.update(id, tag);
+            findTag = await tagDb.get(id);
+            res.status(200).json(findTag);
+        } else if (!findTag) {
+            res.status(404).json({error: 'The tag with the specified ID does not exist.'});
+        } else {
+            res.status(400).json({error: 'Please provide tag for the tag.'});
+        }
+    } catch(err) {
+        res.status(500).json({error: 'The tag information could not be modified.'});
+    }
+});
+
+server.delete('/api/tags/:id', async (req, res) => {
+    try {
+        const {id} = req.params;
+        const tag = await tagDb.get(id);
+        if(tag) {
+            const delTag = await tagDb.remove(id);
+            res.status(200).json(tag);
+        } else {
+            res.status(404).json({error: 'The tag with the specified ID does not exist.'});
+        }
+    } catch(err) {
+        res.status(500).json({error: 'The tag could not be removed.'});
     }
 });
 
