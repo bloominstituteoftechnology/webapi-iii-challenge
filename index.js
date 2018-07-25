@@ -75,6 +75,21 @@ server.get('/api/posts/:id', (req, res) => {
     )
 })
 
+server.get('/api/tags/:id', (req, res) => {
+  tagDb
+    .get(req.params.id)
+    .then((tag) => {
+      tag === undefined
+        ? res.status(404).json({
+          message: `tag with id of ${req.params.id} does not exist`
+        })
+        : res.status(200).json(tag)
+    })
+    .catch((err) =>
+      res.status(500).json({ error: 'Tag information could not be retrieved.' })
+    )
+})
+
 server.use(function (req, res) {
   res.status(404).send("Ain't nobody got time for that!")
 })
