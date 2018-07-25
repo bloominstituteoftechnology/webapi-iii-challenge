@@ -180,7 +180,25 @@ server.delete('/posts/:id', async (req, res) => {
         await postDb.remove(id);
         res.status(200).json(post);
     } catch(error) {
-        res.status(500).send({message: "The user could not be removed.", error: error.message})
+        res.status(500).send({message: "The post could not be removed.", error: error.message})
+    }
+})
+
+
+//endpoint for DELETE tag
+server.delete('/users/:id', async (req, res) => {
+    const id = req.params.id;
+
+    try {
+        const tag = await tagDb.get(id);
+        if (!tag) {
+            return res.status(404).send({ message: "The tag with the specified ID does not exist." })
+        }
+
+        await userDb.remove(id);
+        res.status(200).json(tag);
+    } catch(errore) {
+        res.status(500).send({message: "The tag could not be removed.", error: error.message})
     }
 })
 
