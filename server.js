@@ -57,7 +57,7 @@ server.post('/api/posts', (req, res) => {
         res.status(200).json(response)
     })
     .catch(err => {
-        sendServerError({error: 'There was an error saving your post to the database.'})
+        sendServerError({error: 'There was an error saving the post to the database.'})
     })
 })
 
@@ -75,7 +75,24 @@ server.put('/api/posts/:id', (req, res) => {
         res.status(200).json(response)
     })
     .catch(err => {
-        sendServerError({error: 'There was an error saving your changes.'})
+        sendServerError({error: 'There was an error saving the changes.'})
+    })
+})
+
+server.delete('/api/posts/:id', (req, res) => {
+    const id = req.params.id;
+
+    if(!id) {
+        res.status(404);
+        res.json({error: 'The post with the specified ID does not exist.'})
+    }
+
+    postDb.remove(id) 
+    .then(response => {
+        res.status(200).json({response})
+    })
+    .catch(err => {
+        sendServerError({error: 'There was an error deleting the post.'})
     })
 })
 
