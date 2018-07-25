@@ -21,171 +21,164 @@ const sendServerError = (msg, res) => {
 //***************************** Posts endpoints *****************************
 
 //Retrieves all posts
-server.get('/api/posts', (req, res) => {
-    postDb.get()
-    .then(response => {
-        res.status(200).json(response)
-    })
-    .catch(err => {
+server.get('/api/posts', async (req, res) => {
+    try {
+        const posts = await postDb.get();
+        res.status(200).json(posts)
+    } catch(err) {
         sendServerError({error: 'The posts information could not be retrieved.'})
-    });
+    };
 });
 
 //Retrieves single post
-server.get('/api/posts/:id', (req, res) => {
+server.get('/api/posts/:id', async (req, res) => {
     const id = req.params.id;
 
+    try {
+    const post = await postDb.get(id);
+        res.status(200).json(post);
     if(!id) {
-        res.status(404);
-        res.json({error: 'The post with the specified ID does not exist.'})
+        res.status(404).json({error: 'The post with the specified ID does not exist.'})
     }
-    postDb.get(id)
-    .then(response => {
-        res.status(200).json(response)
-    })
-    .catch(err => {
+
+    } catch(err) {
         sendServerError({error: 'The post information could not be retrieved.'})
-    })
+    };
 })
 
 //Creates new post
-server.post('/api/posts', (req, res) => {
+server.post('/api/posts', async (req, res) => {
     const post = req.body;
 
+    try{
+        const newPost = await postDb.insert(post);
+        res.status(201).json(newPost)
     if(!post) {
         res.status(400).json({error: 'Please provide content for your post.'})
     }
-
-    postDb.insert(post)
-    .then(response => {
-        res.status(200).json(response)
-    })
-    .catch(err => {
+    } catch(err) {
         sendServerError({error: 'There was an error saving the post to the database.'})
-    })
+    }
 })
 
 //Updates post
-server.put('/api/posts/:id', (req, res) => {
+server.put('/api/posts/:id', async (req, res) => {
     const id = req.params.id;
     const post = req.body;
 
-    if(!id) {
-        res.status(404);
-        res.json({error: 'The post with the specified ID does not exist.'})
-    }
-
-    postDb.update(id, post) 
-    .then(response => {
-        res.status(200).json(response)
-    })
-    .catch(err => {
+    try {
+        const updatedPost = await postDb.update(id, post);
+        res.status(200).json(updatedPost);
+    
+        if(!id) {
+            res.status(404).json({error: 'The post with the specified ID does not exist.'})
+        }
+        if(!post) {
+            res.status(400).json({error: 'Please provide text for your post.'})
+        }
+    } catch(err) {
         sendServerError({error: 'There was an error saving the changes.'})
-    })
+    }
 })
 
 //Deletes post
-server.delete('/api/posts/:id', (req, res) => {
+server.delete('/api/posts/:id', async (req, res) => {
     const id = req.params.id;
 
-    if(!id) {
-        res.status(404);
-        res.json({error: 'The post with the specified ID does not exist.'})
-    }
+    try {
+        const deleted = await postDb.remove(id) ;
+        res.status(200).json({deleted})
 
-    postDb.remove(id) 
-    .then(response => {
-        res.status(200).json({response})
-    })
-    .catch(err => {
+        if(!id) {
+            res.status(404);
+            res.json({error: 'The post with the specified ID does not exist.'})
+        }
+    } catch(err) {
         sendServerError({error: 'There was an error deleting the post.'})
-    })
+    }
 })
 
 //Retrieves list of tags on single post
 
-server.get('/api/posts/:id/tags', (req, res) => {
+server.get('/api/posts/:id/tags', async (req, res) => {
     const id = req.params.id;
-    if(!id) {
-        res.status(404);
-        res.json({error: 'The post with the specified ID does not exist.'})
-    }
 
-    postDb.getPostTags(id)
-    .then(response => {
-        res.status(200).json({response})
-    })
-    .catch(err => {
+    try {
+        const tagsList = await postDb.getPostTags(id);
+        res.status(200).json({tagsList})
+
+        if(!id) {
+            res.status(404);
+            res.json({error: 'The post with the specified ID does not exist.'})
+        }
+
+    } catch(err) {
         sendServerError({error: 'The post tags could not be retrieved.'})
-    })
-
+    }
 })
 
 //***************************** Users endpoints *****************************
 
 //Posts by single user
-server.get('/api/posts/user/:userId', (req, res) => {
+server.get('/api/users/:userId/posts', async (req, res) => {
     const userId = req.params.userId;
 
-    if(!userId) {
-        res.status(404);
-        res.json({error: 'The user with the specified ID does not exist.'})
-    }
+    try{
+        const userPosts = await userDb.getUserPosts(userId);
+        res.status(200).json(userPosts);
 
-    userDb.getUserPosts(userId)
-    .then(response => {
-        res.status(200).json(response)
-    })
-    .catch(err => {
+        if(!userId) {
+            res.status(404);
+            res.json({error: 'The user with the specified ID does not exist.'})
+        }
+    } catch(err) {
         sendServerError({error: 'The user posts could not be retrieved.'})
-    })
+    }
 })
 
 //Retrieves list of users
-server.get('/api/users', (req, res) => {
-    userDb.get()
-    .then(response => {
-        res.status(200).json(response)
-    })
-    .catch(err => {
+server.get('/api/users', async (req, res) => {
+    try {
+        const users = await userDb.get();
+        res.status(200).json(users)
+    } catch(err) {
         sendServerError({error: 'The users could not be retrieved.'})
-    })
+    }
 })
 
 
 //Retrieves single user
-server.get('/api/users/:userId', (req, res) => {
+server.get('/api/users/:userId', async (req, res) => {
     const userId = req.params.userId;
 
-    if(!userId) {
-        res.status(404);
-        res.json({error: 'The user with the specified ID does not exist.'})
-    }
+    try {
+        const user = await userDb.get(userId);
+        res.status(200).json(user)
 
-    userDb.get(userId)
-    .then(response => {
-        res.status(200).json(response)
-    })
-    .catch(err => {
+        if(!userId) {
+            res.status(404);
+            res.json({error: 'The user with the specified ID does not exist.'})
+        }
+    } catch(err) {
         sendServerError({error: 'The user could not be retrieved.'})
-    })
+    }
 })
 
+
 //Creates new user
-server.post('/api/users', (req, res) => {
+server.post('/api/users', async (req, res) => {
     const name = req.body;
 
-    if(!name) {
-        res.status(400).json({error: 'Please provide a username.'})
-    }
+    try{
+        const newUser = await userDb.insert(name);
+        res.status(201).json(newUser);
 
-    userDb.insert(name)
-    .then(response => {
-        res.status(200).json(response)
-    })
-    .catch(err => {
+        if(!name) {
+            res.status(400).json({error: 'Please provide a username.'})
+        }
+    } catch(err) {
         sendServerError({error: 'There was an error saving the user to the database.'})
-    })
+    }
 })
 
 //Updates user
@@ -257,7 +250,7 @@ server.get('/api/tags/:id', (req, res) => {
     })
 })
 
-//Creates new tage
+//Creates new tag
 server.post('/api/tags', (req, res) => {
     const tag = req.body;
 
@@ -267,7 +260,7 @@ server.post('/api/tags', (req, res) => {
 
     tagsDb.insert(tag)
     .then(response => {
-        res.status(200).json(response)
+        res.status(201).json(response)
     })
     .catch(err => {
         sendServerError({error: 'There was an error saving the tag to the database.'})
