@@ -52,4 +52,52 @@ server.get('/api/postTags/:id', async (req, res) => {
     }
 });
 
+server.post('/api/posts', async (req, res) => {
+    try {
+        const post = {...req.body};
+        if(!post.userId || !post.text) {
+            res.status(400).json({error: 'Please provide userId and text for the post.'});
+        } else {
+            const newPost = await postDb.insert(post);
+            res.status(201).json(post);
+        }
+    } catch(err) {
+        res.status(500).json({error: 'There was an error while saving the post to the database.'});
+    }
+});
+
+server.put('/api/posts/:id', async (req, res) => {
+    try {
+        const {id} = req.params;
+        const post = req.body;
+        let findPost = await postDb.get(id);
+        if(findPost && (post.userId && post.text)) {
+            const updatePost = await postDb.update(id, post);
+            findPost = await postDb.get(id);
+            res.status(200).json(findPost);
+        } else if (!findPost) {
+            res.status(404).json({error: 'The post with the specified ID does not exist.'});
+        } else {
+            res.status(400).json({error: 'Please provide userId and text for the user.'});
+        }
+    } catch(err) {
+        res.status(500).json({error: 'The post information could not be modified.'});
+    }
+});
+
+server.delete('/api/posts/:id', async (req, res) => {
+    try {
+        const {id} = req.params;
+        const post = await postDb.get(id);
+        if(post) {
+            const delPost = await postDb.remove(id);
+            res.status(200).json(post);
+        } else {
+            res.status(404).json({error: 'The post with the specified ID does not exist.'});
+        }
+    } catch(err) {
+        res.status(500).json({error: 'The post could not be removed.'});
+    }
+});
+
 server.listen(port, () => console.log(`Server running @ localhost:${port}`));
