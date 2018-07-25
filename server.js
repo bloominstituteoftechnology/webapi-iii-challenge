@@ -224,6 +224,7 @@ server.post('/posts/:userId', (req, res) => {
 
 server.post('/tags', (req, res) => {
   const newTag = req.body.tag;
+  const tag = { tag: newTag };
   if(!newTag) {
     res
       .status(400)
@@ -254,17 +255,17 @@ server.post('/tags', (req, res) => {
           .end()
       })
     tagDb
-      .insert(newTag)
+      .insert(tag)
       .then(response => {
         res
           .status(200)
           .json(response)
           .end()
       })
-      .catch((err) => {
+      .catch(() => {
         res
           .status(500)
-          .json(err)
+          .json({ error: `The tag could not be posted.` })
           .end()
       })
   }
