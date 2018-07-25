@@ -123,6 +123,22 @@ server.delete('/api/posts/:id', (req, res) => {
     )
 })
 
+server.delete('/api/tags/:id', (req, res) => {
+  tagDb
+    .remove(req.params.id)
+    .then((tag) => {
+      tag == 0
+        ? res.status(404).json({
+          message: `The post with the specified ID of ${req.params
+            .id} does not exist.`
+        })
+        : res.status(200).json(tag)
+    })
+    .catch((err) =>
+      res.status(500).json({ error: 'The post could not be removed' })
+    )
+})
+
 server.use(function (req, res) {
   res.status(404).send("Ain't nobody got time for that!")
 })
