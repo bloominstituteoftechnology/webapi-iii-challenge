@@ -19,12 +19,14 @@
   },
   "homepage": "https://github.com/kamry-bowman/Node-Blog#readme",
   "dependencies": {
+    "axios": "^0.18.0",
     "express": "^4.16.3",
     "helmet": "^3.13.0",
     "knex": "^0.15.2",
     "sqlite3": "^4.0.2"
   },
   "devDependencies": {
+    "morgan": "^1.9.0",
     "nodemon": "^1.18.3"
   }
 }
