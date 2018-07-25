@@ -44,12 +44,10 @@ server.post('/users', async (req, res) => {
 
   try {
     const response = await userDB.insert({ NAME });
-    // reponse is { id: # }
-    return res.status(200).json(`The user ${NAME} has been added.`);
+    // response is { id: # }
+    return res.status(200).json(`User id:${response.id} has been added.`);
   } catch (err) {
-    return res
-      .status(500)
-      .json({ error: `The user ${NAME} could not be added.` });
+    return res.status(500).json({ error: `User could not be added.` });
   }
 });
 
@@ -133,6 +131,31 @@ server.get('/posts/:id', async (req, res) => {
   try {
     const response = await postDB.get(ID);
     return res.status(200).json(response);
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ error: `Post id:${ID} could not be retrieved.` });
+  }
+});
+
+// display an individual post's tags
+server.get('/posts/:id/tags', async (req, res) => {
+  const ID = req.params.id;
+
+  // make sure the post exists
+  try {
+    await postDB.get(ID);
+    try {
+      const tagResponse = await postDB.getPostTags(ID);
+      console.log('GETPOSTTAGS response', tagResponse);
+      if (tagResponse.length === 0)
+        res.status(200).json({ message: `Post id:${ID} has no tags` });
+      else return res.status(200).json(tagResponse);
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ error: 'The tags information could not be retrieved.', err });
+    }
   } catch (err) {
     return res
       .status(500)
@@ -230,15 +253,23 @@ server.post('/tags', async (req, res) => {
     return;
   }
 
+  if (TAG.length > 80) {
+    res.status(400).json({
+      error: 'Tag must be fewer than 80 characters.',
+    });
+    return;
+  }
+
   const tag = { tag: TAG };
 
   try {
     const response = await tagDB.insert(tag);
-    // reponse is { id: # }
-    console.log('TAG RESPONSE', response);
+    // response is { id: # }
     return res.status(200).json(`Tag id:${response.id} has been added.`);
   } catch (err) {
-    return res.status(500).json({ error: `The tag could not be added.` });
+    if (err.errno == 19)
+      return res.status(500).json({ error: `No duplicate tags` });
+    else return res.status(500).json({ error: `The tag could not be added.` });
   }
 });
 
