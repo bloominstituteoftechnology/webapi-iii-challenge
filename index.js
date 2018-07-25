@@ -22,6 +22,20 @@ server.get('/api/users', (req, res) => {
     .catch(err => {
         res.status(500).json({ error: 'The users information could not be retrieved'})
     })
+});
+
+server.post('/api/users', (req, res) => {
+    const { name } = req.body;
+    if(!name){
+        res.status(400).json({ error: 'Please provide user name' });
+        res.end(); // <-- needed or not?
+    }
+    users.insert({ name }).then(u => {
+        res.status(201).json(u);
+    })
+    .catch(err => {
+        res.status(500).json({ error: 'There was an error while saving the user to the database' })
+    })
 })
 
 
