@@ -32,7 +32,7 @@ server.get('/api/users/:id', (req, res) => {
        const request = dbuser.get(id);
 
         request.then(response => {
-        if(response.length==0) res.status(404).json({ error: "The post with the specified ID does not exist." });
+        if(response.length==0) res.status(404).json({ error: "The user with the specified ID does not exist." });
          else {
                  response.id = id;
                  res.status(200).json(response);
@@ -97,10 +97,33 @@ server.get('/:id', (req, res) => {
         })
 
         .catch(err => {
+        res.status(404).json({error: "The post with the specified ID does not exist."});
+        })
+
+});
+
+server.get('/:id', (req, res) => {
+        const id = req.params.id;
+
+       const request = dbuser.getPostTags(id);
+
+        request.then(response => {
+        if(response.length==0) res.status(404).json({ error: "The user with the specified ID does not exist." });
+         else {
+                // response.id = id;
+                 res.status(200).json(response);
+         }
+
+        })
+
+        .catch(err => {
         res.status(404).json({error: "The user with the specified ID does not exist."});
         })
 
 });
+
+
+
 
 server.post('/api/posts', (req, res) => {
 
@@ -150,6 +173,30 @@ server.delete('/api/posts/:id', (req, res) => {
         })
 
   });
+
+
+server.delete('/api/users/:id', (req, res) => {
+        const id = req.params.id;
+        const request = dbuser.remove(id);
+
+        request.then(response => {
+                if(response===1) {
+                let responseObject ={};
+                responseObject.message = `Successfully deleted user with id ${id}`;
+
+
+                res.json(responseObject);
+                }
+
+                else res.status(404).json({ error: "The user with the specified ID does not exist." });
+        })
+
+        .catch(error => {
+        res.status(500).json({ error: "The user could not be removed" });
+        })
+
+  });
+
 
 
 server.put('/api/posts/:id', (req, res) => {
