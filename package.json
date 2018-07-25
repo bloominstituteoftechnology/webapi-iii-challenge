@@ -1,0 +1,29 @@
+{
+  "name": "node-blog",
+  "version": "1.0.0",
+  "description": "Lambda Node.js, express and middleware",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emaquino44/Node-Blog.git"
+  },
+  "author": "emmelineaquino",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/emaquino44/Node-Blog/issues"
+  },
+  "homepage": "https://github.com/emaquino44/Node-Blog#readme",
+  "dependencies": {
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "knex": "^0.15.2",
+    "npm": "^6.2.0",
+    "sqlite3": "^4.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.3"
+  }
+}
