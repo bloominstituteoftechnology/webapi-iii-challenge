@@ -7,7 +7,7 @@ const server = express();
 
 server.use(express.json());
 
-server.get('/user', (req, res) => {
+server.get('/users', (req, res) => {
   userDb
     .get()
     .then(response => {
@@ -24,7 +24,7 @@ server.get('/user', (req, res) => {
     })
 })
 
-server.get('/user/:id', (req, res) => {
+server.get('/users/:id', (req, res) => {
   const id = req.params.id;
   userDb
     .get(id)
@@ -114,6 +114,48 @@ server.get('/tags/:id', (req, res) => {
       res
         .status(500)
         .json({ error: `The tag information could not be retrieved.` })
+        .end()
+    })
+})
+
+server.get('/users/:id/posts', (req, res) => {
+  const id = req.params.id;
+  userDb
+    .getUserPosts(id)
+    .then(response => {
+      res
+        .status(200)
+        .json(response)
+        .end()
+    })
+    .catch(() => {
+      res
+        .status(404)
+        .json({ error: `The specified User ID does not exist.` })
+        .end()
+    })
+})
+
+server.get('/posts/:id/tags', (req, res) => {
+  const id = req.params.id;
+  postDb
+    .getPostTags(id)
+    .then(response => {
+      if(!response[0]) {
+        res
+        .status(404)
+        .json({ error: `The specified Post ID either has no tags or does not exist.` })
+        .end()
+      }
+      res
+        .status(200)
+        .json(response)
+        .end()
+    })
+    .catch(() => {
+      res
+        .status(500)
+        .json({ error: `The tags information could not be retrieved.` })
         .end()
     })
 })
