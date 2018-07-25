@@ -61,5 +61,18 @@ server.put('/users/:id', async (req, res) => {
   }
 })
 
+server.delete('/users/:id', async (req, res) => {
+  const id = Number(req.params.id)
+
+  try {
+    const numberOfDeletedUsers = await userDb.remove(id)
+    if (numberOfDeletedUsers > 0)
+      res.status(200).json({ message: "successfully deleted user" })
+  } catch(e) {
+    res.status(500).json({ error: "couldn't delete user" })
+  }
+})
+
+
 
 server.listen(8080, () => console.log('💵:8080'))
