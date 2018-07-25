@@ -27,26 +27,37 @@ server.get('/api/users/:id', (req, res) => {
     const { id } = req.params;
     users.get(id).then(u => {
         if(u.length === 0) {
-            res.status(404).json({ error: 'The user with specified ID does not exist' });
+            res.status(404).json({ error: 'The user with specified ID does not exist.' });
         }
         res.status(200).json(u)
     })
     .catch(err => {
-        res.status(500).json({ error: 'The users information could not be retrieved'})
+        res.status(500).json({ error: 'The users information could not be retrieved.'})
     })
 });
-
 server.post('/api/users', (req, res) => {
     const { name } = req.body;
     if(!name){
-        res.status(400).json({ error: 'Please provide user name' });
+        res.status(400).json({ error: 'Please provide user name.' });
         res.end(); // <-- needed or not?
     }
     users.insert({ name }).then(u => {
         res.status(201).json(u);
     })
     .catch(err => {
-        res.status(500).json({ error: 'There was an error while saving the user to the database' })
+        res.status(500).json({ error: 'There was an error while saving the user to the database.' })
+    })
+});
+server.delete('/api/users/:id', (req, res) => {
+    const { id } = req.params;
+    users.remove(id).then(u => {
+        if(!u) {
+            res.status(404).json({ error: 'The user with the specified ID does not exist.' })
+        }
+        res.status(200).json(u);
+    })
+    .catch(err => {
+        res.status(500).json({ error: 'The user could not be removed.' })
     })
 })
 
