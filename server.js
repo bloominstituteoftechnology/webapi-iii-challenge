@@ -7,6 +7,8 @@ const server = express();
 
 server.use(express.json());
 
+// ALL THE GETS
+
 server.get('/users', (req, res) => {
   userDb
     .get()
@@ -159,6 +161,40 @@ server.get('/posts/:id/tags', (req, res) => {
         .end()
     })
 })
+
+// ALL THE POST
+
+server.post('/users', (req, res) => {
+  const name = req.body.name;
+  const user = { name }
+  if(!name) {
+    res
+      .status(400)
+      .json({ error: `Please provide a name.` })
+      .end()
+  } else if (name.length > 128) {
+    res
+      .status(400)
+      .json({ error: `The name provided is greater than 128 characters.` })
+      .end()
+  } else {
+    userDb
+      .insert(user)
+      .then(response => {
+        res
+          .status(200)
+          .json(response)
+          .end()
+      })
+      .catch(() => {
+        res
+          .status(500)
+          .json({ error: `The user could not be saved.` })
+          .end()
+      })
+  }
+})
+
 
 
 server.listen(8000, () => console.log(`... API is running on port 8000 ...`));
