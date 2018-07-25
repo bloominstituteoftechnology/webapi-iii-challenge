@@ -50,15 +50,28 @@ server.get('/api/users/:id', (req, res) => {
     .get(req.params.id)
     .then((user) => {
       user === undefined
-        ? res
-          .status(404)
-          .json({ message: `user with id ${req.params.id}, not found` })
+        ? res.status(404).json({
+          message: `user with id of ${req.params.id} does not exist`
+        })
         : res.status(200).json(user)
     })
     .catch((err) =>
       res
         .status(500)
         .json({ error: 'User information could not be retrieved.' })
+    )
+})
+
+server.get('/api/posts/:id', (req, res) => {
+  postDb
+    .get(req.params.id)
+    .then((post) => {
+      res.status(200).json(post)
+    })
+    .catch((err) =>
+      res.status(404).json({
+        message: `post with id of ${req.params.id} cannot be found`
+      })
     )
 })
 
