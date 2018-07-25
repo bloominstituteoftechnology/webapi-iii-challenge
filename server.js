@@ -34,4 +34,16 @@ server.get('/users', async (req, res) => {
   }
 })
 
+server.get('/users/:id', async (req, res) => {
+  const id = Number(req.params.id)
+  
+  try {
+    const user = await userDb.get(id)
+    res.status(200).json(user)
+  } catch(e) {
+    res.status(500).json({ error: "couldn't retrieve user" })
+  }
+})
+
+
 server.listen(8080, () => console.log('💵:8080'))
