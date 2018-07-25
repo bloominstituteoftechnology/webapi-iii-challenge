@@ -13,7 +13,7 @@ server.get('/yo', (req, res) => {
 
 server.get('/api/posts', (req, res) => {
  
-  db.find()
+  postDb.get()
     .then(posts => {
       res.status(200).json(posts);
     })
