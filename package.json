@@ -1,0 +1,19 @@
+{
+  "name": "node-blog",
+  "version": "1.0.0",
+  "description": "Express Routers and Middleware",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "cors": "^2.8.4",
+    "knex": "^0.14.4",
+    "sqlite3": "^4.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.17.3"
+  }
+}
