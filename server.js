@@ -23,6 +23,7 @@ function upperCaser(req, res, next) {
 }
 
 server.use(express.json());
+server.use(cors());
 
 //BEGIN USERS CRUD
 server.get('/api/users/', async (req, res) => {
