@@ -60,10 +60,10 @@ server.put('/api/users/:id', async(req, res) => {
             return;
         }
         const updateResponse = await userDb.update(id, req.body);
-        res.status(200).json(updateResponse);
+        res.status(OK_CODE).json(updateResponse);
     }
     catch(err) {
-        res.status(500).json({ error: 'The user information could not be modified'});
+        res.status(INTERNAL_SERVER_ERROR_CODE).json({ error: 'The user information could not be modified'});
         res.end();
     }
 });
