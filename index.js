@@ -83,6 +83,21 @@ server.delete("/api/post/:id", async (req, res) => {
   }
 });
 
+// tagDb
+server.get("/api/post/:id/tagdb", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const response = await tagDb.get(id);
+    res.status(200).send(response);
+  } catch (error) {
+    res
+      .status(500)
+      .send({ error: "ERROR PROCESSING REQUEST", error: error.message });
+  }
+});
+
+// userDb
+
 // catch all 404
 server.use(function(req, res) {
   res.status(404).send("ERROR: FILE NOT FOUND");
