@@ -21,3 +21,17 @@ server.get('/api/users', async (req, res) => {
         res.status(NOT_FOUND_CODE).json({ error: 'Users cannot be found' });
     }
 })
+server.get('/api/users/:id', async (req, res) => {
+    try {
+    const { id } = req.params;
+    const user = await userDb.get(id);
+    if(user === undefined) {
+        res.status(NOT_FOUND_CODE).json({ error: 'The user with that id cannot be found'});
+        res.end();
+        return;
+    }
+    res.status(OK_CODE).json(user);
+    } catch (err) {
+        res.status(NOT_FOUND_CODE).json({ error: 'Users cannot be found' });
+    }
+})
