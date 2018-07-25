@@ -97,7 +97,8 @@ server.get('/users', (req, res) => {
 
 
 server.get('/posts/:id', (req, res) => {
-        const id = req.params.id;
+	
+	const id = req.params.id;
 
        const request = dbpost.get(id);
 
@@ -294,20 +295,6 @@ server.delete('/tags/:id', (req, res) => {
   });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 server.delete('/users/:id', (req, res) => {
         const id = req.params.id;
         const request = dbuser.remove(id);
@@ -360,6 +347,37 @@ else{
         res.status(500).json({ message: "Couldn't update the post" });
         })
 }	
+});
+
+
+server.put('/tags/:id', (req, res) => {
+  const {tag} = req.body;
+
+  const id =  req.params.id;
+  const tagContent = {tag};
+
+
+if (!tag) {
+                res.status(400).json({errorMessage: "Please provide text for the tag."});
+}
+
+else{
+ const request = dbtag.update(id, tagContent);
+
+
+        request.then(response => {
+                if(response===0)  res.status(404).json({ message: "The tag with the specified ID does not exist." });
+                else{
+                        let responseObject ={};
+                        responseObject.message= `Successfully updated tag text to ${tag} whose id is ${id}`
+                        res.status(200).json(responseObject);
+                }
+        })
+
+        .catch(error => {
+        res.status(500).json({ message: "Couldn't update the tag" });
+        })
+}
 });
 
 
