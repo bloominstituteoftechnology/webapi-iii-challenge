@@ -24,6 +24,17 @@ server.get('/api/users', (req, res) => {
     )
 })
 
+server.get('/api/posts', (req, res) => {
+  postDb
+    .get()
+    .then((posts) => res.status(200).json(posts))
+    .catch((err) =>
+      res
+        .status(500)
+        .json({ error: 'The posts information could not be retrieved.' })
+    )
+})
+
 server.use(function (req, res) {
   res.status(404).send("Ain't nobody got time for that!")
 })
