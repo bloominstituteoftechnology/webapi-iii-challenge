@@ -46,6 +46,27 @@ server.get("/users/:id", (req, res) => {
         .json({ error: "The user information could not be retrieved." });
     });
 });
+
+//get user posts
+
+server.get("/users/:id/posts", (req, res) => {
+  users
+    .getUserPosts(req.params.id)
+    .then(posts => {
+      if (posts.length === 0) {
+        res
+          .status(404)
+          .json({ message: "The posts with the specified ID does not exist." });
+      }
+      res.status(200).json(posts);
+    })
+    .catch(error => {
+      res
+        .status(500)
+        .json({ error: "The posts information could not be retrieved." });
+    });
+});
+
 //create user
 server.post("/users", (req, res) => {
   const { name } = req.body;
@@ -82,6 +103,31 @@ server.delete("/users/:id", (req, res) => {
     });
 });
 
+//edit users
+
+server.put("/users/:id", (req, res) => {
+  const id = req.params.id;
+  const { name } = req.body;
+  if (!name) {
+    res.status(400).json({ errorMessage: "Please provide name for post." });
+  }
+  users
+    .update(id, { name })
+    .then(user => {
+      if (user.length === 0) {
+        res.status(404).json({
+          errorMessage: "The user with the specified ID does not exist."
+        });
+      }
+      res.status(200).json({ name });
+    })
+    .catch(error => {
+      res
+        .status(500)
+        .json({ error: "The user information could not be modified." });
+    });
+});
+
 //get posts
 server.get("/posts", (req, res) => {
   posts
@@ -111,6 +157,25 @@ server.get("/posts/:id", (req, res) => {
       res
         .status(500)
         .json({ error: "The user information could not be retrieved." });
+    });
+});
+
+//get post tags
+server.get("/posts/:id/tags", (req, res) => {
+  posts
+    .getPostTags(req.params.id)
+    .then(tags => {
+      if (tags.length === 0) {
+        res
+          .status(404)
+          .json({ message: "The tags with the specified ID does not exist." });
+      }
+      res.status(200).json(tags);
+    })
+    .catch(error => {
+      res
+        .status(500)
+        .json({ error: "The tags information could not be retrieved." });
     });
 });
 
@@ -149,6 +214,31 @@ server.delete("/posts/:id", (req, res) => {
     })
     .catch(error => {
       res.status(500).json({ error: "The post could not be deleted." });
+    });
+});
+
+//edit post
+
+server.put("/posts/:id", (req, res) => {
+  const id = req.params.id;
+  const { text } = req.body;
+  if (!text) {
+    res.status(400).json({ errorMessage: "Please provide text for post." });
+  }
+  posts
+    .update(id, { text })
+    .then(post => {
+      if (post.length === 0) {
+        res.status(404).json({
+          errorMessage: "The post with the specified ID does not exist."
+        });
+      }
+      res.status(200).json({ text });
+    })
+    .catch(error => {
+      res
+        .status(500)
+        .json({ error: "The user information could not be modified." });
     });
 });
 
@@ -219,6 +309,31 @@ server.delete("/tags/:id", (req, res) => {
     })
     .catch(error => {
       res.status(500).json({ error: "The post could not be deleted." });
+    });
+});
+
+//edit tag
+
+server.put("/tags/:id", (req, res) => {
+  const id = req.params.id;
+  const { tag } = req.body;
+  if (!tag) {
+    res.status(400).json({ errorMessage: "Please provide tag for post." });
+  }
+  tags
+    .update(id, { tag })
+    .then(post => {
+      if (post.length === 0) {
+        res.status(404).json({
+          errorMessage: "The post with the specified ID does not exist."
+        });
+      }
+      res.status(200).json({ tag });
+    })
+    .catch(error => {
+      res
+        .status(500)
+        .json({ error: "The user information could not be modified." });
     });
 });
 
