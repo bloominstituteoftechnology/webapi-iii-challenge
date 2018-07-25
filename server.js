@@ -1,5 +1,6 @@
 const express = require('express');
-const dbpost = require('./data/helpers/postDb.js');
+const dbpost = require('./data/helpers/postDb');
+const dbuser = require('./data/helpers/userDb');
 
 const server = express();
 
@@ -23,6 +24,42 @@ server.get('/api/posts', (req, res) => {
         })
 
 });
+
+
+server.get('/api/users/:id', (req, res) => {
+        const id = req.params.id;
+
+       const request = dbuser.get(id);
+
+        request.then(response => {
+        if(response.length==0) res.status(404).json({ error: "The post with the specified ID does not exist." });
+         else {
+                 response.id = id;
+                 res.status(200).json(response);
+         }
+
+        })
+
+        .catch(err => {
+        res.status(404).json({error: "The user with the specified ID does not exist."});
+        })
+
+});
+
+
+server.get('/api/users', (req, res) => {
+        const request = dbuser.get();
+
+        request.then(response => {
+        res.status(200).json(response);
+        })
+
+        .catch(err => {
+        res.status(404).json({error: "The user information could not be retrieved."});
+        })
+
+});
+
 
 server.get('/api/posts/:id', (req, res) => {
         const id = req.params.id;
@@ -114,6 +151,39 @@ server.delete('/api/posts/:id', (req, res) => {
 
   });
 
+
+server.put('/api/posts/:id', (req, res) => {
+  const { text} = req.body;
+
+  const id =  req.params.id;
+  const post = {text};
+
+
+if (!text) {
+                res.status(400).json({errorMessage: "Please provide text for the post."});
+}
+
+ const request = dbpost.update(id, post);
+
+
+        request.then(response => {
+                if(response===0)  res.status(404).json({ message: "The post with the specified ID does not exist." });
+                else{ 
+			let responseObject ={};
+			responseObject.message= `Successfully updated post with id ${id}`
+			res.status(200).json(responseObject);
+		}
+	})
+
+        .catch(error => {
+        res.status(500).json({ message: "Couldn't update the post" });
+        })
+});
+
+
+server.use(function(req, res) {
+  res.status(404).send("Wrong path, check url");
+});
 
 
 
