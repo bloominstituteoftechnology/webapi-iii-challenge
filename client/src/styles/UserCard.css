@@ -1,0 +1,30 @@
+.userCard {
+    width: 300px;
+    height: 80px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0px 25px;
+    box-sizing: border-box;
+    margin: 15px;
+    background-color: white;
+}
+
+.userImg {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    border: 2px solid gray;
+}
+
+.userName {
+    text-align: center;
+    margin: 3px;
+}
+
+.btn {
+    cursor: pointer;
+    border: 1px solid lightgray;
+}
+

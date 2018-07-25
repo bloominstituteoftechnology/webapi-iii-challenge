@@ -1,0 +1,14 @@
+.post{
+    width: 100%;
+    background-color: white;
+    margin: 15px;
+    padding: 30px;
+}
+
+.postContent {
+    font-size: 1.2rem;
+}
+
+.postAuthor {
+    font-weight: 800;
+}
