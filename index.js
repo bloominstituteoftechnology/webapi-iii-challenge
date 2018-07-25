@@ -72,5 +72,27 @@ server.put('/api/users/:id', async(req, res) => {
         res.end();
     }
 });
-
+server.delete('/api/users/:id', async (req, res) => {
+    try {
+        const id = req.params.id
+        const deleteResponse = await userDb.remove(id);
+        if(deleteResponse === 0) {
+            throw NOT_FOUND_CODE;
+        }
+        res.status(200).json(deleteResponse);
+    }
+    catch (err) {
+        switch(err) {
+            case NOT_FOUND_CODE: {
+                res.status(NOT_FOUND_CODE).json({ errorMessage: 'The user could not be deleted because there is no user with that id'});
+                res.end();
+                break;
+            }
+            default: {
+                res.status(INTERNAL_SERVER_ERROR_CODE).json({ error: 'The user could not be deleted at this time.'})
+                res.end();
+            }
+        }
+    }
+});
 server.listen(8001);
