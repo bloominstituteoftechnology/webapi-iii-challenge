@@ -70,3 +70,13 @@ server.post('/posts', async (req, res) => {
 //         res.status(500).json({ error: "The post information could not be modified." })
 //     }
 // })
+
+
+server.get('/users', async (req, res) => {
+    try{
+        const users = await user.get()
+        res.status(200).json(users)
+    }catch(err){
+        res.status(500).json({ "error": "Problem retrieving users"})
+    }
+})
