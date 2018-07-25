@@ -54,15 +54,20 @@ server.put('/api/users/:id', async(req, res) => {
     try {
         const id = req.params.id;
         const { name } = req.body;
+
         if(name === undefined) {
-            res.status(BAD_REQUEST_CODE).json({ errorMessage: 'Please provide a name for the user'});
-            res.end();
-            return;
+            throw BAD_REQUEST_CODE;
         }
         const updateResponse = await userDb.update(id, req.body);
         res.status(OK_CODE).json(updateResponse);
     }
     catch(err) {
+        if(err === BAD_REQUEST_CODE) {
+            res.status(BAD_REQUEST_CODE).json({ errorMessage: 'Please provide a name for the user'});
+            res.end();
+            return;
+        }
+
         res.status(INTERNAL_SERVER_ERROR_CODE).json({ error: 'The user information could not be modified'});
         res.end();
     }
