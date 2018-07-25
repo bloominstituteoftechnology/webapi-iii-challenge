@@ -2,9 +2,12 @@ const express = require('express');
 const postDB = require('./data/helpers/postDb')
 const tagDB = require('./data/helpers/tagDb')
 const userDB = require('./data/helpers/userDb')
+var cors = require('cors')
 
 const server = express();
+
 server.use(express.json())
+server.use(cors())
 
 server.get('/', (req, res) => {
   res.send('Welcome Node-Blog');
