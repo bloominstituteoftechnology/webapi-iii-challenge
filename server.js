@@ -55,6 +55,28 @@ server.post('/api/users', async (req, res) => {
   }
 });
 
+server.get('/api/users/posts/:id', async (req, res) => {
+  try {
+    const user = await userDb.get(req.params.id);
+    if (user.length === 0) {
+      res.status(404).send({ error: 'The user with the specified ID does not exist.'});
+    } 
+  } catch (err) {
+    res.status(500).send({ error: 'The user information could not be retrieved.' });
+  }
+
+  try {
+    const posts = await userDb.getUserPosts(req.params.id);
+    if (posts.length === 0) {
+      res.status(204).send({ error: 'This user has no posts.' })
+    } else {
+      res.status(200).json(posts);
+    }
+  } catch (err) {
+    res.status(500).send({ error: `The user's posts could not be retrieved.` });
+  }
+});
+
 server.delete('/api/users/:id', async (req, res) => {
   try {
     const user = await userDb.get(req.params.id);
