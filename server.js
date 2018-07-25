@@ -113,6 +113,25 @@ server.delete('/users/:id', (req, res) => {
 });
 
 
+//Get user Posts
+server.get('/users/:id/posts', (req, res) => {
+    userDb
+    .getUserPosts(req.params.id)
+    .then(posts => {
+        res
+        .status(200)
+        .json(posts);
+    })
+    .catch(err => {
+            res
+            .status(500)
+            .json({ error: "The user post information could not be retrieved."});
+});
+});
+
+
+
+
 // POSTS
 // All posts
 server.get('/posts', (req, res) => {
@@ -151,6 +170,19 @@ server.get('/posts/:id', (req, res) => {
             .json({ error: "The post information could not be retrieved."});
 });
 });
+
+//get post tags
+
+server.get('/posts/:id/tags', (req, res) => {
+    const {tags} = req.params
+    postDb
+    .getPostTags(req.params.id)
+    .then(tags => {
+        res 
+        .status(200)
+        .json({tags})
+    })
+})
 
 
 // Insert post 
@@ -216,6 +248,10 @@ server.delete('/posts/:id', (req, res) => {
             .json({error: "The post could not be removed"})
         })
 });
+
+
+
+
 
 
 
