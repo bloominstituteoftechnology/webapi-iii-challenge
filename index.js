@@ -197,6 +197,20 @@ server.get('/api/users/:id', async (req, res) => {
     }
 });
 
+server.get('/api/userPosts/:id', async (req, res) => {
+    try {
+        const {id} = req.params;
+        const userPosts = await userDb.getUserPosts(id);
+        if(userPosts) {
+            res.status(200).json(userPosts);
+        } else {
+            res.status(404).json({error: 'The user post with the specified ID does not exist.'});
+        }
+    } catch(err) {
+        res.status(500).json({error: 'The user post information could not be retrieved.'});
+    }
+});
+
 server.post('/api/users', async (req, res) => {
     try {
         const user = {...req.body};
