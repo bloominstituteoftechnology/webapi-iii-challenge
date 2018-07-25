@@ -32,10 +32,16 @@ server.get('/posts/:id', async (req,res) => {
 })
 
 server.post('/posts', async (req, res) => {
-    const { text, postedBy, tags } = req.body
+    const { text, userId } = req.body
+    console.log("text", text, "userID", userId);
+    let userIn = await user.get(userId)
     
-    if(!text || !postedBy || tags.length < 1){
-        res.status(400).json({ "error": "Please include some text, posted By and at least one tag"})
+    if(!text || !userId){
+        res.status(400).json({ "error": "Please include some text and the user ID of an existing user"})
+    }
+    
+    if(!userIn){
+        res.status(400).json({ "error": "No user exists with that ID"})
     }
     
     try{
