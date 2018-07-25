@@ -100,4 +100,35 @@ server.get('/posts/:id', async (req, res) => {
     }
 });
 
+server.post('/posts/', async (req, res) => {
+    let post = req.body;
+    if (!('text') in post || !('userId') in post) {
+        res.status(400).send({ errorMessage: "Please provide a userId and text for the user." });
+    }
+
+    try {
+        const newPost= await postDb.insert(post);
+        res.status(200).json(newPost);
+    }
+    catch (err) {
+        res.status(500).json({ error: 'Post could not be created.' })
+    }
+});
+
+server.delete('/posts/:id', async (req, res) => {
+    let id = req.params.id;
+
+    try {
+        const deleted = await postDb.remove(id);
+        if (deleted > 0)
+            res.status(200).json(deleted);
+        else
+            res.status(404).json({ error: 'The post with the specified ID could not be found' });
+    }
+    catch (err) {
+        res.status(500).json({ error: 'Post could not be deleted' });
+    }
+
+})
+
 server.listen(8000, () => console.log('API running on port 8000'));
