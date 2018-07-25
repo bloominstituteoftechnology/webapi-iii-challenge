@@ -59,6 +59,15 @@ server.put('/api/user/:id', (req, res) => {
         })
         .catch(err => res.status(500).json({ error: "The user could not be updated" }))
 })
+server.get('/api/user/:id/posts', (req, res) => {
+    userDb.getUserPosts(req.params.id)
+        .then (response => {
+            if(response.length === 0) {
+                res.status(404).json({ message: "The user with the specified ID does not exist." })
+            } res.status(200).json(response);
+        }) 
+        .catch (err => res.status(500).json({ error: "The users information could not be retrieved."}))
+})
 
 // Posts
 server.get('/api/posts', (req, res) => {
@@ -67,7 +76,7 @@ server.get('/api/posts', (req, res) => {
         .catch(err => res.status(500).json({ error: "The posts information could not be retrieved." }))
 })
 server.get('/api/post/:id', (req, res) => {
-    postDb.get(Number(req.params.id))
+    postDb.get(req.params.id)
         .then (response => {
             if (response.length === 0) {
                 res.status(404).json({ message: "The post with the specified ID does not exist." })
@@ -109,6 +118,15 @@ server.put('/api/post/:id', (req, res) => {
             }
         })
         .catch(err => res.status(500).json({ error: "The post could not be updated" }))
+})
+server.get('/api/posts/tag/:id', (req, res) => {
+    postDb.getPostTags(req.params.id)
+        .then (response => {
+            if(response.length === 0) {
+                res.status(404).json({ message: "The post(s) with the specified ID does not exist." })
+            } res.status(200).json(response);
+        }) 
+        .catch (err => res.status(500).json({ error: "The posts information could not be retrieved."}))
 })
 
 // Tags
