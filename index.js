@@ -8,8 +8,18 @@ const tagDb = require("./data/helpers/tagDb");
 const userDb = require("./data/helpers/userDb");
 
 // use middleware
+server.use(express.json());
 
 // create endpoints
+// postDb
+server.get("/api/post/:id", async (req, res) => {
+  try {
+    const response = await postDb.get(req.params.id);
+    res.status(200).json(response);
+  } catch (error) {
+    res.status(500).send({ error: "ERROR PROCESSING REQUEST", error });
+  }
+});
 
 // catch all 404
 server.use(function(req, res) {
