@@ -2,6 +2,7 @@ const express = require('express');
 const helmet = require('helmet');
 const userDb = require('./data/helpers/userDb.js');
 const postDb = require('./data/helpers/postDb.js');
+const tagDb = require('./data/helpers/tagDb.js');
 
 const server = express();
 server.use(helmet());
@@ -176,6 +177,78 @@ server.put('/api/posts/:id', async (req, res) => {
     }
   } catch (err) {
     res.status(500).send({ error: 'The post information could not be modified.' });
+  }
+});
+
+// Tags
+server.get('/api/tags', async (req, res) => {
+  try {
+    const tags = await tagDb.getAll();
+    res.status(200).json(tags);
+  } catch (err) {
+    res.status(500).send({ error: 'The tags information could not be retrieved.' })
+  }
+});
+
+server.get('/api/tags/:id', async (req, res) => {
+  try {
+    const tag = await tagDb.get(req.params.id);
+    if (tag.length === 0) {
+      res.status(404).send({ error: 'The tag with the specified ID does not exist.'});
+    } else {
+      res.status(200).json(tag);
+    }
+  } catch (err) {
+    res.status(500).send({ error: 'The tag information could not be retrieved.' });
+  }
+});
+
+server.post('/api/tags', async (req, res) => {
+  const { tag } = req.body;
+  if (!tag) {
+    res.status(400).send({ error: 'Please provide a value for the tag.' });
+  }
+
+  try {
+    const added = await tagDb.insert(req.body);
+    const tag = await tagDb.get(added.id);
+    res.status(201).json(tag);
+  } catch (err) {
+    res.status(500).send({ error: 'There was an error while saving the tag to the database.' });
+  }
+});
+
+server.delete('/api/tags/:id', async (req, res) => {
+  try {
+    const tag = await tagDb.get(req.params.id);
+    if (tag.length === 0) {
+      res.status(404).send({ error: 'The tag with the specified ID does not exist.' })
+    } else {
+      await tagDb.remove(req.params.id)
+      res.status(200).json(tag);
+    }
+  } catch (err) {
+    res.status(500).send({ error: 'The tag could not be removed.' });
+  }
+});
+
+server.put('/api/tags/:id', async (req, res) => {
+  const { tag } = req.body;
+  if (!tag) {
+    res.status(400).send({ error: 'Please provide a value for the tag.' });
+  }
+
+  try {
+    let tagObj = await tagDb.get(req.params.id);
+    if (tagObj.length === 0) {
+      res.status(404).send({ error: 'The tag with the specified ID does not exist.' })
+    } else {
+      await tagDb.update(req.params.id, req.body);
+      tagObj = await tagDb.get(req.params.id);
+      res.status(200).json(tagObj);
+    }
+  } catch (err) {
+    res.status(500).send({ error: 'The tag information could not be modified.' });
   }
 });
 
