@@ -45,6 +45,25 @@ server.get('/api/posts/:id', (req, res) => {
 });
 
 
+server.get('/:id', (req, res) => {
+        const id = req.params.id;
+
+       const request = dbpost.getPostTags(id);
+
+        request.then(response => {
+        if(response.length==0) res.status(404).json({ error: "The post with the specified ID does not exist or there are no tags on this post id." });
+         else {
+                // response.id = id;
+                 res.status(200).json(response);
+         }
+
+        })
+
+        .catch(err => {
+        res.status(404).json({error: "The user with the specified ID does not exist."});
+        })
+
+});
 
 
 server.listen(7000, () => console.log('API running on port 7000'));
