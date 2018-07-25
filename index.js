@@ -38,6 +38,11 @@ server.get('/api/users/:id', async (req, res) => {
 
 server.post('/api/users', async (req, res) => {
     try {
+        if(req.body.name.length > 128) {
+            res.status(BAD_REQUEST_CODE).json({error: 'Maximum name length is 128, please make a shorter name'});
+            res.end();
+            return;
+        }
         if(req.body.name === undefined) {
             res.status(BAD_REQUEST_CODE).json({error: 'Cannot create user without a name'});
             res.end();
