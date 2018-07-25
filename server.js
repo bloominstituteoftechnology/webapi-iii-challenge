@@ -187,10 +187,42 @@ server.post('/posts', (req, res) => {
 
         }  });
 
+
+server.post('/tags', (req, res) => {
+
+        const {tag} = req.body;
+        const tagContent = {tag};
+
+        if (!tag) {
+                res.status(400).json({errorMessage: "Please provide text for the tag."});
+        }
+
+        else{
+
+        const request = dbtag.insert(tagContent);
+
+        request.then(response => {
+                let responseObject ={};
+		responseObject.tag = tagContent.tag;
+                responseObject.message ="Successfully added a new tag";
+
+                res.status(201).json(responseObject);
+        })
+
+        .catch(error => {
+        res.status(500).json({ message: "There was an error while saving the tag to the database" });
+        })
+
+        }  
+});
+
+
+
+
 server.post('/users', (req, res) => {
 
         const {name} = req.body;
-        const post = {name};
+        const user = {name};
 
         if (!name) {
                 res.status(400).json({errorMessage: "Please provide a name for the user."});
@@ -198,10 +230,10 @@ server.post('/users', (req, res) => {
 
         else{
 
-        const request = dbuser.insert(post);
+        const request = dbuser.insert(user);
 
         request.then(response => {
-                response.text = post.name;
+                response.name = user.name;
                 response.message ="Successfully added a new user";
 
                 res.status(201).json(response);
@@ -212,8 +244,6 @@ server.post('/users', (req, res) => {
         })
 
         }  });
-
-
 
 
 
@@ -239,6 +269,43 @@ server.delete('/posts/:id', (req, res) => {
         })
 
   });
+
+
+server.delete('/tags/:id', (req, res) => {
+        const id = req.params.id;
+        const request = dbtag.remove(id);
+
+        request.then(response => {
+                if(response===1) {
+                let responseObject ={};
+                responseObject.message = `Successfully deleted tag with id ${id}`;
+
+
+                res.json(responseObject);
+                }
+
+                else res.status(404).json({ error: "The tag with the specified ID does not exist." });
+        })
+
+        .catch(error => {
+        res.status(500).json({ error: "The tag could not be removed" });
+        })
+
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 server.delete('/users/:id', (req, res) => {
@@ -300,7 +367,7 @@ server.put('/users/:id', (req, res) => {
   const {name} = req.body;
 
   const id =  req.params.id;
-  const post = {name};
+  const user = {name};
 
 
 if (!name) {
@@ -308,7 +375,7 @@ if (!name) {
 }
 
 else {
- const request = dbuser.update(id, post);
+ const request = dbuser.update(id, user);
 
 
         request.then(response => {
