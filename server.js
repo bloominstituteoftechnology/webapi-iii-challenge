@@ -199,11 +199,10 @@ server.put('/api/tags/:id', async (req,res) => {
   try{
     //Check if tag exists:
     if (!req.body.tag){
-      res.status(400).json({errorMessage: 'A unique tag (body) and id (url params) is required in the request body.'})
+      res.status(400).json({errorMessage: 'A unique tag (body) is required in the request body.'})
     }
 
     const tags = await tagDB.get()
-    console.log(tags)
     
     //Check Uniqueness
     if (tags.some( tag => tag.tag === req.body.tag)){
@@ -233,7 +232,120 @@ server.put('/api/tags/:id', async (req,res) => {
 
 
 
+// ===============    CRUD FOR userDB ===========================================
+/**
+ *   GET users
+ */
+server.get('/api/users', async (req,res) =>{
+  try{
+    const users = await userDB.get()
+    users.length > 0 ? res.status(200).send(users) : 
+     res.status(404).json({ message: "The users information could not be retrieved." })
+  }
+  catch (err){
+    res.status(500).json({error: "The users information could not be retrieved."})
+  }
+  
+})
 
+/**
+ *   GET users by ID
+ */
+server.get('/api/users/:id', async (req,res) =>{
+  
+  // Using Async/Await
+  try{
+    const post = await userDB.get(req.params.id)
+    console.log(post)
+    post ? res.status(200).json(post) : 
+      res.status(404).json({ message: "The post with the specified ID does not exist." })
+    // res.status(200).json(post)
+  }
+  catch (err){
+    res.status(500).json({error: 'The user information could not be retrieved.'})
+  }
+})
+
+/**
+ *   POST users by id
+ */
+server.post('/api/users', async (req,res) => {
+  try{
+    if (!req.body.tag){
+      res.status(400).json({errorMessage: 'A unique tag is required in the request body.'})
+    }
+
+    //Check Uniqueness
+    const users = await userDB.get()
+    if (users.some( tag => tag.tag === req.body.tag)){
+      res.status(400).json({errorMessage: 'Please specify a unique tag. This tag already exists.'})
+    
+    //Check if string length is < 80 characters long
+    }else if (req.body.tag.length > 80){
+      res.status(400).json({errorMessage: 'The tag must be less than 80 characters'})
+    
+    //Good to go!
+    }else {
+      const post = await userDB.insert(req.body);
+      res.status(200).json(post);
+    }
+  }
+  catch (err){
+    res.status(500).json({ error: "There was an error while saving the post to the database" })
+  }
+})
+
+/**
+ *   DELETE users by id
+ */
+server.delete('/api/users/:id', async (req,res) => {
+  try{
+    const tag = await userDB.remove(req.params.id);
+    console.log(tag)
+    tag == 0 ? res.status(400).json({ message: "The tag with the specified ID does not exist." }) :
+      res.status(200).send(`${tag} record(s) were deleted`);
+    }
+  catch (err){
+    res.status(500).json({ error: "There was an error while deleting the tag to the database" })
+  }
+})
+
+/**
+ *   PUT users by id
+ */
+server.put('/api/users/:id', async (req,res) => {
+  try{
+    //Check if tag exists:
+    if (!req.body.tag){
+      res.status(400).json({errorMessage: 'A unique tag (body) is required in the request body.'})
+    }
+
+    const users = await userDB.get()
+    
+    //Check Uniqueness
+    if (users.some( tag => tag.tag === req.body.tag)){
+      res.status(400).json({errorMessage: 'Please specify a unique tag. This tag already exists.'})
+    
+    //Check if string length is < 80 characters long
+    }else if (req.body.tag.length > 80){
+      res.status(400).json({errorMessage: 'The tag must be less than 80 characters'})
+    
+    //Good to go!
+    }else {
+      const tag = await userDB.update(req.params.id, req.body)  
+      if (tag == 0){
+        res.status(400).json({ message: "The tag with the specified ID does not exist." })
+      } else {
+        const updatedTag = await userDB.get(req.params.id)
+        res.status(200).json(updatedTag);
+      } 
+    }
+  }
+  
+  catch (err){
+    res.status(500).json({ error: "There was an error while saving the tag to the database" })
+  }
+})
 
 
 
