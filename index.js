@@ -56,4 +56,30 @@ server.get("/api/users/:id", (req, res) => {
     })
 })
 //tags
+server.get("/api/tags/", (req, res) => {
+  tagDb
+    .get()
+    .then(tags => {
+      res.json(tags)
+    })
+    .catch(error => {
+      return res.status(500).send({Message: "Server Error"});
+    })
+})
+server.get("/api/tags/:id", (req, res) => {
+  const { id } = req.params;
+  tagDb
+    .get(id)
+    .then(tags => {
+      if (tags == undefined){
+        return res.status(200).send({Message: "Tag does not exist"});
+      }
+      res.json(tags)
+    })
+    .catch(error => {
+      return res.status(500).send({Message: "Server Error"});
+    })
+})
+
+
 server.listen(8000, () => {console.log("Server is listening on port 8000")})
