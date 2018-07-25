@@ -45,5 +45,38 @@ server.get('/api/posts/:id', (req, res) => {
     })
 })
 
+server.post('/api/posts', (req, res) => {
+    const post = req.body;
+
+    if(!post) {
+        res.status(400).json({error: 'Please provide content for your post.'})
+    }
+
+    postDb.insert(post)
+    .then(response => {
+        res.status(200).json(response)
+    })
+    .catch(err => {
+        sendServerError({error: 'There was an error saving your post to the database.'})
+    })
+})
+
+server.put('/api/posts/:id', (req, res) => {
+    const id = req.params.id;
+    const post = req.body;
+
+    if(!id) {
+        res.status(404);
+        res.json({error: 'The post with the specified ID does not exist.'})
+    }
+
+    postDb.update(id, post) 
+    .then(response => {
+        res.status(200).json(response)
+    })
+    .catch(err => {
+        sendServerError({error: 'There was an error saving your changes.'})
+    })
+})
 
 server.listen(8000, () => console.log('API running'))
