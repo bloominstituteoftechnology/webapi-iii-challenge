@@ -347,7 +347,23 @@ server.put('/api/users/:id', async (req,res) => {
   }
 })
 
-
+/**
+ *   GET USER POSTS - helper
+ */
+server.get('/api/user/posts/:id', async (req,res) =>{
+  
+  // Using Async/Await
+  try{
+    const post = await userDB.getUserPosts(req.params.id)
+    console.log(post)
+    post ? res.status(200).json(post) : 
+      res.status(404).json({ message: "The post with the specified ID does not exist." })
+    // res.status(200).json(post)
+  }
+  catch (err){
+    res.status(500).json({error: 'The user information could not be retrieved.'})
+  }
+})
 
 
 server.listen(8000, () => console.log('\n ====== API running on port this 8000 ======= \n'));
