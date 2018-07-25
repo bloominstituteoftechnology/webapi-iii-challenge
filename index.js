@@ -80,3 +80,19 @@ server.get('/users', async (req, res) => {
         res.status(500).json({ "error": "Problem retrieving users"})
     }
 })
+
+
+
+
+
+
+
+
+server.get('/tags', async (req, res) => {
+    try{
+        const tags = await tag.get()
+        res.status(200).json(tags)
+    }catch(err){
+        res.status(500).json({ "error": "Problem retrieving tags"})
+    }
+})
