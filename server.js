@@ -46,8 +46,8 @@ server.get('/posts', (req, res) => {
 
 server.get('/posts/:id', (req, res) => {
   const { id } = req.params;
-  userDb
-  .getUserPosts(id)
+  postDb
+  .get(id)
   .then(post => {
     if (post.length === 0) {
       res.status(404).json({ message: "The post with the specified ID does not exist." })
@@ -57,6 +57,21 @@ server.get('/posts/:id', (req, res) => {
   })
   .catch(error => {
     res.status(500).json({ error: "The post information could not be retrieved." })
+  })
+})
+
+server.get('/posts/:id/tags', (req, res) => {
+  postDb
+  .getPostTags(id)
+  .then(post => {
+    if (post.length === 0) {
+      res.status(404).json({ message: "The post with the specified ID does not exist." })
+    } else {
+      res.status(200).json({ post })
+    }
+  })
+  .catch(error => {
+    res.status(500).json({ error: "The post's tags could not be retrieved." })
   })
 })
 
@@ -71,22 +86,22 @@ server.get('/tags', (req, res) => {
   })
 })
 
-
-server.get('/posts/:id/tags', (req, res) => {
+server.get('/tags/:id', (req, res) => {
   const { id } = req.params;
-  postDb
-  .getPostTags(id)
-  .then(post => {
-    if (post.length === 0) {
-      res.status(404).json({ message: "The post with the specified ID does not exist." })
+  tagDb
+  .get(id)
+  .then(tag => {
+    if (tag.length === 0) {
+      res.status(404).json({ message: "The tag with the specified ID does not exist." })
     } else {
-      res.status(200).json({ post })
+      res.status(200).json({ tag })
     }
   })
   .catch(error => {
-    res.status(500).json({ error: "The post's tags could not be retrieved." })
+    res.status(500).json({ error: "The tag information could not be retrieved." })
   })
 })
+
 
 server.post('/users', (req, res) => {
   const { name } = req.body;
@@ -133,6 +148,69 @@ server.post('/tags', (req, res) => {
   })
   .catch(error => {
     res.status(500).json({ error: "There was an error while saving the tag to the database" })
+  })
+})
+
+server.put('/users/:id', (req, res) => {
+  const { name } = req.body;
+  const { id } = req.params;
+  if(!name) {
+    res.status(400).json({ error: "Please provide a new name for this user"});
+  }
+  userDb
+  .update(id, { name })
+  .then(user => {
+    if(user === 0) {
+      res.status(404).json({ error: "The user with the specified ID does not exist" })
+      return;
+    }
+    res.status(200).json({ user })
+  })
+  .catch(error => {
+    res.status(500).json({ error: "There was an error while updating the name to the database" })
+  })
+})
+
+
+server.put('/posts/:id', (req, res) => {
+  const { text } = req.body;
+  const { id } = req.params;
+  if(!text) {
+    res.status(400).json({ error: "Please update the text for this post"});
+  }
+  postDb
+  .update(id, { text })
+  .then(post => {
+    if(text === 0) {
+      res.status(404).json({ error: "The post with the specified ID does not exist" })
+      return;
+    }
+    res.status(200).json({ post })
+  })
+  .catch(error => {
+    res.status(500).json({ error: "There was an error while updating the post to the database" })
+  })
+})
+
+
+server.put('/tags/:id', (req, res) => {
+  const { id } = req.params;
+  const { tag } = req.body;
+  if(!tag) {
+    res.status(400).json({ error: "Please update the text for this tag"});
+    return;
+  }
+  tagDb
+  .update(id, { tag })
+  .then(tag => {
+    if (tag === 0) {
+      res.status(404).json({ message: "The tag with the specified ID does not exist." })
+      return;
+    }
+      res.status(200).json({ tag })
+  })
+  .catch(error => {
+    res.status(500).json({ error: "There was an error while updating the tag to the database" })
   })
 })
 
