@@ -152,4 +152,37 @@ server.post('/api/posts', async (req, res) => {
         }
     }
 })
+server.put('/api/posts/:id', async(req, res) => {
+    try {
+        const id = req.params.id;
+        const { userId, text } = req.body;
+
+        if(userId === undefined || text === undefined) {
+            throw BAD_REQUEST_CODE;
+        }
+        const updateResponse = await postDb.update(id, req.body);
+        if(updateResponse === 0) {
+            throw NOT_FOUND_CODE;
+        }
+        res.status(OK_CODE).json(updateResponse);
+    }
+    catch(err) {
+        switch(err) {
+        case BAD_REQUEST_CODE: {
+            res.status(BAD_REQUEST_CODE).json({ errorMessage: 'Please provide text and a userId'});
+            res.end();
+            break;
+        }
+        case NOT_FOUND_CODE: {
+            res.status(NOT_FOUND_CODE).json({ errorMessage: 'There was no post by that id that can be updated'});
+            res.end();
+            break;
+        }
+        default: {
+        res.status(INTERNAL_SERVER_ERROR_CODE).json({ error: 'The post information could not be modified'});
+        res.end();
+        }
+    }
+}
+});
 server.listen(8001);
