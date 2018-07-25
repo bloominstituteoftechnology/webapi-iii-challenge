@@ -92,6 +92,17 @@ server.put('/api/users/:id', async (req, res) => {
     return sendUserError(500, "Server Error: User could not be updated", res);
   }
 })
+
+server.get('/api/users/:id/posts', async (req, res) => {
+  try {
+    const userPosts = await userDb.getUserPosts(req.params.id);
+    if (userPosts.length === 0) return sendUserError(404, `Not Found: No user with ID ${req.params.id} or no posts for that user`, res);
+    res.status(200).json(userPosts);
+  } catch(err) {
+    conErr(err);
+    return sendUserError(500, `Server Error: Could not retreive user posts`, res);
+  }
+})
 //END USERS CRUD
 
 //BEGIN POSTS CRUD
@@ -161,6 +172,17 @@ server.put('/api/posts/:id', async (req, res) => {
   } catch(err) {
     conErr(err);
     return sendUserError(500, `Server Error: Post ${postId.id} could not be updated`, res);
+  }
+})
+
+server.get('/api/posts/:id/tags', async (req, res) => {
+  try {
+    const postTags = await postDb.getPostTags(req.params.id);
+    if (postTags.length === 0) return sendUserError(404, `Not Found: No post with ID ${req.params.id} found or no Tags exist`, res);
+    res.status(200).json(postTags);
+  } catch(err) {
+    conErr(err);
+    return sendUserError(500, `Server Error: Could not retrieve post tags`, res);
   }
 })
 //END POSTS CRUD
