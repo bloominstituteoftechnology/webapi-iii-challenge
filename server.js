@@ -118,6 +118,11 @@ server.get('/users/:id/posts', (req, res) => {
     userDb
     .getUserPosts(req.params.id)
     .then(posts => {
+        if (!posts) {
+            res
+            .status(404)
+            .json({ message: "There are no posts" });
+        }
         res
         .status(200)
         .json(posts);
@@ -177,9 +182,15 @@ server.get('/posts/:id/tags', (req, res) => {
     postDb
     .getPostTags(req.params.id)
     .then(tags => {
+        if (tags.length ===0) {
+            res.json({message: "id doesnt exist"})
+        }
         res 
         .status(200)
         .json({tags})
+    })
+    .catch(error => {
+        res.status(500).json({error: "post tag cannot be retrieved"})
     })
 })
 
