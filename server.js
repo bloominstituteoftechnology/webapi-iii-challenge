@@ -103,4 +103,13 @@ server.post('/posts', async (req, res) => {
 
 })
 
+server.get('/posts', async (req, res) => {
+  try {
+    const posts = await postDb.get()
+    res.status(200).json(posts) 
+  } catch(e) {
+    res.status(500).json({ message: "couldn't retrieve posts" })
+  }
+})
+
 server.listen(8080, () => console.log('💵:8080'))
