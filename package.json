@@ -4,7 +4,7 @@
   "description": "Lambda Node.js, express and middleware",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "nodemon server.js"
   },
   "repository": {
     "type": "git",
