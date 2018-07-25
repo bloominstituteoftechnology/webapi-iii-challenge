@@ -6,6 +6,7 @@ const userDb = require('./data/helpers/userDb.js');
 
 server.use(express.json());
 
+//View Users
 server.get('/users', (req, res) => {
   userDb
   .get()
@@ -16,7 +17,7 @@ server.get('/users', (req, res) => {
     res.status(500).json({ error: "Could not retreive users"})
   })
 })
-
+//View User by ID
 server.get('/users/:id', (req, res) => {
   const { id } = req.params;
   userDb
@@ -32,7 +33,7 @@ server.get('/users/:id', (req, res) => {
     res.status(500).json({ error: "The user information could not be retrieved." })
   })
 })
-
+//View Posts
 server.get('/posts', (req, res) => {
   postDb
   .get()
@@ -43,7 +44,7 @@ server.get('/posts', (req, res) => {
     res.status(500).json({ error: "Could not retreive posts"})
   })
 })
-
+//View Post by ID
 server.get('/posts/:id', (req, res) => {
   const { id } = req.params;
   postDb
@@ -59,7 +60,7 @@ server.get('/posts/:id', (req, res) => {
     res.status(500).json({ error: "The post information could not be retrieved." })
   })
 })
-
+//View a Post's Tags
 server.get('/posts/:id/tags', (req, res) => {
   postDb
   .getPostTags(id)
@@ -74,7 +75,7 @@ server.get('/posts/:id/tags', (req, res) => {
     res.status(500).json({ error: "The post's tags could not be retrieved." })
   })
 })
-
+//View Tags
 server.get('/tags', (req, res) => {
   tagDb
   .get()
@@ -85,7 +86,7 @@ server.get('/tags', (req, res) => {
     res.status(500).json({ error: "Could not retreive tags"})
   })
 })
-
+//View Tag by ID
 server.get('/tags/:id', (req, res) => {
   const { id } = req.params;
   tagDb
@@ -101,8 +102,7 @@ server.get('/tags/:id', (req, res) => {
     res.status(500).json({ error: "The tag information could not be retrieved." })
   })
 })
-
-
+//Add New User
 server.post('/users', (req, res) => {
   const { name } = req.body;
   if (!name) {
@@ -118,7 +118,7 @@ server.post('/users', (req, res) => {
     res.status(500).json({ error: "There was an error while saving the user to the database" })
   })
 })
-
+//Add New Post
 server.post('/posts', (req, res) => {
   const { userId, text } = req.body;
   if (!text || !userId) {
@@ -134,7 +134,7 @@ server.post('/posts', (req, res) => {
     res.status(500).json({ error: "There was an error while saving the post to the database" })
   })
 })
-
+//Add New Tag
 server.post('/tags', (req, res) => {
   const { tag } = req.body;
   if (!tag) {
@@ -150,7 +150,7 @@ server.post('/tags', (req, res) => {
     res.status(500).json({ error: "There was an error while saving the tag to the database" })
   })
 })
-
+//Update User
 server.put('/users/:id', (req, res) => {
   const { name } = req.body;
   const { id } = req.params;
@@ -171,7 +171,7 @@ server.put('/users/:id', (req, res) => {
   })
 })
 
-
+//Update Post
 server.put('/posts/:id', (req, res) => {
   const { text } = req.body;
   const { id } = req.params;
@@ -192,7 +192,7 @@ server.put('/posts/:id', (req, res) => {
   })
 })
 
-
+//Update Tag
 server.put('/tags/:id', (req, res) => {
   const { id } = req.params;
   const { tag } = req.body;
