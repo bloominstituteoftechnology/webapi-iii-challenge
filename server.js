@@ -326,9 +326,9 @@ server.put('/api/users/:id', async (req,res) => {
     if (users.some( name => name.name === req.body.name)){
       res.status(400).json({errorMessage: 'Please specify a unique name. This name already exists.'})
     
-    //Check if string length is < 80 characters long
-    }else if (req.body.name.length > 80){
-      res.status(400).json({errorMessage: 'The name must be less than 80 characters'})
+    //Check if string length is < 128 characters long
+    }else if (req.body.name.length > 128){
+      res.status(400).json({errorMessage: 'The name must be less than 128 characters'})
     
     //Good to go!
     }else {
