@@ -65,6 +65,37 @@ server.get('/:id', (req, res) => {
 
 });
 
+server.post('/api/posts', (req, res) => {
+
+        const {text, userId} = req.body;
+        const post = {text, userId};
+
+        if (!text || !userId) {
+                res.status(400).json({errorMessage: "Please provide text and userId for the post."});
+        }
+
+        else{
+
+        const request = dbpost.insert(post);
+
+        request.then(response => {
+                response.text = post.text;
+                response.userId = post.userId;
+		response.message ="Successfully added a new post";
+
+                res.status(201).json(response);
+        })
+
+        .catch(error => {
+        res.status(500).json({ message: "There was an error while saving the user to the database" });
+        })
+
+        }  });
+
+
+
+
+
 
 server.listen(7000, () => console.log('API running on port 7000'));
 
