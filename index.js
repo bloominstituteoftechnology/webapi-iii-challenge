@@ -50,6 +50,28 @@ server.post("/api/post", async (req, res) => {
   }
 });
 
+server.put("/api/post/:id", async (req, res) => {
+  if (
+    !"text" in req.body &&
+    !"postedBy" in req.body &&
+    !"tags" in request.body
+  ) {
+    res.status(400).send({
+      message: "PLEASE CHECK THE STRUCTURE OF YOUR POST AND TRY AGAIN"
+    });
+  }
+  try {
+    const id = req.params.id;
+    const post = req.body;
+    const response = await postDb.update(id, post);
+    res.status(200).json(req.body);
+  } catch (error) {
+    res
+      .status(500)
+      .send({ error: "ERROR PROCESSING REQUEST", error: error.message });
+  }
+});
+
 // catch all 404
 server.use(function(req, res) {
   res.status(404).send("ERROR: FILE NOT FOUND");
