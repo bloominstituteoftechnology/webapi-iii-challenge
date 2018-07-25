@@ -125,5 +125,33 @@ server.post('/users/', async (req, res) => {
 })
 
 //endpoint for POST post
+server.post('/posts', async (req, res) => {
+    if (!(req.body.text && req.body.userId)) {
+        return res.status(400).send({message: "Please provide userId and text for the post." })
+    }
+
+    try {
+        const response = await postDb.insert(req.body);
+        const newPost = await postDb.get(response.id);
+        res.status(200).json(newPost);
+    } catch(e) {
+        res.status(500).send({message: "There was an error while saving post to the database", error: e.message});
+    }
+})
+
+//endpoint for POST tag
+server.post('/tags', async (req, res) => {
+    if (!req.body.tag) {
+        return res.status(400).send({message: "Please provide tag." })
+    }
+
+    try {
+        const response = await tagDb.insert(req.body);
+        const newTag = await tagDb.get(response.id);
+        res.status(200).json(newTag);
+    } catch(e) {
+        res.status(500).send({message: "There was an error while saving tag to the database", error: e.message});
+    }
+})
 
 server.listen(8000, () => console.log('\n=== API Running... ===\n'))
