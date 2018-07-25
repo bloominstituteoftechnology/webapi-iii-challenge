@@ -97,6 +97,7 @@ server.get('/users/:id/posts', async (req,res) => {
     }
 })
 
+//endpoint for GET postTags
 server.get('/posts/:id/tags', async (req,res) => {
     const id = req.params.id;
 
@@ -107,5 +108,22 @@ server.get('/posts/:id/tags', async (req,res) => {
         res.status(500).send({message: 'Users information could not be retrieved.', error: error.message})
     }
 })
+
+//endpoint for POST user
+server.post('/users/', async (req, res) => {
+    if (!req.body.name){
+        return res.status(400).send({message: 'Please provide name of user.'})
+    }
+
+    try {
+        const response = await userDb.insert(req.body);
+        const newUser = await userDb.get(response.id);
+        res.status(200).json(newUser);
+    } catch(e) {
+        res.status(500).send({message: "There was an error while saving user to the database", error: e.message});
+    }
+})
+
+//endpoint for POST post
 
 server.listen(8000, () => console.log('\n=== API Running... ===\n'))
