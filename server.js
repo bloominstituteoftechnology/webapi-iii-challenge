@@ -5,12 +5,14 @@ const tagDb = require('./data/helpers/tagDb');
 const express = require('express');
 const morgan = require('morgan');
 
+// server
 const server = express();
 
 // middlware
 server.use(express.json()); 
 server.use(morgan('tiny'));
 
+// GET CRUD
 server.get('/users', async (req, res) => { // GET user
     try {
         const users = await userDb.get();
@@ -37,5 +39,20 @@ server.get('/tags', async (req, res) => {  // GET tag
         res.status(500).send({ error: 'The tags information could not be retrieved.' })
     };
 });
+
+// POST CRUD
+server.post('/users', async (req, res) => {
+    if (!req.body || !req.body.name)
+        res.status(400).json({ error: 'Please provide name and bio for the user.'})
+    const { name } = req.body
+    try {
+        const { id } = await userDb.insert({ name })
+        if (id) {
+            res.status(200).json({ id, name })
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'User could not be added.' })
+    }
+})
 
 server.listen(8000, () => console.log('API running on port 8000'));
