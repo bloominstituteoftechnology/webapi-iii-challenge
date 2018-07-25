@@ -192,7 +192,7 @@ server.put('/posts/:id', async (req, res) => {
     if(!user)
       res.status(400).json({ message: "please provide valid userId" })
 
-    const numberOfUpdatedPosts = await postDb.insert(id, { userId, text })
+    const numberOfUpdatedPosts = await postDb.update(id, { userId, text })
     
     res.status(200).json({ id, userId, text })
 
