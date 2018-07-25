@@ -77,5 +77,46 @@ server.get('/posts/:id', (req, res) => {
     })
 })
 
+server.get('/tags', (req, res) => {
+  tagDb
+    .get()
+    .then(response => {
+      res
+        .status(200)
+        .json(response)
+        .end()
+    })
+    .catch(() => {
+      res
+        .status(500)
+        .json({ error: `The tags information could not be retrieved.` })
+        .end()
+    })
+})
+
+server.get('/tags/:id', (req, res) => {
+  const id = req.params.id;
+  tagDb
+    .get(id)
+    .then(response => {
+      if(!response) {
+        res
+        .status(404)
+        .json({ error: `The specified Tag ID does not exist.` })
+        .end()
+      }
+      res
+        .status(200)
+        .json(response)
+        .end()
+    })
+    .catch(() => {
+      res
+        .status(500)
+        .json({ error: `The tag information could not be retrieved.` })
+        .end()
+    })
+})
+
 
 server.listen(8000, () => console.log(`... API is running on port 8000 ...`));
