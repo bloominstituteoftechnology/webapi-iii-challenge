@@ -174,7 +174,6 @@ server.get('/posts/:id', (req, res) => {
 //get post tags
 
 server.get('/posts/:id/tags', (req, res) => {
-    const {tags} = req.params
     postDb
     .getPostTags(req.params.id)
     .then(tags => {
@@ -207,19 +206,19 @@ server.post('/posts', (req, res) => {
 //Update post
 server.put('/posts/:id', (req, res) => {
     const {id} = req.params;
-    const {text, userId} = req.body;
-    if (!text || !userId) {
+    const {text} = req.body;
+    if (!text) {
         res.status(400).json({errorMessage: "Please provide text and userId for the post."})
         return;
     }
     postDb
-    .update(id, {text, userId})
+    .update(id, {text})
     .then(response => {
         if (response == 0) {
             res.status(404).json({message: "The post with the specified ID does not exist."})
             return;
         }
-        res.status(200).json({text, userId})
+        res.status(200).json({text})
     })
     .catch(error => {
         res.status(500).json({error: "The post information could not be modified."})
