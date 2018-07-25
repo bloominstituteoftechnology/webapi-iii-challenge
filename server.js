@@ -31,15 +31,22 @@ server.get('/users/:id', (req, res) => {
   userDb
     .get(id)
     .then(response => {
-      res
+      if(!response) {
+        res
+          .status(404)
+          .json({ error: `The specified User Id does not exist.` })
+          .end()
+      } else {
+        res
         .status(200)
         .json(response)
         .end()
+      }
     })
     .catch(() => {
       res
-        .status(404)
-        .json({ error: `The specified User Id does not exist.` })
+        .status(500)
+        .json({ error: `The user could not be retrieved.` })
         .end();
     })
 })
@@ -266,6 +273,57 @@ server.post('/tags', (req, res) => {
         res
           .status(500)
           .json({ error: `The tag could not be posted.` })
+          .end()
+      })
+  }
+})
+
+// ALL PUTS
+
+server.put('/users/:userId', (req, res) => {
+  const id = req.params.userId;
+  const newName = req.body.name;
+  const name = { name: newName };
+  if(!id || !newName ) {
+    res
+      .status(400)
+      .json({ error: `Please provide a User ID and Name.` })
+      .end()
+  } else if(newName.length > 128) {
+    res
+      .status(400)
+      .json({ error: `The name provided is greater than 128 characters.` })
+      .end()
+  } else {
+    userDb
+      .update(id, name)
+      .then(response => {
+        if(!response) {
+          res
+            .status(404)
+            .json({ error: `The specified User ID does not exist.` })
+            .end()
+        } else {
+          userDb
+            .get(id)
+            .then(response => {
+              res
+                .status(200)
+                .json(response)
+                .end()
+            })
+            .catch(() => {
+              res
+                .status(404)
+                .json({ error: `The specified User Id does not exist.` })
+                .end();
+            })
+        }
+      })
+      .catch(() => {
+        res
+          .status(500)
+          .json({ error: `The user could not be updated. `})
           .end()
       })
   }
