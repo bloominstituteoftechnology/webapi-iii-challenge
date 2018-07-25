@@ -3,7 +3,7 @@ const server = express();
 const cors = require('cors');
 
 const postDb = require('./data/helpers/postDb.js')
-const tabDb = require('./data/helpers/tagDb.js')
+const tagsDb = require('./data/helpers/tagDb.js')
 const userDb = require('./data/helpers/userDb.js')
 
 
@@ -18,7 +18,7 @@ const sendServerError = (msg, res) => {
     return;
 }
 
-//Posts endpoints
+//***************************** Posts endpoints *****************************
 
 //Retrieves all posts
 server.get('/api/posts', (req, res) => {
@@ -102,7 +102,26 @@ server.delete('/api/posts/:id', (req, res) => {
     })
 })
 
-//Users endpoints
+//Retrieves list of tags on single post
+
+server.get('/api/posts/:id/tags', (req, res) => {
+    const id = req.params.id;
+    if(!id) {
+        res.status(404);
+        res.json({error: 'The post with the specified ID does not exist.'})
+    }
+
+    postDb.getPostTags(id)
+    .then(response => {
+        res.status(200).json({response})
+    })
+    .catch(err => {
+        sendServerError({error: 'The post tags could not be retrieved.'})
+    })
+
+})
+
+//***************************** Users endpoints *****************************
 
 //Posts by single user
 server.get('/api/posts/user/:userId', (req, res) => {
@@ -148,7 +167,7 @@ server.get('/api/users/:userId', (req, res) => {
         res.status(200).json(response)
     })
     .catch(err => {
-        sendServerError({error: 'The user post could not be retrieved.'})
+        sendServerError({error: 'The user could not be retrieved.'})
     })
 })
 
@@ -203,6 +222,92 @@ server.delete('/api/users/:id', (req, res) => {
     })
     .catch(err => {
         sendServerError({error: 'There was an error deleting the user.'})
+    })
+})
+
+//***************************** Tags endpoints *****************************
+
+//Retrieves list of tags
+server.get('/api/tags', (req, res) => {
+    tagsDb.get()
+    .then(response => {
+        res.status(200).json(response)
+    })
+    .catch(err => {
+        sendServerError({error: 'The tags could not be retrieved.'})
+    })
+})
+
+
+//Retrieves single tag
+server.get('/api/tags/:id', (req, res) => {
+    const id = req.params.id;
+
+    if(!id) {
+        res.status(404);
+        res.json({error: 'The tag with the specified ID does not exist.'})
+    }
+
+    tagsDb.get(id)
+    .then(response => {
+        res.status(200).json(response)
+    })
+    .catch(err => {
+        sendServerError({error: 'The tag could not be retrieved.'})
+    })
+})
+
+//Creates new tage
+server.post('/api/tags', (req, res) => {
+    const tag = req.body;
+
+    if(!tag) {
+        res.status(400).json({error: 'Please provide a tag.'})
+    }
+
+    tagsDb.insert(tag)
+    .then(response => {
+        res.status(200).json(response)
+    })
+    .catch(err => {
+        sendServerError({error: 'There was an error saving the tag to the database.'})
+    })
+})
+
+//Updates tag
+server.put('/api/tags/:id', (req, res) => {
+    const id = req.params.id;
+    const tag = req.body;
+
+    if(!id) {
+        res.status(404);
+        res.json({error: 'The tag with the specified ID does not exist.'})
+    }
+
+    tagsDb.update(id, tag) 
+    .then(response => {
+        res.status(200).json(response)
+    })
+    .catch(err => {
+        sendServerError({error: 'There was an error saving the changes.'})
+    })
+})
+
+//Deletes tag
+server.delete('/api/tags/:id', (req, res) => {
+    const id = req.params.id;
+
+    if(!id) {
+        res.status(404);
+        res.json({error: 'The tag with the specified ID does not exist.'})
+    }
+
+    tagsDb.remove(id) 
+    .then(response => {
+        res.status(200).json({response})
+    })
+    .catch(err => {
+        sendServerError({error: 'There was an error deleting the tag.'})
     })
 })
 
