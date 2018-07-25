@@ -88,16 +88,16 @@ server.delete('/api/posts/:id', async (req,res) => {
  */
 server.put('/api/posts/:id', async (req,res) => {
   try{
-    
-    if (!req.body.title || !req.body.contents) {
-      res.status(400).json({errorMessage: 'Please provide title and contents for the post.'})
-    }
-    else {
-      const post = await db.update(req.params.id, req.body)  
-      if (post == '0'){
+    if (!req.body.userId || !req.body.text){
+      res.status(400).json({errorMessage: 'An id and text property is required in the request body.'})
+    }else if (typeof(req.body.userId) != 'number'){
+      res.status(400).json({errorMessage: 'The id property must be a number'})
+    }else {
+      const post = await postDB.update(req.params.id, req.body)  
+      if (post == 0){
         res.status(400).json({ message: "The post with the specified ID does not exist." })
       } else {
-        const updatedPost = await db.findById(req.params.id)
+        const updatedPost = await postDB.get(req.params.id)
         res.status(200).json(updatedPost);
       } 
     }
@@ -119,4 +119,4 @@ server.put('/api/posts/:id', async (req,res) => {
 
 
 
-server.listen(8000, () => console.log('\n ====== API running on port 8000 ======= \n'));
+server.listen(8000, () => console.log('\n ====== API running on port this 8000 ======= \n'));
