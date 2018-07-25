@@ -1,6 +1,7 @@
 const express = require('express');
 const helmet = require('helmet');
 const userDb = require('./data/helpers/userDb.js');
+const postDb = require('./data/helpers/postDb.js');
 
 const server = express();
 server.use(helmet());
@@ -15,6 +16,7 @@ server.get('/', (req, res) => {
   res.send('Node Blog');
 });
 
+// Users
 server.get('/api/users', async (req, res) => {
   try {
     const users = await userDb.getAll();
@@ -39,9 +41,7 @@ server.get('/api/users/:id', async (req, res) => {
 
 server.post('/api/users', async (req, res) => {
   const { name } = req.body;
-  console.log('req.body',req.body);
   if (!name) {
-    res.status(400).send({ error: req.body });
     res.status(400).send({ error: 'Please provide a name for the user.' });
   }
 
@@ -68,7 +68,6 @@ server.delete('/api/users/:id', async (req, res) => {
   }
 });
 
-
 server.put('/api/users/:id', async (req, res) => {
   try {
     const { name } = req.body;
@@ -88,5 +87,97 @@ server.put('/api/users/:id', async (req, res) => {
   }
 });
 
+// Posts
+server.get('/api/posts', async (req, res) => {
+  try {
+    const posts = await postDb.getAll();
+    res.status(200).json(posts);
+  } catch (err) {
+    res.status(500).send({ error: 'The posts information could not be retrieved.' })
+  }
+});
 
-server.listen(8000, () => console.log(`\nAPI running on port 8000\n`));
+server.get('/api/posts/:id', async (req, res) => {
+  try {
+    const post = await postDb.get(req.params.id);
+    if (post.length === 0) {
+      res.status(404).send({ error: 'The post with the specified ID does not exist.'});
+    } else {
+      res.status(200).json(post);
+    }
+  } catch (err) {
+    res.status(500).send({ error: 'The post information could not be retrieved.' });
+  }
+});
+
+server.post('/api/posts', async (req, res) => {
+  const { userId, text } = req.body;
+
+  if (!text) {
+    res.status(400).send({ error: 'Please provide text for the post.' });
+  }
+
+  try {
+    const user = await userDb.get(userId);
+    if (user.length === 0) {
+      res.status(404).send({ error: 'The user with the specified ID does not exist.'});
+    } 
+  } catch (err) {
+    res.status(400).send({ error: 'Please provide a user ID for the post.' });
+  }
+
+  try {
+    const added = await postDb.insert(req.body);
+    const post = await postDb.get(added.id);
+    res.status(201).json(post);
+  } catch (err) {
+    res.status(500).send({ error: 'There was an error while saving the post to the database.' });
+  }
+});
+
+server.delete('/api/posts/:id', async (req, res) => {
+  try {
+    const post = await postDb.get(req.params.id);
+    if (post.length === 0) {
+      res.status(404).send({ error: 'The post with the specified ID does not exist.' })
+    } else {
+      await postDb.remove(req.params.id)
+      res.status(200).json(post);
+    }
+  } catch (err) {
+    res.status(500).send({ error: 'The post could not be removed.' });
+  }
+});
+
+server.put('/api/posts/:id', async (req, res) => {
+  const { userId, text } = req.body;
+
+  if (!text) {
+    res.status(400).send({ error: 'Please provide text for the post.' });
+  }
+
+  try {
+    const user = await userDb.get(userId);
+    if (user.length === 0) {
+      res.status(404).send({ error: 'The user with the specified ID does not exist.'});
+    } 
+  } catch (err) {
+    res.status(400).send({ error: 'Please provide a user ID for the post.' });
+  }
+
+  try {
+    let post = await postDb.get(req.params.id);
+    if (post.length === 0) {
+      res.status(404).send({ error: 'The post with the specified ID does not exist.' })
+    } else {
+      await postDb.update(req.params.id, req.body);
+      post = await postDb.get(req.params.id);
+      res.status(200).json(post);
+    }
+  } catch (err) {
+    res.status(500).send({ error: 'The post information could not be modified.' });
+  }
+});
+
+
+server.listen(8000, () => console.log(`\n==== API running on port 8000 ====\n`));
