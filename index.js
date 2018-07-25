@@ -15,7 +15,7 @@ server.use(express.json());
 server.get("/api/post/:id/tags", async (req, res) => {
   try {
     const response = await postDb.getPostTags(req.params.id);
-    res.status(200).json(response);
+    res.status(200).send(response);
   } catch (error) {
     res.status(500).send({ message: "ERROR PROCESSING REQUEST", error: error });
   }
@@ -24,7 +24,7 @@ server.get("/api/post/:id/tags", async (req, res) => {
 server.get("/api/post/:id", async (req, res) => {
   try {
     const response = await postDb.get(req.params.id);
-    res.status(200).json(response);
+    res.status(200).send(response);
   } catch (error) {
     res.status(500).send({ message: "ERROR PROCESSING REQUEST", error: error });
   }
@@ -41,8 +41,8 @@ server.post("/api/post", async (req, res) => {
     });
   }
   try {
-    await postDb.insert(req.body);
-    res.status(200).json(req.body);
+    const response = await postDb.insert(req.body);
+    res.status(200).send(response);
   } catch (error) {
     res
       .status(500)
@@ -64,7 +64,7 @@ server.put("/api/post/:id", async (req, res) => {
     const id = req.params.id;
     const post = req.body;
     const response = await postDb.update(id, post);
-    res.status(200).json(req.body);
+    res.status(200).send(response);
   } catch (error) {
     res
       .status(500)
