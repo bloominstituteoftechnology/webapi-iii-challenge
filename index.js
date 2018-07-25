@@ -72,6 +72,17 @@ server.put("/api/post/:id", async (req, res) => {
   }
 });
 
+server.delete("/api/post/:id", async (req, res) => {
+  try {
+    const response = await postDb.remove(req.params.id);
+    res.status(200).send(response);
+  } catch (error) {
+    res
+      .status(500)
+      .send({ error: "ERROR PROCESSING REQUEST", error: error.message });
+  }
+});
+
 // catch all 404
 server.use(function(req, res) {
   res.status(404).send("ERROR: FILE NOT FOUND");
