@@ -12,3 +12,12 @@ const express = require('express');
 
 const server = express();
 server.use(express.json());
+
+server.get('/api/users', async (req, res) => {
+    try {
+    const users = await userDb.get();
+    res.status(OK_CODE).json(users);
+    } catch (err) {
+        res.status(NOT_FOUND_CODE).json({ error: 'Users cannot be found' });
+    }
+})
