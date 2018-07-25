@@ -59,18 +59,29 @@ server.put('/api/users/:id', async(req, res) => {
             throw BAD_REQUEST_CODE;
         }
         const updateResponse = await userDb.update(id, req.body);
+        if(updateResponse === 0) {
+            throw NOT_FOUND_CODE;
+        }
         res.status(OK_CODE).json(updateResponse);
     }
     catch(err) {
-        if(err === BAD_REQUEST_CODE) {
+        switch(err) {
+        case BAD_REQUEST_CODE: {
             res.status(BAD_REQUEST_CODE).json({ errorMessage: 'Please provide a name for the user'});
             res.end();
             return;
         }
-
+        case NOT_FOUND_CODE: {
+            res.status(NOT_FOUND_CODE).json({ errorMessage: 'There was no user by that id that can be updated'});
+            res.end();
+            return;
+        }
+        default: {
         res.status(INTERNAL_SERVER_ERROR_CODE).json({ error: 'The user information could not be modified'});
         res.end();
+        }
     }
+}
 });
 server.delete('/api/users/:id', async (req, res) => {
     try {
