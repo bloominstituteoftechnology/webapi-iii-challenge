@@ -22,7 +22,7 @@ server.get('/users', async (req, res) => { // GET user
     };
 });
 
-server.get('/users/:id', async (req, res) => {
+server.get('/users/:id', async (req, res) => { // GET user/:id
     const {id} = req.params;
     try {
         const user = await userDb.get(id);
@@ -62,6 +62,20 @@ server.post('/users', async (req, res) => {
         }
     } catch (error) {
         res.status(500).json({ error: 'User could not be added.' })
+    }
+})
+
+// PUT CRUD
+server.put('/users/:id', async (req, res) => {
+    if (!req.body || !req.body.name)
+        res.status(400).json({ error: 'Please provide name and bio for the user.'})
+    const { name } = req.body
+    try {
+        const usedID = await userDb.update(req.params.id, { name });
+        if (userID > 0)
+            res.status(200).json({ id, name })
+    } catch (error) {
+        res.status(500).json({ error: 'Unable to update user.' })
     }
 })
 
