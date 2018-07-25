@@ -22,6 +22,16 @@ server.get('/users', async (req, res) => { // GET user
     };
 });
 
+server.get('/users/:id', async (req, res) => {
+    const {id} = req.params;
+    try {
+        const user = await userDb.get(id);
+        res.status(200).json(user)
+    } catch (error) {
+        res.status(500).json({ error: 'Unable to retrieve user.' })
+    }
+})
+
 server.get('/posts', async (req, res) => { // GET post
     try {
         const users = await postDb.get();
