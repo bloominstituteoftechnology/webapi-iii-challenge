@@ -50,3 +50,22 @@ server.post('/api/users', async (req, res) => {
         res.status(INTERNAL_SERVER_ERROR_CODE).json({error: 'Error creating user either this is a server problem or there is a user that already exists by that name'})
     }
 })
+server.put('/api/users/:id', async(req, res) => {
+    try {
+        const id = req.params.id;
+        const { name } = req.body;
+        if(name === undefined) {
+            res.status(BAD_REQUEST_CODE).json({ errorMessage: 'Please provide a name for the user'});
+            res.end();
+            return;
+        }
+        const updateResponse = await userDb.update(id, req.body);
+        res.status(200).json(updateResponse);
+    }
+    catch(err) {
+        res.status(500).json({ error: 'The user information could not be modified'});
+        res.end();
+    }
+});
+
+server.listen(8001);
