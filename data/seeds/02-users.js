@@ -1,7 +1,7 @@
-exports.seed = function(knex, Promise) {
+exports.seed = function (knex, Promise) {
   return knex('users')
     .del() // delete existing users
-    .then(function() {
+    .then(function () {
       return knex('users').insert([
         { name: 'Frodo Baggings' }, // 1
         { name: 'Samwise Gamgee' }, // 2
@@ -11,7 +11,7 @@ exports.seed = function(knex, Promise) {
         { name: 'Boromir' }, // 6
         { name: 'Legolas' }, // 7
         { name: 'Gimly' }, // 8
-        { name: 'Aragorn' }, // 9
-      ]);
-    });
-};
+        { name: 'Aragorn' } // 9
+      ])
+    })
+}

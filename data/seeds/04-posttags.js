@@ -1,7 +1,7 @@
-exports.seed = function(knex, Promise) {
+exports.seed = function (knex, Promise) {
   return knex('posttags')
     .del() // delete existing posttags
-    .then(function() {
+    .then(function () {
       return knex('posttags').insert([
         { postId: 1, tagId: 3 },
         { postId: 1, tagId: 11 },
@@ -23,7 +23,7 @@ exports.seed = function(knex, Promise) {
         { postId: 21, tagId: 11 },
         { postId: 29, tagId: 4 },
         { postId: 29, tagId: 2 },
-        { postId: 29, tagId: 8 },
-      ]);
-    });
-};
+        { postId: 29, tagId: 8 }
+      ])
+    })
+}
