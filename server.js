@@ -51,9 +51,9 @@ server.get('/tags', async (req, res) => {  // GET tag
 });
 
 // POST CRUD
-server.post('/users', async (req, res) => {
+server.post('/users', async (req, res) => { // POST user
     if (!req.body || !req.body.name)
-        res.status(400).json({ error: 'Please provide name and bio for the user.'})
+        res.status(400).json({ message: 'Please provide name and bio for the user.'})
     const { name } = req.body
     try {
         const { id } = await userDb.insert({ name })
@@ -65,8 +65,23 @@ server.post('/users', async (req, res) => {
     }
 })
 
+server.post('/posts', async (req, res) => { // POST post
+    const { userId, text } = req.body;
+    if (!(userId || text))
+        res.status(400).json({ message: 'Please provide userId and text.' })
+    try {
+        const { postId } = await postDb.insert({ userId, text });
+        try {
+            const post = await postDb.get(postId.id);
+            res.status(200).json(post);
+        } catch (error) {
+            res.status(500).json({ message: 'Could not create post.' })
+        };
+    };
+});
+
 // PUT CRUD
-server.put('/users/:id', async (req, res) => {
+server.put('/users/:id', async (req, res) => { // PUT user/:id
     if (!req.body || !req.body.name)
         res.status(400).json({ error: 'Please provide name and bio for the user.'})
     const { name } = req.body
@@ -80,7 +95,7 @@ server.put('/users/:id', async (req, res) => {
 })
 
 // DELETE CRUD
-server.delete('/users/:id', async (req, res) => {
+server.delete('/users/:id', async (req, res) => { // DELETE user/:id
     try {
         const result = await userDb.remove(req.params.id)
         if (result > 0)
