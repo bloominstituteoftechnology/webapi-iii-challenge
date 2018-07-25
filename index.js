@@ -107,4 +107,26 @@ server.delete('/api/users/:id', async (req, res) => {
     }
 });
 //postsDb
+server.get('/api/posts', async (req, res) => {
+    try {
+    const posts = await postDb.get();
+    res.status(OK_CODE).json(posts);
+    } catch (err) {
+        res.status(NOT_FOUND_CODE).json({ error: 'Posts cannot be found' });
+    }
+})
+server.get('/api/posts/:id', async (req, res) => {
+    try {
+    const { id } = req.params;
+    const post = await postDb.get(id);
+    if(post === undefined) {
+        res.status(NOT_FOUND_CODE).json({ error: 'The post with that id cannot be found'});
+        res.end();
+        return;
+    }
+    res.status(OK_CODE).json(post);
+    } catch (err) {
+        res.status(NOT_FOUND_CODE).json({ error: 'Post cannot be found' });
+    }
+})
 server.listen(8001);
