@@ -217,10 +217,15 @@ server.post('/api/tags/', upperCaser, async (req, res) => {
   const { tag } = req.body;
   if (!tag) return sendUserError(400, `Bad Request: Please provide text for your tag`);
   try {
-    // const tags = await tagDb.get();
-    // console.log(tags.entries());
-    // if (tags.includes(tag)) return sendUserError(400, `Bad request: "${tag}" is already in the database choose a unique value`, res);
-    //Must include code to cancel request if there is a duplicate
+    const tags = await tagDb.get(); //Return tags array to check for uniqueness if next steps...
+
+    function notUnique(tagObject) {
+      return tagObject.tag.toUpperCase() === tag;
+    } //Helper function to check if tag value is unique
+
+    let check = tags.find(notUnique); //Checks if tag value is unique using a helper function
+
+    if (check) return sendUserError(400, `Bad request: "${tag}" is already in the database choose a unique value`, res);
     const tagId = await tagDb.insert({tag});
     try {
       const tag = await tagDb.get(tagId.id);
