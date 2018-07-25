@@ -51,8 +51,8 @@ server.get('/api/users/:id', (req, res) => {
     .then((user) => {
       user === undefined
         ? res.status(404).json({
-          message: `user with id of ${req.params.id} does not exist`
-        })
+            message: `user with id of ${req.params.id} does not exist`
+          })
         : res.status(200).json(user)
     })
     .catch((err) =>
@@ -81,8 +81,8 @@ server.get('/api/tags/:id', (req, res) => {
     .then((tag) => {
       tag === undefined
         ? res.status(404).json({
-          message: `tag with id of ${req.params.id} does not exist`
-        })
+            message: `tag with id of ${req.params.id} does not exist`
+          })
         : res.status(200).json(tag)
     })
     .catch((err) =>
@@ -97,9 +97,9 @@ server.delete('/api/users/:id', (req, res) => {
     .then((user) => {
       user == 0
         ? res.status(404).json({
-          message: `The user with the specified ID of ${req.params
-            .id} does not exist.`
-        })
+            message: `The user with the specified ID of ${req.params
+              .id} does not exist.`
+          })
         : res.status(200).json(user)
     })
     .catch((err) =>
@@ -113,9 +113,9 @@ server.delete('/api/posts/:id', (req, res) => {
     .then((post) => {
       post == 0
         ? res.status(404).json({
-          message: `The post with the specified ID of ${req.params
-            .id} does not exist.`
-        })
+            message: `The post with the specified ID of ${req.params
+              .id} does not exist.`
+          })
         : res.status(200).json(post)
     })
     .catch((err) =>
@@ -129,14 +129,32 @@ server.delete('/api/tags/:id', (req, res) => {
     .then((tag) => {
       tag == 0
         ? res.status(404).json({
-          message: `The post with the specified ID of ${req.params
-            .id} does not exist.`
-        })
+            message: `The post with the specified ID of ${req.params
+              .id} does not exist.`
+          })
         : res.status(200).json(tag)
     })
     .catch((err) =>
       res.status(500).json({ error: 'The post could not be removed' })
     )
+})
+
+// endpoints for POST method
+server.post('/api/users', (req, res) => {
+  !req.body.name
+    ? res.status(400).json({
+        errorMessage: 'Please provide a name for this new user'
+      })
+    : userDb
+        .insert(req.body)
+        .then((newPost) => res.status(201).json(newPost))
+        .catch((err) =>
+          res
+            .status(400)
+            .json({
+              error: 'There was an error while saving the post to the database'
+            })
+        )
 })
 
 server.use(function (req, res) {
