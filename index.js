@@ -44,6 +44,24 @@ server.get('/api/tags', (req, res) => {
     )
 })
 
+// endpoints for GET method by id
+server.get('/api/users/:id', (req, res) => {
+  userDb
+    .get(req.params.id)
+    .then((user) => {
+      user === undefined
+        ? res
+          .status(404)
+          .json({ message: `user with id ${req.params.id}, not found` })
+        : res.status(200).json(user)
+    })
+    .catch((err) =>
+      res
+        .status(500)
+        .json({ error: 'User information could not be retrieved.' })
+    )
+})
+
 server.use(function (req, res) {
   res.status(404).send("Ain't nobody got time for that!")
 })
