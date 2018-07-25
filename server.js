@@ -119,7 +119,7 @@ server.post('/users/', async (req, res) => {
         const response = await userDb.insert(req.body);
         const newUser = await userDb.get(response.id);
         res.status(200).json(newUser);
-    } catch(e) {
+    } catch(error) {
         res.status(500).send({message: "There was an error while saving user to the database", error: e.message});
     }
 })
@@ -134,7 +134,7 @@ server.post('/posts', async (req, res) => {
         const response = await postDb.insert(req.body);
         const newPost = await postDb.get(response.id);
         res.status(200).json(newPost);
-    } catch(e) {
+    } catch(error) {
         res.status(500).send({message: "There was an error while saving post to the database", error: e.message});
     }
 })
@@ -149,7 +149,7 @@ server.post('/tags', async (req, res) => {
         const response = await tagDb.insert(req.body);
         const newTag = await tagDb.get(response.id);
         res.status(200).json(newTag);
-    } catch(e) {
+    } catch(error) {
         res.status(500).send({message: "There was an error while saving tag to the database", error: e.message});
     }
 })
@@ -166,7 +166,20 @@ server.delete('/users/:id', async (req, res) => {
 
         await userDb.remove(id);
         res.status(200).json(user);
-    } catch(e) {
+    } catch(errore) {
+        res.status(500).send({message: "The user could not be removed.", error: error.message})
+    }
+})
+
+//endpoint for DELETE post
+server.delete('/posts/:id', async (req, res) => {
+    const id = req.params.id;
+
+    try {
+        const post = await postDb.get(id);
+        await postDb.remove(id);
+        res.status(200).json(post);
+    } catch(error) {
         res.status(500).send({message: "The user could not be removed.", error: error.message})
     }
 })
