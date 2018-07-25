@@ -46,6 +46,7 @@ server.post('/users/', async (req, res) => {
 
 server.delete('/users/:id', async (req, res) => {
     let id = req.params.id;
+    
     try {
         const deleted = await userDb.remove(id);
         if( deleted > 0)
@@ -57,6 +58,26 @@ server.delete('/users/:id', async (req, res) => {
         res.status(500).json({error: 'User could not be deleted'});
     }
     
+})
+
+server.put('/users/:id', async (req, res) => {
+    let id = req.params.id;
+    let updatedUser = req.body;
+    if(!('name') in updatedUser){
+        res.status(400).send({errorMessage: "Please provide a name for the user."});
+    }
+
+    try{
+        const updated = await userDb.update(id, updatedUser);
+        if( updated > 0)
+        res.status(200).json(updated);
+        else
+        res.status(404).json({error: 'The user with the specified ID could not be found'});
+    }
+
+    catch(err) {
+        res.status(500).json({error: 'User could not be updated'});
+    }
 })
 
 server.listen(8000, () => console.log('API running on port 8000'));
