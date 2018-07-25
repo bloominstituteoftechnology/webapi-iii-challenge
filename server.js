@@ -154,4 +154,21 @@ server.post('/tags', async (req, res) => {
     }
 })
 
+//endpoint for DELETE user
+server.delete('/users/:id', async (req, res) => {
+    const id = req.params.id;
+
+    try {
+        const user = await userDb.get(id);
+        if (!user) {
+            return res.status(404).send({ message: "The user with the specified ID does not exist." })
+        }
+
+        await userDb.remove(id);
+        res.status(200).json(user);
+    } catch(e) {
+        res.status(500).send({message: "The user could not be removed.", error: error.message})
+    }
+})
+
 server.listen(8000, () => console.log('\n=== API Running... ===\n'))
