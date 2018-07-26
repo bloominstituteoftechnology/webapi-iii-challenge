@@ -1,8 +1,8 @@
 const express = require('express');
 const helmet = require('helmet');
-const post = require('./data/helpers/postDb.js');
-const tag = require('./data/helpers/tagDb.js');
-const user = require('./data/helpers/userDb.js');
+const postDb = require('./data/helpers/postDb.js');
+const tagDb = require('./data/helpers/tagDb.js');
+const userDb = require('./data/helpers/userDb.js');
 
 const server = express()
 
@@ -16,9 +16,10 @@ server.use(helmet())
 const INTERNAL_SERVER_ERROR = "INTERNAL_SERVER_ERROR"
 const INVALID_POST_ID = "INVALID_POST_ID"
 const MISSING_TEXT_OR_ID = "MISSING_TEXT_OR_ID"
-const MISSING_NAME_OR_ID = "MISSING_NAME_OR_ID"
+const MISSING_NAME = "MISSING_NAME"
+const MISSING_TAG = "MISSING_TAG"
 const INVALID_USER_ID = "INVALID_USER_ID"
-const ID_ALREADY_TAKEN = "ID_ALREADY_TAKEN"
+const INVALID_TAG_ID = "INVALID_TAG_ID"
 
 // ******************************  MiddleWare ********************************************
 
@@ -29,7 +30,7 @@ const getPost = async (req, res, next) => {
     let error = INVALID_POST_ID
     
     try{
-        const postIn = await post.get(id)
+        const postIn = await postDb.get(id)
         if(!postIn){ throw Error() }
         error = INTERNAL_SERVER_ERROR
         req.postIn = postIn  
@@ -47,7 +48,7 @@ const getUser = async (req, res, next) => {
     let error = INVALID_USER_ID
 
     try{
-        const userIn = await user.get(userId || id)
+        const userIn = await userDb.get(userId || id)
         if(!userIn){ throw Error() }
         error = INTERNAL_SERVER_ERROR
 
@@ -58,13 +59,29 @@ const getUser = async (req, res, next) => {
         next({error: error, internalError: err.message})    }
 }
 
+const getTag = async (req, res, next) => {
+    let { id } = req.params
+    let error = INVALID_TAG_ID
+    
+    try{
+        const tagIn = await tagDb.get(id)
+        if(!tagIn){ throw Error() }
+        error = INTERNAL_SERVER_ERROR
+        req.tagIn = tagIn  
+
+        next();
+    }catch(err){
+        next({error: error, internalError: err.message})
+    }
+}
+
 // ******************************  Posts ********************************************
 
 server.get('/api/posts', async (req, res, next) => {
     let error = INTERNAL_SERVER_ERROR
 
     try{
-        const posts = await post.get()
+        const posts = await postDb.get()
         res.status(SUCCESS).json(posts)
     }catch(err){
         next({error: error, internalError: err.message})
@@ -92,7 +109,7 @@ server.post('/api/posts', getUser, async (req, res, next) => {
         const postOut = {...req.body}
         error = INTERNAL_SERVER_ERROR           
 
-        const response = await post.insert(postOut)
+        const response = await postDb.insert(postOut)
         res.status(SUCCESS).json(response)
     }catch(err){
         next({error: error, internalError: err.message})    }
@@ -101,7 +118,7 @@ server.post('/api/posts', getUser, async (req, res, next) => {
 server.put('/api/posts/:id', getPost, async (req, res, next) => {
     try{
         const updated = {...req.body} 
-        await post.update(req.params.id, updated); 
+        await postDb.update(req.params.id, updated); 
         res.status(SUCCESS).json(updated)
     }catch(err) {
         next({error: INTERNAL_SERVER_ERROR, internalError: err.message})    }
@@ -109,7 +126,7 @@ server.put('/api/posts/:id', getPost, async (req, res, next) => {
 
 server.delete('/api/posts/:id', getPost, async (req, res, next) => {
     try{
-        await post.remove(req.params.id)
+        await postDb.remove(req.params.id)
         res.status(SUCCESS).json({"Removed": req.postIn})
         
     }catch(err){
@@ -124,7 +141,7 @@ server.get('/api/users', async (req, res, next) => {
     let error = INTERNAL_SERVER_ERROR
 
     try{
-        const users = await user.get()
+        const users = await userDb.get()
         res.status(SUCCESS).json(users)
     }catch(err){
         next({error: error, internalError: err.message})    }
@@ -141,19 +158,15 @@ server.get('/api/users/:id', getUser, async (req, res, next) => {
 })
 
 server.post('/api/users', async (req, res, next) => {
-    const { id, name } = req.body
-    let error = MISSING_NAME_OR_ID
+    const { name } = req.body
+    let error = MISSING_NAME
 
     try{
-        if(!id || !name){ throw Error() }
-        error = ID_ALREADY_TAKEN
-
-        const idTaken = await user.get(id)
-        if(idTaken){ throw Error() }
+        if( !name ){ throw Error() }
         error = INTERNAL_SERVER_ERROR
 
         const newUser = {...req.body}
-        await user.insert(newUser)
+        await userDb.insert(newUser)
         res.status(SUCCESS).json(newUser)
     }catch(err){
         next({error: error, internalError: err.message})    }
@@ -162,7 +175,7 @@ server.post('/api/users', async (req, res, next) => {
 server.put('/api/users/:id', getUser, async (req, res, next) => {
     try{
         const updated = {...req.body}
-        await user.update(req.params.id, updated)
+        await userDb.update(req.params.id, updated)
         res.status(SUCCESS).json(updated)
     }catch(err){
         next({error: INTERNAL_SERVER_ERROR, internalError: err.message})    }
@@ -170,7 +183,7 @@ server.put('/api/users/:id', getUser, async (req, res, next) => {
 
 server.delete('/api/users/:id', getUser, async (req, res, next) => {
     try{
-        await user.remove(req.params.id)
+        await userDb.remove(req.params.id)
         res.status(SUCCESS).json({"Removed": req.userIn})
     }catch(err){
         next({error: INTERNAL_SERVER_ERROR, internalError: err.message})    }
@@ -182,11 +195,39 @@ server.delete('/api/users/:id', getUser, async (req, res, next) => {
 
 server.get('/api/tags', async (req, res, next) => {
     try{
-        const tags = await tag.get()
+        const tags = await tagDb.get()
         res.status(SUCCESS).json(tags)
     }catch(err){
         next({error: error, internalError: err.message})    }
 })
+
+server.get('/api/tags/:id', getTag, async (req, res, next) => {
+    // getTag has already validated tag and assigned to req.tagIn
+    let error = INTERNAL_SERVER_ERROR
+
+    try{
+        res.status(SUCCESS).json(req.tagIn)
+    }catch(err){
+        next({error: error, internalError: err.message})    }
+})
+
+server.post('/api/tags', async (req, res, next) => {
+    const { tag } = req.body
+    let error = MISSING_TAG
+
+    try{
+        if( !tag ){ throw Error() }
+        error = INTERNAL_SERVER_ERROR
+
+        const newTag = {...req.body}
+        await tagDb.insert(newTag)
+        res.status(SUCCESS).json(newTag)
+    }catch(err){
+        next({error: error, internalError: err.message})    }
+})
+
+
+// ******************************  Error Handler ********************************************
 
 server.use(( err, req, res, next ) => {
     switch(err.error) {
@@ -196,10 +237,16 @@ server.use(( err, req, res, next ) => {
                 description: "Please include valid text and a valid ID of a user",
                 internal_error: err.internalError 
             })
-        case MISSING_NAME_OR_ID:
+        case MISSING_NAME:
             res.status(400).send({
                 success: false,
-                description: "Please include a valid name and an id of a user",
+                description: "Please include a valid name for a user",
+                internal_error: err.internalError 
+            })
+        case MISSING_TAG:
+            res.status(400).send({
+                success: false,
+                description: "Please include a valid tag",
                 internal_error: err.internalError 
             })
         case INVALID_USER_ID:
@@ -214,14 +261,14 @@ server.use(( err, req, res, next ) => {
                 description: "No post by that ID",
                 internal_error: err.internalError
             })
-        case ID_ALREADY_TAKEN:
+        case INVALID_TAG_ID:
             res.status(400).send({
                 success: false,
-                description: "That ID is already in use",
+                description: "No tag by that ID",
                 internal_error: err.internalError
             })
         case INTERNAL_SERVER_ERROR:
-            res.status(400).send({
+            res.status(500).send({
                 success: false,
                 description: "Internal Server Error",
                 internal_error: err.internalError
