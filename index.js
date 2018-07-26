@@ -58,6 +58,7 @@ server.put('/api/users/:id', async (req, res) => {
     const { id } = req.params;
     const { name } = req.body;
     if (!name) return res.status(400).json({ errorMessage: "Please provide a name for the user." });
+    if (name.length > 128) return res.status(400).json({ errorMessage: "Name provided is too long!" });;
     try {
         const updateResponse = await users.update(id, { name });
         if (updateResponse === 0) return res.status(404).json({ message: 'The user with the specified ID does not exist.' });
