@@ -39,7 +39,8 @@ server.use(morgan('dev'));
 
 
 function upperCase(req, res, next){
-        let uppercased = req.body.tag.toUpperCase();
+        
+	let uppercased = req.body.tag.toUpperCase();
 	req.body.tag = uppercased;
         next();
 };
@@ -64,7 +65,7 @@ server.get('/', (req, res) => {
 
 });*/
 
-server.get('/api/tags', (req, res) => {
+server.get('/api/tags', (req, res, next) => {
         const request = dbtag.get();
 
         request.then(response => {
@@ -72,7 +73,8 @@ server.get('/api/tags', (req, res) => {
         })
 
         .catch(err => {
-        res.status(404).json({error: "The tags information could not be retrieved."});
+        next({code: 404, message: "The tags information could not be retrieved via error middleware"});
+	//res.status(404).json({error: "The tags information could not be retrieved."});
         })
 
 });
@@ -91,7 +93,7 @@ server.get('/api/tags', (req, res) => {
 
 });*/
 
-server.get('/api/tags/:id', (req, res) => {
+server.get('/api/tags/:id', (req, res, next) => {
         const id = req.params.id;
 
        const request = dbtag.get(id);
@@ -112,7 +114,8 @@ server.get('/api/tags/:id', (req, res) => {
         })
 
         .catch(err => {
-        res.status(404).json({error: "The tag with the specified ID does not exist."});
+	next({code: 404, message: "The tag with the specified ID does not exist via middleware."});
+        //res.status(404).json({error: "The tag with the specified ID does not exist."});
         })
 
 	}
@@ -276,11 +279,11 @@ server.get('/api/tags/:id', (req, res) => {
 
 
 
-server.post('/api/tags', upperCase, (req, res) => {
+server.post('/api/tags', upperCase, (req, res, next) => {
 
         let tag = req.body.tag;
-	console.log(req);
-        let tagContent = {tag: req.body.tag};
+	console.log(req.body.tag);
+        const tagContent = {tag: req.body.tag};
 
         if (!tag) {
                 res.status(400).json({errorMessage: "Please provide text for the tag."});
@@ -298,8 +301,9 @@ server.post('/api/tags', upperCase, (req, res) => {
                 res.status(201).json(responseObject);
         })
 
-        .catch(error => {
-        res.status(500).json({ message: "There was an error while saving the tag to the database" });
+        .catch(err => {
+	next({code: 500, message: "There was an error while saving the tag to the database"});
+       //res.status(500).json({ message: "There was an error while saving the tag to the database" });
         })
 
         }  
@@ -360,7 +364,7 @@ server.post('/api/tags', upperCase, (req, res) => {
   });*/
 
 
-server.delete('/tags/:id', (req, res) => {
+server.delete('/tags/:id', (req, res, next) => {
         const id = req.params.id;
         const request = dbtag.remove(id);
 
@@ -376,8 +380,9 @@ server.delete('/tags/:id', (req, res) => {
                 else res.status(404).json({ error: "The tag with the specified ID does not exist." });
         })
 
-        .catch(error => {
-        res.status(500).json({ error: "The tag could not be removed" });
+        .catch(err => {
+        next({code: 500, message: "The tag could not be deleted"});
+	//res.status(500).json({ error: "The tag could not be removed" });
         })
 
   });
@@ -438,7 +443,7 @@ else{
 });*/
 
 
-server.put('/tags/:id', (req, res) => {
+server.put('/tags/:id', (req, res, next) => {
   const {tag} = req.body;
 
   const id =  req.params.id;
@@ -462,8 +467,9 @@ else{
                 }
         })
 
-        .catch(error => {
-        res.status(500).json({ message: "Couldn't update the tag" });
+        .catch(err => {
+        next({code: 500, message: "Couldn't update the tag"});
+	//res.status(500).json({ message: "Couldn't update the tag" });
         })
 }
 });
@@ -501,13 +507,23 @@ else {
 });*/
 
 
+server.use((err, req, res, next) => {
+switch (err.code){
+	
+	case 404:
+	res.status(404).json({success: false, error: err.message});
+
+	default:
+	res.status(500).json({ success: false, error: err.message});
+
+}
+});
+
 
 server.use(function(req, res) {
   res.status(404).send("Wrong path, check url");
 });
 
-//server.use(morgan('short'));
+
 
 server.listen(7000, () => console.log('API running on port 7000'));
-
-
