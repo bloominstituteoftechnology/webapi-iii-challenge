@@ -62,17 +62,23 @@ server.get('/api/users/:id', (req, res) => {
     )
 })
 
-server.get('/api/posts/:id', (req, res) => {
-  postDb
-    .get(req.params.id)
-    .then((post) => {
-      res.status(200).json(post)
-    })
-    .catch((err) =>
-      res.status(404).json({
-        message: `post with id of ${req.params.id} cannot be found`
+server.get('/api/users/:id/posts', (req, res) => {
+  userDb.get(req.params.id).then((user) => {
+    user === undefined
+      ? res.status(404).json({
+        message: `user with id of ${req.params.id} does not exist`
       })
-    )
+      : postDb
+        .get(req.params.id)
+        .then((post) => {
+          res.status(200).json(post)
+        })
+        .catch((err) =>
+          res.status(404).json({
+            message: `user with ID of ${req.params.id} does not have any post`
+          })
+        )
+  })
 })
 
 server.get('/api/tags/:id', (req, res) => {
@@ -105,6 +111,10 @@ server.delete('/api/users/:id', (req, res) => {
     .catch((err) =>
       res.status(500).json({ error: 'The user could not be removed' })
     )
+  // Make a call to the postDB
+  // Get all the posts
+  // 1. filter ( match the id).forEach( delete all the posts)
+  // 2. forEach (if the ids matches, delete the posts)
 })
 
 server.delete('/api/posts/:id', (req, res) => {
@@ -168,6 +178,21 @@ server.post('/api/users/:id/newpost', (req, res) => {
       .catch((err) =>
         res.status(400).json({
           error: 'There was an error while saving the post to the database'
+        })
+      )
+})
+
+server.post('/api/users/:id/tag', (req, res) => {
+  !req.body
+    ? res.status(400).json({
+      errorMessage: 'Please provide text for the tag.'
+    })
+    : tagDb
+      .insert(req.body.tag)
+      .then((newPost) => res.status(201).json(newPost))
+      .catch((err) =>
+        res.status(400).json({
+          error: 'There was an error while saving the TAG to the database'
         })
       )
 })
