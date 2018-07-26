@@ -57,12 +57,62 @@ server.post('/users', async (req, res) => {
     return;
   }
 
+  if (NAME.length > 128) {
+    res
+      .status(400)
+      .json({ error: 'Please keep the name shorter than 128 characters.' });
+    return;
+  }
+
   try {
     const response = await userDB.insert({ NAME });
     // response is { id: # }
     return res.status(200).json(`User id:${response.id} has been added.`);
   } catch (err) {
     return res.status(500).json({ error: `User could not be added.` });
+  }
+});
+
+// edit a user
+server.put('/users/:id', async (req, res) => {
+  const NAME = req.body.name;
+  const ID = req.params.id;
+
+  if (!NAME) {
+    res.status(400).json({
+      error: 'Please provide the updated name for the user.',
+    });
+    return;
+  }
+
+  if (NAME.length > 128) {
+    res
+      .status(400)
+      .json({ error: 'Please keep the name shorter than 128 characters.' });
+    return;
+  }
+
+  const USER = { name: NAME };
+
+  // ensure user with that ID exists
+  try {
+    const response = await userDB.get(ID);
+    if (typeof response === 'undefined')
+      return res.status(404).json({ error: `No user with id:${ID} exists.` });
+    // found user, so edit it
+    try {
+      const response = await userDB.update(ID, USER);
+      console.log('RESPONSE', response);
+      res.status(200).json({ messsage: `User with id ${ID} has been editied` });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ error: `The user with id:${ID} could not be edited.` });
+    }
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ error: `The user with id:${ID} could not be retrieved.` });
   }
 });
 
