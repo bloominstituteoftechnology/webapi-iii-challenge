@@ -159,6 +159,14 @@ server.post('/api/users', async (req, res, next) => {
         next({error: error, internalError: err.message})    }
 })
 
+server.put('/api/users/:id', getUser, async (req, res, next) => {
+    try{
+        const updated = {...req.body}
+        await user.update(req.params.id, updated)
+        res.status(SUCCESS).json(updated)
+    }catch(err){
+        next({error: INTERNAL_SERVER_ERROR, internalError: err.message})    }
+})
 
 
 
