@@ -137,7 +137,7 @@ server.delete("/api/tag/:id", async (req, res) => {
 server.get("/api/user/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    const response = userDb.remove(id);
+    const response = userDb.get(id);
     res.status(200).send(response);
   } catch (error) {
     res
