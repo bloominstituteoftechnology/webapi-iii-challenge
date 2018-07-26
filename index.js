@@ -131,4 +131,24 @@ server.delete('/posts/:id', async (req, res) => {
 
 })
 
+server.put('/posts/:id', async (req, res) => {
+    let id = req.params.id;
+    let updatedPost = req.body;
+    if (!('text') in updatedPost || !('userId') in updatedPost) {
+        res.status(400).send({ errorMessage: "Please provide text and userId for the post." });
+    }
+
+    try {
+        const updated = await postDb.update(id, updatedPost);
+        if (updated > 0)
+            res.status(200).json(updated);
+        else
+            res.status(404).json({ error: 'The post with the specified ID could not be found' });
+    }
+
+    catch (err) {
+        res.status(500).json({ error: 'Post could not be updated' });
+    }
+})
+
 server.listen(8000, () => console.log('API running on port 8000'));
