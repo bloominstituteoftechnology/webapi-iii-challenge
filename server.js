@@ -16,7 +16,7 @@ server.use(cors({ origin: 'http://localhost:3000' }));
 
 //router handlers
 server.get('/', (req, res) => {
-  res.send('Hello World you');
+  res.send('Hello World');
 });
 
 //User Endpoints - router handlers
@@ -40,6 +40,36 @@ server.get('/api/users/:id', (req, res) => {
             res.status(500).json({ error: `Error in retrieving user with this id ${id}`})
         })
 })
+
+server.post('/api/users', (req, res) => {
+    const { name } = req.body
+    name ? (
+        userDb.insert({ name })
+            .then( id => {
+                res.status(201)
+                userDb.get(id.id)
+                    .then( user => {
+                        user ? res.status(200).json(user) : res.status(404).json({ Error: `There is no user with id ${id}`})
+                    })
+                    .catch( error => {
+                        res.status(500).json({ error: `Error with retrieving user with this id ${id}`})
+                    })
+            })
+            .catch( error => {
+                res.status(500).json({ error: `Error in creating new user with this name '${name}'`})
+            })
+    ) : (
+        res.status(400).json({ Error: "Enter name of user" })
+    )
+})
+
+
+
+
+
+
+
+
 
 
 
