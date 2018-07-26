@@ -52,13 +52,15 @@ server.get('/tags/', (req, res) => {
 server.get('/users/:id', (req, res) => {
     const id = req.params.id;
 
+    console.log(id);
     userDb.get()
     .then(response => {
         if(response.length === 0) {
             res.status(404).json({ error: "User not found." });
             return;
         }
-        res.status(200).json(response)
+        res.status(200).json(response[id-1])
+        //adjusting for 0th index — the same happens in the next gets
     })
     .catch(() => {
         res
@@ -75,7 +77,7 @@ server.get('/posts/:id', (req, res) => {
             res.status(404).json({ error: "Post not found." });
             return;
         }
-        res.status(200).json(response)
+        res.status(200).json(response[id-1])
     })
     .catch(() => {
         res
@@ -92,7 +94,7 @@ server.get('/tags/:id', (req, res) => {
             res.status(404).json({ error: "Tag not found." });
             return;
         }
-        res.status(200).json(response)
+        res.status(200).json(response[id-1])
     })
     .catch(() => {
         res
