@@ -113,7 +113,7 @@ server.get('/api/posts/:postId/tags/', (req, res) => {
 server.post('/api/users', (req, res) => {
 
     const name = req.body.name;
-    let newUser = {
+    const newUser = {
         name
     };
     userDb.insert(newUser)
@@ -179,22 +179,18 @@ server.post('/api/tags', (req, res) => {
         })
 })
 //UPDATE USER
-server.put('/api/users', (req, res) => {
-    const id = req.body.id;
-    const name = req.body.name;
-    // let updateUser = {
-    //     id,
-    //     name
-    // };
-    userDb.update(id, name)
+server.put('/api/users/:id', (req, res) => {
+
+    const updateId = req.params.id;
+    const updateName = req.body.name;
+
+    userDb.update(updateId, {"name": updateName}) //?
         .then(response => {
-            res.status(200).json({
-                "success": "new user created",
-                "post": newUser,
-                "new_user_id": response
-            })
+            
+            res.send(updateName + ' was updated')
         })
         .catch(err => {
+            console.log(err);
             res.status(500).json({
                 "failed": "user was not updated",
                 "error": err
@@ -209,4 +205,4 @@ server.put('/api/users', (req, res) => {
 //DELETE POST
 //DELETE TAGS
 
-server.listen(8000, () => console.log('\n ====API RUNNING===\n'))
+server.listen(8000, () => console.log('\n ====API RUNNING===\n')) 
