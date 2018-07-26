@@ -14,7 +14,7 @@ server.get('/users', (req, res) => {
     .get()
     .then(response => {
       res
-        .status(200)
+        .status(418)
         .json(response)
         .end()
     })
@@ -47,7 +47,7 @@ server.get('/users/:id', (req, res) => {
       res
         .status(500)
         .json({ error: `The user could not be retrieved.` })
-        .end();
+        .end()
     })
 })
 
@@ -253,7 +253,7 @@ server.post('/tags', (req, res) => {
               .json({ error: `The provided tag already exist.` })
               .end()
           }
-        });
+        })
       })
       .catch(() => {
         res
@@ -316,14 +316,58 @@ server.put('/users/:userId', (req, res) => {
               res
                 .status(404)
                 .json({ error: `The specified User Id does not exist.` })
-                .end();
+                .end()
+            })
+        }
+      })
+      .catch(err => {
+        res
+          .status(500)
+          .json(err)
+          .end()
+      })
+  }
+})
+
+server.put('/posts/:postId', (req, res) => {
+  const id = req.params.postId;
+  const text = req.body.text;
+  const post = { text };
+  if(!text) {
+    res
+      .status(400)
+      .json({ error: `Please provide the text to update.` })
+      .end()
+  } else {
+    postDb
+      .update(id, post)
+      .then(response => {
+        if(!response) {
+          res
+            .status(404)
+            .json({ error: `The ID specified could not be found.` })
+            .end()
+        } else {
+          postDb
+            .get(id)
+            .then(response => {
+              res
+                .status(200)
+                .json(response)
+                .end()
+            })
+            .catch(() => {
+              res
+                .status(404)
+                .json({ error: `The specified Post Id does not exist.` })
+                .end()
             })
         }
       })
       .catch(() => {
         res
           .status(500)
-          .json({ error: `The user could not be updated. `})
+          .json({ error: `The post could not be updated.` })
           .end()
       })
   }
