@@ -15,4 +15,20 @@ router.get('/', (req, res, next) => {
         })
 });
 
+//GET POST TAGS
+router.get('/:id/tags', (req, res) => {
+  
+    let id = req.params.id;
+    postDb.getPostTags(id)
+        .then(userPostData => {
+            res.status(200).json(userPostData);
+        })
+        .catch(err => {
+            res.status(500).json({
+                "error": err,
+                "message": "The post tags could not be retrieved."
+            })
+        })
+});
+
 module.exports = router;

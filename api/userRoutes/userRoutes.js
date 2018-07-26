@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const userDb = require('../../data/helpers/userDb');
+const postDb = require('../../data/helpers/postDb');
 
 
 //GET USERS
@@ -46,5 +47,45 @@ router.get('/:id/posts', (req, res, next) => {
             })
         })
 });
+
+//GET SPECIFIC USER, SPECIFIC POST
+router.get('/:id/posts/:postId', (req, res) => {
+
+    const postId = req.params.postId;
+    postDb.get(postId)
+        .then(userSinglePost => {
+            res.status(200).json(userSinglePost);
+        })
+        .catch(err => {
+            res.status(500).json({
+                "error": err,
+                "message": "The post could not be retrieved."
+            })
+        })
+});
+
+//POST NEW USER
+router.post('/', (req, res) => {
+
+    let name = req.body.name;
+    let newUser = {
+        name
+    };
+    userDb.insert(newUser)
+        .then(response => {
+            res.status(200).json({
+                "success": "new user created",
+                "post": newUser,
+                "new_user_id": response
+            })
+        })
+        .catch(err => {
+            res.status(500).json({
+                "failed": "new user was not created",
+                "error": err
+            })
+        })
+})
+
 
 module.exports = router;
