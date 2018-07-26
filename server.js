@@ -1,6 +1,8 @@
 // import your node modules
 const express = require('express');
 const dbuser = require('./data/helpers/userDb');
+const dbpost = require('./data/helpers/postDb');
+const dbtag = require('./data/helpers/tagDb');
 
 
 const server = express();
@@ -18,7 +20,7 @@ server.get('/', (req, res) => {
 });
 
 //User Endpoints - router handlers
-server.get('/users', (req, res) => {
+server.get('/api_v1/users', (req, res) => {
         const request = dbuser.get();
 
         request.then(response => {
@@ -31,7 +33,19 @@ server.get('/users', (req, res) => {
 
 });
 
+//posts Endpoints
+server.get('/api_v1/posts', (req, res) => {
+        const request = dbpost.get();
 
+        request.then(response => {
+        res.status(200).json(response);
+        })
+
+        .catch(err => {
+        res.status(404).json({error: "The posts information could not be retrieved."});
+        })
+
+});
 
 // add your server code starting here
 server.listen(port, () => console.log(`API listening on port ${port}`));
