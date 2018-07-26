@@ -8,10 +8,7 @@ const server = express()
 
 server.listen(8000, () => console.log('API running on port 8000'))
 
-// local middleware adds specific post to req.body
-function getPost(req, res, next){
 
-}
 const SUCCESS = 200;
 server.use(express.json())
 server.use(helmet())
@@ -20,6 +17,24 @@ const INTERNAL_SERVER_ERROR = "INTERNAL_SERVER_ERROR"
 const INVALID_POST_ID = "INVALID_POST_ID"
 const MISSING_TEXT_OR_ID = "MISSING_TEXT_OR_ID"
 const INVALID_USER_ID = "INVALID_USER_ID"
+
+
+// local middleware checks for specific post by ID and adds to req.body
+const getPost = async (req, res, next) => {
+    let { id } = req.params
+    let error = INVALID_POST_ID
+    
+    try{
+        const postIn = await post.get(id)
+        if(!postIn){ throw Error() }
+        error = INTERNAL_SERVER_ERROR
+        req.postIn = postIn  
+
+        next();
+    }catch(err){
+        next({error: error, internalError: err.message})
+    }
+}
 
 // ******************************  Posts ********************************************
 
@@ -34,16 +49,10 @@ server.get('/posts', async (req, res, next) => {
     }
 })
 
-server.get('/posts/:id', async (req,res, next) => {
-    let { id } = req.params
-    let error = INVALID_POST_ID
-
+server.get('/posts/:id', getPost, (req,res, next) => {
     try{
-        const postIn = await post.get(id)
-        if(!postIn){ throw Error() }
         error = INTERNAL_SERVER_ERROR
-
-        res.status(SUCCESS).json(postIn)
+        res.status(SUCCESS).json(req.postIn)
     }catch(err){
         next({error: error, internalError: err.message})
     }
