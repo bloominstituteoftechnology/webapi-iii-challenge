@@ -90,10 +90,20 @@ server.post('/api/posts', async (req, res) => {
     const { userId, text } = req.body;
     if (!userId || !text) return res.status(400).json({ errorMessage: "Please provide userId and text for the post." });
     try {
-        const response = await posts.insert({ userId, text });
-        return res.status(201).json(response);
+        const findResponse = await users.get();
+        for (let i = 0; i < findResponse.length; i++) {
+            if (findResponse[i].id == userId) {
+                try {
+                    const response = await posts.insert({ userId, text });
+                    return res.status(201).json(response);
+                } catch (err) {
+                    return res.status(500).json({ error: 'There was an error while saving the post to the database.' });
+                }
+            }
+        }
+        return res.status(400).json({ errorMessage: 'Please provide a userId that matches an existing users id.' });
     } catch (err) {
-        return res.status(500).json({ error: 'There was an error while saving the post to the database.' });
+        return res.status(500).json({ error: 'The posts information could not be retrieved.' });
     }
 })
 
