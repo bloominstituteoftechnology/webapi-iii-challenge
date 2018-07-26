@@ -4,7 +4,6 @@ const helmet = require("helmet");
 const morgan = require("morgan");
 
 //import files
-
 // const users = require("./data/helpers/userDb");
 // const posts = require("./data/helpers/postDb");
 // const tags = require("./data/helpers/tagDb");

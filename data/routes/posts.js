@@ -20,17 +20,17 @@ router.get("/:id", (req, res) => {
   posts
     .get(req.params.id)
     .then(post => {
-      if (post.length === 0) {
+      if (!post) {
         res
           .status(404)
-          .json({ message: "The user with the specified ID does not exist." });
+          .json({ message: "The post with the specified ID does not exist." });
       }
       res.status(200).json(post);
     })
     .catch(error => {
       res
         .status(500)
-        .json({ error: "The user information could not be retrieved." });
+        .json({ error: "The post information could not be retrieved." });
     });
 });
 
@@ -56,7 +56,7 @@ router.post("/", (req, res) => {
   const { text, userId } = req.body;
   if (!text || !userId) {
     res.status(400).json({
-      errorMessage: "Please provide post for the post."
+      errorMessage: "Please provide text and usedId for the post."
     });
   }
   posts
@@ -95,17 +95,17 @@ router.put("/:id", (req, res) => {
   posts
     .update(id, { text })
     .then(post => {
-      if (post.length === 0) {
+      if (!post) {
         res.status(404).json({
           errorMessage: "The post with the specified ID does not exist."
         });
       }
-      res.status(200).json({ text });
+      res.status(200).json({ texts });
     })
     .catch(error => {
       res
         .status(500)
-        .json({ error: "The user information could not be modified." });
+        .json({ error: "The post information could not be modified." });
     });
 });
 

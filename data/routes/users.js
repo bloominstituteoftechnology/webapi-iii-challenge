@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-
 const users = require("../helpers/userDb");
 
 router.get("/", (req, res) => {
@@ -20,7 +19,7 @@ router.get("/:id", (req, res) => {
   users
     .get(req.params.id)
     .then(user => {
-      if (user.length === 0) {
+      if (!user) {
         res
           .status(404)
           .json({ message: "The user with the specified ID does not exist." });
@@ -34,13 +33,7 @@ router.get("/:id", (req, res) => {
     });
 });
 
-router.post("/", (req, res) => {
-  const { name } = req.body;
-  if (!name) {
-    res.status(400).json({
-      errorMessage: "Please provide name for the post."
-    });
-  }
+router.get("/:id/posts", (req, res) => {
   users
     .getUserPosts(req.params.id)
     .then(posts => {
@@ -55,6 +48,23 @@ router.post("/", (req, res) => {
       res
         .status(500)
         .json({ error: "The posts information could not be retrieved." });
+    });
+});
+
+router.post("/", (req, res) => {
+  const { name } = req.body;
+  if (!name) {
+    res.status(400).json({
+      errorMessage: "Please provide name for the post."
+    });
+  }
+  users
+    .insert({ name })
+    .then(post => res.status(201).json({ name }))
+    .catch(error => {
+      res.status(500).json({
+        error: "There was an error while saving the post to the database"
+      });
     });
 });
 
@@ -84,7 +94,7 @@ router.put("/:id", (req, res) => {
   users
     .update(id, { name })
     .then(user => {
-      if (user.length === 0) {
+      if (!user) {
         res.status(404).json({
           errorMessage: "The user with the specified ID does not exist."
         });

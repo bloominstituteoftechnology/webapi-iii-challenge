@@ -12,7 +12,7 @@ router.get("/", (req, res) => {
     .catch(error => {
       res
         .status(500)
-        .json({ error: "The posts information could not be retrieved." });
+        .json({ error: "The tags information could not be retrieved." });
     });
 });
 
@@ -20,17 +20,17 @@ router.get("/:id", (req, res) => {
   tags
     .get(req.params.id)
     .then(tag => {
-      if (tag.length === 0) {
+      if (!tag) {
         res
           .status(404)
-          .json({ message: "The user with the specified ID does not exist." });
+          .json({ message: "The tag with the specified ID does not exist." });
       }
       res.status(200).json(tag);
     })
     .catch(error => {
       res
         .status(500)
-        .json({ error: "The user information could not be retrieved." });
+        .json({ error: "The tag information could not be retrieved." });
     });
 });
 
@@ -46,7 +46,7 @@ router.post("/", (req, res) => {
     .then(post => res.status(201).json({ tag }))
     .catch(error => {
       res.status(500).json({
-        error: "There was an error while saving the post to the database"
+        error: "There was an error while saving the tag to the database"
       });
     });
 });
@@ -77,7 +77,7 @@ router.put("/:id", (req, res) => {
   tags
     .update(id, { tag })
     .then(post => {
-      if (post.length === 0) {
+      if (!post) {
         res.status(404).json({
           errorMessage: "The post with the specified ID does not exist."
         });
