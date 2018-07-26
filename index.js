@@ -184,7 +184,7 @@ const handleUpperCase = (req, res, next) => {
         next();
     })
     .catch(err => {
-        console.log(err);
+        res.status(500).json({ error: 'The tags information could not be retrieved'});
     })
     
 }

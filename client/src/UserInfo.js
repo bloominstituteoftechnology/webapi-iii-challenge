@@ -8,13 +8,14 @@ class UserInfo extends Component {
     }
     render() { 
         console.log('user info props: ', this.props.u);
-        const  id = this.props.u.id;
-        const  name = this.props.u.name;
+        // const  id = this.props.u.id;
+        // const  name = this.props.u.name;
         return ( 
             <div>
-                <Link to={`/users/${id}`}>
+                hi
+                {/* <Link to={`/users/${id}`}>
                 {name}
-                </Link>   
+                </Link>    */}
             </div>
          );
     }
