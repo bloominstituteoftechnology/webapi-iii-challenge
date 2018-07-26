@@ -164,7 +164,8 @@ server.get("/api/user/:id/posts", async (req, res) => {
 server.post("/api/user/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    const response = userDb.insert(id);
+    const user = res.body;
+    const response = userDb.insert(id, user);
     res.status(200).send(response);
   } catch (error) {
     res
