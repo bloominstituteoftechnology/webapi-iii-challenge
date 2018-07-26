@@ -55,7 +55,7 @@ function logger (req, res, next) {
 
 server.use(logger);
 
-// GET | Returns the stored posts / tags / users
+// GET | Returns the stored users / posts / tags
 
 server.get('/', (req, res) => {
     res.send({ hello: 'world', project: "blog" });
@@ -94,12 +94,12 @@ server.get('/tags/', (req, res) => {
     })
 })
 
-// GET | Returns the post / tag / user with the specified id
+// GET | Returns the user / post / tag with the specified id
 
 server.get('/users/:id', (req, res) => {
     const id = req.params.id;
 
-    console.log(id);
+    // console.log(id);
     userDb.get()
     .then(response => {
         if(response.length === 0) {
@@ -149,6 +149,69 @@ server.get('/tags/:id', (req, res) => {
     })
 })
 
-// 
+// organize next gets in this similar order: user / post / tag
+
+// GET | Unique User's Posts
+
+server.get('/users/:id/posts', (req, res) => {
+    const id = req.params.id;
+
+    userDb.getUserPosts(id)
+    .then(response => {
+        if(response[id-1] === undefined) {
+            res.status(404).json({ error: "User ID not found." });
+            return;
+        } else if (response.length === 0) {
+            res.status(404).json({ error: "User posts not found." });
+        }
+        res.status(200).json(response[id-1])
+    })
+    .catch(() => {
+        res
+        .status(500).json({ error: `Couldn't get user.`})
+    })
+})
+
+// GET | Unique Post's Tags
+
+server.get('/posts/:id/tags', (req, res) => {
+    const id = req.params.id;
+
+    postDb.getPostTags(id)
+    .then(response => {
+        if(response[id-1] === undefined) {
+            res.status(404).json({ error: "Post ID not found." });
+            return;
+        } 
+        // else if (response.length === 0) {
+        //     res.status(404).json({ error: "Post tags not found." });
+        // }
+        res.status(200).json(response)
+    })
+    .catch(() => {
+        res
+        .status(500).json({ error: `Couldn't get user.`})
+    })
+})
+
+server.post('/users', (req, res) => {
+    const { name } = req.body;
+
+    if (!name || name === '') {
+        console.log("Error Code: ", 400, "Bad Response");
+        res.status(400).json({ errorMessage: "Please provide a name for the user." });
+        return;
+    }
+    userDb
+    .insert(req.body)
+    .then(response => {
+        console.log(response);
+        res.status(201).json({response, name, message: "Successfully created new user."});
+    })
+    .catch(err => {
+        res.status(500).json({err, message: "Couldn't create new user (might be due to duplicate name constraint)."});
+    })
+})
+
 
 server.listen(8100, () => console.log('Blog API running on port 8100 . . .'));
