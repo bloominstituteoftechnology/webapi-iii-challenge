@@ -2,14 +2,6 @@ const express = require('express');
 const router = express.Router();
 const tagDb = require('../data/helpers/tagDb');
 
-// custom errors
-const errors = {
-    400: 'Please provide information with your request.',
-    403: 'Balance is the key, making things even is the secret to success.',
-    404: 'The specified ID does not exist.',
-    500: 'The information could not be accessed or modified.'
-}
-
 // custom middleware
 function isEven(req, res, next) {
     let d = new Date();
@@ -30,17 +22,17 @@ function isUpper(req, res, next) {
 }
 
 // READ
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
     try {
         const tags = await tagDb.get();
 
         res.status(200).json(tags);
     } catch(err) {
-        res.status(500).json({error: errors["500"]});
+        next({code: 500});
     }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req, res, next) => {
     try {
         const {id} = req.params;
         const tag = await tagDb.get(id);
@@ -48,32 +40,32 @@ router.get('/:id', async (req, res) => {
         if(tag) {
             res.status(200).json(tag);
         } else {
-            res.status(404).json({error: errors["404"]});
+            next({code: 404});
         }
     } catch(err) {
-        res.status(500).json({error: errors["500"]});
+        next({code: 500});
     }
 });
 
 // CREATE
-router.post('/', isEven, isUpper, async (req, res) => {
+router.post('/', isEven, isUpper, async (req, res, next) => {
     try {
         const tag = {...req.body};
 
-        if(tag.tag) {
+        if(!tag.tag) {
+            next({code: 400});
+        } else {
             const newTag = await tagDb.insert(tag);
 
             res.status(201).json(tag);
-        } else {
-            res.status(400).json({error: errors["400"]});
         }
     } catch(err) {
-        res.status(500).json({error: errors["500"]});
+        next({code: 500});
     }
 });
 
 // UPDATE
-router.put('/:id', async (req, res) => {
+router.put('/:id', async (req, res, next) => {
     try {
         const {id} = req.params;
         const tag = req.body;
@@ -85,17 +77,17 @@ router.put('/:id', async (req, res) => {
 
             res.status(200).json(findTag);
         } else if (!findTag) {
-            res.status(404).json({error: errors["404"]});
+            next({code: 404});
         } else {
-            res.status(400).json({error: errors["400"]});
+            next({code: 400});
         }
     } catch(err) {
-        res.status(500).json({error: errors["500"]});
+        next({code: 500});
     }
 });
 
 // DELETE
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', async (req, res, next) => {
     try {
         const {id} = req.params;
         const tag = await tagDb.get(id);
@@ -105,10 +97,10 @@ router.delete('/:id', async (req, res) => {
 
             res.status(200).json(tag);
         } else {
-            res.status(404).json({error: errors["404"]});
+            next({code: 404});
         }
     } catch(err) {
-        res.status(500).json({error: errors["500"]});
+        next({code: 500});
     }
 });
 
