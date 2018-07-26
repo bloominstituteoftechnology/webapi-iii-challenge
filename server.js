@@ -31,9 +31,6 @@ server.get("/api/users/:id", (req, res) => {
   userDb
     .get(id)
     .then(response => {
-      if (response === 0) {
-        return errorHelper(404, "No user by that Id in the DB", res);
-      }
       res.json(response);
     })
     .catch(error => {
@@ -86,6 +83,54 @@ server.delete("/api/users/:id", (req, res) => {
     .remove(id)
     .then(response => {
       res.json({ response: response });
+    })
+    .catch(error => {
+      return error;
+    });
+});
+
+//postDb
+server.get("/api/posts", (req, res) => {
+  postDb
+    .get()
+    .then(response => {
+      res.json(response);
+    })
+    .catch(error => {
+      return error;
+    });
+});
+
+server.get("/api/posts/:id", (req, res) => {
+  const { id } = req.params;
+  postDb
+    .get(id)
+    .then(response => {
+      res.json(response);
+    })
+    .catch(error => {
+      return error;
+    });
+});
+
+server.get("/api/posts/tags/:id", (req, res) => {
+  const { id } = req.params;
+  postDb
+    .getPostTags(id)
+    .then(response => {
+      res.json(response);
+    })
+    .catch(error => {
+      return error;
+    });
+});
+
+server.post("/api/posts", (req, res) => {
+  const { userId, text } = req.body;
+  postDb
+    .insert({ userId, text })
+    .then(response => {
+      res.json(response);
     })
     .catch(error => {
       return error;
