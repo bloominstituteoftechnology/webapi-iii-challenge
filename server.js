@@ -3,11 +3,15 @@ const morgan = require('morgan');
 const dbpost = require('./data/helpers/postDb');
 const dbuser = require('./data/helpers/userDb');
 const dbtag = require('./data/helpers/tagDb');
+const userRoutes = require('./userRoutes');
 
 
 const server = express();
 
 server.use(express.json());
+
+server.use('/api/users', userRoutes);
+
 
 function logger(req, res, next) {
   console.log(
@@ -19,17 +23,37 @@ function logger(req, res, next) {
 next();	
 }	
 
+
+/*server.use('/api/tags',(req, res, next) => {
+	let uppercased = req.body.tag.toUpperCase();
+        //console.log(uppercased);
+        next(uppercased);
+
+});*/
+
+
 server.use(logger);
 
 
 server.use(morgan('dev'));
+
+//server.use(upperCase);
+
+
+function upperCase(req, res, next){
+        let uppercased = req.body.tag.toUpperCase();
+	req.body.tag = uppercased;
+        next();
+};
+
+
 
 server.get('/', (req, res) => {
         res.send('Testing');
 });
 
 
-server.get('/posts', (req, res) => {
+server.get('/api/posts', (req, res) => {
         const request = dbpost.get();
 
         request.then(response => {
@@ -42,7 +66,7 @@ server.get('/posts', (req, res) => {
 
 });
 
-server.get('/tags', (req, res) => {
+server.get('/api/tags', (req, res) => {
         const request = dbtag.get();
 
         request.then(response => {
@@ -56,7 +80,7 @@ server.get('/tags', (req, res) => {
 });
 
 
-server.get('/users', (req, res) => {
+/*server.get('/api/users', (req, res) => {
         const request = dbuser.get();
 
         request.then(response => {
@@ -67,9 +91,9 @@ server.get('/users', (req, res) => {
         res.status(404).json({error: "The user information could not be retrieved."});
         })
 
-});
+});*/
 
-server.get('/tags/:id', (req, res) => {
+server.get('/api/tags/:id', (req, res) => {
         const id = req.params.id;
 
        const request = dbtag.get(id);
@@ -97,7 +121,7 @@ server.get('/tags/:id', (req, res) => {
 });
 
 
-server.get('/users/:id', (req, res) => {
+/*server.get('/api/users/:id', (req, res) => {
         const id = req.params.id;
 
        const request = dbuser.get(id);
@@ -122,9 +146,9 @@ server.get('/users/:id', (req, res) => {
         })
 
 	}
-});
+});*/
 
-server.get('/users/:id/posts', (req, res) => {
+/*server.get('/api/users/:id/posts', (req, res) => {
         const id = req.params.id;
 
        const request = dbuser.getUserPosts(id);
@@ -142,12 +166,12 @@ server.get('/users/:id/posts', (req, res) => {
         res.status(404).json({error: "The user with the specified ID does not exist."});
         })
 
-});
+});*/
 
 
 
 
-server.get('/posts/:id', (req, res) => {
+server.get('/api/posts/:id', (req, res) => {
 	
 	const id = req.params.id;
 
@@ -176,7 +200,7 @@ server.get('/posts/:id', (req, res) => {
 });
 
 
-server.get('/posts/:id/tags', (req, res) => {
+server.get('/api/posts/:id/tags', (req, res) => {
         const id = req.params.id;
 
        const request = dbpost.getPostTags(id);
@@ -221,7 +245,7 @@ server.get('/posts/:id/tags', (req, res) => {
 
 
 
-server.post('/posts', (req, res) => {
+server.post('/api/posts', (req, res) => {
 
         const {text, userId} = req.body;
         const post = {text, userId};
@@ -253,17 +277,19 @@ server.post('/posts', (req, res) => {
         }  });
 
 
-server.post('/tags', (req, res) => {
 
-        const {tag} = req.body;
-        const tagContent = {tag};
+server.post('/api/tags', upperCase, (req, res) => {
+
+        let tag = req.body.tag;
+	console.log(req);
+        let tagContent = {tag: req.body.tag};
 
         if (!tag) {
                 res.status(400).json({errorMessage: "Please provide text for the tag."});
         }
 
         else{
-
+	
         const request = dbtag.insert(tagContent);
 
         request.then(response => {
@@ -284,7 +310,7 @@ server.post('/tags', (req, res) => {
 
 
 
-server.post('/users', (req, res) => {
+/*server.post('/users', (req, res) => {
 
         const {name} = req.body;
         const user = {name};
@@ -308,7 +334,7 @@ server.post('/users', (req, res) => {
         res.status(500).json({ message: "There was an error while saving the user to the database" });
         })
 
-        }  });
+        }  });*/
 
 
 
@@ -359,7 +385,7 @@ server.delete('/tags/:id', (req, res) => {
   });
 
 
-server.delete('/users/:id', (req, res) => {
+/*server.delete('/users/:id', (req, res) => {
         const id = req.params.id;
         const request = dbuser.remove(id);
 
@@ -379,7 +405,7 @@ server.delete('/users/:id', (req, res) => {
         res.status(500).json({ error: "The user could not be removed" });
         })
 
-  });
+  });*/
 
 
 
@@ -445,7 +471,7 @@ else{
 });
 
 
-server.put('/users/:id', (req, res) => {
+/*server.put('/users/:id', (req, res) => {
   const {name} = req.body;
 
   const id =  req.params.id;
@@ -474,7 +500,7 @@ else {
         })
 }
 
-});
+});*/
 
 
 
