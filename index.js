@@ -235,6 +235,14 @@ server.put('/api/tags/:id', getTag, async (req, res, next) => {
         next({error: INTERNAL_SERVER_ERROR, internalError: err.message})    }
 })
 
+server.delete('/api/tags/:id', getTag, async (req, res, next) => {
+    try{
+        await tagDb.remove(req.params.id)
+        res.status(SUCCESS).json({"Removed": req.tagIn})
+    }catch(err){
+        next({error: INTERNAL_SERVER_ERROR, internalError: err.message})    }
+})
+
 
 // ******************************  Error Handler ********************************************
 
