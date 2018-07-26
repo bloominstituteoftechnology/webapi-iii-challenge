@@ -39,15 +39,12 @@ router.post('/', async (req, res) => { // POST user
 
 router.put('/:id', async (req, res) => { // PUT user/:id
     if (!req.body || !req.body.name)
-    res.status(400).json({ message: 'Please provide a name for the user.' })
-
-    const id = Number(req.params.id)
+        res.status(400).json({ error: 'Please provide name and bio for the user.'})
     const { name } = req.body
-
     try {
-        const numberOfUpdatedUsers = await userDb.update(id, { name })
-        if (numberOfUpdatedUsers > 0)
-        res.status(200).json({ id, name })
+        const usedID = await userDb.update(req.params.id, { name });
+        if (userID > 0)
+            res.status(200).json({ id, name })
     } catch (error) {
         res.status(500).json({ error: 'Unable to update user.' })
     }

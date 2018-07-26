@@ -40,7 +40,7 @@ router.post('/', async (req, res) => { // POST post
     }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', async (req, res) => { // PUT post
     if (!req.body || !req.body.userId || !req.body.text)
       res.status(400).json({ message: 'Please provide user information!' })
     const {id} = req.params;
@@ -56,7 +56,7 @@ router.put('/:id', async (req, res) => {
       }
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', async (req, res) => { // DELETE post
     const {id} = req.params.id
     try {
       const deletePosts = await postDb.remove(id)
