@@ -73,6 +73,12 @@ server.get('/tags/:id', (req, res) => {
         const id = req.params.id;
 
        const request = dbtag.get(id);
+	
+	if(isNaN(id)){
+	res.status(404).json({ error: "Id should be a number" });	
+	}
+
+	else{
 
         request.then(response => {
         if(response.length==0) res.status(404).json({ error: "The tag with the specified ID does not exist." });
@@ -87,6 +93,7 @@ server.get('/tags/:id', (req, res) => {
         res.status(404).json({error: "The tag with the specified ID does not exist."});
         })
 
+	}
 });
 
 
@@ -94,6 +101,12 @@ server.get('/users/:id', (req, res) => {
         const id = req.params.id;
 
        const request = dbuser.get(id);
+
+	if(isNaN(id)){
+        res.status(404).json({ error: "Id should be a number" });                        
+        }
+
+        else{
 
         request.then(response => {
         if(response.length==0) res.status(404).json({ error: "The user with the specified ID does not exist." });
@@ -108,6 +121,7 @@ server.get('/users/:id', (req, res) => {
         res.status(404).json({error: "The user with the specified ID does not exist."});
         })
 
+	}
 });
 
 server.get('/users/:id/posts', (req, res) => {
@@ -137,6 +151,12 @@ server.get('/posts/:id', (req, res) => {
 	
 	const id = req.params.id;
 
+	if(isNaN(id)){
+        res.status(404).json({ error: "Id should be a number" });                        
+        }
+
+        else{
+
        const request = dbpost.get(id);
 
         request.then(response => {
@@ -152,6 +172,7 @@ server.get('/posts/:id', (req, res) => {
         res.status(404).json({error: "The user with the specified ID does not exist."});
         })
 
+	}
 });
 
 
