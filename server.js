@@ -261,6 +261,38 @@ server.post('/posts/:id', async (req, res) => {
   }
 });
 
+// edit a post
+server.put('/posts/:id', async (req, res) => {
+  const TEXT = req.body.text;
+  const ID = req.params.id;
+
+  if (!TEXT) {
+    res.status(400).json({
+      error: 'Please provide the updated text for the post.',
+    });
+    return;
+  }
+
+  const POST = { text: TEXT };
+
+  // ensure post with that ID exists
+  try {
+    await postDB.get(ID);
+    try {
+      const response = await postDB.update(ID, POST);
+      res.status(200).json({ message: `Post id:${ID} has been updated` });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ error: `Post id:${ID} could not be updated.` });
+    }
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ error: `Post id:${ID} could not be retrieved.` });
+  }
+});
+
 // delete a post
 server.delete('/posts/:id', async (req, res) => {
   const ID = req.params.id;
