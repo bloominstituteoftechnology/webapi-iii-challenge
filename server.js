@@ -30,6 +30,18 @@ server.get('/api/users', (req, res) => {
 		});
 })
 
+server.get('/api/users/:id', (req, res) => {
+    const { id } = req.params
+    userDb.get(id)
+        .then( user => {
+            user ? res.status(200).json(user) : res.status(404).json({ userError: `There is no user with id ${id}`});
+        })
+        .catch( error => {
+            res.status(500).json({ error: `Error in retrieving user with this id ${id}`})
+        })
+})
+
+
 
 // add your server code starting here
 server.listen(port, () => console.log(`API listening on port ${port}`));
