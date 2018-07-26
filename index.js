@@ -160,5 +160,32 @@ server.get('/tags', async (req, res) => {
     }
 });
 
+server.get('/tags/:id', async (req, res) => {
+    const id = req.params.id;
+    try {
+        const tag = await tagDb.get(id)
+        res.status(200).json(tag);
+    }
+    catch (err) {
+        res.status(500).json({ error: 'Tag could not be retrieved.' })
+    }
+});
+
+server.post('/tag/', async (req, res) => {
+    let tag = req.body;
+    if (!('tag') in tag) {
+        res.status(400).send({ errorMessage: "Please provide a tag." });
+    }
+
+    try {
+        const newTag = await tagDb.insert(tag);
+        res.status(200).json(newTag);
+    }
+    catch (err) {
+        res.status(500).json({ error: 'Tag could not be created.' })
+    }
+});
+
+
 
 server.listen(8000, () => console.log('API running on port 8000'));
