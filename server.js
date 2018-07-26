@@ -423,4 +423,31 @@ server.put('/tags/:tagId', (req, res) => {
   }
 })
 
+// ALL DELETES
+
+server.delete('/users/:userId', (req, res) => {
+  const id = req.params.userId;
+  userDb
+    .remove(id)
+    .then(response => {
+      if(!response) {
+        res
+          .status(404)
+          .json({ error: `The specified ID could not be found.` })
+          .end()
+      } else {
+        res
+          .status(200)
+          .json({ success: true })
+          .end()
+      }
+    })
+    .catch(() => {
+      res
+        .status(500)
+        .json({ error: `The user could not be deleted.` })
+        .end()
+    })
+})
+
 server.listen(8000, () => console.log(`... API is running on port 8000 ...`));
