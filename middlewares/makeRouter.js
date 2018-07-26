@@ -28,7 +28,7 @@ function onlyNonEmptyStrings(item) {
 }
 
 
-// Creates an express.Router to handle database calls 
+// Creates an express.Router to handle database calls
 // INPUT
 // type: string, refers to the type of data (post, tag, user), used for generating error messages
 // shape: string, describes the properties on the type, used for generating error messages
@@ -51,8 +51,8 @@ const makeRouter = (type, shape, db, passedMiddlewares = []) => {
         const { code, message } = runningError || getErrorLocal('data', 'getById');
         res.status(code).json(message);
       } else {
-        res.status(200)
-        req.locals = {payload: dbResponse};
+        res.status(200);
+        req.local = { payload: dbResponse };
         next();
       }
     } catch (err) {
@@ -61,7 +61,7 @@ const makeRouter = (type, shape, db, passedMiddlewares = []) => {
     }
   });
 
-  router.get('/', async (req, res) => {
+  router.get('/', async (req, res, next) => {
     let runningError;
 
     try {
@@ -73,7 +73,9 @@ const makeRouter = (type, shape, db, passedMiddlewares = []) => {
         res.status(code).json(message);
       } else {
         // send data back
-        res.status(200).json(dbResponse);
+        res.status(200);
+        req.local = { payload: dbResponse };
+        next();
       }
     } catch (err) {
       const { code, message } = runningError || getErrorLocal('database', 'get');
@@ -81,7 +83,7 @@ const makeRouter = (type, shape, db, passedMiddlewares = []) => {
     }
   });
 
-  router.post('/', async (req, res) => {
+  router.post('/', async (req, res, next) => {
     let runningError;
     const { body: payload } = req;
 
@@ -100,14 +102,16 @@ const makeRouter = (type, shape, db, passedMiddlewares = []) => {
 
       // Request object from server, receiving assigned id as promise
       const dbGetResponse = await db.get(dbPostResponse.id);
-      res.status(201).json(dbGetResponse);
+      res.status(201);
+      req.local = { payload: dbGetResponse };
+      next();
     } catch (err) {
       const { code, message } = runningError || getErrorLocal('database', 'post');
       res.status(code).json(message);
     }
   });
 
-  router.put('/:id', async (req, res) => {
+  router.put('/:id', async (req, res, next) => {
     let runningError;
     const {
       params: { id },
@@ -129,7 +133,10 @@ const makeRouter = (type, shape, db, passedMiddlewares = []) => {
 
       // Request object from server, receiving assigned id as promise
       const dbResponsePost = await db.get(id);
-      res.status(200).json(dbResponsePost);
+      res.status(201);
+      req.local = { payload: dbResponsePost };
+      next();
+
     } catch (err) {
       const { code, message } = runningError || getErrorLocal('database', 'put');
       res.status(code).json(message);
@@ -154,7 +161,11 @@ const makeRouter = (type, shape, db, passedMiddlewares = []) => {
     }
   });
 
-  router.use([...passedMiddlewares, (req, res) => res.json(req.locals.payload)]);
+  router.use([...passedMiddlewares, (req, res) => {
+    return res.json(req.local.payload);
+  }
+  ]);
+
 
   return router;
 };

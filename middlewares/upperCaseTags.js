@@ -1,7 +1,7 @@
 
 
 function tagsToUpper(item) {
-  if (typeof item === 'array') {
+  if (Array.isArray(item)) {
     return item.map(subitem => ({ ...subitem, tag: subitem.tag.toUpperCase() }));
   }
   if (typeof item === 'object') {
@@ -12,9 +12,10 @@ function tagsToUpper(item) {
 
 
 function handleTags(req, res, next) {
-  if (req.locals.payload !== undefined) {
-    req.locals.payload = tagsToUpper(req.locals.payload);
+  if (req.local.payload !== undefined) {
+    req.local.payload = tagsToUpper(req.local.payload);
   }
+  next();
 }
 
 module.exports = handleTags;
