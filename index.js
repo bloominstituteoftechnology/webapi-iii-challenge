@@ -225,11 +225,23 @@ server.put('/tags/:id', async (req, res) => {
 server.get('/posts/:id/tags', async (req, res) => {
     let id = req.params.id;
     try {
-        const tag = await postDb.getPostTags(id)
-        res.status(200).json(tag);
+        const tags = await postDb.getPostTags(id)
+        res.status(200).json(tags);
     }
     catch (err) {
         res.status(500).json({ error: `Post's tags could not be retrieved.` })
+    }
+    
+})
+
+server.get('/users/:id/posts', async (req, res) => {
+    let id = req.params.id;
+    try {
+        const posts = await userDb.getUserPosts(id)
+        res.status(200).json(posts);
+    }
+    catch (err) {
+        res.status(500).json({ error: `User's posts could not be retrieved.` })
     }
     
 })
