@@ -137,4 +137,28 @@ server.post("/api/posts", (req, res) => {
     });
 });
 
+//tagDb
+server.get("/api/tags", (req, res) => {
+  tagDb
+    .get()
+    .then(response => {
+      res.json({ response });
+    })
+    .catch(error => {
+      return error;
+    });
+});
+
+server.get("/api/tags/:id", (req, res) => {
+  const { id } = req.params;
+  tagDb
+    .get(id)
+    .then(response => {
+      res.json(response);
+    })
+    .catch(error => {
+      return error;
+    });
+});
+
 server.listen(8000, () => console.log("\n=== API running... ===\n"));
