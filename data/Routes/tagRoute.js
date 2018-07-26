@@ -4,6 +4,20 @@ const tagging = express.Router();
 
 const tagDb = require('../helpers/tagDb');
 
+tagging.use(uppercaseTag);
+
+
+function uppercaseTag(req, res, next) {
+    if (req.method === "GET" && req.url === '/') {
+        let tags = res.json;
+        res.json = function (data) {
+            data.forEach(response => response.tag = response.tag.toUpperCase());
+            tags.apply(res, arguments);
+        }
+    }
+    next();
+}
+
 
 
 
