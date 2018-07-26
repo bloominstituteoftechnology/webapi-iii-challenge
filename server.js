@@ -11,6 +11,13 @@ server.use(express.json());
 server.use(morgan('dev'));
 server.use(helmet());
 
+//Middleware to make new tags start with uppercase letter
+function uppercase(req, res, next) {
+  const { tag } = req.body;
+  req.body.tag = tag.charAt(0).toUpperCase() + tag.substr(1);
+  next();
+}
+
 //View Users
 server.get('/users', (req, res) => {
   userDb
@@ -149,7 +156,7 @@ server.post('/posts', (req, res) => {
 })
 
 //Add New Tag
-server.post('/tags', (req, res) => {
+server.post('/tags', uppercase, (req, res) => {
   const { tag } = req.body;
   if (!tag) {
     res.status(400).json({ errorMessage: "Please provide a tag." })
