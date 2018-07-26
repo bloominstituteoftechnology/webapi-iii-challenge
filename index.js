@@ -18,8 +18,10 @@ const INVALID_POST_ID = "INVALID_POST_ID"
 const MISSING_TEXT_OR_ID = "MISSING_TEXT_OR_ID"
 const INVALID_USER_ID = "INVALID_USER_ID"
 
+// ******************************  MiddleWare ********************************************
 
-// local middleware checks for specific post by ID and adds to req.body
+// local middleware checks for specific post by ID and adds to req.postIn
+// Use to confirm we have a valid post
 const getPost = async (req, res, next) => {
     let { id } = req.params
     let error = INVALID_POST_ID
@@ -34,6 +36,24 @@ const getPost = async (req, res, next) => {
     }catch(err){
         next({error: error, internalError: err.message})
     }
+}
+// Checks for user by ID and adds to req.userIn
+// Use to confirm valid user
+const getUser = async (req, res, next) => {
+    const { userId } = req.body
+    const { id } = req.params
+    let error = INVALID_USER_ID
+
+    try{
+        const userIn = await user.get(userId || id)
+        if(!userIn){ throw Error() }
+        error = INTERNAL_SERVER_ERROR
+
+        req.userIn = userIn
+
+        next();
+    }catch(err){
+        next({error: error, internalError: err.message})    }
 }
 
 // ******************************  Posts ********************************************
@@ -50,26 +70,24 @@ server.get('/posts', async (req, res, next) => {
 })
 
 server.get('/posts/:id', getPost, (req,res, next) => {
+    error = INTERNAL_SERVER_ERROR
+
     try{
-        error = INTERNAL_SERVER_ERROR
         res.status(SUCCESS).json(req.postIn)
     }catch(err){
         next({error: error, internalError: err.message})
     }
 })
 
-server.post('/posts', async (req, res, next) => {
+server.post('/posts', getUser, async (req, res, next) => {
+    // getUser has already validated we have a valid user
     const { text, userId } = req.body
     let error = MISSING_TEXT_OR_ID
 
     try{
         if(!text || !userId){ throw Error() }   // throw if missing information
-        error = INVALID_USER_ID               // update error 
 
-        let userIn = await user.get(userId)     // Check that ID is valid
-        if(!userIn){ throw Error() }            // update error
-
-        const postOut = {...req.body}
+        const postOut = {"text": text, "userId": userId}
         error = INTERNAL_SERVER_ERROR           
 
         const response = await post.insert(postOut)
@@ -78,37 +96,22 @@ server.post('/posts', async (req, res, next) => {
         next({error: error, internalError: err.message})    }
 })
 
-server.put('/posts/:id', async (req, res, next) => {
-    const updated = {...req.body}
-    const { id } = req.params
-    let error = INVALID_POST_ID           // set initial error code 
-
+server.put('/posts/:id', getPost, async (req, res, next) => {
     try{
-        let postIn = await post.get(id)
-        if(!postIn){ throw Error() }        // throw if invalid user ID
-        error = INTERNAL_SERVER_ERROR     // update error
-
+        const updated = {...req.body}    
         await post.update(id, updated); 
         res.status(SUCCESS).json(updated)
     }catch(err) {
-        next({error: error, internalError: err.message})    }
+        next({error: INTERNAL_SERVER_ERROR, internalError: err.message})    }
 })
 
-server.delete('/posts/:id', async (req, res, next) => {
-    const { id } = req.params
-    let error = INVALID_POST_ID
-
+server.delete('/posts/:id', getPost, async (req, res, next) => {
     try{
-        const postIn = await post.get(id)
-        console.log(postIn)
-        if(!postIn){ throw Error() }
-
-        error = INTERNAL_SERVER_ERROR
         await post.remove(id)
         res.status(SUCCESS).json({"Removed": postIn})
         
     }catch(err){
-        next({error: error, internalError: err.message})    }
+        next({error: INTERNAL_SERVER_ERROR, internalError: err.message})    }
 })
 
 
@@ -125,17 +128,12 @@ server.get('/users', async (req, res, next) => {
         next({error: error, internalError: err.message})    }
 })
 
-server.get('/users/:id', async (req, res, next) => {
-    const { id } = req.params
-    let error = INVALID_USER_ID
+server.get('/users/:id', getUser, async (req, res, next) => {
+    // getUser validates and assigns user to req.userIn
+    let error = INTERNAL_SERVER_ERROR
 
     try{
-        const userIn = await user.get(id)
-        if(!userIn){ throw Error() }
-        error = INTERNAL_SERVER_ERROR
-
-        res.status(SUCCESS).json(userIn)
-
+        res.status(SUCCESS).json(req.userIn)
     }catch(err){
         next({error: error, internalError: err.message})    }
 })
