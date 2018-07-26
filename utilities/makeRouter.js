@@ -35,13 +35,13 @@ function onlyNonEmptyStrings(item) {
 // db: knex QueryBuilder object, imported by server. Contains methods used to generate database queries
 // OUTPUT
 // return an express.Router object with routes set for various API calls
-const makeRouter = (type, shape, db) => {
+const makeRouter = (type, shape, db, passedMiddlewares = []) => {
   const router = express.Router();
   router.use(express.json());
   // Binds the getError import with the type and shape parameters from makeRouter
   const getErrorLocal = (errType, reqType, id) => getError(errType, reqType, type, shape, id);
 
-  router.get('/:id', async (req, res) => {
+  router.get('/:id', async (req, res, next) => {
     let runningError;
 
     const { id } = req.params;
@@ -51,7 +51,9 @@ const makeRouter = (type, shape, db) => {
         const { code, message } = runningError || getErrorLocal('data', 'getById');
         res.status(code).json(message);
       } else {
-        res.status(200).json(dbResponse);
+        res.status(200)
+        req.locals = {payload: dbResponse};
+        next();
       }
     } catch (err) {
       const { code, message } = runningError || getErrorLocal('database', 'getById');
@@ -151,6 +153,8 @@ const makeRouter = (type, shape, db) => {
       res.status(code).json(message);
     }
   });
+
+  router.use([...passedMiddlewares, (req, res) => res.json(req.locals.payload)]);
 
   return router;
 };
