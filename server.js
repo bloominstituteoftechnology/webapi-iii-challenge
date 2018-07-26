@@ -12,6 +12,13 @@ server.use(cors());
 server.use(helmet());
 server.use(morgan('dev'));
 
+const toUpperCase = (req, res, next) => {
+  if (req.body.tag) {
+    req.body.tag = req.body.tag.toUpperCase();
+  }
+  next();
+}
+
 // ============ Users ============
 
 server.get('/api/users', async (req, res) => {
@@ -212,7 +219,7 @@ server.get('/api/tags/:id', async (req, res) => {
   }
 });
 
-server.post('/api/tags', async (req, res) => {
+server.post('/api/tags', toUpperCase, async (req, res) => {
   if (!req.body.tag) {
     res.status(400).json({ message: "Please enter a tag." });
   }
@@ -233,7 +240,7 @@ server.post('/api/tags', async (req, res) => {
   }
 });
 
-server.put('/api/tags/:id', async (req, res) => {
+server.put('/api/tags/:id', toUpperCase, async (req, res) => {
   if (!req.body.tag) {
     res.status(400).json({ message: "Please enter a tag." });
   }
