@@ -130,13 +130,13 @@ server.get('/api_v1/tags/:id', (req, res) => {
 
 
 
-server.get('/api_v1/post/:id', (req, res) => {
+server.get('/api_v1/post_tags/:id', (req, res) => {
         const id = req.params.id;
 
        const request = dbpost.getPostTags(id);
 
         request.then(response => {
-        if(response.length==0) res.status(404).json({ error: "The post with the specified ID does not exist or there are no tags on this post id." });
+        if(response.length==0) res.status(404).json({ error: "no tag associated with this post id" });
          else {
                 // response.id = id;
                  res.status(200).json(response);
@@ -145,18 +145,18 @@ server.get('/api_v1/post/:id', (req, res) => {
         })
 
         .catch(err => {
-        res.status(404).json({error: "The post with the specified ID does not exist."});
+        res.status(404).json({error: "no tags associated with this post id"});
         })
 
 });
 
-server.get('/api_v1/user/:id', (req, res) => {
+server.get('/api_v1/user_posts/:id', (req, res) => {
         const id = req.params.id;
 
        const request = dbuser.getUserPosts(id);
 
         request.then(response => {
-        if(response.length==0) res.status(404).json({ error: "The user with the specified ID does not exist." });
+        if(response.length==0) res.status(404).json({ error: "no post associated with this user id" });
          else {
                 // response.id = id;
                  res.status(200).json(response);
@@ -165,7 +165,7 @@ server.get('/api_v1/user/:id', (req, res) => {
         })
 
         .catch(err => {
-        res.status(404).json({error: "The user with the specified ID does not exist."});
+        res.status(404).json({error: "no post associated with this user id"});
         })
 
 });
@@ -173,4 +173,4 @@ server.get('/api_v1/user/:id', (req, res) => {
 
 
 // add your server code starting here
-server.listen(port, () => console.log(`API listening on port ${port}`));
+server.listen(port, () => console.log(`API listening on port ${port} ==> remember: error messages and comments are very important`));
