@@ -102,7 +102,7 @@ server.get("/api/tag/:id", async (req, res) => {
 server.post("/api/tag", async (req, res) => {
   try {
     const post = req.body;
-    const response = tagDb.insert(post);
+    const response = await tagDb.insert(post);
     res.status(200).send(response);
   } catch (error) {
     res
@@ -115,7 +115,7 @@ server.put("/api/tag/:id", async (req, res) => {
   try {
     const post = req.body;
     const id = req.params.id;
-    const response = tagDb.update(post, id);
+    const response = await tagDb.update(post, id);
     res.status(200).send(response);
   } catch (error) {
     res
@@ -127,7 +127,7 @@ server.put("/api/tag/:id", async (req, res) => {
 server.delete("/api/tag/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    const response = tagDb.remove(id);
+    const response = await tagDb.remove(id);
     res.status(200).send(response);
   } catch (error) {
     res
@@ -140,7 +140,7 @@ server.delete("/api/tag/:id", async (req, res) => {
 server.get("/api/user/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    const response = userDb.get(id);
+    const response = await userDb.get(id);
     res.status(200).send(response);
   } catch (error) {
     res
@@ -152,7 +152,7 @@ server.get("/api/user/:id", async (req, res) => {
 server.get("/api/user/:id/posts", async (req, res) => {
   try {
     const id = req.params.id;
-    const response = userDb.getUserPosts(id);
+    const response = await userDb.getUserPosts(id);
     res.status(200).send(response);
   } catch (error) {
     res
@@ -165,7 +165,7 @@ server.post("/api/user/:id", async (req, res) => {
   try {
     const id = req.params.id;
     const user = res.body;
-    const response = userDb.insert(id, user);
+    const response = await userDb.insert(id, user);
     res.status(200).send(response);
   } catch (error) {
     res
