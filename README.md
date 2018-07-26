@@ -1,6 +1,6 @@
 # Building an API using a Node.js and Express
 
-## Topics
+# Topics
 
 * Building RESTful APIs.
 * Performing CRUD Operations on Multiple Resources.
@@ -14,7 +14,7 @@ Use Node.js and Express to design and build an API that performs CRUD operations
 
 ### Download Project Files and Install Dependencies
 
-* **Fork** and **Clone** this repository.
+<!-- * **Fork** and **Clone** this repository.
 * **CD into the folder** where you cloned the repository.
 * Do your magic!
 
@@ -24,7 +24,7 @@ Use Node.js and Express to design and build an API that performs CRUD operations
 * use _yarn_ or _npm_ to add **knex** and **sqlite3** as dependencies to the project. **This is required for database access**.
 * Configure an _npm script_ named _"start"_ that will execute your code using _nodemon_ so that the server restarts on changes. Make _nodemon_ be a development time dependency only, it shouldn't be deployed to production.
 * Design and build a set of endpoints that satisfy the API requirements.
-* **Use _Postman_ to test the API as you work through the exercises.**
+* **Use _Postman_ to test the API as you work through the exercises.** -->
 
 ### Database Persistence Helpers
 

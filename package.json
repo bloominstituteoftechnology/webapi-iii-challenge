@@ -1,0 +1,27 @@
+{
+  "name": "node-blog",
+  "version": "1.0.0",
+  "main": "server.js",
+  "repository": "git+https://github.com/JJAshcraft/Node-Blog.git",
+  "author": "JJ Ashcraft <jj@jjashcraft.com>",
+  "license": "MIT",
+  "private": false,
+  "description": "example blog application",
+  "bugs": {
+    "url": "https://github.com/JJAshcraft/Node-Blog/issues"
+  },
+  "homepage": "https://github.com/JJAshcraft/Node-Blog#readme",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "devDependencies": {
+    "morgan": "^1.9.0",
+    "nodemon": "^1.18.3"
+  },
+  "dependencies": {
+    "express": "^4.16.3",
+    "knex": "^0.15.2",
+    "sqlite3": "^4.0.2"
+  }
+}
