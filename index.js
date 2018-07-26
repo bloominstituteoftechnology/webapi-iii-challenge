@@ -4,7 +4,7 @@ const bodyParser = require('body-parser')
 
 const postDb = require("./data/helpers/postDb.js");
 const tagDb = require("./data/helpers/tagDb.js");
-const UserDb = require("./data/helpers/userDb.js");
+const userDb = require("./data/helpers/userDb.js");
 
 
 server.use(express.json());
@@ -33,7 +33,6 @@ server.get("/api/posts/:id", (req, res) => {
 });
 server.post("/api/posts/", (req, res) => {
   const { text, userId } = req.body;
-  console.log(req.body)
   if(text == "" || userId == "") {
       return res.status(400).send({Message: "Must provide a user ID and  text content"});
   }
@@ -48,18 +47,18 @@ server.post("/api/posts/", (req, res) => {
 });
 //users
 server.get("/api/users/", (req, res) => {
-  UserDb
+  userDb
     .get()
     .then(users => {
       res.json(users)
     })
     .catch(error => {
       return res.status(500).send({Message: "Server Error"});
-    })
+    });
 })
 server.get("/api/users/:id", (req, res) => {
   const { id } = req.params;
-  UserDb
+  userDb
     .get(id)
     .then(users => {
       if (users == undefined){
@@ -70,7 +69,21 @@ server.get("/api/users/:id", (req, res) => {
     .catch(error => {
       return res.status(500).send({Message: "Server Error"});
     })
-})
+});
+server.post("/api/users/", (req, res) => {
+  const { name } = req.body;
+if(name == "") {
+    return res.status(400).send({Message: "Must provide a username"});
+}
+userDb
+    .insert({name})
+    .then(response => {
+        res.status(201).json(response);
+    })
+    .catch(error => {
+        return res.status(500).send({Message: "Server Error"});
+    });
+});
 //tags
 server.get("/api/tags/", (req, res) => {
   tagDb
