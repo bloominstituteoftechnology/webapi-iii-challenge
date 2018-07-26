@@ -42,7 +42,85 @@ server.get('/api_v1/posts', (req, res) => {
         })
 
         .catch(err => {
-        res.status(404).json({error: "The posts information could not be retrieved."});
+        res.status(404).json({error: "Unable to retrieve posts from the database...  try again."});
+        })
+
+});
+
+//tags Endpoints
+server.get('/api_v1/tags', (req, res) => {
+        const request = dbtag.get();
+
+        request.then(response => {
+        res.status(200).json(response);
+        })
+
+        .catch(err => {
+        res.status(404).json({error: "Unable to retrieve tags from the database...  try again."});
+        })
+
+});
+
+//user by id Endpoints
+server.get('/api_v1/users/:id', (req, res) => {
+        const id = req.params.id;
+
+       const request = dbuser.get(id);
+
+        request.then(response => {
+        if(response.length==0) res.status(404).json({ error: "Unable to retrieve user with specified id" });
+         else {
+                 response.id = id;
+                 res.status(200).json(response);
+         }
+
+        })
+
+        .catch(err => {
+        res.status(404).json({error: "Unable to retrieve user with specified id"});
+        })
+
+});
+
+//posts by id Endpoints
+server.get('/api_v1/posts/:id', (req, res) => {
+	
+	const id = req.params.id;
+
+       const request = dbpost.get(id);
+
+        request.then(response => {
+        if(response.length==0) res.status(404).json({ error: "Unable to retrieve post with specified id" });
+         else {
+		 response.id = id;
+	 res.status(200).json(response);
+	 }
+
+        })
+
+        .catch(err => {
+        res.status(404).json({error: "Unable to retrieve post with specified id"});
+        })
+
+});
+
+//tag by id Endpoints
+server.get('/api_v1/tags/:id', (req, res) => {
+        const id = req.params.id;
+
+       const request = dbtag.get(id);
+
+        request.then(response => {
+        if(response.length==0) res.status(404).json({ error: "Unable to retrieve tag with specified id" });
+         else {
+                 response.id = id;
+                 res.status(200).json(response);
+         }
+
+        })
+
+        .catch(err => {
+        res.status(404).json({error: "Unable to retrieve tag with specified id"});
         })
 
 });
