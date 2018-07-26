@@ -1,6 +1,7 @@
 const postDb = require('./data/helpers/postDb.js');
 const tagDb = require('./data/helpers/tagDb.js');
-const userDb = require('./data/helpers/userDb.js');
+// const userDb = require('./data/helpers/userDb.js');
+const userRoutes = require('./ServerRoutes/userRoutes');
 const express = require('express');
 
 //start server
@@ -34,31 +35,7 @@ function uppercaseTag(req, res, next) {
     next();
 }
 
-//endpoint for GET users
-server.get('/users', async (req, res) => {
-    try {
-        const response = await userDb.get();
-        res.status(200).json(response);
-    } catch (error) {
-        res.status(500).send({ error: 'Users information could not be retrieved.' })
-    }
-})
-
-//endpoint for GET user with id
-server.get('/users/:id', async (req, res) => {
-    try {
-        const id = req.params.id;
-        const response = await userDb.get(id);
-
-        if (!response) {
-            return res.status(404).send({ message: "The user with the specified ID does not exist." })
-        }
-
-        res.status(200).json(response);
-    } catch (error) {
-        res.status(500).send({ error: 'Users information could not be retrieved.' })
-    }
-})
+server.use('/users', userRoutes);
 
 //endpoint for GET posts
 server.get('/posts', async (req, res) => {
@@ -109,17 +86,6 @@ server.get('/tags/:id', async (req, res) => {
     }
 })
 
-//endpoint for GET userposts
-server.get('/users/:id/posts', async (req, res) => {
-    const id = req.params.id;
-
-    try {
-        const response = await userDb.getUserPosts(id);
-        res.status(200).json(response);
-    } catch (error) {
-        res.status(500).send({ message: 'Users information could not be retrieved.', error: error.message })
-    }
-})
 
 //endpoint for GET postTags
 server.get('/posts/:id/tags', async (req, res) => {
@@ -178,23 +144,6 @@ server.post('/tags', async (req, res) => {
     }
 })
 
-//endpoint for DELETE user
-server.delete('/users/:id', async (req, res) => {
-    const id = req.params.id;
-
-    try {
-        const user = await userDb.get(id);
-        if (!user) {
-            return res.status(404).send({ message: "The user with the specified ID does not exist." })
-        }
-
-        await userDb.remove(id);
-        res.status(200).json(user);
-    } catch (errore) {
-        res.status(500).send({ message: "The user could not be removed.", error: error.message })
-    }
-})
-
 //endpoint for DELETE post
 server.delete('/posts/:id', async (req, res) => {
     const id = req.params.id;
@@ -222,27 +171,6 @@ server.delete('/users/:id', async (req, res) => {
         res.status(200).json(tag);
     } catch (errore) {
         res.status(500).send({ message: "The tag could not be removed.", error: error.message })
-    }
-})
-
-//endpoint for PUT user
-server.put('/users/:id', async (req, res) => {
-    if (!req.body.name) {
-        return res.status(400).send({ message: 'Please provide name of user.' })
-    }
-
-    const id = req.params.id;
-    const user = req.body;
-    try {
-        const response = await userDb.update(id, user);
-        if (response===0) {
-            res.status(404).send({ message: "The user with the specified ID does not exist." });
-        } else {
-            const newUser = await userDb.get(id);
-            res.status(200).json(newUser);
-        }
-    } catch (error) {
-        res.status(500).send({ message: "This user could not be modified.", error: error.message })
     }
 })
 
@@ -287,6 +215,10 @@ server.put('/tags/:id', async (req, res) => {
     } catch (error) {
         res.status(500).send({ message: "This tag could not be modified.", error: error.message })
     }
+})
+
+server.use((err, req, res, next) => {
+    res.send(err);
 })
 
 
