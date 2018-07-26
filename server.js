@@ -50,11 +50,11 @@ server.get('/api/users/:id', async (req, res) => {
 
 server.post('/api/users/', async (req, res) => {
   const { name } = req.body;
+  if (name.length > 128) return sendUserError(400, `Bad Request: Your string is ${name.length} characters, it should be less than 128`, res);
   try {
     const userId = await userDb.insert({name}); //This really creates the user but since it returns an ID I label it as such and pass it into a getByID function
     try {
       const user = await userDb.get(userId.id);
-      console.log(user);
       res.status(201).json(user);
     } catch(err) {
       console.log("console err", err)
@@ -83,7 +83,7 @@ server.delete('/api/users/:id', async (req, res) => {
 server.put('/api/users/:id', async (req, res) => {
   const { name } = req.body;
   if (!name) return sendUserError(400, "Bad Request: Please provide a valid name");
-
+  else if (name.length > 128) return sendUserError(400, `Bad Request: Your string is ${name.length} characters, it should be less than 128`, res);
   try {
     const userID = await userDb.update(req.params.id, {name});
     try {
@@ -217,6 +217,7 @@ server.get('/api/tags/:id', async (req, res) => {
 server.post('/api/tags/', upperCaser, async (req, res) => {
   const { tag } = req.body;
   if (!tag) return sendUserError(400, `Bad Request: Please provide text for your tag`);
+  else if (tag.length > 80) return sendUserError(400, `Bad Request: Your string is ${tag.length} characters, it should be less than 80`, res);
   try {
     const tags = await tagDb.get(); //Return tags array to check for uniqueness if next steps...
 
@@ -254,6 +255,7 @@ server.delete('/api/tags/:id', async (req, res) => {
 
 server.put('/api/tags/:id', upperCaser, async (req, res) => {
   const { tag } = req.body;
+  if (tag.length > 80) return sendUserError(400, `Bad Request: Your string is ${tag.length} characters, it should be less than 80`, res);
   try {
     const result = await tagDb.update(req.params.id, {tag});
     if (result === 0) return sendUserError(404, `Not Found: Could not find tag with ID ${req.params.id}`, res);
