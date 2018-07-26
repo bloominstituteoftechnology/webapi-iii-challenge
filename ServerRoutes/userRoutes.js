@@ -41,6 +41,21 @@ router.get('/:id/posts', async (req, res, next) => {
     }
 })
 
+//endpoint for POST user
+router.post('/', async (req, res, next) => {
+    if (!req.body.name) {
+        return next({ message: 'Please provide name of user.' })
+    }
+
+    try {
+        const response = await userDb.insert(req.body);
+        const newUser = await userDb.get(response.id);
+        res.status(200).json(newUser);
+    } catch (error) {
+        next({ success: false, code: 500, message: "There was an error while saving user to the database", error: error.message})
+    }
+})
+
 //endpoint for DELETE user
 router.delete('/:id', async (req, res, next) => {
     const id = req.params.id;
