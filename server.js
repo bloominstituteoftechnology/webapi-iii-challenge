@@ -55,6 +55,19 @@ function logger (req, res, next) {
 
 server.use(logger);
 
+function upperCaseTag(req, res, next) {
+    if (req.method === "GET" && req.url === "/tags") {
+      let tags = res.json;
+      res.json = function(data) {
+        data.forEach(response => (response.tag = response.tag.toUpperCase()));
+        tags.apply(res, arguments);
+      };
+    }
+    next();
+}
+
+server.use(upperCaseTag);
+
 // GET | Returns the stored users / posts / tags
 
 server.get('/', (req, res) => {
@@ -100,13 +113,13 @@ server.get('/users/:id', (req, res) => {
     const id = req.params.id;
 
     // console.log(id);
-    userDb.get()
+    userDb.get(id)
     .then(response => {
         if(response.length === 0) {
             res.status(404).json({ error: "User not found." });
             return;
         }
-        res.status(200).json(response[id-1])
+        res.status(200).json(response)
         //adjusting for 0th index — the same happens in the next gets
     })
     .catch(() => {
@@ -118,17 +131,14 @@ server.get('/users/:id', (req, res) => {
 server.get('/posts/:id', (req, res) => {
     const id = req.params.id;
 
-    postDb.get()
+    postDb.get(id)
     .then(response => {
-        if(response.length === 0) {
-            res.status(404).json({ error: "Post not found." });
-            return;
-        }
-        res.status(200).json(response[id-1])
+        res.status(200).json({id, response})
     })
-    .catch(() => {
-        res
-        .status(500).json({ error: `Couldn't get post.`})
+    .catch( err => {
+        console.log(err);
+        res.status(404).json({ error: "Post not found." });
+        // res.status(500).json({err, error: `Couldn't get post.`})
     })
 })
 
@@ -194,11 +204,13 @@ server.get('/posts/:id/tags', (req, res) => {
     })
 })
 
+// POST | New User
+
 server.post('/users', (req, res) => {
     const { name } = req.body;
 
     if (!name || name === '') {
-        console.log("Error Code: ", 400, "Bad Response");
+        console.log("Error Code: ", 400, "Bad Response 1");
         res.status(400).json({ errorMessage: "Please provide a name for the user." });
         return;
     }
@@ -212,6 +224,87 @@ server.post('/users', (req, res) => {
         res.status(500).json({err, message: "Couldn't create new user (might be due to duplicate name constraint)."});
     })
 })
+
+// POST | New Post
+
+server.post('/posts', (req, res) => {
+    const { text, userId } = req.body;
+
+    if (!text || text === '') {
+        console.log("Error Code: ", 400, "Bad Response 2");
+        res.status(400).json({ errorMessage: "Please write content for the post." });
+        return;
+    } else if (!userId) {
+        console.log("Error Code: ", 400, "Bad Response 3");
+        res.status(400).json({ errorMessage: "No userId was provided for the post." })
+        return;
+    }
+    postDb
+    .insert(req.body)
+    .then(response => {
+        console.log(response);
+        res.status(201).json({response, text, userId, message: "Successfully created new post."});
+    })
+    .catch(err => {
+        res.status(500).json({err, message: "Couldn't create new user (might be due to duplicate name constraint)."});
+    })
+})
+
+// DELETE | Delete User
+
+server.delete('/users/:id', (req,res) => {
+    const id = req.params.id;
+
+    if( !id ) {
+        return res.status(404).json({ message: "Couldn't delete user. The user with this specified ID does not exist."})
+    }
+
+    userDb
+    .remove(id)
+    .then(response => {
+        res.status(200).json({response, message: `User #${id} has been deleted.`});
+    })
+    .catch(err => {
+        res.status(500).json({id, errorMessage: "The user could not be deleted."});
+    })   
+})
+
+// DELETE | Delete Post
+
+server.delete('/posts/:id', (req,res) => {
+    const id = req.params.id;
+
+    console.log(id);
+    if( !id ) {
+        return res.status(404).json({ message: "Couldn't delete post. The post with this specified ID does not exist."})
+    }
+
+    postDb
+    .remove(id)
+    .then(response => {
+        res.status(200).json({response, message: `Post #${id} has been deleted.`});
+    })
+    .catch(err => {
+        res.status(500).json({id, errorMessage: "The post could not be deleted."});
+    })   
+})
+
+// PUT | Update User
+
+server.put('/users/:id', (req,res) => {
+    const id = req.params.id;
+    const user = req.body
+
+    userDb
+    .update(id, user)
+    .then(response => {
+        res.status(200).json({ id, user, message: `User #${id} has been updated.` });
+    })
+    .catch(err => {
+        res.status(500).json({errorMessage: "The user could not be updated."});
+    })   
+})
+
 
 
 server.listen(8100, () => console.log('Blog API running on port 8100 . . .'));
