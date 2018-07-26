@@ -23,6 +23,12 @@ function isEven(req, res, next) {
     }
 }
 
+function isUpper(req, res, next) {
+    // console.log(req.body.tag.toUpperCase());
+    req.body.tag = req.body.tag.toUpperCase();
+    next();
+}
+
 // READ
 router.get('/', async (req, res) => {
     try {
@@ -50,7 +56,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // CREATE
-router.post('/', isEven, async (req, res) => {
+router.post('/', isEven, isUpper, async (req, res) => {
     try {
         const tag = {...req.body};
 
