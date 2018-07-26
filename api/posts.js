@@ -21,13 +21,13 @@ router.get('/:id', async (req, res) => {
 });
 
 router.get('/:id/tags', async (req, res) => {
-  const { id } = req.parms;
+  const { id } = req.params;
 
   try {
     const tags = await Post.getPostTags(id);
     res.status(200).json({ tags });
   } catch (err) {
-    res.status(400).json({ error: 'Error fethcing tags' });
+    res.status(400).json({ error: 'Error fetching tags' });
   }
 });
 
