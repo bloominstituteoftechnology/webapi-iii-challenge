@@ -109,8 +109,8 @@ server.put('/api/posts/:id', getPost, async (req, res, next) => {
 
 server.delete('/api/posts/:id', getPost, async (req, res, next) => {
     try{
-        await post.remove(id)
-        res.status(SUCCESS).json({"Removed": postIn})
+        await post.remove(req.params.id)
+        res.status(SUCCESS).json({"Removed": req.postIn})
         
     }catch(err){
         next({error: INTERNAL_SERVER_ERROR, internalError: err.message})    }
@@ -168,6 +168,13 @@ server.put('/api/users/:id', getUser, async (req, res, next) => {
         next({error: INTERNAL_SERVER_ERROR, internalError: err.message})    }
 })
 
+server.delete('/api/users/:id', getUser, async (req, res, next) => {
+    try{
+        await user.remove(req.params.id)
+        res.status(SUCCESS).json({"Removed": req.userIn})
+    }catch(err){
+        next({error: INTERNAL_SERVER_ERROR, internalError: err.message})    }
+})
 
 
 
