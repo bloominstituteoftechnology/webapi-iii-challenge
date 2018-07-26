@@ -1,17 +1,15 @@
 const express = require('express');
 const morgan = require('morgan');
-const dbpost = require('./data/helpers/postDb');
-const dbuser = require('./data/helpers/userDb');
 const dbtag = require('./data/helpers/tagDb');
 const userRoutes = require('./userRoutes');
-
+const postRoutes = require('./postRoutes');
 
 const server = express();
 
 server.use(express.json());
 
 server.use('/api/users', userRoutes);
-
+server.use('/api/posts', postRoutes);
 
 function logger(req, res, next) {
   console.log(
@@ -53,7 +51,7 @@ server.get('/', (req, res) => {
 });
 
 
-server.get('/api/posts', (req, res) => {
+/*server.get('/api/posts', (req, res) => {
         const request = dbpost.get();
 
         request.then(response => {
@@ -64,7 +62,7 @@ server.get('/api/posts', (req, res) => {
         res.status(404).json({error: "The posts information could not be retrieved."});
         })
 
-});
+});*/
 
 server.get('/api/tags', (req, res) => {
         const request = dbtag.get();
@@ -171,7 +169,7 @@ server.get('/api/tags/:id', (req, res) => {
 
 
 
-server.get('/api/posts/:id', (req, res) => {
+/*server.get('/api/posts/:id', (req, res) => {
 	
 	const id = req.params.id;
 
@@ -197,10 +195,10 @@ server.get('/api/posts/:id', (req, res) => {
         })
 
 	}
-});
+});*/
 
 
-server.get('/api/posts/:id/tags', (req, res) => {
+/*server.get('/api/posts/:id/tags', (req, res) => {
         const id = req.params.id;
 
        const request = dbpost.getPostTags(id);
@@ -218,7 +216,7 @@ server.get('/api/posts/:id/tags', (req, res) => {
         res.status(404).json({error: "The post with the specified ID does not exist."});
         })
 
-});
+});*/
 
 
 
@@ -245,7 +243,7 @@ server.get('/api/posts/:id/tags', (req, res) => {
 
 
 
-server.post('/api/posts', (req, res) => {
+/*server.post('/api/posts', (req, res) => {
 
         const {text, userId} = req.body;
         const post = {text, userId};
@@ -274,7 +272,7 @@ server.post('/api/posts', (req, res) => {
         res.status(500).json({ message: "There was an error while saving the post to the database" });
         })
 
-        }  });
+        }  });*/
 
 
 
@@ -339,7 +337,7 @@ server.post('/api/tags', upperCase, (req, res) => {
 
 
 
-server.delete('/posts/:id', (req, res) => {
+/*server.delete('/posts/:id', (req, res) => {
         const id = req.params.id;
         const request = dbpost.remove(id);
 
@@ -359,7 +357,7 @@ server.delete('/posts/:id', (req, res) => {
         res.status(500).json({ error: "The post could not be removed" });
         })
 
-  });
+  });*/
 
 
 server.delete('/tags/:id', (req, res) => {
@@ -409,7 +407,7 @@ server.delete('/tags/:id', (req, res) => {
 
 
 
-server.put('/posts/:id', (req, res) => {
+/*server.put('/posts/:id', (req, res) => {
   const { text} = req.body;
 
   const id =  req.params.id;
@@ -437,7 +435,7 @@ else{
         res.status(500).json({ message: "Couldn't update the post" });
         })
 }	
-});
+});*/
 
 
 server.put('/tags/:id', (req, res) => {
