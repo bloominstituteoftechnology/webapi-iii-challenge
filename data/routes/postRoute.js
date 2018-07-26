@@ -25,11 +25,6 @@ router.get('/:id', (req, res) => {
     postDb
     .get(req.params.id)
     .then(post => {
-        if (!post) {
-            res
-            .status(404)
-            .json({ message: "The post with the specified ID does not exist." });
-        }
         res
         .status(200)
         .json(post);
