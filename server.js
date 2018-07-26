@@ -135,6 +135,38 @@ server.get('/api/tags/:id', (req, res) => {
     .catch(() => sendUserError(500, "The tag could not be retrieved", res))
 })
 
+// ! ================== DELETE
+
+server.delete('/api/users/:id', (req, res) => {
+  const { id } = req.params;
+  userDb
+    .remove(id)
+    .then(() => sendUserSuccess(204, {success: 'user was removed'}, res))
+    .catch(() => sendUserError(500, "There was an error deleting the user"));
+})
+
+server.delete('/api/posts/:id', (req, res) => {
+  const { id } = req.params;
+  postDb
+    .remove(id)
+    .then(() => sendUserSuccess(204, {success: 'post was removed'}, res))
+    .catch(() => sendUserError(500, "There was an error deleting the post"));
+})
+
+server.delete('/api/tags/:id', (req, res) => {
+  const { id } = req.params;
+  tagDb
+    .remove(id)
+    .then(() => sendUserSuccess(204, {success: 'tag was removed'}, res))
+    .catch(() => sendUserError(500, "There was an error deleting the tag"));
+})
+
+// ! ================== GET POST TAGS BY ID
+
+server.get('/api/posts/:postId/tags', (req, res) => {
+  
+})
+
 
 
 
