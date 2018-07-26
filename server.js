@@ -1,6 +1,7 @@
 const express = require('express');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const cors = require('cors');
 
 const makeRouter = require('./middlewares/makeRouter');
 const getChildrenByParent = require('./middlewares/getChildrenByParent');
@@ -13,6 +14,7 @@ const userDb = require('./data/helpers/userDb');
 const server = express();
 server.use(morgan('combined'));
 server.use(helmet());
+server.use(cors());
 server.use(express.json());
 
 // Helper function to send off response after req is done being modified by middleware
