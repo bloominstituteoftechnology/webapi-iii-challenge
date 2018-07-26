@@ -163,6 +163,7 @@ server.delete('/api/posts/:id', async (req, res) => {
 server.post('/api/tags', async (req, res) => {
     const { tag } = req.body;
     if (!tag) return res.status(400).json({ errorMessage: "Please provide a tag." });
+    if (tag.length > 80) return res.status(400).json({ errorMessage: "Tag provided is too long!" });;
     try {
         const response = await tags.insert({ tag });
         return res.status(201).json(response);
