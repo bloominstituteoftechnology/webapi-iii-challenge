@@ -179,6 +179,19 @@ server.put("/api/user/:id", async (req, res) => {
     const id = req.params.id;
     const user = req.params.user;
     const response = await userDb.update(id, user);
+    res.status(200).send(response);
+  } catch (error) {
+    res
+      .status(500)
+      .send({ message: "ERROR PROCESSING REQUEST", error: error.message });
+  }
+});
+
+server.delete("/api/user/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const response = await userDb.remove(id);
+    res.status(200).send(response);
   } catch (error) {
     res
       .status(500)
