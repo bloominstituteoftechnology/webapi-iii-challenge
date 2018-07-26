@@ -1,6 +1,7 @@
 const express = require('express');
 const server = express();
 const morgan = require('morgan')
+const helmet = require('helmet');
 
 const postDb = require('./data/helpers/postDb.js');
 const tagDb = require('./data/helpers/tagDb.js');
@@ -8,6 +9,7 @@ const userDb = require('./data/helpers/userDb.js');
 
 server.use(express.json());
 server.use(morgan('dev'));
+server.use(helmet());
 
 //View Users
 server.get('/users', (req, res) => {
@@ -101,7 +103,7 @@ server.get('/tags/:id', (req, res) => {
   tagDb
   .get(id)
   .then(tag => {
-    if (tag.length === 0) {
+    if (!tag) {
       res.status(404).json({ message: "The tag with the specified ID does not exist." })
     } else {
       res.status(200).json({ tag })
