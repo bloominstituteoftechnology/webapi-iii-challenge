@@ -151,4 +151,14 @@ server.put('/posts/:id', async (req, res) => {
     }
 })
 
+server.get('/tags', async (req, res) => {
+    try {
+        const tags = await tagDb.get();
+        res.status(200).json(tags);
+    } catch (err) {
+        res.status(500).json({ error: 'Tags could not be retrieved.' })
+    }
+});
+
+
 server.listen(8000, () => console.log('API running on port 8000'));
