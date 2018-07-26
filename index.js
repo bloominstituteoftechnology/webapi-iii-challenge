@@ -89,10 +89,22 @@ server.get('/api/posts', async (req, res, next) => {
 })
 
 server.get('/api/posts/:id', getPost, (req,res, next) => {
-    error = INTERNAL_SERVER_ERROR
+    let error = INTERNAL_SERVER_ERROR
 
     try{
         res.status(SUCCESS).json(req.postIn)
+    }catch(err){
+        next({error: error, internalError: err.message})
+    }
+})
+
+// Get all tags for a post
+server.get('/api/posts/:id/tags', getPost, async (req, res, next) => {
+    let error = INTERNAL_SERVER_ERROR
+
+    try{
+        const tags = await postDb.getPostTags(req.params.id)
+        res.status(SUCCESS).json(tags)
     }catch(err){
         next({error: error, internalError: err.message})
     }
@@ -132,6 +144,7 @@ server.delete('/api/posts/:id', getPost, async (req, res, next) => {
     }catch(err){
         next({error: INTERNAL_SERVER_ERROR, internalError: err.message})    }
 })
+
 
 
 
