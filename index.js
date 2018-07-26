@@ -222,5 +222,15 @@ server.put('/tags/:id', async (req, res) => {
     }
 })
 
-
+server.get('/posts/:id/tags', async (req, res) => {
+    let id = req.params.id;
+    try {
+        const tag = await postDb.getPostTags(id)
+        res.status(200).json(tag);
+    }
+    catch (err) {
+        res.status(500).json({ error: `Post's tags could not be retrieved.` })
+    }
+    
+})
 server.listen(8000, () => console.log('API running on port 8000'));
