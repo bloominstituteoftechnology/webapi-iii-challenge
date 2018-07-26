@@ -11,9 +11,7 @@ server.use(express.json());
 function uppercaseTag(req, res, next) {
     if (req.method === 'GET' && req.url === '/tags') {
         let tags = res.json;
-        console.log('tags')
         res.json = function (data) {
-            console.log(data)
             data.forEach(response=> response.tag = response.tag.toUpperCase());
             tags.apply(res, arguments);
         }
