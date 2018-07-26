@@ -1,83 +1,87 @@
 const express = require('express');
 const users = require('../../data/helpers/userDb');
+const errorHandler = require('../errorHandler');
 
 const router = express.Router();
 
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
     const { name } = req.body;
-    if (!name) return res.status(400).json({ errorMessage: "Please provide a name for the user." });
-    if (name.length > 128) return res.status(400).json({ errorMessage: "Name provided is too long!" });;
+    if (!name) next({ code: 400, errorMessage: "Please provide a name for the user." });
+    if (name.length > 128) next({ code: 400, errorMessage: "Name provided is too long!" });;
     try {
         const response = await users.insert({ name });
         return res.status(201).json(response);
     } catch (err) {
-        return res.status(500).json({ error: 'There was an error while saving the user to the database.' });
+        if (err.errno === 19) next({ code: 400, errorMessage: 'There is already an existing user with that name!' });
+        next({ code: 500, error: 'There was an error while saving the user to the database.' });
     }
 })
 
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
     try {
         const response = await users.get();
         return res.status(200).json(response);
     } catch (err) {
-        return res.status(500).json({ error: 'The users information could not be retrieved.' });
+        next({ code: 500, error: 'The users information could not be retrieved.' });
     }
 })
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req, res, next) => {
     try {
         const response = await users.get(req.params.id);
-        if (!response) return res.status(404).json({ message: "The user with the specified ID does not exist." });
+        if (!response) next({ code: 404, message: "The user with the specified ID does not exist." });
         return res.status(200).json(response);
     } catch (err) {
-        return res.status(500).json({ error: 'The user information could not be retrieved.' });
+        next({ code: 500, error: 'The user information could not be retrieved.' });
     }
 })
 
-router.get('/posts/:id', async (req, res) => {
+router.get('/posts/:id', async (req, res, next) => {
     try {
         const response = await users.getUserPosts(req.params.id);
-        if (response.length === 0) return res.status(404).json({ message: 'This user has no posts!' });
+        if (response.length === 0) next({ code: 404, message: 'This user has no posts!' });
         return res.status(200).json(response);
     } catch (err) {
-        return res.status(500).json({ error: 'The user information could not be retrieved.' });
+        next({ code: 500, error: 'The user information could not be retrieved.' });
     }
 })
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', async (req, res, next) => {
     const { id } = req.params;
     const { name } = req.body;
-    if (!name) return res.status(400).json({ errorMessage: "Please provide a name for the user." });
-    if (name.length > 128) return res.status(400).json({ errorMessage: "Name provided is too long!" });;
+    if (!name) next({ code: 400, errorMessage: "Please provide a name for the user." });
+    if (name.length > 128) next({ code: 400, errorMessage: "Name provided is too long!" });;
     try {
         const updateResponse = await users.update(id, { name });
-        if (updateResponse === 0) return res.status(404).json({ message: 'The user with the specified ID does not exist.' });
+        if (updateResponse === 0) next({ code: 404, message: 'The user with the specified ID does not exist.' });
         try {
             const findResponse = await users.get(id);
-            if (!findResponse) return res.status(404).json({ message: "The user with the specified ID does not exist." });
+            if (!findResponse) next({ code: 404, message: "The user with the specified ID does not exist." });
             return res.status(200).json(findResponse);
         } catch (err) {
-            return res.status(500).json({ error: 'The user information could not be retrieved.' });
+            next({ code: 500, error: 'The user information could not be retrieved.' });
         }
     } catch (err) {
-        return res.status(500).json({ error: "The users information could not be modified." });
+        next({ code: 500, error: "The users information could not be modified." });
     }
 })
 
 router.delete('/:id', async (req, res) => {
     try {
         const findResponse = await users.get(req.params.id);
-        if (!findResponse) return res.status(404).json({ message: "The user with the specified ID does not exist." });
+        if (!findResponse) next({ code: 404, message: "The user with the specified ID does not exist." });
         try {
             const removeResponse = await users.remove(req.params.id);
-            if (removeResponse === 0) return res.status(404).json({ message: "The user with the specified ID does not exist." });
+            if (removeResponse === 0) next({ code: 404, message: "The user with the specified ID does not exist." });
             return res.status(200).json(findResponse);
         } catch (err) {
-            return res.status(500).json({ error: "The user could not be removed" });
+            next({ code: 500, error: "The user could not be removed" });
         }
     } catch (err) {
-        return res.status(500).json({ error: "The user information could not be retrieved." });
+        next({ code: 500, error: "The user information could not be retrieved." });
     }
 })
+
+router.use(errorHandler.errorHandler);
 
 module.exports = router;
