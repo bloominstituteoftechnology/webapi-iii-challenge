@@ -27,7 +27,6 @@ class App extends Component {
       });
   }
   render() {
-    console.log("this.state.users is: ", this.state.users);
     return (
       <div className="App">
         <header className="App-header">
@@ -50,7 +49,11 @@ class App extends Component {
           )}
         />
 
-        <Route exact path="/users/:id" component={UserPost} />
+        <Route
+          exact
+          path="/users/:id"
+          render={props => <UserPost {...props} />}
+        />
       </div>
     );
   }
