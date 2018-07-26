@@ -8,6 +8,11 @@ const server = express();
 server.use(express.json());
 server.use(cors());
 
+function tagUpperCaser(req, res, next) {
+    req.body.tag = req.body.tag.toUpperCase();
+    next()
+}
+
 server.post('/api/users', async (req, res) => {
     const { name } = req.body;
     if (!name) return res.status(400).json({ errorMessage: "Please provide a name for the user." });
@@ -170,7 +175,7 @@ server.delete('/api/posts/:id', async (req, res) => {
 
 // END OF POSTS
 
-server.post('/api/tags', async (req, res) => {
+server.post('/api/tags', tagUpperCaser, async (req, res) => {
     const { tag } = req.body;
     if (!tag) return res.status(400).json({ errorMessage: "Please provide a tag." });
     if (tag.length > 80) return res.status(400).json({ errorMessage: "Tag provided is too long!" });
@@ -206,7 +211,7 @@ server.get('/api/tags/:id', async (req, res) => {
     }
 })
 
-server.put('/api/tags/:id', async (req, res) => {
+server.put('/api/tags/:id', tagUpperCaser, async (req, res) => {
     const { id } = req.params;
     const { tag } = req.body;
     if (!tag) return res.status(400).json({ errorMessage: "Please provide a tag." });
