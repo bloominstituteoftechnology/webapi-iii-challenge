@@ -52,19 +52,19 @@ server.post('/api/users', async (req, res) => {
     catch (err) {
         switch(err) {
             case NAME_LENGTH_ERROR: {
-            res.status(BAD_REQUEST_CODE).json({error: 'Maximum name length is 128, please make a shorter name'});
-            res.end();
+                res.status(BAD_REQUEST_CODE).json({error: 'Maximum name length is 128, please make a shorter name'});
+                res.end();
                 break;
-        }
+            }
             case BAD_REQUEST_CODE: {
-            res.status(BAD_REQUEST_CODE).json({error: 'Cannot create user without a name'});
-            res.end();
+                res.status(BAD_REQUEST_CODE).json({error: 'Cannot create user without a name'});
+                res.end();
                 break;
             }
             default: {
             res.status(INTERNAL_SERVER_ERROR_CODE).json({error: 'Error creating user either this is a server problem or there is a user that already exists by that name'})
+            }
         }
-    } 
     }
 });
 server.put('/api/users/:id', async(req, res) => {
@@ -117,7 +117,8 @@ server.delete('/api/users/:id', async (req, res) => {
                 break;
             }
             default: {
-                res.status(INTERNAL_SERVER_ERROR_CODE).json({ error: 'The user could not be deleted at this time.'})
+                res.status(INTERNAL_SERVER_ERROR_CODE)
+                .json({ error: 'The user could not be deleted at this time.'})
                 res.end();
             }
         }
