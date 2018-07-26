@@ -7,10 +7,10 @@ const INTERNAL_SERVER_ERROR_CODE = 500;
 
 
 const express = require('express');
-const usersRoutes = require('./api/usersRoutes');
+const userRoutes = require('./api/userRoutes');
 const server = express();
-server.use('/api/users', usersRoutes);
 server.use(express.json());
+server.use('/api/users', userRoutes);
 
 // server.get('/api/posts', async (req, res) => {
 //     try {

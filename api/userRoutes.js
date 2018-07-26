@@ -47,10 +47,11 @@ router.post('/', async (req, res) => {
             throw BAD_REQUEST_CODE;
         }
         const postResponse = await userDb.insert(req.body);
+        console.log(postResponse);
         res.status(CREATED_CODE).json(postResponse);
     } 
     catch (err) {
-     
+     console.log(err);
     }
 });
 router.put('/:id', async(req, res) => {
