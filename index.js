@@ -43,11 +43,17 @@ server.post('/users', async (req, res) => {
      }
 })
 
-server.put('users/:id', async (req, res) => {
+server.put('/users/:id', async (req, res) => {
     try {
-        
+        const id = req.params.id
+        const { name } = req.body
+        if (name === undefined) {
+            res.status(400).send({error: "Name not found"})
+        }
+        const update = await userDb.update(id, {name}) 
+        res.status(200).json(update)
     } catch(err) {
-
+        res.status(500).json({error: "The user couldn't be modified"})
     }
 })
 
