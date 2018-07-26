@@ -8,6 +8,20 @@ const bodyParser = require('body-parser');
 
 server.use(bodyParser.json());
 
+function isTagCapital(req,res,next) {
+    console.log(req.body);
+    if('tag' in req.body){
+         if(req.body.tag != req.body.tag.toUpperCase())
+         res.status(403).send({errorMessage:'All tags must be capitalized.'})
+         else
+         console.log('tag is in capitals');
+         next();
+     }
+     else
+     next();
+}
+
+server.use(isTagCapital);
 server.get('/users', async (req, res) => {
     try {
         const users = await userDb.get();
