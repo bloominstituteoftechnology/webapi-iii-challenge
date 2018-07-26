@@ -3,15 +3,26 @@ const userDb = require("./data/helpers/userDb.js");
 const postDb = require("./data/helpers/postDb.js");
 const tagDb = require("./data/helpers/tagDb.js");
 
+const server = express();
+server.use(express.json());
+
+
 //Middleware
 function uppercaseTag(req, res, next) {
-    
+    if (req.method === 'GET' && req.url === '/tags') {
+        let tags = res.json;
+        console.log('tags')
+        res.json = function (data) {
+            console.log(data)
+            data.forEach(response=> response.tag = response.tag.toUpperCase());
+            tags.apply(res, arguments);
+        }
+    }
     next();
 }
 
+server.use(uppercaseTag)
 
-const server = express();
-server.use(express.json());
 
 
 
