@@ -171,6 +171,266 @@ server.get('/api_v1/user_posts/:id', (req, res) => {
 
 });
 
+//adding a post  Endpoints
+server.post('/api_v1/add_post', (req, res) => {
+
+        const {text, userId} = req.body;
+        const post = {text, userId};
+
+        if (!text || !userId) {
+                res.status(400).json({errorMessage: "text and userId are required for the post."});
+        }
+
+        else{
+
+        const request = dbpost.insert(post);
+
+        request.then(response => {
+                response.text = post.text;
+                response.userId = post.userId;
+		response.message ="Success: added a new post";
+
+                res.status(201).json(response);
+        })
+
+        .catch(error => {
+        res.status(500).json({ message: "There was an error while saving the post to the database" });
+        })
+
+        }  });
+
+
+//adding a tag  Endpoints
+server.post('/api_v1/add_tag', (req, res) => {
+
+        const {tag} = req.body;
+        const tagContent = {tag};
+
+        if (!tag) {
+                res.status(400).json({errorMessage: "text is required for the tag."});
+        }
+
+        else{
+
+        const request = dbtag.insert(tagContent);
+
+        request.then(response => {
+                let responseObject ={};
+		responseObject.tag = tagContent.tag;
+                responseObject.message ="Success: added a new tag";
+
+                res.status(201).json(responseObject);
+        })
+
+        .catch(error => {
+        res.status(500).json({ message: "There was an error while saving the tag to the database" });
+        })
+
+        }  
+});
+
+
+
+//posting user  Endpoints
+server.post('/api_v1/add_user', (req, res) => {
+
+        const {name} = req.body;
+        const user = {name};
+
+        if (!name) {
+                res.status(400).json({errorMessage: "name is required for the user."});
+        }
+
+        else{
+
+        const request = dbuser.insert(user);
+
+        request.then(response => {
+                response.name = user.name;
+                response.message ="Success: added a new user";
+
+                res.status(201).json(response);
+        })
+
+        .catch(error => {
+        res.status(500).json({ message: "There was an error while saving the user to the database" });
+        })
+
+        }  });
+
+
+
+
+//deleting post by id Endpoints
+server.delete('/api_v1/delete_post/:id', (req, res) => {
+        const id = req.params.id;
+        const request = dbpost.remove(id);
+
+        request.then(response => {
+                if(response===1) {
+		let responseObject ={};
+		responseObject.message = `Success: deleted post with id ${id}`;
+
+
+		res.json(responseObject);
+		}	
+
+                else res.status(404).json({ error: "The post with the specified ID does not exist." });
+        })
+
+        .catch(error => {
+        res.status(500).json({ error: "The post could not be removed" });
+        })
+
+  });
+
+
+//deleting tag by id Endpoints
+server.delete('/api_v1/delete_tag/:id', (req, res) => {
+        const id = req.params.id;
+        const request = dbtag.remove(id);
+
+        request.then(response => {
+                if(response===1) {
+                let responseObject ={};
+                responseObject.message = `Success: deleted tag with id ${id}`;
+
+
+                res.json(responseObject);
+                }
+
+                else res.status(404).json({ error: "The tag with the specified ID does not exist." });
+        })
+
+        .catch(error => {
+        res.status(500).json({ error: "The tag could not be removed" });
+        })
+
+  });
+
+
+//deleting user by id Endpoints
+server.delete('/api_v1/delete_user/:id', (req, res) => {
+        const id = req.params.id;
+        const request = dbuser.remove(id);
+
+        request.then(response => {
+                if(response===1) {
+                let responseObject ={};
+                responseObject.message = `Success: deleted user with id ${id}`;
+
+
+                res.json(responseObject);
+                }
+
+
+                else res.status(404).json({ error: "The user with the specified ID does not exist." });
+        })
+
+        .catch(error => {
+        res.status(500).json({ error: "The user could not be removed" });
+        })
+
+  });
+
+
+
+//updating existing_post by id Endpoints
+server.put('/api_v1/update_post/:id', (req, res) => {
+  const { text} = req.body;
+
+  const id =  req.params.id;
+  const post = {text};
+
+
+if (!text) {
+                res.status(400).json({errorMessage: "Please provide text for the post."});
+}
+
+else{
+ const request = dbpost.update(id, post);
+
+
+        request.then(response => {
+                if(response===0)  res.status(404).json({ message: "The post with the specified ID does not exist." });
+                else{ 
+			let responseObject ={};
+			responseObject.message= `Success: updated post text with id ${id}`
+			res.status(200).json(responseObject);
+		}
+	})
+
+        .catch(error => {
+        res.status(500).json({ message: "Couldn't update the post" });
+        })
+}	
+});
+
+
+//updating existing_tag by id Endpoints
+server.put('/api_v1/update_tag/:id', (req, res) => {
+  const {tag} = req.body;
+
+  const id =  req.params.id;
+  const tagContent = {tag};
+
+
+if (!tag) {
+                res.status(400).json({errorMessage: "Please provide text for the tag."});
+}
+
+else{
+ const request = dbtag.update(id, tagContent);
+
+
+        request.then(response => {
+                if(response===0)  res.status(404).json({ message: "The tag with the specified ID does not exist." });
+                else{
+                        let responseObject ={};
+                        responseObject.message= `Success: updated tag text to ${tag} whose id is ${id}`
+                        res.status(200).json(responseObject);
+                }
+        })
+
+        .catch(error => {
+        res.status(500).json({ message: "Couldn't update the tag" });
+        })
+}
+});
+
+
+//updating existing_user by id Endpoints
+server.put('/api_v1/update_user/:id', (req, res) => {
+  const {name} = req.body;
+
+  const id =  req.params.id;
+  const user = {name};
+
+
+if (!name) {
+                res.status(400).json({errorMessage: "Please provide a name for the user."});
+}
+
+else {
+ const request = dbuser.update(id, user);
+
+
+        request.then(response => {
+                if(response===0)  res.status(404).json({ message: "The user with the specified ID does not exist." });
+                else{
+                        let responseObject ={};
+                        responseObject.message= `Success: updated user name who id is ${id}`
+                        res.status(200).json(responseObject);
+                }
+        })
+
+        .catch(error => {
+        res.status(500).json({ message: "Couldn't update the user" });
+        })
+}
+
+});
+
 
 
 // add your server code starting here
