@@ -2,13 +2,9 @@ const express = require('express');
 const helmet = require('helmet');
 const morgan = require('morgan');
 
+const makeRouter = require('./utilities/makeRouter');
 
-const posts = require('./routes/posts')
-const users = require('./routes/users')
-const tags = require('./routes/tags')
-
-
-
+const postDb = require('./data/helpers/postDb');
 const tagDb = require('./data/helpers/tagDb');
 const userDb = require('./data/helpers/userDb');
 
@@ -17,9 +13,9 @@ server.use(helmet());
 server.use(morgan('dev'));
 server.use(express.json());
 
-server.use('/api/posts', posts);
-// server.use('/users', users)
-// server.use('/tags', tags)
+server.use('/api/posts', makeRouter('post', 'userId and text', postDb));
+server.use('/api/tags', makeRouter('tag', 'tag', tagDb));
+server.use('/api/users', makeRouter('user', 'name', userDb));
 
 
-server.listen(8000, () => { console.log('Listening on Port 8000')});
+server.listen(8000, () => { console.log('Listening on Port 8000'); });
