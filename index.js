@@ -33,7 +33,7 @@ server.get("/api/post/:id", async (req, res) => {
 server.post("/api/post", async (req, res) => {
   if (
     !"text" in req.body &&
-    !"postedBy" in req.body &&
+    // !"postedBy" in req.body &&
     !"tags" in request.body
   ) {
     res.status(400).send({
@@ -137,12 +137,36 @@ server.delete("/api/tag/:id", async (req, res) => {
 server.get("/api/user/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    const response = tagDb.remove(id);
+    const response = userDb.remove(id);
     res.status(200).send(response);
   } catch (error) {
     res
       .status(500)
-      .send({ error: "EROR PROCESSING REQUEST", error: error.message });
+      .send({ error: "ERROR PROCESSING REQUEST", error: error.message });
+  }
+});
+
+server.get("/api/user/:id/posts", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const response = userDb.getUserPosts(id);
+    res.status(200).send(response);
+  } catch (error) {
+    res
+      .status(500)
+      .send({ error: "ERROR PROCESSING REQUEST", error: error.message });
+  }
+});
+
+server.post("/api/user/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const response = userDb.insert(id);
+    res.status(200).send(response);
+  } catch (error) {
+    res
+      .status(500)
+      .send({ error: "ERROR PROCESSING REQUEST", error: error.message });
   }
 });
 
