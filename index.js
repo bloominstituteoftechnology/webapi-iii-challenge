@@ -14,7 +14,7 @@ server.use(express.json());
 // postDb
 server.get("/api/post", async (req, res) => {
   try {
-    const response = postDb.get();
+    const response = await postDb.get();
     res.status(200).send(response);
   } catch (error) {
     res
@@ -105,9 +105,13 @@ server.delete("/api/post/:id", async (req, res) => {
 // tagDb
 server.get("/api/tag", async (req, res) => {
   try {
-    const response = tagDb.get();
+    const response = await tagDb.get();
     res.status(200).send(response);
-  } catch (error) {}
+  } catch (error) {
+    res
+      .status(500)
+      .send({ message: "ERROR PROCESSING REQUEST", error: error.message });
+  }
 });
 
 server.get("/api/tag/:id", async (req, res) => {
