@@ -118,5 +118,17 @@ server.put('/posts/:id', async (req, res) => {
     }
 })
 
+server.delete('/posts/:id', async (req, res) => {
+    try {
+        const id = req.params.id
+        const remove = await postDb.remove(id)
+        if (remove === 0) {
+            res.status(404)
+        }
+        res.status(200).json(remove)
+    } catch(err) {
+        res.status(400).json({error: "The post couldn't be deleted"})
+    }
+})
 
 server.listen(8000);
