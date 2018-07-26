@@ -1,10 +1,14 @@
 const express = require("express");
+const helmet = require('helmet');
+const morgan = require('morgan');
 const userDb = require("./data/helpers/userDb.js");
 const postDb = require("./data/helpers/postDb.js");
 const tagDb = require("./data/helpers/tagDb.js");
 
 const server = express();
 server.use(express.json());
+server.use(helmet());
+server.use(morgan('dev'));
 
 
 //Middleware
