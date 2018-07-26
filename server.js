@@ -385,7 +385,7 @@ server.put('/api/users/:id', async (req,res) => {
 /**
  *   GET USER POSTS - helper
  */
-server.get('/api/user/posts/:id', async (req,res) =>{
+server.get('/api/user/:id/posts', async (req,res) =>{
   
   // Using Async/Await
   try{
