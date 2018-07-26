@@ -4,6 +4,14 @@ const userDb = require('./data/helpers/userDb.js');
 const postDb = require('./data/helpers/postDb.js');
 const tagDb = require('./data/helpers/tagDb.js');
 
+function uppercaser(req, res, next) {
+  const { tag } = req.body;
+  if (tag) {
+    req.body.tag = tag.charAt(0).toUpperCase() + tag.slice(1);
+  }
+  next();
+}
+
 const server = express();
 server.use(helmet());
 server.use(express.json());
@@ -250,7 +258,7 @@ server.get('/api/tags/:id', async (req, res) => {
   }
 });
 
-server.post('/api/tags', async (req, res) => {
+server.post('/api/tags', uppercaser, async (req, res) => {
   const { tag } = req.body;
   if (!tag) {
     res.status(400).send({ error: 'Please provide a value for the tag.' });
