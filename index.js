@@ -9,8 +9,10 @@ server.use(express.json());
 server.use(cors());
 
 function tagUpperCaser(req, res, next) {
-    req.body.tag = req.body.tag.toUpperCase();
-    next()
+    if (req.body.tag) {
+        req.body.tag = req.body.tag.toUpperCase();
+    }
+    next();
 }
 
 server.post('/api/users', async (req, res) => {
@@ -146,16 +148,26 @@ server.put('/api/posts/:id', async (req, res) => {
     const { userId, text } = req.body;
     if (!userId || !text) return res.status(400).json({ errorMessage: "Please provide userId and text for the post." });
     try {
-        const updateResponse = await posts.update(id, { userId, text });
-        if (updateResponse === 0) return res.status(404).json({ message: 'The post with the specified ID does not exist.' });
-        try {
-            const findResponse = await posts.get(id);
-            return res.status(200).json(findResponse);
-        } catch (err) {
-            return res.status(500).json({ error: 'The post information could not be retrieved.' });
+        const getResponse = await users.get();
+        for (let i = 0; i < getResponse.length; i++) {
+            if (getResponse[i].id == userId) {
+                try {
+                    const updateResponse = await posts.update(id, { userId, text });
+                    if (updateResponse === 0) return res.status(404).json({ message: 'The post with the specified ID does not exist.' });
+                    try {
+                        const findResponse = await posts.get(id);
+                        return res.status(200).json(findResponse);
+                    } catch (err) {
+                        return res.status(500).json({ error: 'The post information could not be retrieved.' });
+                    }
+                } catch (err) {
+                    return res.status(500).json({ error: "The posts information could not be modified." });
+                }
+            }
         }
+        return res.status(400).json({ errorMessage: 'Please provide a userId that matches an existing users id.' });
     } catch (err) {
-        return res.status(500).json({ error: "The posts information could not be modified." });
+        return res.status(500).json({ error: 'The posts information could not be retrieved.' });
     }
 })
 
