@@ -43,13 +43,13 @@ server.get('/posts', async (req, res) => {
         const posts = await post.get()
         res.status(m.SUCCESS).json(posts)
     }catch(err){
-        res.status(error.code).json({ "error": error.msg, "e": err.message  })
+        res.status(error.code).json({ "error": error.msg, "internal-error": err.message  })
     }
 })
 
 server.get('/posts/:id', async (req,res) => {
     let { id } = req.params
-    let error = m.INVALID_USER_ID
+    let error = m.INVALID_POST_ID
 
     try{
         const postIn = await post.get(id)
@@ -58,7 +58,7 @@ server.get('/posts/:id', async (req,res) => {
 
         res.status(m.SUCCESS).json(postIn)
     }catch(err){
-        res.status(error.code).json({ "error": error.msg, "e": err.message })
+        res.status(error.code).json({ "error": error.msg, "internal-error": err.message })
     }
 })
 
@@ -79,14 +79,14 @@ server.post('/posts', async (req, res) => {
         const response = await post.insert(postOut)
         res.status(m.SUCCESS).json(response)
     }catch(err){
-        res.status(error.code).json({ "error": error.msg, "e": err.message })
+        res.status(error.code).json({ "error": error.msg, "internal-error": err.message })
     }
 })
 
 server.put('/posts/:id', async (req, res) => {
     const updated = {...req.body}
     const { id } = req.params
-    let error = m.INVALID_USER_ID           // set initial error code 
+    let error = m.INVALID_POST_ID           // set initial error code 
 
     try{
         let postIn = await post.get(id)
@@ -96,16 +96,17 @@ server.put('/posts/:id', async (req, res) => {
         await post.update(id, updated); 
         res.status(m.SUCCESS).json(updated)
     }catch(err) {
-        res.status(error.code).json({ "error": error.msg, "e": err.message })
+        res.status(error.code).json({ "error": error.msg, "internal-error": err.message })
     }
 })
 
 server.delete('/posts/:id', async (req, res) => {
     const { id } = req.params
-    let error = m.INVALID_USER_ID
+    let error = m.INVALID_POST_ID
 
     try{
         const postIn = await post.get(id)
+        console.log(postIn)
         if(!postIn){ throw Error() }
 
         error = m.INTERNAL_SERVER_ERROR
@@ -113,7 +114,7 @@ server.delete('/posts/:id', async (req, res) => {
         res.status(m.SUCCESS).json({"Removed": postIn})
         
     }catch(err){
-        res.status(error.code).json({ "error": error.msg, "e": err.message })
+        res.status(error.code).json({ "error": error.msg, "internal-error": err.message })
     }
 })
 
@@ -128,7 +129,7 @@ server.get('/users', async (req, res) => {
         const users = await user.get()
         res.status(m.SUCCESS).json(users)
     }catch(err){
-        res.status(error.code).json({ "error": error.msg, "e": err.message })
+        res.status(error.code).json({ "error": error.msg, "internal-error": err.message })
     }
 })
 
@@ -144,9 +145,10 @@ server.get('/users/:id', async (req, res) => {
         res.status(m.SUCCESS).json(userIn)
 
     }catch(err){
-        res.status(error.code).json({ "error": error.msg, "e": err.message })
+        res.status(error.code).json({ "error": error.msg, "internal-error": err.message })
     }
 })
+
 
 
 
@@ -159,6 +161,6 @@ server.get('/tags', async (req, res) => {
         const tags = await tag.get()
         res.status(m.SUCCESS).json(tags)
     }catch(err){
-        res.status(m.INTERNAL_SERVER_ERROR.code).json({ "error": m.INTERNAL_SERVER_ERROR.msg, "e": err.message })
+        res.status(m.INTERNAL_SERVER_ERROR.code).json({ "error": m.INTERNAL_SERVER_ERROR.msg, "internal-error": err.message })
     }
 })
