@@ -16,7 +16,9 @@ server.use(helmet())
 const INTERNAL_SERVER_ERROR = "INTERNAL_SERVER_ERROR"
 const INVALID_POST_ID = "INVALID_POST_ID"
 const MISSING_TEXT_OR_ID = "MISSING_TEXT_OR_ID"
+const MISSING_NAME_OR_ID = "MISSING_NAME_OR_ID"
 const INVALID_USER_ID = "INVALID_USER_ID"
+const ID_ALREADY_TAKEN = "ID_ALREADY_TAKEN"
 
 // ******************************  MiddleWare ********************************************
 
@@ -58,7 +60,7 @@ const getUser = async (req, res, next) => {
 
 // ******************************  Posts ********************************************
 
-server.get('/posts', async (req, res, next) => {
+server.get('/api/posts', async (req, res, next) => {
     let error = INTERNAL_SERVER_ERROR
 
     try{
@@ -69,7 +71,7 @@ server.get('/posts', async (req, res, next) => {
     }
 })
 
-server.get('/posts/:id', getPost, (req,res, next) => {
+server.get('/api/posts/:id', getPost, (req,res, next) => {
     error = INTERNAL_SERVER_ERROR
 
     try{
@@ -79,7 +81,7 @@ server.get('/posts/:id', getPost, (req,res, next) => {
     }
 })
 
-server.post('/posts', getUser, async (req, res, next) => {
+server.post('/api/posts', getUser, async (req, res, next) => {
     // getUser has already validated we have a valid user
     const { text, userId } = req.body
     let error = MISSING_TEXT_OR_ID
@@ -87,7 +89,7 @@ server.post('/posts', getUser, async (req, res, next) => {
     try{
         if(!text || !userId){ throw Error() }   // throw if missing information
 
-        const postOut = {"text": text, "userId": userId}
+        const postOut = {...req.body}
         error = INTERNAL_SERVER_ERROR           
 
         const response = await post.insert(postOut)
@@ -96,16 +98,16 @@ server.post('/posts', getUser, async (req, res, next) => {
         next({error: error, internalError: err.message})    }
 })
 
-server.put('/posts/:id', getPost, async (req, res, next) => {
+server.put('/api/posts/:id', getPost, async (req, res, next) => {
     try{
-        const updated = {...req.body}    
-        await post.update(id, updated); 
+        const updated = {...req.body} 
+        await post.update(req.params.id, updated); 
         res.status(SUCCESS).json(updated)
     }catch(err) {
         next({error: INTERNAL_SERVER_ERROR, internalError: err.message})    }
 })
 
-server.delete('/posts/:id', getPost, async (req, res, next) => {
+server.delete('/api/posts/:id', getPost, async (req, res, next) => {
     try{
         await post.remove(id)
         res.status(SUCCESS).json({"Removed": postIn})
@@ -118,7 +120,7 @@ server.delete('/posts/:id', getPost, async (req, res, next) => {
 
 // ******************************  Users ********************************************
 
-server.get('/users', async (req, res, next) => {
+server.get('/api/users', async (req, res, next) => {
     let error = INTERNAL_SERVER_ERROR
 
     try{
@@ -128,7 +130,7 @@ server.get('/users', async (req, res, next) => {
         next({error: error, internalError: err.message})    }
 })
 
-server.get('/users/:id', getUser, async (req, res, next) => {
+server.get('/api/users/:id', getUser, async (req, res, next) => {
     // getUser validates and assigns user to req.userIn
     let error = INTERNAL_SERVER_ERROR
 
@@ -138,6 +140,24 @@ server.get('/users/:id', getUser, async (req, res, next) => {
         next({error: error, internalError: err.message})    }
 })
 
+server.post('/api/users', async (req, res, next) => {
+    const { id, name } = req.body
+    let error = MISSING_NAME_OR_ID
+
+    try{
+        if(!id || !name){ throw Error() }
+        error = ID_ALREADY_TAKEN
+
+        const idTaken = await user.get(id)
+        if(idTaken){ throw Error() }
+        error = INTERNAL_SERVER_ERROR
+
+        const newUser = {...req.body}
+        await user.insert(newUser)
+        res.status(SUCCESS).json(newUser)
+    }catch(err){
+        next({error: error, internalError: err.message})    }
+})
 
 
 
@@ -145,7 +165,7 @@ server.get('/users/:id', getUser, async (req, res, next) => {
 
 // ******************************  Tags ********************************************
 
-server.get('/tags', async (req, res, next) => {
+server.get('/api/tags', async (req, res, next) => {
     try{
         const tags = await tag.get()
         res.status(SUCCESS).json(tags)
@@ -161,6 +181,12 @@ server.use(( err, req, res, next ) => {
                 description: "Please include valid text and a valid ID of a user",
                 internal_error: err.internalError 
             })
+        case MISSING_NAME_OR_ID:
+            res.status(400).send({
+                success: false,
+                description: "Please include a valid name and an id of a user",
+                internal_error: err.internalError 
+            })
         case INVALID_USER_ID:
             res.status(400).send({
                 success: false,
@@ -171,6 +197,12 @@ server.use(( err, req, res, next ) => {
             res.status(400).send({
                 success: false,
                 description: "No post by that ID",
+                internal_error: err.internalError
+            })
+        case ID_ALREADY_TAKEN:
+            res.status(400).send({
+                success: false,
+                description: "That ID is already in use",
                 internal_error: err.internalError
             })
         case INTERNAL_SERVER_ERROR:
