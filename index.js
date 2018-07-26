@@ -37,21 +37,28 @@ const m = {
 // ******************************  Posts ********************************************
 
 server.get('/posts', async (req, res) => {
+    let error = m.INTERNAL_SERVER_ERROR
+
     try{
         const posts = await post.get()
         res.status(m.SUCCESS).json(posts)
     }catch(err){
-        res.status(m.INTERNAL_SERVER_ERROR.code).json({ "error": m.INTERNAL_SERVER_ERROR.msg, "e": err.message  })
+        res.status(error.code).json({ "error": error.msg, "e": err.message  })
     }
 })
 
 server.get('/posts/:id', async (req,res) => {
     let { id } = req.params
+    let error = m.INVALID_USER_ID
+
     try{
         const postIn = await post.get(id)
+        if(!postIn){ throw Error() }
+        error = m.INTERNAL_SERVER_ERROR
+
         res.status(m.SUCCESS).json(postIn)
     }catch(err){
-        res.status(m.INVALID_POST_ID.code).json({ "error": m.INVALID_POST_ID.msg, "e": err.message })
+        res.status(error.code).json({ "error": error.msg, "e": err.message })
     }
 })
 
@@ -60,14 +67,14 @@ server.post('/posts', async (req, res) => {
     let error = m.MISSING_INFORMATION
 
     try{
-        if(!text || !userId){ throw Error() }   // Error is currently missing information, throw if missing information
-        error = m.INVALID_USER_ID
+        if(!text || !userId){ throw Error() }   // throw if missing information
+        error = m.INVALID_USER_ID               // update error 
 
-        let userIn = await user.get(userId)     // Error is now invalid user error
-        if(!userIn){ throw Error() }
+        let userIn = await user.get(userId)     // Check that ID is valid
+        if(!userIn){ throw Error() }            // update error
 
         const postOut = {...req.body}
-        error = m.INTERNAL_SERVER_ERROR           // ID checks out, change error to internal server error in case that goes wrong
+        error = m.INTERNAL_SERVER_ERROR           
 
         const response = await post.insert(postOut)
         res.status(m.SUCCESS).json(response)
@@ -79,13 +86,13 @@ server.post('/posts', async (req, res) => {
 server.put('/posts/:id', async (req, res) => {
     const updated = {...req.body}
     const { id } = req.params
-    let error = m.INVALID_USER_ID
+    let error = m.INVALID_USER_ID           // set initial error code 
 
     try{
         let postIn = await post.get(id)
-        if(!postIn){ throw Error() }
+        if(!postIn){ throw Error() }        // throw if invalid user ID
+        error = m.INTERNAL_SERVER_ERROR     // update error
 
-        error = m.INTERNAL_SERVER_ERROR     // If Id checks out, change error to server error
         await post.update(id, updated); 
         res.status(m.SUCCESS).json(updated)
     }catch(err) {
@@ -101,6 +108,7 @@ server.delete('/posts/:id', async (req, res) => {
         const postIn = await post.get(id)
         if(!postIn){ throw Error() }
 
+        error = m.INTERNAL_SERVER_ERROR
         await post.remove(id)
         res.status(m.SUCCESS).json({"Removed": postIn})
         
@@ -114,14 +122,31 @@ server.delete('/posts/:id', async (req, res) => {
 // ******************************  Users ********************************************
 
 server.get('/users', async (req, res) => {
+    let error = m.INTERNAL_SERVER_ERROR
+
     try{
         const users = await user.get()
         res.status(m.SUCCESS).json(users)
     }catch(err){
-        res.status(500).json({ "error": "Problem retrieving users", "e": err.message })
+        res.status(error.code).json({ "error": error.msg, "e": err.message })
     }
 })
 
+server.get('/users/:id', async (req, res) => {
+    const { id } = req.params
+    let error = m.INVALID_USER_ID
+
+    try{
+        const userIn = await user.get(id)
+        if(!userIn){ throw Error() }
+        error = m.INTERNAL_SERVER_ERROR
+
+        res.status(m.SUCCESS).json(userIn)
+
+    }catch(err){
+        res.status(error.code).json({ "error": error.msg, "e": err.message })
+    }
+})
 
 
 
@@ -134,6 +159,6 @@ server.get('/tags', async (req, res) => {
         const tags = await tag.get()
         res.status(m.SUCCESS).json(tags)
     }catch(err){
-        res.status(500).json({ "error": "Problem retrieving tags", "e": err.message })
+        res.status(m.INTERNAL_SERVER_ERROR.code).json({ "error": m.INTERNAL_SERVER_ERROR.msg, "e": err.message })
     }
 })
