@@ -75,6 +75,11 @@ const getTag = async (req, res, next) => {
     }
 }
 
+const upperCaser = (req, res, next) => {
+    req.body.tag = req.body.tag.toUpperCase()
+    next();
+}
+
 // ******************************  Posts ********************************************
 
 server.get('/api/posts', async (req, res, next) => {
@@ -233,7 +238,7 @@ server.get('/api/tags/:id', getTag, async (req, res, next) => {
         next({error: error, internalError: err.message})    }
 })
 
-server.post('/api/tags', async (req, res, next) => {
+server.post('/api/tags', upperCaser, async (req, res, next) => {
     const { tag } = req.body
     let error = MISSING_TAG
 
