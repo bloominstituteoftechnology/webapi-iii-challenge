@@ -126,10 +126,11 @@ server.get('/users/:id/posts', (req, res) => {
     userDb
     .getUserPosts(req.params.id)
     .then(posts => {
-        if (!posts) {
+        if (posts.length === 0) {
             res
             .status(404)
             .json({ message: "There are no posts" });
+        
         }
         res
         .status(200)
@@ -167,11 +168,11 @@ server.get('/posts/:id', (req, res) => {
     postDb
     .get(req.params.id)
     .then(post => {
-        if (post.length === 0) {
-            res
-            .status(404)
-            .json({ message: "The post with the specified ID does not exist." });
-        }
+        // if (post.length === 0) {
+        //     res
+        //     .status(404)
+        //     .json({ message: "The post with the specified ID does not exist." });
+        // }
         res
         .status(200)
         .json(post);
@@ -179,7 +180,7 @@ server.get('/posts/:id', (req, res) => {
     .catch(err => {
             res
             .status(500)
-            .json({ error: "The post information could not be retrieved."});
+            .json({ error: "The post information could not be retrieved.", errorMessage: err.message});
 });
 });
 
