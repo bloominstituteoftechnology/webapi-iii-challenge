@@ -208,6 +208,10 @@ server.post('/posts', (req, res) => {
         if (!text || !userId) {
                 res.status(400).json({errorMessage: "Please provide text and userId for the post."});
         }
+	
+	else if(isNaN(parseInt(userId))){
+		res.status(400).json({errorMessage: "Please provide a number for userId."});
+	}
 
         else{
 
