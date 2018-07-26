@@ -170,6 +170,15 @@ server.get('/api/users/:id', getUser, async (req, res, next) => {
         next({error: error, internalError: err.message})    }
 })
 
+// Get all posts for a user
+server.get('/api/users/:id/posts', getUser, async (req, res, next) => {
+    try{
+        const posts = await userDb.getUserPosts(req.params.id)
+        res.status(SUCCESS).json(posts)
+    }catch(err){
+        next({error: INTERNAL_SERVER_ERROR, internalError: err.message})    }
+})
+
 server.post('/api/users', async (req, res, next) => {
     const { name } = req.body
     let error = MISSING_NAME
