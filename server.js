@@ -129,7 +129,7 @@ server.get('/api_v1/tags/:id', (req, res) => {
 
 
 
-
+//tags associated with a post id Endpoints
 server.get('/api_v1/post_tags/:id', (req, res) => {
         const id = req.params.id;
 
@@ -150,6 +150,7 @@ server.get('/api_v1/post_tags/:id', (req, res) => {
 
 });
 
+//posts associated with a user id Endpoints
 server.get('/api_v1/user_posts/:id', (req, res) => {
         const id = req.params.id;
 
