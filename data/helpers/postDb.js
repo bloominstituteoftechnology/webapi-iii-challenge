@@ -1,6 +1,10 @@
 const db = require('../dbConfig.js');
 
 module.exports = {
+
+  getAll: function() {
+    return db('posts');
+  },
   get: function(id) {
     let query = db('posts as p');
 
