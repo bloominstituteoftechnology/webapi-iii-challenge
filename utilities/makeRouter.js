@@ -27,6 +27,14 @@ function onlyNonEmptyStrings(item) {
   return false;
 }
 
+
+// Creates an express.Router to handle database calls 
+// INPUT
+// type: string, refers to the type of data (post, tag, user), used for generating error messages
+// shape: string, describes the properties on the type, used for generating error messages
+// db: knex QueryBuilder object, imported by server. Contains methods used to generate database queries
+// OUTPUT
+// return an express.Router object with routes set for various API calls
 const makeRouter = (type, shape, db) => {
   const router = express.Router();
   router.use(express.json());
@@ -90,9 +98,6 @@ const makeRouter = (type, shape, db) => {
 
       // Request object from server, receiving assigned id as promise
       const dbGetResponse = await db.get(dbPostResponse.id);
-      // const post = dbResponsePost.find(candidatePost => candidatePost.id === dbResponseId.id);
-      // const dbResponsePost = await db.get();
-      // const post = dbResponsePost.find(candidatePost => candidatePost.id === dbResponseId.id);
       res.status(201).json(dbGetResponse);
     } catch (err) {
       const { code, message } = runningError || getErrorLocal('database', 'post');
