@@ -17,7 +17,11 @@ server.get('/', (req, res) => {
   res.send('Node Blog');
 });
 
-// Users
+/*==================
+*
+*   USERS
+*
+==================*/
 server.get('/api/users', async (req, res) => {
   try {
     const users = await userDb.getAll();
@@ -110,7 +114,11 @@ server.put('/api/users/:id', async (req, res) => {
   }
 });
 
-// Posts
+/*==================
+*
+*   POSTS
+*
+==================*/
 server.get('/api/posts', async (req, res) => {
   try {
     const posts = await postDb.getAll();
@@ -130,6 +138,19 @@ server.get('/api/posts/:id', async (req, res) => {
     }
   } catch (err) {
     res.status(500).send({ error: 'The post information could not be retrieved.' });
+  }
+});
+
+server.get('/api/posts/tags/:id', async (req, res) => {
+  try {
+    const tags = await postDb.getPostTags(req.params.id);
+    if (tags.length === 0) {
+      res.status(204).send({ error: 'This post has no tags.'});
+    } else {
+      res.status(200).json(tags);
+    }
+  } catch (err) {
+    res.status(500).send({ error: 'The tags information for this post could not be retrieved.' });
   }
 });
 
@@ -202,7 +223,11 @@ server.put('/api/posts/:id', async (req, res) => {
   }
 });
 
-// Tags
+/*==================
+*
+*   TAGS
+*
+==================*/
 server.get('/api/tags', async (req, res) => {
   try {
     const tags = await tagDb.getAll();
