@@ -4,6 +4,9 @@ const helmet = require('helmet');
 const cors = require('cors');
 const userDb = require('./data/helpers/userDb.js');
 const postDb = require('./data/helpers/postDb.js');
+const tagDb = require('./data/helpers/tagDb.js');
+
+
 
 const server = express();
 const port = 5000;
@@ -172,7 +175,95 @@ server.put('/api/users/:id/posts/:postId', (req, res) => {
     )
 })
 
+//************TAG ENDPOINTS***************************//
 
+server.get('/api/tags', (req, res) => {
+    tagDb.get()
+        .then( posts => {
+            res.status(200).json(posts)
+        })
+        .catch( error => {
+            res.status(500).json({ error: "Error retrieving posts" })
+        })
+})
+
+server.get('/api/tags/:id', (req, res) => {
+    const { id } = req.params
+    tagDb.get(id)
+        .then( user => {
+            user ? res.status(200).json(user) : res.status(404).json({ error: `There are no tags for this user ${id}`});
+        })
+        .catch( error => {
+            res.status(500).json({ error: `Error in retrieving tags with this user ${id}`})
+        })
+})
+
+server.post('/api/tags', (req, res) => {
+    const { tag } = req.body
+    tag ? (
+        tagDb.insert({ tag })
+            .then( id => {
+                res.status(201)
+                tagDb.get(id.id)
+                    .then( tag => {
+                        tag ? res.status(200).json(tag) : res.status(404).json({ error: `Unable to locate tags for this user ${id.id}` })
+                    })
+                    .catch( error => {
+                        res.status(500).json({ error: `Could not find tag with id ${id.id}` })
+                    })
+            })
+            .catch( error => {
+                res.status(500).json({ error: "Unable to create tag" })
+            })
+    ) : (
+        res.status(400).json({ error: "Add a tag." })
+    )
+})
+
+server.delete('/api/tags/:id', (req, res) => {
+    const { id } = req.params
+    tagDb.remove(id)
+        .then( response => {
+            if (response) {
+                res.status(200)
+                tagDb.get()
+                    .then( tags => {
+                        res.status(200).json(tags)
+                    })
+                    .catch( error => {
+                        res.status(500).json({ error: "Error retrieving tags" })
+                    })
+            } else {
+                res.status(404).json({ error: `Unable to delete tag for this user ${id}` })
+            }
+        })
+        .catch( error => {
+            res.status(500).json({ error: "Unable delete tag" })
+        })
+})
+
+server.put('/api/tags/:id', (req, res) => {
+    const { id } = req.params
+    const { tag } = req.body
+    tag ? (
+        tagDb.update(id, { tag })
+            .then( response => {
+                if (response) {
+                    tagDb.get(id)
+                        .then( tag => {
+                            tag ? res.status(200).json(tag) : res.status(404).json({ error: `Unable to locate tag for this user ${id}` })
+                        })
+                        .catch( error => {
+                            res.status(500).json({ error: `Unable to locate tag for this user ${id}` })
+                        })
+                } else {
+                    res.status(404).json({ error: `Unable to update this tage ${id}`})
+                }
+            })
+    ) : (
+        res.status(400).json({ error: "error" })
+    )
+})
 
 
 
