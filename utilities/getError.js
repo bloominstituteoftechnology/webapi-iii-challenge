@@ -9,17 +9,17 @@ function getError(errType, reqType, targetType, targetShape, id = null) {
   let code;
   switch (errType) {
     case 'database':
-      problem = `Your ${reqType} to the database server request failed.`;
+      problem = `Your ${reqType} request to the database server request failed.`;
       code = 500;
       switch (reqType) {
         case 'post':
           upshot = `The provided ${targetType} was not saved.`;
           break;
         case 'delete':
-          upshot = 'Requested data was note deleted.';
+          upshot = `Requested ${targetType} data was not deleted.`;
           break;
         case 'getById':
-          upshot = 'Ensure requested ID exists on server. Otherwise contact your database administrator.';
+          upshot = `Ensure requested ${targetType} ID exists on server. Otherwise contact your database administrator.`;
           break;
         default:
           upshot = 'Please contact your database administrator';
@@ -34,7 +34,7 @@ function getError(errType, reqType, targetType, targetShape, id = null) {
       break;
 
     case 'data':
-      problem = 'Database responded, but the request was not successful.';
+      problem = `Database responded, but the ${targetType} ${reqType} request was not successful.`;
       code = 404;
       switch (reqType) {
         case 'post':
@@ -43,8 +43,8 @@ function getError(errType, reqType, targetType, targetShape, id = null) {
         case 'put':
           upshot = `Please ensure that your request is well constructed, with input for all required strings, and that the database contains the ${targetType} you are trying to update.`;
           break;
-        case 'delete':
-          upshot = `Database responded successfully, but did delete any data. Please ensure the id refers to a ${targetType} contained in the database.`;
+        case 'delete': case 'getById':
+          upshot = `Please ensure the id refers to a ${targetType} contained in the database.`;
           break;
         default:
           upshot = 'Please ensure that your request is well constructed, with input for all required strings, and that the database has been populated.';

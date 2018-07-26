@@ -39,7 +39,12 @@ const makeRouter = (type, shape, db) => {
     const { id } = req.params;
     try {
       const dbResponse = await db.get(id);
-      res.status(200).json(dbResponse);
+      if (dbResponse === undefined) {
+        const { code, message } = runningError || getErrorLocal('data', 'getById');
+        res.status(code).json(message);
+      } else {
+        res.status(200).json(dbResponse);
+      }
     } catch (err) {
       const { code, message } = runningError || getErrorLocal('database', 'getById');
       res.status(code).json(message);
@@ -54,12 +59,12 @@ const makeRouter = (type, shape, db) => {
 
       // update error info based on successful database call
       if (dbResponse.length === 0) {
-        const { code, message } = runningError || getErrorLocal('database', 'getById');
+        const { code, message } = runningError || getErrorLocal('database', 'getAll');
         res.status(code).json(message);
+      } else {
+        // send data back
+        res.status(200).json(dbResponse);
       }
-
-      // send data back
-      res.status(200).json(dbResponse);
     } catch (err) {
       const { code, message } = runningError || getErrorLocal('database', 'get');
       res.status(code).json(message);
@@ -79,13 +84,16 @@ const makeRouter = (type, shape, db) => {
 
     try {
       // Post to server, receiving assigned id as promise
-      const dbResponseId = await db.insert(payload);
+      const dbPostResponse = await db.insert(payload);
       // update error info to reflect successful database save
-      runningError = getErrorLocal('partialSuccess', 'post', dbResponseId);
+      runningError = getErrorLocal('partialSuccess', 'post', dbPostResponse.id);
 
       // Request object from server, receiving assigned id as promise
-      const dbResponsePost = await db.get(dbResponseId.id.toString());
-      res.status(201).json(dbResponsePost);
+      const dbGetResponse = await db.get(dbPostResponse.id);
+      // const post = dbResponsePost.find(candidatePost => candidatePost.id === dbResponseId.id);
+      // const dbResponsePost = await db.get();
+      // const post = dbResponsePost.find(candidatePost => candidatePost.id === dbResponseId.id);
+      res.status(201).json(dbGetResponse);
     } catch (err) {
       const { code, message } = runningError || getErrorLocal('database', 'post');
       res.status(code).json(message);
@@ -131,7 +139,7 @@ const makeRouter = (type, shape, db) => {
         const { code, message } = runningError || getErrorLocal('data', 'delete');
         res.status(code).json(message);
       } else {
-        res.status(200).json(dbResponse);
+        res.status(200).json(id);
       }
     } catch (err) {
       const { code, message } = runningError || getErrorLocal('database', 'delete');
