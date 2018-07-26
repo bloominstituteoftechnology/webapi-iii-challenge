@@ -14,7 +14,8 @@ server.use(cors({}));
 
 const uppercaseTags = (req, res, next) => {
   const { tag } = req.body;
-  tag.toUpperCase();
+  let uppercased = tag.toUpperCase();
+  req.body.tag = uppercased;
   next();
 };
 
@@ -144,7 +145,7 @@ server.post("/api/posts", (req, res) => {
 });
 
 //tagDb
-server.get("/api/tags", uppercaseTags, (req, res) => {
+server.get("/api/tags", (req, res) => {
   tagDb
     .get()
     .then(response => {
@@ -159,6 +160,18 @@ server.get("/api/tags/:id", uppercaseTags, (req, res) => {
   const { id } = req.params;
   tagDb
     .get(id)
+    .then(response => {
+      res.json(response);
+    })
+    .catch(error => {
+      return error;
+    });
+});
+
+server.post("/api/tags", uppercaseTags, (req, res) => {
+  const { tag } = req.body;
+  tagDb
+    .insert({ tag })
     .then(response => {
       res.json(response);
     })
