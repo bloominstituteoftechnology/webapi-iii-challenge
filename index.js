@@ -226,6 +226,15 @@ server.post('/api/tags', async (req, res, next) => {
         next({error: error, internalError: err.message})    }
 })
 
+server.put('/api/tags/:id', getTag, async (req, res, next) => {
+    try{
+        const updated = {...req.body}
+        await tagDb.update(req.params.id, updated)
+        res.status(SUCCESS).json(updated)
+    }catch(err){
+        next({error: INTERNAL_SERVER_ERROR, internalError: err.message})    }
+})
+
 
 // ******************************  Error Handler ********************************************
 
