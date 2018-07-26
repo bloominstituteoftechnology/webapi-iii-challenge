@@ -105,5 +105,18 @@ server.post('/posts/:id', async (req, res) => {
     }
 })
 
+server.put('/posts/:id', async (req, res) => {
+    try {
+        const { userId, text} = req.body
+        if (userId === undefined || text === undefined) {
+            return res.status(400).json({error: "UserId or text is missing"})
+        }
+        const update = await postDb.update(req.body)
+        res.status(200).json(update)
+    } catch(err) {
+        res.status(500).json({error: "Error posting post"})
+    }
+})
+
 
 server.listen(8000);
