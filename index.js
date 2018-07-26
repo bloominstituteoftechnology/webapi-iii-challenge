@@ -101,7 +101,8 @@ server.get("/api/tag/:id", async (req, res) => {
 
 server.post("/api/tag", async (req, res) => {
   try {
-    const post = req.body;
+    // Custom middle ware to upper case new tags
+    const post = req.body.toUpperCase;
     const response = await tagDb.insert(post);
     res.status(200).send(response);
   } catch (error) {
