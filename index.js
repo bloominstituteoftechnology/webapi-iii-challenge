@@ -171,7 +171,7 @@ server.get('/tags/:id', async (req, res) => {
     }
 });
 
-server.post('/tag/', async (req, res) => {
+server.post('/tags/', async (req, res) => {
     let tag = req.body;
     if (!('tag') in tag) {
         res.status(400).send({ errorMessage: "Please provide a tag." });
@@ -186,6 +186,41 @@ server.post('/tag/', async (req, res) => {
     }
 });
 
+server.delete('/tags/:id', async(req,res) => {
+    let id = req.params.id;
+
+    try {
+        const deleted = await tagDb.remove(id);
+        if (deleted > 0)
+            res.status(200).json(deleted);
+        else
+            res.status(404).json({ error: 'The tag with the specified ID could not be found' });
+    }
+    catch (err) {
+        res.status(500).json({ error: 'Tag could not be deleted' });
+    }
+    
+});
+
+server.put('/tags/:id', async (req, res) => {
+    let id = req.params.id;
+    let updatedTag = req.body;
+    if (!('tag') in updatedTag) {
+        res.status(400).send({ errorMessage: "Please provide an updated tag." });
+    }
+
+    try {
+        const updated = await tagDb.update(id, updatedTag);
+        if (updated > 0)
+            res.status(200).json(updated);
+        else
+            res.status(404).json({ error: 'The tag with the specified ID could not be found' });
+    }
+
+    catch (err) {
+        res.status(500).json({ error: 'Tag could not be updated' });
+    }
+})
 
 
 server.listen(8000, () => console.log('API running on port 8000'));
