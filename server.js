@@ -163,7 +163,7 @@ server.get('/posts/:id/tags', (req, res) => {
         request.then(response => {
         if(response.length==0) res.status(404).json({ error: "The post with the specified ID does not exist or there are no tags on this post id." });
          else {
-                // response.id = id;
+                response.unshift("Tags for the specified posts are:");
                  res.status(200).json(response);
          }
 
