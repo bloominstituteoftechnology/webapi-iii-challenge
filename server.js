@@ -1,4 +1,5 @@
 const express = require('express');
+const morgan = require('morgan');
 const dbpost = require('./data/helpers/postDb');
 const dbuser = require('./data/helpers/userDb');
 const dbtag = require('./data/helpers/tagDb');
@@ -8,9 +9,10 @@ const server = express();
 
 server.use(express.json());
 
+server.use(morgan('dev'));
+
 server.get('/', (req, res) => {
         res.send('Testing');
-
 });
 
 
@@ -81,6 +83,25 @@ server.get('/users/:id', (req, res) => {
 
 });
 
+server.get('/users/:id/posts', (req, res) => {
+        const id = req.params.id;
+
+       const request = dbuser.getUserPosts(id);
+
+        request.then(response => {
+        if(response.length==0) res.status(404).json({ error: "The user with the specified ID does not exist." });
+         else {  
+                 res.status(200).json(response);
+         }
+
+        })
+
+        .catch(err => {
+        res.status(404).json({error: "The user with the specified ID does not exist."});
+        })
+
+});
+
 
 server.get('/users', (req, res) => {
         const request = dbuser.get();
@@ -138,7 +159,9 @@ server.get('/:id', (req, res) => {
 
 });
 
-server.get('/:id', (req, res) => {
+
+
+/*server.get('/:id', (req, res) => {
         const id = req.params.id;
 
        const request = dbuser.getPostTags(id);
@@ -156,7 +179,7 @@ server.get('/:id', (req, res) => {
         res.status(404).json({error: "The user with the specified ID does not exist."});
         })
 
-});
+});*/
 
 
 
@@ -418,7 +441,7 @@ server.use(function(req, res) {
   res.status(404).send("Wrong path, check url");
 });
 
-
+//server.use(morgan('short'));
 
 server.listen(7000, () => console.log('API running on port 7000'));
 
