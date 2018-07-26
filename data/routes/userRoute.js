@@ -24,7 +24,7 @@ router.get('/:id', (req, res) => {
     userDb
     .get(req.params.id)
     .then(user => {
-        if (user.length === 0) {
+        if (!user) {
             res
             .status(404)
             .json({ message: "The user with the specified ID does not exist." });

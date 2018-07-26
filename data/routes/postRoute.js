@@ -25,11 +25,11 @@ router.get('/:id', (req, res) => {
     postDb
     .get(req.params.id)
     .then(post => {
-        // if (post.length === 0) {
-        //     res
-        //     .status(404)
-        //     .json({ message: "The post with the specified ID does not exist." });
-        // }
+        if (!post) {
+            res
+            .status(404)
+            .json({ message: "The post with the specified ID does not exist." });
+        }
         res
         .status(200)
         .json(post);
@@ -61,7 +61,7 @@ router.get('/:id/tags', (req, res) => {
 
 
 // Insert post 
-router.post('/posts', (req, res) => {
+router.post('/', (req, res) => {
     const {text, userId} = req.body;
     if (!text || !userId) {
         res.status(400).json({errorMessage: "Please provide text and userId for the post."})
@@ -110,7 +110,7 @@ router.delete('/:id', (req, res) => {
     postDb
     .remove(id)
     .then(response => {
-        if (response === 0) {
+        if (!response) {
             res
             .status(404)
             .json({message: "The post with the specified ID does not exist."})

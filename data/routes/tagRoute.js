@@ -3,6 +3,20 @@ const router = express.Router();
 const tagDb = require('../helpers/tagDb');
 
 
+function uppercaseTag(req, res, next) {
+    if (req.method === 'GET' && req.url === '/') {
+        let tags = res.json;
+        res.json = function (data) {
+            data.forEach(response=> response.tag = response.tag.toUpperCase());
+            tags.apply(res, arguments);
+        }
+    }
+    next();
+}
+
+router.use(uppercaseTag)
+
+
 // All tags
 router.get('/', (req, res) => {
     tagDb
@@ -25,7 +39,7 @@ router.get('/:id', (req, res) => {
     tagDb
     .get(req.params.id)
     .then(tag => {
-        if (tag.length === 0) {
+        if (!tag) {
             res
             .status(404)
             .json({ message: "The tag with the specified ID does not exist." });
