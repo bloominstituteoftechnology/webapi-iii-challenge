@@ -28,6 +28,8 @@
     "sqlite3": "^4.0.2"
   },
   "devDependencies": {
+    "babel-plugin-transform-async-to-generator": "^6.24.1",
+    "babel-polyfill": "^6.26.0",
     "nodemon": "^1.18.3"
   }
 }
