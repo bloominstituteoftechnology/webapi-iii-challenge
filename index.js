@@ -77,7 +77,8 @@ server.put("/api/post/:id", async (req, res) => {
 
 server.delete("/api/post/:id", async (req, res) => {
   try {
-    const response = await postDb.remove(req.params.id);
+    const id = req.params.id;
+    const response = await postDb.remove(id);
     res.status(200).send(response);
   } catch (error) {
     res
