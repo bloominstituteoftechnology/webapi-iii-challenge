@@ -3,7 +3,7 @@ const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
 const userDb = require('./data/helpers/userDb.js');
-
+const postDb = require('./data/helpers/postDb.js');
 
 const server = express();
 const port = 5000;
@@ -11,7 +11,7 @@ const port = 5000;
 //middleware
 server.use(express.json());
 server.use(helmet());
-server.use(cors({ origin: 'http://localhost:3000' }));
+server.use(cors({ origin: 'http://localhost:5000' }));
 
 
 //router handlers
@@ -61,7 +61,7 @@ server.post('/api/users', (req, res) => {
     ) : (
         res.status(400).json({ Error: "Enter name of user" })
     )
-})
+});
 
 
 server.delete('/api/users/:id', (req, res) => {
@@ -107,6 +107,70 @@ server.put('/api/users/:id', (req, res) => {
     )
 });
 
+//************POST ENDPOINTS***************************//
+
+server.get('/api/posts', (req, res) => {
+    postDb.get()
+        .then( posts => {
+            res.status(200).json(posts)
+        })
+        .catch( error => {
+            res.status(500).json({ error: "Error retrieving posts" })
+        })
+})
+
+server.get('/api/posts/:id', (req, res) => {
+    const { id } = req.params
+    postDb.get(id)
+        .then( user => {
+            user ? res.status(200).json(user) : res.status(404).json({ error: `There are no posts with id ${id}`});
+        })
+        .catch( error => {
+            res.status(500).json({ error: `Error in retrieving posts with this user id ${id}`})
+        })
+})
+
+server.delete('/api/users/:id/posts/:postId', (req, res) => {
+    const { id, postId } = req.params
+    postDb.remove(postId)
+        .then( response => {
+            if (response) {
+                res.status(200)
+                userDb.getUserPosts(id)
+                    .then( posts => {
+                        posts.length > 0 ? res.status(200).json(posts) : res.status(404).json({ error: `This user ${id} has no posts` })
+                    })
+                    .catch( error => {
+                        res.status(500).json({ error: `Can not retrieve posts for this user ${id}` })
+                    })
+            } else {
+                res.status(404).json({ error: `Unable to delete posts ${postId}` })
+            }
+        })
+})
+
+server.put('/api/users/:id/posts/:postId', (req, res) => {
+    const { id, postId } = req.params
+    const { text } = req.body
+    text ? (
+        postDb.update(postId, { userId: id, text: text })
+            .then( response => {
+                if (response) {
+                    postDb.get(postId)
+                        .then( post => {
+                            post ? res.status(200).json(post) : res.status(404).json({ error: `Unable to find post for this user ${postId}` })
+                        })
+                        .catch( error => {
+                            res.status(500).json({ error: `Unable to locate post for this user ${postId}` })
+                        })
+                } else {
+                    res.status(404).json({ error: `Unable to update posts for this user. ${postId}`})
+                }
+            })
+    ) : (
+        res.status(400).json({ error: "Missing text for a post" })
+    )
+})
 
 
 
