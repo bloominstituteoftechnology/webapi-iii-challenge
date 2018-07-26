@@ -1,5 +1,6 @@
 const express = require("express");
 const server = express();
+const bodyParser = require('body-parser')
 
 const postDb = require("./data/helpers/postDb.js");
 const tagDb = require("./data/helpers/tagDb.js");
@@ -29,6 +30,21 @@ server.get("/api/posts/:id", (req, res) => {
         .catch(error => {
             return res.status(500).send({Message: "Server Error"});
         });
+});
+server.post("/api/posts/", (req, res) => {
+  const { text, userId } = req.body;
+  console.log(req.body)
+  if(text == "" || userId == "") {
+      return res.status(400).send({Message: "Must provide a user ID and  text content"});
+  }
+  postDb
+      .insert({text, userId})
+      .then(response => {
+          res.status(201).json(response);
+      })
+      .catch(error => {
+          return res.status(500).send({Message: "Server Error"});
+      });
 });
 //users
 server.get("/api/users/", (req, res) => {
