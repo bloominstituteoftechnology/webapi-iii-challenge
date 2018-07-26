@@ -12,6 +12,12 @@ server.use(express.json());
 server.use(helmet());
 server.use(cors({}));
 
+const uppercaseTags = (req, res, next) => {
+  const { tag } = req.body;
+  tag.toUpperCase();
+  next();
+};
+
 //routing/endpoints
 
 //userDb
@@ -129,6 +135,30 @@ server.post("/api/posts", (req, res) => {
   const { userId, text } = req.body;
   postDb
     .insert({ userId, text })
+    .then(response => {
+      res.json(response);
+    })
+    .catch(error => {
+      return error;
+    });
+});
+
+//tagDb
+server.get("/api/tags", uppercaseTags, (req, res) => {
+  tagDb
+    .get()
+    .then(response => {
+      res.json({ response });
+    })
+    .catch(error => {
+      return error;
+    });
+});
+
+server.get("/api/tags/:id", uppercaseTags, (req, res) => {
+  const { id } = req.params;
+  tagDb
+    .get(id)
     .then(response => {
       res.json(response);
     })
