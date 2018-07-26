@@ -92,10 +92,10 @@ server.get('/posts/:id', async (req,res) => {
     }
 })
 
-server.post('/posts', async (req, res) => {
+server.post('/posts/:id', async (req, res) => {
     try {
         const { userId, text } = req.body;
-        if (userId === undefined || text === underfined) {
+        if (userId === undefined || text === undefined) {
           return res.status(400).json({error: "UserId or text is missing"})
         }
         const post = await postDb.insert(req.body);
