@@ -170,21 +170,43 @@ server.put('/api/posts/:id', (req, res) => {
 // ***** post end *******
 
 // ***** tag start ******
-server.get('/api/tags', (req, res) => {
-    tags.get().then(u => {
-        res.status(200).json(u)
+
+// custom middleware - tags toUpperCase
+const handleUpperCase = (req, res, next) => {
+    tags.get().then(tagItem => {
+        // console.log(tagItem);
+        tagItem.forEach(tag => {
+            tag.tag = tag.tag.toUpperCase();
+            // console.log(tagItem)
+        })
+        // console.log(tagItem)
+        req.body.tags = tagItem;
+        next();
+    })
+    .catch(err => {
+        console.log(err);
+    })
+    
+}
+
+server.get('/api/tags', handleUpperCase, (req,res) => {
+    console.log("req body tags: ", req.body)
+    tags.get().then(t => {
+        // t.toUpperCase
+        res.send(req.body.tags)
     })
     .catch(err => {
         res.status(500).json({ error: 'The tags information could not be retrieved'})
     })
 });
+
 server.get('/api/tags/:id', (req, res) => {
     const { id } = req.params;
-    tags.get(id).then(u => {
-        if(!u) {
+    tags.get(id).then(t => {
+        if(!t) {
             res.status(404).json({ error: 'The tag with specified ID does not exist.' });
         }
-        res.status(200).json(u)
+        res.status(200).json(t)
     })
     .catch(err => {
         res.status(500).json({ error: 'The tag information could not be retrieved.'})

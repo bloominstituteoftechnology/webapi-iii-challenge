@@ -1,4 +1,5 @@
 import React, { Component }  from 'react';
+import { Route, Link, Switch } from 'react-router-dom';
 
 class UserInfo extends Component {
     constructor(props) {
@@ -6,10 +7,14 @@ class UserInfo extends Component {
         this.state = {  }
     }
     render() { 
-        console.log(this.props)
+        console.log('user info props: ', this.props.u);
+        const  id = this.props.u.id;
+        const  name = this.props.u.name;
         return ( 
             <div>
-                {this.props.match.params.id}    
+                <Link to={`/users/${id}`}>
+                {name}
+                </Link>   
             </div>
          );
     }
