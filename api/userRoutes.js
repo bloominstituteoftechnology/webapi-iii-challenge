@@ -42,11 +42,9 @@ router.post('/', async (req, res) => {
             throw codes.BAD_REQUEST;
         }
         const postResponse = await userDb.insert(req.body);
-        console.log(postResponse);
-        res.status(CREATED_CODE).json(postResponse);
+        res.status(codes.CREATED).json(postResponse);
     } 
     catch (err) {
-     console.log(err);
     }
 });
 router.put('/:id', async(req, res) => {
