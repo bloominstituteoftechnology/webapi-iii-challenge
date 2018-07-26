@@ -1,10 +1,13 @@
 const express = require('express');
 const server = express();
+const morgan = require('morgan')
+
 const postDb = require('./data/helpers/postDb.js');
 const tagDb = require('./data/helpers/tagDb.js');
 const userDb = require('./data/helpers/userDb.js');
 
 server.use(express.json());
+server.use(morgan('dev'));
 
 //View Users
 server.get('/users', (req, res) => {
