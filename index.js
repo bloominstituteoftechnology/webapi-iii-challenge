@@ -11,6 +11,7 @@ server.use(cors());
 server.post('/api/users', async (req, res) => {
     const { name } = req.body;
     if (!name) return res.status(400).json({ errorMessage: "Please provide a name for the user." });
+    if (name.length > 128) return res.status(400).json({ errorMessage: "Name provided is too long!" });;
     try {
         const response = await users.insert({ name });
         return res.status(201).json(response);
