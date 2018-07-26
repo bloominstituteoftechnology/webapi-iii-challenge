@@ -1,17 +1,29 @@
-const OK_CODE = 200;
-const CREATED_CODE = 201;
-const BAD_REQUEST_CODE = 400;
-const NOT_FOUND_CODE = 404;
-const INTERNAL_SERVER_ERROR_CODE = 500;
-
-
-
-const express = require('express');
-const userRoutes = require('./api/userRoutes');
+const codes = require("./status-codes/statusCodes");
+const express = require("express");
+const userRoutes = require("./api/userRoutes");
 const server = express();
 server.use(express.json());
-server.use('/api/users', userRoutes);
+server.use("/api/users", userRoutes);
 
+server.use((err, req, res, next) => {
+  const errorInfo = {
+    ...err,
+    success: false
+  };
+  switch (errorInfo.code) {
+    case codes.BAD_REQUEST:
+      res.status(codes.BAD_REQUEST).json(errorInfo);
+      return;
+    case codes.NOT_FOUND:
+      res.status(codes.NOT_FOUND).json(errorInfo);
+      return;
+    case codes.INTERNAL_SERVER_ERROR:
+      res.status(codes.INTERNAL_SERVER_ERROR).json(errorInfo);
+      return;
+    default:
+      res.status(codes.INTERNAL_SERVER_ERROR).json(errorInfo);
+  }
+});
 // server.get('/api/posts', async (req, res) => {
 //     try {
 //     const posts = await postDb.get();
@@ -43,7 +55,7 @@ server.use('/api/users', userRoutes);
 //         }
 //         const postResponse = postDb.insert(req.body);
 //         res.status(OK_CODE).json(postResponse);
-//     } 
+//     }
 //     catch (err) {
 //         switch(err) {
 //             case BAD_REQUEST_CODE: {
