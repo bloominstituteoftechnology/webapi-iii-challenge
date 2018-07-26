@@ -12,6 +12,13 @@ server.use(express.json());
 server.use(cors());
 
 
+const upperTags = function(req, res, next) {
+    let tag = req.query.tag;
+    return tag.toUpperCase();
+    next();
+}
+
+
 const sendServerError = (msg, res) => {
     res.status(500);
     res.json(msg);
@@ -182,126 +189,121 @@ server.post('/api/users', async (req, res) => {
 })
 
 //Updates user
-server.put('/api/users/:id', (req, res) => {
+server.put('/api/users/:id', async (req, res) => {
     const id = req.params.id;
     const name = req.body;
 
-    if(!id) {
-        res.status(404);
-        res.json({error: 'The user with the specified ID does not exist.'})
-    }
+    try {
+        const updatedUser = await userDb.update(id, name); 
+        res.status(200).json(updatedUser);
 
-    userDb.update(id, name) 
-    .then(response => {
-        res.status(200).json(response)
-    })
-    .catch(err => {
+        if(!id) {
+            res.status(404);
+            res.json({error: 'The user with the specified ID does not exist.'})
+        }
+    } catch(err) {
         sendServerError({error: 'There was an error saving the changes.'})
-    })
+    }
 })
 
 //Deletes user
-server.delete('/api/users/:id', (req, res) => {
+server.delete('/api/users/:id', async (req, res) => {
     const id = req.params.id;
 
-    if(!id) {
-        res.status(404);
-        res.json({error: 'The user with the specified ID does not exist.'})
-    }
+    try {
+        const deleted = await userDb.remove(id) ;
+        res.status(200).json({deleted})
 
-    userDb.remove(id) 
-    .then(response => {
-        res.status(200).json({response})
-    })
-    .catch(err => {
+        if(!id) {
+            res.status(404);
+            res.json({error: 'The user with the specified ID does not exist.'})
+        }
+    } catch(err) {
         sendServerError({error: 'There was an error deleting the user.'})
-    })
+    }
 })
 
 //***************************** Tags endpoints *****************************
 
 //Retrieves list of tags
-server.get('/api/tags', (req, res) => {
-    tagsDb.get()
-    .then(response => {
-        res.status(200).json(response)
-    })
-    .catch(err => {
+server.get('/api/tags', async (req, res) => {
+    try {
+        const tags = await tagsDb.get();
+        server.use(upperTags);
+        console.log(tags);
+        res.status(200).json(tags)
+    } catch(err) {
         sendServerError({error: 'The tags could not be retrieved.'})
-    })
+    }
 })
 
 
 //Retrieves single tag
-server.get('/api/tags/:id', (req, res) => {
+server.get('/api/tags/:id', async (req, res) => {
     const id = req.params.id;
 
-    if(!id) {
-        res.status(404);
-        res.json({error: 'The tag with the specified ID does not exist.'})
-    }
+    try {
+        const tag = await tagsDb.get(id);
+        res.status(200).json(tag)
 
-    tagsDb.get(id)
-    .then(response => {
-        res.status(200).json(response)
-    })
-    .catch(err => {
+        if(!id) {
+            res.status(404);
+            res.json({error: 'The tag with the specified ID does not exist.'})
+        }
+    } catch(err) {
         sendServerError({error: 'The tag could not be retrieved.'})
-    })
+    }
 })
 
 //Creates new tag
-server.post('/api/tags', (req, res) => {
+server.post('/api/tags', async (req, res) => {
     const tag = req.body;
 
-    if(!tag) {
-        res.status(400).json({error: 'Please provide a tag.'})
-    }
+    try {
+        const newTag = await tagsDb.insert(tag);
+        res.status(201).json(newTag)
 
-    tagsDb.insert(tag)
-    .then(response => {
-        res.status(201).json(response)
-    })
-    .catch(err => {
+        if(!tag) {
+            res.status(400).json({error: 'Please provide a tag.'})
+        }
+    } catch(err) {
         sendServerError({error: 'There was an error saving the tag to the database.'})
-    })
+    }
 })
 
 //Updates tag
-server.put('/api/tags/:id', (req, res) => {
+server.put('/api/tags/:id', async (req, res) => {
     const id = req.params.id;
     const tag = req.body;
 
-    if(!id) {
-        res.status(404);
-        res.json({error: 'The tag with the specified ID does not exist.'})
-    }
+    try {
+        const updatedTag = await tagsDb.update(id, tag);
+        res.status(200).json(updatedTag)
 
-    tagsDb.update(id, tag) 
-    .then(response => {
-        res.status(200).json(response)
-    })
-    .catch(err => {
+        if(!id) {
+            res.status(404);
+            res.json({error: 'The tag with the specified ID does not exist.'})
+        }
+    } catch(err) {
         sendServerError({error: 'There was an error saving the changes.'})
-    })
+    }
 })
 
 //Deletes tag
-server.delete('/api/tags/:id', (req, res) => {
+server.delete('/api/tags/:id', async (req, res) => {
     const id = req.params.id;
 
-    if(!id) {
-        res.status(404);
-        res.json({error: 'The tag with the specified ID does not exist.'})
-    }
-
-    tagsDb.remove(id) 
-    .then(response => {
-        res.status(200).json({response})
-    })
-    .catch(err => {
+    try {
+        const deleted = await  tagsDb.remove(id) ;
+        res.status(200).json({deleted})
+        
+        if(!id) {
+            res.status(404);
+            res.json({error: 'The tag with the specified ID does not exist.'})
+        }
+    } catch(err) {
         sendServerError({error: 'There was an error deleting the tag.'})
-    })
+    }
 })
 
 server.listen(8000, () => console.log('API running'))
