@@ -174,6 +174,18 @@ server.post("/api/user/:id", async (req, res) => {
   }
 });
 
+server.put("/api/user/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const user = req.params.user;
+    const response = await userDb.update(id, user);
+  } catch (error) {
+    res
+      .status(500)
+      .send({ message: "ERROR PROCESSING REQUEST", error: error.message });
+  }
+});
+
 // catch all 404
 server.use(function(req, res) {
   res.status(404).send("ERROR: FILE NOT FOUND");
