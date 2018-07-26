@@ -57,6 +57,19 @@ server.put('/users/:id', async (req, res) => {
     }
 })
 
+server.delete('/users/:id', async (req, res) => {
+    try {
+        const id = req.params.id
+        const remove = await userDb.remove(id)
+        if (remove === 0 ) {
+            res.status(404)
+        }
+        res.send(200).json(remove)
+    } catch(err) {
+        res.status(400).json({error: "The user couldn't be deleted"})
+    }
+})
+
 // Posts 
 
 server.get('/posts', async (req, res) => {
