@@ -20,7 +20,7 @@ server.get('/', (req, res) => {
 });
 
 function toUpperCase(req, res, next) {
-  req.body.tag = req.body.tag.toUpperCase();
+  if (req.body.tag) req.body.tag = req.body.tag.toUpperCase();
   next();
 }
 
@@ -338,7 +338,7 @@ server.get('/tags/:id', async (req, res) => {
   }
 });
 
-//! add a new tag
+// add a new tag
 server.post('/tags', toUpperCase, async (req, res) => {
   const TAG = req.body.tag;
 
@@ -367,6 +367,46 @@ server.post('/tags', toUpperCase, async (req, res) => {
       // dup
       return res.status(500).json({ error: `No duplicate tags` });
     else return res.status(500).json({ error: `The tag could not be added.` });
+  }
+});
+
+// edit a tag
+server.put('/tags/:id', toUpperCase, async (req, res) => {
+  const ID = req.params.id;
+  const TAG = req.body.tag;
+
+  if (!TAG) {
+    res.status(400).json({
+      error: 'Please provide the tag.',
+    });
+    return;
+  }
+
+  if (TAG.length > 80) {
+    res.status(400).json({
+      error: 'Tag must be fewer than 80 characters.',
+    });
+    return;
+  }
+
+  // does the tag exist?
+  try {
+    const response = await tagDB.get(ID);
+    if (typeof response === 'undefined')
+      res.status(404).json({ error: `Tag with id:${ID} exists` });
+    //edit the tag
+    try {
+      const response = await tagDB.update(ID, { tag: TAG });
+      res.status(200).json({ message: `Tag id:${ID} has been updated.` });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ error: `Tag with id:${ID} could not be updated.` });
+    }
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ error: `Tag with id:${ID} could not be retrieved.` });
   }
 });
 
