@@ -19,7 +19,22 @@ server.get('/', (req, res) => {
   res.send('TADA!');
 });
 
+function toUpperCase(req, res, next) {
+  req.body.tag = req.body.tag.toUpperCase();
+  next();
+}
+
 // display all users
+server.get('/users', async (req, res) => {
+  try {
+    const response = await userDB.get();
+    return res.status(200).json(response);
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ error: 'The users information could not be retrieved.' });
+  }
+});
 server.get('/users', async (req, res) => {
   try {
     const response = await userDB.get();
@@ -147,14 +162,13 @@ server.get('/posts/:id/tags', async (req, res) => {
     await postDB.get(ID);
     try {
       const tagResponse = await postDB.getPostTags(ID);
-      console.log('GETPOSTTAGS response', tagResponse);
       if (tagResponse.length === 0)
         res.status(200).json({ message: `Post id:${ID} has no tags` });
       else return res.status(200).json(tagResponse);
     } catch (err) {
       return res
         .status(500)
-        .json({ error: 'The tags information could not be retrieved.', err });
+        .json({ error: 'The tags information could not be retrieved.' });
     }
   } catch (err) {
     return res
@@ -242,8 +256,8 @@ server.get('/tags/:id', async (req, res) => {
   }
 });
 
-// add a new tag
-server.post('/tags', async (req, res) => {
+//! add a new tag
+server.post('/tags', toUpperCase, async (req, res) => {
   const TAG = req.body.tag;
 
   if (!TAG) {
@@ -268,6 +282,7 @@ server.post('/tags', async (req, res) => {
     return res.status(200).json(`Tag id:${response.id} has been added.`);
   } catch (err) {
     if (err.errno == 19)
+      // dup
       return res.status(500).json({ error: `No duplicate tags` });
     else return res.status(500).json({ error: `The tag could not be added.` });
   }
