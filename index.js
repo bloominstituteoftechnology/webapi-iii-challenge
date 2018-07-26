@@ -184,7 +184,7 @@ server.post('/api/tags', tagUpperCaser, async (req, res) => {
             const response = await tags.insert({ tag });
             return res.status(201).json(response);
         } catch (err) {
-            if (err.errno === 19) return res.status(500).json({ error: 'There is already an existing tag!' });
+            if (err.errno === 19) return res.status(500).json({ error: 'There is already an existing tag with that name!' });
             return res.status(500).json({ error: 'There was an error while saving the tag to the database.' });
         }
     } catch (err) {
@@ -226,6 +226,7 @@ server.put('/api/tags/:id', tagUpperCaser, async (req, res) => {
             return res.status(500).json({ error: 'The tag information could not be retrieved.' });
         }
     } catch (err) {
+        if (err.errno === 19) return res.status(500).json({ error: 'There is already an existing tag with that name!' });
         return res.status(500).json({ error: "The tags information could not be modified." });
     }
 })
