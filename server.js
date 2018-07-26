@@ -18,10 +18,11 @@ const tags = require("./data/routes/tags");
 const server = express();
 //parse JSON to objects
 server.use(express.json());
-
+//security
 server.use(helmet());
+//logger
 server.use(morgan("dev"));
-
+//custom middleware for uppercasing tags
 function uppercaseTag(req, res, next) {
   if (req.method === "GET" && req.url === "/tags") {
     let tags = res.json;
@@ -32,13 +33,13 @@ function uppercaseTag(req, res, next) {
   }
   next();
 }
-
+//test home server
 server.get("/", (req, res) => {
   res.send("<h1>Hello<h1>");
 });
-
+//use uppercase for tags
 server.use(uppercaseTag);
-
+//use users route
 server.use("/users", users);
 server.use("/posts", posts);
 server.use("/tags", tags);
@@ -57,8 +58,6 @@ server.use("/tags", tags);
 //         .json({ error: "The users information could not be retrieved." });
 //     });
 // });
-
-//use users route
 
 //get user by id
 
