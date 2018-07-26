@@ -3,9 +3,17 @@ const userDb = require("./data/helpers/userDb.js");
 const postDb = require("./data/helpers/postDb.js");
 const tagDb = require("./data/helpers/tagDb.js");
 
+//Middleware
+function uppercaseTag(req, res, next) {
+    
+    next();
+}
+
 
 const server = express();
 server.use(express.json());
+
+
 
 
 // USERS
@@ -136,7 +144,6 @@ server.get('/users/:id/posts', (req, res) => {
 
 
 
-
 // POSTS
 // All posts
 server.get('/posts', (req, res) => {
@@ -176,8 +183,8 @@ server.get('/posts/:id', (req, res) => {
 });
 });
 
-//get post tags
 
+//get post tags
 server.get('/posts/:id/tags', (req, res) => {
     postDb
     .getPostTags(req.params.id)
@@ -213,6 +220,7 @@ server.post('/posts', (req, res) => {
             res.status(500).json({error: "There was an error while saving the post to the database" })
         })
 });
+
 
 //Update post
 server.put('/posts/:id', (req, res) => {
@@ -258,10 +266,6 @@ server.delete('/posts/:id', (req, res) => {
             .json({error: "The post could not be removed"})
         })
 });
-
-
-
-
 
 
 
@@ -324,6 +328,7 @@ server.post('/tags', (req, res) => {
         })
 });
 
+
 //Update tag
 server.put('/tags/:id', (req, res) => {
     const {id} = req.params;
@@ -347,6 +352,7 @@ server.put('/tags/:id', (req, res) => {
     });
 });
 
+
 //Delete tag
 server.delete('/tags/:id', (req, res) => {
     const {id} = req.params;
@@ -368,4 +374,5 @@ server.delete('/tags/:id', (req, res) => {
         })
 });
 
-server.listen(8000, () => console.log("Yo, your API us running on port 8000"));
+
+server.listen(8000, () => console.log("Yo, your API is running on port 8000"));
