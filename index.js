@@ -68,7 +68,7 @@ server.put("/api/post/:id", async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .send({ error: "ERROR PROCESSING REQUEST", error: error.message });
+      .send({ message: "ERROR PROCESSING REQUEST", error: error.message });
   }
 });
 
@@ -79,7 +79,7 @@ server.delete("/api/post/:id", async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .send({ error: "ERROR PROCESSING REQUEST", error: error.message });
+      .send({ message: "ERROR PROCESSING REQUEST", error: error.message });
   }
 });
 
@@ -92,7 +92,7 @@ server.get("/api/tag/:id", async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .send({ error: "ERROR PROCESSING REQUEST", error: error.message });
+      .send({ message: "ERROR PROCESSING REQUEST", error: error.message });
   }
 });
 
@@ -104,7 +104,7 @@ server.post("/api/tag", async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .send({ error: "ERROR PROCESSING REQUEST", error: error.message });
+      .send({ message: "ERROR PROCESSING REQUEST", error: error.message });
   }
 });
 
@@ -117,7 +117,7 @@ server.put("/api/tag/:id", async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .send({ error: "ERROR PROCESSING REQUEST", error: error.message });
+      .send({ message: "ERROR PROCESSING REQUEST", error: error.message });
   }
 });
 
@@ -129,7 +129,7 @@ server.delete("/api/tag/:id", async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .send({ error: "EROR PROCESSING REQUEST", error: error.message });
+      .send({ message: "EROR PROCESSING REQUEST", error: error.message });
   }
 });
 
@@ -142,7 +142,7 @@ server.get("/api/user/:id", async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .send({ error: "ERROR PROCESSING REQUEST", error: error.message });
+      .send({ message: "ERROR PROCESSING REQUEST", error: error.message });
   }
 });
 
@@ -154,7 +154,7 @@ server.get("/api/user/:id/posts", async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .send({ error: "ERROR PROCESSING REQUEST", error: error.message });
+      .send({ message: "ERROR PROCESSING REQUEST", error: error.message });
   }
 });
 
@@ -166,7 +166,7 @@ server.post("/api/user/:id", async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .send({ error: "ERROR PROCESSING REQUEST", error: error.message });
+      .send({ message: "ERROR PROCESSING REQUEST", error: error.message });
   }
 });
 
