@@ -13,7 +13,7 @@ server.use(helmet());
 //userDB.js
 
 //USERS.GET
-server.get('/users', (req, res) => {
+server.get('/users/', (req, res) => {
     const id = req.params.id;
     const name = req.params.name;
 
@@ -23,9 +23,18 @@ server.get('/users', (req, res) => {
     .catch(err => res.send(err));
 })
 
+//USERS.GETBYID
+server.get('/users/:id', (req, res) => {
+    const id = req.params.id;
+
+    userDb.get(id).then(posts => {
+        res.status(200).json(posts);
+    })
+    .catch(err => res.send(err));
+})
 
 //USERS.GETUSERPOSTS
-server.get('/users/:id', (req, res) => {
+server.get('/users/:id/posts', (req, res) => {
     const id = req.params.id;
     userDb.getUserPosts(id).then(posts => {
         res.status(200).json(posts);
@@ -48,16 +57,19 @@ server.put('/users/:id', (req, res) => {
 
 //USERS.POST
 server.post('/users', (req, res) => {
-    const { name } = req.body;
+    const { id, name }  = req.body;
+    const success = { name } + 'has been successfully saved';
     if (!name ) {
-        res.status(400).json(`{ errorMessage: "Please provide a name for the post." }`)
+        res.status(400).json(`Error: Please provide a name for the post.`)
     };
 
-    let msg = db.find()[db.find()-1];
+    if ( name.length > 128 ) {
+        res.status(400).json(`Error: Must be 128 characters or shorter.`);
+    };
 
-    userDb.insert({ name }).then(posts => {
+    userDb.insert({ id, name }).then(posts => {
         posts.push({ name });
-        res.status(201).json(`{Message: "Success"}`);
+        res.status(201).send(success);
     })
     .catch(err => res.send(err));
 })
@@ -85,6 +97,15 @@ server.get('/tags', (req, res) => {
     .catch(err => res.send(err));
 })
 
+//TAG.GETBYID
+server.get('/tags/:id', (req, res) => {
+    const id = req.params.id;
+
+    tagDb.get(id).then(posts => {
+        res.status(200).json(posts);
+    })
+    .catch(err => res.send(err));
+})
 
 //TAG.PUT
 server.put('/tags/:id', (req, res) => {
@@ -136,6 +157,7 @@ server.get('/posts', (req, res) => {
     .catch(err => res.send(err));
 })
 
+//POST.GETBYID
 server.get('/posts/:id', (req, res) => {
     const id = req.params.id;
 
