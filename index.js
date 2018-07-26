@@ -7,6 +7,15 @@ const express = require("express");
 const server = express();
 server.use(express.json());
 
+const cors = require("cors");
+server.use(cors());
+
+// CUSTOM MIDDLEWARE
+const upperCase = (req, res, next) => {
+  req.body.tag = req.body.tag.toUpperCase();
+  next();
+};
+
 // Users
 server.get("/api/users", (req, res) => {
   users
@@ -281,7 +290,7 @@ server.get("/api/tags", (req, res) => {
     );
 });
 
-server.post("/api/tags", (req, res) => {
+server.post("/api/tags", upperCase, (req, res) => {
   const { tag } = req.body;
   if (!tag) {
     res
@@ -343,7 +352,7 @@ server.delete("/api/tags/:id", (req, res) => {
     });
 });
 
-server.put("/api/tags/:id", (req, res) => {
+server.put("/api/tags/:id", upperCase, (req, res) => {
   const { tag } = req.body;
   if (!tag) {
     res.status(400).json({
@@ -382,6 +391,11 @@ server.put("/api/tags/:id", (req, res) => {
     .catch(err => {
       res.status(500).json({ error: err.message });
     });
+});
+
+// Error Handling
+server.use((req, res) => {
+  res.status(404).send("This route does not exist.");
 });
 
 server.listen(8000, () => console.log("API running on port 8000"));
