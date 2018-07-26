@@ -7,6 +7,18 @@ const server = express();
 
 server.use(express.json());
 
+// CUSTOM MIDDLEWARE
+
+server.post('/tags', (req, res, next) => {
+  req.body.tag = req.body.tag.toUpperCase();
+  next();
+})
+
+server.put('/tags/:tagId', (req, res, next) => {
+  req.body.tag = req.body.tag.toUpperCase();
+  next();
+})
+
 // ALL THE GETS
 
 server.get('/users', (req, res) => {
