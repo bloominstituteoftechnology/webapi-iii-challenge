@@ -3,23 +3,19 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 
-const posts = require('./routers/posts');
-const tags = require('./routers/tags');
-const users = require('./routers/users');
+const apiRouter = require('./routers/indexRouter');
 
 // init server
 const server = express();
 const port = 8000;
 
-// opt in
+// mount middleware
 server.use(cors());
 server.use(express.json());
 server.use(helmet());
 
-// routers
-server.use('/api/posts', posts);
-server.use('/api/tags', tags);
-server.use('/api/users', users);
+// api router
+server.use('/api', apiRouter);
 
 server.get('/', (req, res) => {
     res.status(200).send('Hello');
