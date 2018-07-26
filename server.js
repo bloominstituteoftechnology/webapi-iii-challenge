@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const userDb = require('./data/helpers/userDb.js');
 const postDb = require('./data/helpers/postDb.js');
 const tagDb = require('./data/helpers/tagDb.js');
@@ -6,6 +7,7 @@ const tagDb = require('./data/helpers/tagDb.js');
 const port = 8000;
 const server = express();
 server.use(express.json());
+server.use(cors());
 
 //User endpoints
 
@@ -112,6 +114,18 @@ server.get('/api/posts', (req, res) => {
         res.json({ error: "The post information could not be retrieved." })
     });
 });
+// server.get('/api/posts', (req, res) => {
+//     postDb
+//     .get()
+//     .then(posts => {
+//         res.json({ posts });
+//     })
+//     .catch(error => {
+//         res.status(500)
+//         res.json({ error: "The post information could not be retrieved." })
+//     });
+// });
+
 
 //Get post by ID
 server.get('/api/posts/:id', (req, res) => {
