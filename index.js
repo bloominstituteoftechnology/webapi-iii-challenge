@@ -72,18 +72,18 @@ server.get("/api/users/:id", (req, res) => {
 });
 server.post("/api/users/", (req, res) => {
   const { name } = req.body;
-if(name == "") {
+  if(name == "") {
     return res.status(400).send({Message: "Must provide a username"});
-}
-userDb
-    .insert({name})
-    .then(response => {
-        res.status(201).json(response);
-    })
-    .catch(error => {
-        return res.status(500).send({Message: "Server Error"});
-    });
-});
+  }
+  userDb
+      .insert({name})
+      .then(response => {
+          res.status(201).json(response);
+      })
+      .catch(error => {
+          return res.status(500).send({Message: "Server Error"});
+      });
+  });
 //tags
 server.get("/api/tags/", (req, res) => {
   tagDb
@@ -109,6 +109,20 @@ server.get("/api/tags/:id", (req, res) => {
       return res.status(500).send({Message: "Server Error"});
     })
 })
+server.post("/api/tags/", (req, res) => {
+  const { tag } = req.body;
+  if(tag == "") {
+    return res.status(400).send({Message: "Must provide a tag"});
+  }
+  tagDb
+      .insert({tag})
+      .then(response => {
+          res.status(201).json(response);
+      })
+      .catch(error => {
+          return res.status(500).send({Message: "Server Error"});
+      });
+  });
 
 
 server.listen(8000, () => {console.log("Server is listening on port 8000")})
