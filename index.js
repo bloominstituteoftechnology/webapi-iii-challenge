@@ -173,12 +173,17 @@ server.delete('/api/posts/:id', async (req, res) => {
 server.post('/api/tags', async (req, res) => {
     const { tag } = req.body;
     if (!tag) return res.status(400).json({ errorMessage: "Please provide a tag." });
-    if (tag.length > 80) return res.status(400).json({ errorMessage: "Tag provided is too long!" });;
+    if (tag.length > 80) return res.status(400).json({ errorMessage: "Tag provided is too long!" });
     try {
-        const response = await tags.insert({ tag });
-        return res.status(201).json(response);
+        try {
+            const response = await tags.insert({ tag });
+            return res.status(201).json(response);
+        } catch (err) {
+            if (err.errno === 19) return res.status(500).json({ error: 'There is already an existing tag!' });
+            return res.status(500).json({ error: 'There was an error while saving the tag to the database.' });
+        }
     } catch (err) {
-        return res.status(500).json({ error: 'There was an error while saving the tag to the database.' });
+        return res.status(500).json({ error: 'The tags information could not be retrieved.' });
     }
 })
 
