@@ -9,6 +9,19 @@ const server = express();
 
 server.use(express.json());
 
+function logger(req, res, next) {
+  console.log(
+    `[${new Date().toISOString()}] ${req.method} to ${req.url} from ${req.get(
+      'Origin'
+    )}`
+  );
+
+next();	
+}	
+
+server.use(logger);
+
+
 server.use(morgan('dev'));
 
 server.get('/', (req, res) => {
@@ -38,6 +51,20 @@ server.get('/tags', (req, res) => {
 
         .catch(err => {
         res.status(404).json({error: "The tags information could not be retrieved."});
+        })
+
+});
+
+
+server.get('/users', (req, res) => {
+        const request = dbuser.get();
+
+        request.then(response => {
+        res.status(200).json(response);
+        })
+
+        .catch(err => {
+        res.status(404).json({error: "The user information could not be retrieved."});
         })
 
 });
@@ -90,7 +117,8 @@ server.get('/users/:id/posts', (req, res) => {
 
         request.then(response => {
         if(response.length==0) res.status(404).json({ error: "The user with the specified ID does not exist." });
-         else {  
+         else { 
+		 //response.userId = id;
                  res.status(200).json(response);
          }
 
@@ -103,18 +131,6 @@ server.get('/users/:id/posts', (req, res) => {
 });
 
 
-server.get('/users', (req, res) => {
-        const request = dbuser.get();
-
-        request.then(response => {
-        res.status(200).json(response);
-        })
-
-        .catch(err => {
-        res.status(404).json({error: "The user information could not be retrieved."});
-        })
-
-});
 
 
 server.get('/posts/:id', (req, res) => {
@@ -139,7 +155,7 @@ server.get('/posts/:id', (req, res) => {
 });
 
 
-server.get('/:id', (req, res) => {
+server.get('/posts/:id/tags', (req, res) => {
         const id = req.params.id;
 
        const request = dbpost.getPostTags(id);
