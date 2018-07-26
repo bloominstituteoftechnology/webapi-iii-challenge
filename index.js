@@ -37,24 +37,36 @@ server.get('/api/users/:id', async (req, res) => {
 })
 
 server.post('/api/users', async (req, res) => {
+    const NAME_LENGTH_ERROR = 'NAME_LENGTH_ERROR';
     try {
-        if(req.body.name.length > 128) {
-            res.status(BAD_REQUEST_CODE).json({error: 'Maximum name length is 128, please make a shorter name'});
-            res.end();
-            return;
+        const { name } = req.body;
+        if(name.length > 128) {
+            throw NAME_LENGTH_ERROR;
         }
-        if(req.body.name === undefined) {
-            res.status(BAD_REQUEST_CODE).json({error: 'Cannot create user without a name'});
-            res.end();
-            return;
+        if(name === undefined) {
+            throw BAD_REQUEST_CODE;
         }
         const postResponse = await userDb.insert(req.body);
         res.status(CREATED_CODE).json(postResponse);
     } 
     catch (err) {
-        res.status(INTERNAL_SERVER_ERROR_CODE).json({error: 'Error creating user either this is a server problem or there is a user that already exists by that name'})
+        switch(err) {
+            case NAME_LENGTH_ERROR: {
+            res.status(BAD_REQUEST_CODE).json({error: 'Maximum name length is 128, please make a shorter name'});
+            res.end();
+                break;
+        }
+            case BAD_REQUEST_CODE: {
+            res.status(BAD_REQUEST_CODE).json({error: 'Cannot create user without a name'});
+            res.end();
+                break;
+            }
+            default: {
+            res.status(INTERNAL_SERVER_ERROR_CODE).json({error: 'Error creating user either this is a server problem or there is a user that already exists by that name'})
+        }
+    } 
     }
-})
+});
 server.put('/api/users/:id', async(req, res) => {
     try {
         const id = req.params.id;
