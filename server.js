@@ -64,7 +64,24 @@ server.post('/api/users', (req, res) => {
 })
 
 
-
+server.delete('/api/users/:id', (req, res) => {
+    const { id } = req.params
+    userDb.remove(id)
+        .then( response => {
+            if (response) {
+                res.status(200)
+                userDb.get()
+                    .then( users => {
+                        res.status(200).json({ users })
+                    })
+                    .catch( error => {
+                        res.status(500).json({ error: "Could not retrieve this user" })
+                    })
+            } else {
+                res.status(404).json({ error: `There is no user with id ${id}`})
+            }
+        })
+})
 
 
 
