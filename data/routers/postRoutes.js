@@ -48,11 +48,12 @@ router.put('/:id', async (req, res, next) => {
 router.delete('/:id', async (req, res, next) => {
     const id = req.params.id;
     try {
-        await postDb.remove(id)
+        let request = await postDb.remove(id);
+        if(request === 0){throw new Error('Id does not exist')}
         res.status(200).send("Successfully deleted")
     }
     catch (error) {
-        next({ code: 502, message: error })
+        next({ code: 502, message: error.message })
     }
 })
 router.use((err, req, res, next) => {
@@ -75,7 +76,7 @@ router.use((err, req, res, next) => {
                 recovery: 'Please check inputs'
             })
             break;
-        case 501:
+        case 502:
             res.status(501).send({
                 success: false,
                 data: undefined,
