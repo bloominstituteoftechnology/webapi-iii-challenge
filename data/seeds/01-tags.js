@@ -3,20 +3,20 @@ exports.seed = function(knex, Promise) {
     .del() // delete existing tags
     .then(function() {
       return knex('tags').insert([
-        { tag: 'shire' }, // 1
-        { tag: 'fellowship of the ring' }, // 2
-        { tag: 'frodo' }, // 3
-        { tag: 'rivendell' }, // 4
-        { tag: 'bree' }, // 5
-        { tag: 'sam' }, // 6
-        { tag: 'merry' }, // 7
-        { tag: 'gimli' }, // 8
-        { tag: 'gandalf' }, // 9
-        { tag: 'aragorn' }, // 10
-        { tag: 'moria' }, // 11
-        { tag: 'boromir' }, // 12
-        { tag: 'legolas' }, // 13
-        { tag: 'prancing pony' }, // 14
+        { tag: 'SHIRE' }, // 1
+        { tag: 'FELLOWSHIP OF THE RING' }, // 2
+        { tag: 'FRODO' }, // 3
+        { tag: 'RIVENDELL' }, // 4
+        { tag: 'BREE' }, // 5
+        { tag: 'SAM' }, // 6
+        { tag: 'MERRY' }, // 7
+        { tag: 'GIMLY' }, // 8
+        { tag: 'GANDALF' }, // 9
+        { tag: 'ARAGORN' }, // 10
+        { tag: 'MORIA' }, // 11
+        { tag: 'BOROMIR' }, // 12
+        { tag: 'LEGOLAS' }, // 13
+        { tag: 'PRANCING PONY' }, // 14
       ]);
     });
 };

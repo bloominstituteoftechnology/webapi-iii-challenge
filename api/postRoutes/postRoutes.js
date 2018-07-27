@@ -55,7 +55,7 @@ router.get('/:id/tags', (req, res) => {
         })
 });
 
-//UPDATE TAG
+//UPDATE POST
 router.put('/:postId', (req, res) => {
 
     let postId = req.params.postId;
@@ -73,11 +73,31 @@ router.put('/:postId', (req, res) => {
         .catch(err => {
             console.log(err);
             res.status(500).json({
-                "failed": "user was not updated",
+                "failed": "post was not updated",
                 "error": err
             })
         })
 })
+
+//DELETE POST
+router.delete('/:id', (req, res) => {
+
+    let id = req.params.id;
+
+    postDb.remove(id) //?
+        .then(response => {
+
+            res.send('post ' + id + ' was removed')
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+                "failed": "post was not removed",
+                "error": err
+            })
+        })
+})
+
 
 
 
