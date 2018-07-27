@@ -11,7 +11,7 @@ server.get('/', (req, res) => {
   res.send('Hello World');
 });
 
-server.get('/api/posts', (req, res) => {
+server.get('/api/posts', (req, res) => {//get all posts
 
   postDb.get()
     .then(posts => {
@@ -23,7 +23,7 @@ server.get('/api/posts', (req, res) => {
     })
 
 });
-server.get('/api/posts/:id', (req, res) => {
+server.get('/api/posts/:id', (req, res) => {//get posts by id
   const id = req.params.id;
   postDb.get(id)//req.params.id
     .then(posts => {
@@ -38,7 +38,19 @@ server.get('/api/posts/:id', (req, res) => {
     });
 
 })
-server.delete('/api/posts/:id', (req, res) => {
+server.post('/api/posts', (req, res) => {//add post
+  const post = req.body
+  postDb.insert(post)
+    .then(posts => {
+      res.status(200).json(posts);
+    })
+    .catch(error => {
+      res.status(500)
+        .json({ error: "post not added." })
+    })
+
+});
+server.delete('/api/posts/:id', (req, res) => {//delete posts by id
   const { id } = req.params;
   // posts = posts.filter(p => p.id != id)
   postDb.remove(id)
@@ -53,7 +65,7 @@ server.delete('/api/posts/:id', (req, res) => {
         .json({ error: "error 2." })
     });
 })
-server.get('/api/posttags/:id', (req, res) => {
+server.get('/api/posttags/:id', (req, res) => {//get post tags by id
   const postId = req.params.id;
   postDb.getPostTags(postId)//req.params.id
     .then(posts => {
@@ -70,7 +82,7 @@ server.get('/api/posttags/:id', (req, res) => {
 })
 
 
-server.get('/api/users', (req, res) => {
+server.get('/api/users', (req, res) => {// get all users
 
   userDb.get()
     .then(posts => {
@@ -82,7 +94,7 @@ server.get('/api/users', (req, res) => {
     })
 
 });
-server.get('/api/users/:id', (req, res) => {
+server.get('/api/users/:id', (req, res) => {//get user by id
   const id = req.params.id;
   userDb.get(id)
     .then(posts => {
@@ -97,7 +109,7 @@ server.get('/api/users/:id', (req, res) => {
     });
 
 });
-server.post('/api/users', (req, res) => {
+server.post('/api/users', (req, res) => {//add user
   user = req.body
   userDb.insert(user)
     .then(posts => {
@@ -109,7 +121,20 @@ server.post('/api/users', (req, res) => {
     })
 
 });
-server.delete('/api/users/:id', (req, res) => {
+server.put('/api/users/:id', (req, res) => {//uodate user
+  const user = req.body
+  const id = req.params.id;
+  userDb.update(id, user)
+    .then(posts => {
+      res.status(200).json(posts);
+    })
+    .catch(error => {
+      res.status(500)
+        .json({ error: "User not updated." })
+    })
+
+});
+server.delete('/api/users/:id', (req, res) => {//delete user
   const { id } = req.params;
   // posts = posts.filter(p => p.id != id)
   userDb.remove(id)
@@ -125,7 +150,7 @@ server.delete('/api/users/:id', (req, res) => {
     });
 })
 
-server.get('/api/userposts/:id', (req, res) => {
+server.get('/api/userposts/:id', (req, res) => {//get posts of user
   const userId = req.params.id;
   userDb.getUserPosts(userId)//req.params.id
     .then(posts => {
@@ -141,7 +166,7 @@ server.get('/api/userposts/:id', (req, res) => {
 
 })
 
-server.get('/api/tags', (req, res) => {
+server.get('/api/tags', (req, res) => {//get tags
 
   tagDb.get()
     .then(posts => {
