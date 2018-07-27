@@ -1,19 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const userDb = require('../data/helpers/userDb');
-
-// custom middleware
-function isEven(req, res, next) {
-    let d = new Date();
-    d = d.toLocaleTimeString().split(':')[2];
-    // console.log(d);
-
-    if (d % 2 === 0) {
-        next();
-    } else {
-        res.status(403).json({error: errors["403"]});
-    }
-}
+const isEven = require('./middleware/isEven');
 
 // READ
 router.get('/', async (req, res, next) => {

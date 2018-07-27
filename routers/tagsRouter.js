@@ -1,25 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const tagDb = require('../data/helpers/tagDb');
-
-// custom middleware
-function isEven(req, res, next) {
-    let d = new Date();
-    d = d.toLocaleTimeString().split(':')[2];
-    // console.log(d);
-
-    if (d % 2 === 0) {
-        next();
-    } else {
-        res.status(403).json({error: errors["403"]});
-    }
-}
-
-function isUpper(req, res, next) {
-    // console.log(req.body.tag.toUpperCase());
-    req.body.tag = req.body.tag.toUpperCase();
-    next();
-}
+const isEven = require('./middleware/isEven');
+const isUpper = require('./middleware/isUpper');
 
 // READ
 router.get('/', async (req, res, next) => {
