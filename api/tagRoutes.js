@@ -1,74 +1,63 @@
 const server = require('express')()
 const tagDb = require('../data/helpers/tagDb')
+
 // GET ALL TAGS
 server.get('/', (req, res) => {
   tagDb.get().then((tags) => res.status(200).json(tags))
 })
 
 // GET TAG BY ID
-server.get('/:id', (req, res) => {
+server.get('/:id', (req, res, next) => {
   tagDb
     .get(req.params.id)
     .then((tag) => {
       tag === undefined
-        ? res.status(404).json({
-          message: `tag with id of ${req.params.id} does not exist`
-        })
+        ? next(new Error('INVALID_ITEM'))
         : res.status(200).json(tag)
     })
-    .catch((err) =>
-      res.status(500).json({ error: 'Tag information could not be retrieved.' })
-    )
+    .catch(next)
 })
 
 // POST A NEW TAG
-server.post('/', (req, res) => {
+server.post('/', (req, res, next) => {
   const tag = req.body.tag
-  !tag || tag.length > 80
-    ? res.status(400).json({
-      errorMessage: 'Please provide text for this tag.'
-    })
-    : tagDb
-      .insert(req.body)
-      .then((tag) =>
-        tagDb.get(tag.id).then((newTag) => res.status(201).json(newTag))
-      )
-      .catch((err) =>
-        res.status(400).json({
-          error: 'There was an error while saving the tag to our database'
-        })
-      )
+  if (!tag || tag.length > 80) {
+    next(new Error('INVALID_TAG'))
+  }
+  tagDb
+    .insert(req.body)
+    .then((tag) =>
+      tagDb.get(tag.id).then((newTag) => res.status(201).json(newTag))
+    )
+    .catch(next)
 })
 
 // UPDATE A TAG
-server.put('/:id', (req, res) => {
+server.put('/:id', (req, res, next) => {
   const tag = req.body.tag
   const id = req.params.id
-  !tag || tag.length > 80
-    ? res
-      .status(400)
-      .json({ errorMessage: 'Please provide a name for this new user' })
-    : tagDb
-      .update(id, req.body)
-      .then((update) =>
-        tagDb.get(req.params.id).then((tag) => res.status(200).json(tag))
-      )
+  if (!tag || tag.length > 80) {
+    next(new Error('INVALID_TAG'))
+  }
+  tagDb
+    .update(id, req.body)
+    .then((update) =>
+      tagDb.get(req.params.id).then((tag) => res.status(200).json(tag))
+    )
+    .catch(next)
 })
 
-server.delete('/:id', (req, res) => {
+// DELETE A TAG
+server.delete('/:id', (req, res, next) => {
   tagDb
     .remove(req.params.id)
     .then((tag) => {
-      tag == 0
-        ? res.status(404).json({
-          message: `The post with the specified ID of ${req.params
-            .id} does not exist.`
-        })
-        : tagDb.get().then((tags) => res.status(200).json(tags))
+      if (tag == 0) {
+        next(new Error('INVALID_ITEM'))
+      }
+      tagDb.get().then((tags) => res.status(200).json(tags))
     })
-    .catch((err) =>
-      res.status(500).json({ error: 'The post could not be removed' })
-    )
+    .catch(next)
 })
 
 module.exports = server

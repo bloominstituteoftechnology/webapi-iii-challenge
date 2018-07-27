@@ -1,44 +1,47 @@
 const server = require('express')()
 const postDb = require('../data/helpers/postDb')
 
-server.get('/', (req, res) => {
-  postDb
-    .get()
-    .then((posts) => res.status(200).json(posts))
-    .catch((err) =>
-      res
-        .status(500)
-        .json({ error: 'The post information could not be retrieved.' })
-    )
+// GET ALL POSTS
+server.get('/', (req, res, next) => {
+  postDb.get().then((posts) => res.status(200).json(posts)).catch(next)
 })
 
 // GET POST BY ID
-server.get('/:id', (req, res) => {
+server.get('/:id', (req, res, next) => {
   postDb
     .get(req.params.id)
     .then((post) => {
-      post === undefined
-        ? res.status(404).json({
-          message: `post with id of ${req.params.id} does not exist`
-        })
-        : res.status(200).json(post)
+      if (post === undefined) {
+        next(new Error('INVALID_ITEM'))
+      }
+      res.status(200).json(post)
     })
-    .catch((err) => res.status(500).json({ error: err }))
+    .catch(next)
 })
 
-server.delete('/:id', (req, res) => {
+// UPDATE A POST
+server.put('/:id', (req, res, next) => {
+  const text = req.body
+  const id = req.params.id
+  if (!text) {
+    next(new Error('INVALID_POST'))
+  }
+  postDb
+    .update(id, text)
+    .then((update) => postDb.get(id).then((post) => res.status(200).json(post)))
+    .catch(next)
+})
+
+// DELETE A POST
+server.delete('/:id', (req, res, next) => {
   postDb
     .remove(req.params.id)
     .then((post) => {
-      post == 0
-        ? res.status(404).json({
-          message: `The post with the specified ID of ${req.params
-            .id} does not exist.`
-        })
-        : postDb.get().then((posts) => res.status(200).json(posts))
+      if (post == 0) {
+        next(new Error('INVALID_ITEM'))
+      }
+      postDb.get().then((posts) => res.status(200).json(posts)).catch(next)
     })
-    .catch((err) =>
-      res.status(500).json({ error: 'The post could not be removed' })
-    )
+    .catch(next)
 })
 module.exports = server
