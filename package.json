@@ -1,0 +1,29 @@
+{
+  "name": "node-blog",
+  "version": "1.0.0",
+  "description": "Lambda School project on MiddleWare",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ssanusi/Node-Blog.git"
+  },
+  "author": "Sulaiman Sanusi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ssanusi/Node-Blog/issues"
+  },
+  "homepage": "https://github.com/ssanusi/Node-Blog#readme",
+  "dependencies": {
+    "express": "^4.16.3",
+    "helmet": "^3.13.0",
+    "knex": "^0.15.2",
+    "morgan": "^1.9.0",
+    "sqlite3": "^4.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.3"
+  }
+}
