@@ -1,37 +1,20 @@
 import React, { Component } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
-import axios from 'axios';
+import UserPosts from './components/UserPosts';
 
 import Users from './components/Users';
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      users: [],
-    }
-  }
-  
-  componentDidMount() {
-    this.fetchData('http://localhost:8000/users');
-  }
-
-  fetchData= async (URL) => {
-    const response = await axios.get(URL);
-    this.setState({ 
-      users: response.data
-    });
-  }
-
+class App extends Component {  
   render() {
     return (
       <Router>
         <div className="App">
-          <Route path='/' render={props => <Users {...props} users={this.state.users}/>} />
+          <Route exact path='/' component={Users} />
+          <Route path='/users/:id' component={UserPosts} />
         </div>
       </Router>
-    );
+    )
   }
 }
 
