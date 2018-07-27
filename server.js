@@ -1,12 +1,34 @@
 // import your node modules
 const express = require('express');
+const morgan = require('morgan');
+const helmet = require('helmet');
+const cors = require('cors');
+
+
+// custom middleware [m1, m2, mn] -> [request handlers]
+function tagToUpperCase(req, res, next) {
+  if (req.body.tag) {
+    req.body.tag = req.body.tag.toUpperCase();
+  }
+
+  next();
+}
+
+
+const server = express();
+const port = 8000;
+
+server.use(helmet());
+server.use(morgan('dev'));
+server.use(cors());
+server.use(express.json());
+server.use(tagToUpperCase);
+
 const dbuser = require('./data/helpers/userDb');
 const dbpost = require('./data/helpers/postDb');
 const dbtag = require('./data/helpers/tagDb');
 
 
-const server = express();
-const port = 8000;
 
 //middleware
 server.use(express.json());
