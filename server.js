@@ -143,20 +143,20 @@ server.post('/tags',(req, res) => {
 server.put('/tags/:id',(req, res) => {
     const { id } = req.params;
     const { userId, text } = req.body
-    const newPost = { userId, text }
+    const tag = { userId, text }
 
     if(!userId || !text){
         res.status(400).json({ error : 'Please provide your userId and Text'})
     }
     else {
-        const taggedPost = tagDb.update( id, newPost )
+        const taggedPost = tagDb.update( id, tag )
         taggedPost
            .then(response => {
-            response.message = 'update was sucessful'
+            response.message = 'Tag update was sucessful'
                res.status(200).json(response)
            })
            .catch(err => {
-               res.status(500).json({ error : "there was an error while updating records"})
+               res.status(500).json({ error : "there was an error while updating Tag"})
            })
     }
 
@@ -164,7 +164,6 @@ server.put('/tags/:id',(req, res) => {
 
 server.delete('/tags/:id',(req, res) => {
     const { id } = req.params
-    console.log(id)
     const taggedPost = tagDb.remove(id)
     taggedPost
         .then(responds => {
@@ -176,26 +175,86 @@ server.delete('/tags/:id',(req, res) => {
 })
 
 // USERS API CRUD
-
 server.get('/users',(req, res) => {
+    const users = userDb.get()
+    users
+        .then(response => {
+            res.status(200).json(response)
+        })
+        .catch(err => {
+            res.status(500).json({error : `Sorry $(err) Has occurred`})
+        })
+
+})
+
+server.get('/posts/:id',(req, res) => {
+    const { id } = req.params
+        const userPost = userDb.getUserPosts(id)
+        userPost
+            .then( response => {
+                responds.message = 'Post Sucessful'
+                res.status(201).json(response)
+            })
+            .catch(err => {
+                res.status(500).json( {error : `Post wasn't sucessfull because of ${err}`} )
+            })
 
 })
 
 server.post('/users',(req, res) => {
+    const { userId, user } = req.body
+    const newUser = { userId, user }
+    if(!userId || !user){
+        res.status(400).json({ error : 'Please provide your userId and Text'})
+    }
+    else{
+        const newUserCreated = userDb.insert(newUser)
+        newUserCreated
+            .then( response => {
+                responds.message = 'user created Sucessfully'
+                res.status(201).json(response)
+            })
+            .catch(err => {
+                res.status(500).json( {error : `Post wasn't sucessfull because of ${err}`} )
+            })
+    }
 
 })
 
-server.post('/users/:id',(req, res) => {
+
+server.put('/users/:id',(req, res) => {
+    const { id } = req.params;
+    const { userId, user } = req.body
+    const newUser = { userId, user }
+
+    if(!userId || !user){
+        res.status(400).json({ error : 'Please provide your userId and Text'})
+    }
+    else {
+        const updatedUser = userDb.update( id, newUser )
+        updatedUser
+           .then(responds => {
+            responds.message = 'user update was sucessful'
+               res.status(200).json(responds)
+           })
+           .catch(err => {
+               res.status(500).json({ error : "there was an error while updating records"})
+           })
+    }
 
 })
-server.put('/users',(req, res) => {
 
+server.delete('/users/:id',(req, res) => {
+    const { id } = req.params
+    const detetedUser = userDb.remove(id)
+    detetedUser
+        .then(responds => {
+        res.status(200).json(responds)
+        })
+        .catch(err => {
+        res.status(404).json({ error : "user Delete was not sucessful" })
+        })
 })
-server.delete('/users',(req, res) => {
-
-})
-
-
 
 
 server.listen(5000, () =>{
