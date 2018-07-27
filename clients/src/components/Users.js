@@ -35,13 +35,16 @@ class Users extends Component {
 
     render() {
         return (
-            <MainContent>
-                {this.state.users.map(user =>
-                    <Link key={user.id} to={`/users/${user.id}`} style={{color: 'black'}}>
-                        <User user={user} />
-                    </Link>
-                )}
-            </MainContent>
+            <div>
+                <h2>User List</h2>
+                <MainContent>
+                    {this.state.users.map(user =>
+                        <Link key={user.id} to={`/users/${user.id}`} style={{color: 'black'}}>
+                            <User user={user} />
+                        </Link>
+                    )}
+                </MainContent>
+            </div>
         );
     }
 }
