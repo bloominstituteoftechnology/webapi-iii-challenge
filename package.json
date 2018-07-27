@@ -1,0 +1,30 @@
+{
+  "name": "Node-Blog",
+  "version": "1.0.0",
+  "description": "* Building RESTful APIs.\r * Performing CRUD Operations on Multiple Resources.\r * Configuring CORS.\r * Writing Custom Middleware.\r * Using Express Routers to Modularize Application.",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vcao2279/Node-Blog.git"
+  },
+  "keywords": [],
+  "author": "Vu Cao",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vcao2279/Node-Blog/issues"
+  },
+  "homepage": "https://github.com/vcao2279/Node-Blog#readme",
+  "dependencies": {
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "helmet": "^3.13.0",
+    "knex": "^0.15.2",
+    "sqlite3": "^4.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.3"
+  }
+}
