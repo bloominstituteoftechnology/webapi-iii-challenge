@@ -2,11 +2,13 @@ const userRoutes = require('./ServerRoutes/userRoutes');
 const postRoutes = require('./ServerRoutes/postRoutes');
 const tagRoutes = require('./ServerRoutes/tagRoutes');
 const express = require('express');
+const cors = require('cors');
 
 //start server
 const server = express();
 //use middleware
 server.use(express.json());
+server.use(cors({ origin: 'http://localhost:3000'}));
 server.use(uppercaseTag);
 
 //middleware to capitalize tags
