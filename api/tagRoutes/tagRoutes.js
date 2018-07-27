@@ -6,7 +6,7 @@ const tagDb = require('../../data/helpers/tagDb');
 router.get('/', (req, res) => {
     tagDb.get()
         .then(postData => {
-          
+
             res.status(200).json(postData);
         })
         .catch(err => {
@@ -19,7 +19,8 @@ router.get('/', (req, res) => {
 
 //NEW TAG
 router.post('/', (req, res) => {
-    const tag = req.body.tag;
+    let tag = req.body.tag;
+    tag = tag.toUpperCase();
     let newTag = {
         tag
     };
@@ -44,7 +45,7 @@ router.put('/:id', (req, res) => {
 
     let id = req.params.id;
     let tag = req.body.tag;
-
+    tag = tag.toUpperCase();
     tagDb.update(id, {
             "tag": tag
         }) //?
@@ -65,7 +66,6 @@ router.put('/:id', (req, res) => {
 router.delete('/:id', (req, res) => {
 
     let id = req.params.id;
-
     tagDb.remove(id) //?
         .then(response => {
 

@@ -41,7 +41,7 @@ router.post('/', (req, res) => {
 
 //GET POST TAGS
 router.get('/:id/tags', (req, res) => {
-  
+
     let id = req.params.id;
     postDb.getPostTags(id)
         .then(userPostData => {

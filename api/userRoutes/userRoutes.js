@@ -93,7 +93,9 @@ router.put('/:id', (req, res) => {
     let id = req.params.id;
     let name = req.body.name;
 
-    userDb.update(id, {"name": name}) //?
+    userDb.update(id, {
+            "name": name
+        }) //?
         .then(response => {
 
             res.send(name + ' was updated')
@@ -114,7 +116,7 @@ router.delete('/:id', (req, res) => {
     userDb.remove(id) //?
         .then(response => {
 
-            res.send('user '+ id + ' was removed.')
+            res.send('user ' + id + ' was removed.')
         })
         .catch(err => {
             console.log(err);

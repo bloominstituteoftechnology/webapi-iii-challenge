@@ -7,11 +7,11 @@ const tagRoutes = require('./tagRoutes/tagRoutes')
 router.use('/users', userRoutes);
 router.use('/posts', postRoutes);
 router.use('/tags', tagRoutes);
-router.use('/docs', (req, res, next)=> {
+router.use('/docs', (req, res, next) => {
     res.redirect(301, 'https://documenter.getpostman.com/view/4722371/RWMLJkVy')
-    .catch(err => {
-        res.status(500).send('failed to load documentation. Sorry!')
-    })
+        .catch(err => {
+            res.status(500).send('failed to load documentation. Sorry!')
+        })
 })
 
 
