@@ -19,7 +19,7 @@ module.exports = {
 
         return post;
       });
-    }
+    } 
 
     return query;
   },
