@@ -169,4 +169,50 @@ server.post("/posts", (req, res) => {
     );
 });
 
+//* UPDATE Request postDb update().
+server.put("/users/:id", (req, res) => {
+  const { text, userId } = req.body;
+  const { id } = req.params;
+
+  if (!text && !userId) {
+    res.status(400).json({
+      errorMessage: "Please provide text and user id for the posts."
+    });
+  }
+  postDb
+    .update(id, { text, userId })
+    .then(response => {
+      if (!response) {
+        res
+          .status(404)
+          .json({ message: "The user with the specified ID does not exist." });
+      } else {
+        res.status(200).json({ text, userId });
+      }
+    })
+    .catch(err =>
+      res.status(500).json({ error: "The user could not be updated" })
+    );
+});
+
+//* DELETE Request postDb remove()
+server.delete("/posts/:id", (req, res) => {
+  const { id } = req.params;
+
+  postDb
+    .remove(id)
+    .then(post => {
+      if (!post) {
+        res
+          .status(404)
+          .json({ message: "The post with the specified ID does not exist." });
+      } else {
+        res.status(200).json({ message: "The post has been deleted." });
+      }
+    })
+    .catch(err =>
+      res.status(500).json({ error: "The post could not be removed" })
+    );
+});
+
 server.listen(8000, () => console.log("\n === API Running... ===\n"));
