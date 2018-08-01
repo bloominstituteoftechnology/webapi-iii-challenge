@@ -1,6 +1,7 @@
 const express = require("express");
 const morgan = require("morgan");
 const userDb = require("./data/helpers/userDb");
+const postDb = require("./data/helpers/postDb");
 
 const server = express();
 
@@ -10,6 +11,8 @@ server.use(morgan("dev"));
 server.get("/", (req, res) => {
   res.send("Hello World");
 });
+
+//! ==================== USER DB ====================
 
 //* GET Request userDB get()
 server.get("/users", (req, res) => {
@@ -107,6 +110,62 @@ server.delete("/users/:id", (req, res) => {
     })
     .catch(err =>
       res.status(500).json({ error: "The user could not be removed" })
+    );
+});
+
+//! ==================== POST DB ====================
+
+//* GET Request postDB get()
+server.get("/posts", (req, res) => {
+  postDb
+    .get()
+    .then(posts => res.status(200).json(posts))
+    .catch(err =>
+      res
+        .status(500)
+        .json({ error: "The posts information could not be retrieved." })
+    );
+});
+
+//* GET with id postDb
+server.get("/posts/:id", (req, res) => {
+  const { id } = req.params;
+  postDb
+    .get(id)
+    .then(post => {
+      if (!post) {
+        res
+          .status(404)
+          .json({ message: "The post with the specified ID does not exist." });
+      } else {
+        res.status(200).json(post);
+      }
+    })
+    .catch(err =>
+      res
+        .status(500)
+        .json({ error: "The user information could not be retrieved." })
+    );
+});
+
+//* POST Request postDb insert()
+server.post("/posts", (req, res) => {
+  if (!req.body.text && !req.body.userId) {
+    return res.status(400).json({
+      errorMessage: "Please provide the text for the post."
+    });
+  }
+
+  postDb
+    .insert({
+      text: req.body.text,
+      userId: req.body.userId
+    })
+    .then(id => res.status(201).json(id))
+    .catch(err =>
+      res.status(500).json({
+        error: "There was an error while saving the user to the database"
+      })
     );
 });
 
