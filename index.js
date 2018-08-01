@@ -54,6 +54,20 @@ server.post('/users', checkIfName, (req, res) => {
         })
 })
 
+server.delete('/users/:id', (req, res) => {
+    const { id } = req.params;
+    userDb.remove(id)
+        .then(response => {
+            if( response < 1) {
+                res.status(404).json({ message: 'the user with the specified ID does not match any existing files' })
+            }
+            res.status(200).json(response)
+        })
+        .catch(() => {
+            res.status(500).json({ error: 'There was an error while deleting the user from the database' })
+        })
+})
+
 
 server.listen(8000, () => console.log('\n === API running... === \n'))
 
