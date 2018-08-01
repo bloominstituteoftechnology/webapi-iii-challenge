@@ -7,6 +7,7 @@ const userDb = require('./data/helpers/userDb.js');
 
 server.use(express.json());
 
+
 server.get('/users', (req, res) => {
     userDb.get()
         .then(response =>
@@ -17,7 +18,19 @@ server.get('/users', (req, res) => {
         })
 })
 
-
+server.get('/users/:id', (req, res) => {
+    const {id} = req.params;
+    userDb.get(id)
+        .then(response => {
+            if (response.length < 1) {
+                res.status(404).json({ message: 'The user with this data does not exist'})
+            }
+            res.status(200).json(response)
+        })
+        .catch(() => {
+            res.status(500).json({ error: 'The users data could not be found'})
+        })
+})
 
 server.listen(8000, () => console.log('\n === API running... === \n'))
 
