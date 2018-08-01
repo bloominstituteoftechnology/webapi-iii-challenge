@@ -1,0 +1,17 @@
+{
+  "name": "Node-Blog",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:sumi419/Node-Blog.git",
+  "author": "Sumayyah <sumayyah@zubairs-air.attlocal.net>",
+  "license": "MIT",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "knex": "^0.15.2",
+    "sqlite3": "^4.0.2"
+  }
+}
