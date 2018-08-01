@@ -64,7 +64,7 @@ server.post("/users", (req, res) => {
     );
 });
 
-//* UPDATE Request userBd update()
+//* UPDATE Request userBd update().
 server.put("/users/:id", (req, res) => {
   const { name } = req.body;
   const { id } = req.params;
