@@ -1,0 +1,11 @@
+{
+  "name": "node-blog-package",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/adrianadames/Node-Blog.git",
+  "author": "Adrian Adames <adrianadames@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "knex": "^0.15.2"
+  }
+}
