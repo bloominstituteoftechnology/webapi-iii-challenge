@@ -90,4 +90,24 @@ server.put("/users/:id", (req, res) => {
     );
 });
 
+//* DELETE Request userDb remove()
+server.delete("/users/:id", (req, res) => {
+  const { id } = req.params;
+
+  userDb
+    .remove(id)
+    .then(user => {
+      if (!user) {
+        res
+          .status(404)
+          .json({ message: "The user with the specified ID does not exist." });
+      } else {
+        res.status(200).json({ message: "The user has been deleted." });
+      }
+    })
+    .catch(err =>
+      res.status(500).json({ error: "The user could not be removed" })
+    );
+});
+
 server.listen(8000, () => console.log("\n === API Running... ===\n"));
