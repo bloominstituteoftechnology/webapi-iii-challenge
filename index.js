@@ -8,6 +8,16 @@ const userDb = require('./data/helpers/userDb.js');
 server.use(express.json());
 
 
+const checkIfName = (req,res,next) => {
+    const { name } = req.body;
+    if (name == null) {
+        return res.status(400).json({ errorMessage: 'Please provie a name for the user' })
+    } else {
+        next();
+    }
+};
+
+
 server.get('/users', (req, res) => {
     userDb.get()
         .then(response =>
@@ -16,7 +26,7 @@ server.get('/users', (req, res) => {
         .catch(() => {
             res.status(500).json({ error: 'The users data could not be retrieved '})
         })
-})
+});
 
 server.get('/users/:id', (req, res) => {
     const {id} = req.params;
@@ -30,7 +40,20 @@ server.get('/users/:id', (req, res) => {
         .catch(() => {
             res.status(500).json({ error: 'The users data could not be found'})
         })
+});
+
+server.post('/users', checkIfName, (req, res) => {
+    const user = req.body;
+    console.log(user);
+    userDb.insert(user)
+        .then(user => {
+            res.status(201).json(user)
+        })
+        .catch(() => {
+            res.status(500).json({ error: 'There was an error while saving the user to the database' })
+        })
 })
+
 
 server.listen(8000, () => console.log('\n === API running... === \n'))
 
