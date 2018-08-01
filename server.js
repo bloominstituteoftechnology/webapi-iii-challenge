@@ -11,7 +11,7 @@ server.get("/", (req, res) => {
   res.send("Hello World");
 });
 
-//* GET Request
+//* GET Request userDB
 server.get("/users", (req, res) => {
   userDb
     .get()
@@ -20,6 +20,26 @@ server.get("/users", (req, res) => {
       res
         .status(500)
         .json({ error: "The users information could not be retrieved." })
+    );
+});
+
+//* POST Request userDb
+server.post("/users", (req, res) => {
+  if (!req.body.name) {
+    return res.status(400).json({
+      errorMessage: "Please provide a name for the user."
+    });
+  }
+
+  userDb
+    .insert({
+      name: req.body.name
+    })
+    .then(id => res.status(201).json(id))
+    .catch(err =>
+      res.status(500).json({
+        error: "There was an error while saving the user to the database"
+      })
     );
 });
 
