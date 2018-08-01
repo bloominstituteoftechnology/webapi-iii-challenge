@@ -65,27 +65,28 @@ server.post("/users", (req, res) => {
 });
 
 //* UPDATE Request userBd update()
-server.put("/api/post/:id", (req, res) => {
-  const { title, contents } = req.body;
+server.put("/users/:id", (req, res) => {
+  const { name } = req.body;
   const { id } = req.params;
 
-  if (!title || !contents) {
+  if (!name) {
     res.status(400).json({
-      errorMessage: "Please provide title and contents for the post."
+      errorMessage: "Please provide name for the user."
     });
   }
-  db.update(id, { title, contents })
+  userDb
+    .update(id, { name })
     .then(response => {
-      if (response.length === 0) {
+      if (!response) {
         res
           .status(404)
-          .json({ message: "The post with the specified ID does not exist." });
+          .json({ message: "The user with the specified ID does not exist." });
       } else {
-        res.status(200).json({ title, contents });
+        res.status(200).json({ name });
       }
     })
     .catch(err =>
-      res.status(500).json({ error: "The post could not be removed" })
+      res.status(500).json({ error: "The user could not be updated" })
     );
 });
 
