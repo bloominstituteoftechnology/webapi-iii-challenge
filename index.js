@@ -18,15 +18,19 @@ const checkIfName = (req,res,next) => {
 };
 
 
+// ==== MIDDDLEWARE ====
+
 server.get('/users', (req, res) => {
     userDb.get()
         .then(response =>
             res.status(200).json(response)
         )
         .catch(() => {
-            res.status(500).json({ error: 'The users data could not be retrieved '})
+            next({ code: 500, message: 'The users data could not be retrieved'})
         })
 });
+
+// ==== USER REQUESTS ====
 
 server.get('/users/:id', (req, res) => {
     const {id} = req.params;
@@ -38,7 +42,7 @@ server.get('/users/:id', (req, res) => {
             res.status(200).json(response)
         })
         .catch(() => {
-            res.status(500).json({ error: 'The users data could not be found'})
+            next({ code: 500, message: 'The users data could not be found'})
         })
 });
 
@@ -50,7 +54,7 @@ server.post('/users', checkIfName, (req, res) => {
             res.status(201).json(user)
         })
         .catch(() => {
-            res.status(500).json({ error: 'There was an error while saving the user to the database' })
+            next({ code: 500, message: 'There was an error posting the user'})
         })
 })
 
@@ -64,7 +68,7 @@ server.delete('/users/:id', (req, res) => {
             res.status(200).json(response)
         })
         .catch(() => {
-            res.status(500).json({ error: 'There was an error while deleting the user from the database' })
+            next({ code: 500, message: 'There was an error deleting the user'})
         })
 })
 
@@ -79,10 +83,31 @@ server.put('/users/:id', checkIfName, (req, res) => {
             res.status(200).json(user)
         })
         .catch(() => {
-            res.status(500).json({ error: 'There was an error updating the user'})
+            next({ code: 500, message: 'There was an error updating the user'})
         })
 })
 
+
+// ======= POST REQUESTS ========
+
+server.get('/users/posts/:id', (req, res) => {
+    const { id } = req.params;
+
+    userDb.getUserPosts(id)
+        .then( response => {
+            res.status(200).json(response)
+        })
+        .catch(() => {
+            next({ code: 500, message: 'There was an error getting the users posts' })
+        })
+})
+
+
+// ====== ERROR MIDDLEWARE ======
+
+server.use((err, req, res, next) => {
+    res.status(500).send({ success: false, data: undefined, error: err.message });
+})
 
 server.listen(8000, () => console.log('\n === API running... === \n'))
 
