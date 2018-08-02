@@ -34,7 +34,7 @@ server.get('/users', (req, res) => {
             res.status(200).json(response)
         )
         .catch(() => {
-            serverErrorMsg;
+            serverErrorMsg();
         })
 });
 
@@ -48,7 +48,7 @@ server.get('/users/:id', (req, res) => {
             res.status(200).json(response)
         })
         .catch(() => {
-            serverErrorMsg;
+            serverErrorMsg();
         })
 });
 
@@ -60,7 +60,7 @@ server.post('/users', checkIfName, (req, res) => {
             res.status(201).json(user)
         })
         .catch(() => {
-            serverErrorMsg;
+            serverErrorMsg();
         })
 })
 
@@ -74,7 +74,7 @@ server.delete('/users/:id', (req, res) => {
             res.status(200).json(response)
         })
         .catch(() => {
-            serverErrorMsg;
+            serverErrorMsg();
         })
 })
 
@@ -89,7 +89,7 @@ server.put('/users/:id', checkIfName, (req, res) => {
             res.status(200).json(user)
         })
         .catch(() => {
-            serverErrorMsg;
+            serverErrorMsg();
         })
 })
 
@@ -104,7 +104,7 @@ server.get('/users/posts/:id', (req, res) => {
             res.status(200).json(response)
         })
         .catch(() => {
-            serverErrorMsg;
+            serverErrorMsg();
         })
 })
 
@@ -122,7 +122,22 @@ server.post('/users/posts/:id', (req, res) => {
             res.status(200).json(post)
         })
         .catch(() => {
-            serverErrorMsg;
+            serverErrorMsg();
+        })
+})
+
+server.delete('/users/posts/:id', (req, res) => {
+    const { id } = req.params;
+
+    postDb.remove(id)
+        .then( response => {
+            if (response < 1) {
+                res.status(404).json({ message: 'The specified post could not be found' })
+            } 
+            res.status(200).json(response)
+        })
+        .catch(() => {
+            serverErrorMsg();
         })
 })
 
@@ -137,7 +152,7 @@ server.get('/users/posts/tags/:id', (req, res) => {
             res.status(200).json(response)
         })
         .catch(() => {
-            serverErrorMsg;
+            serverErrorMsg();
         })
 })
 
