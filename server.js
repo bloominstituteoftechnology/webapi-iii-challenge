@@ -1,16 +1,18 @@
 const express = require("express");
 const userRoutes = require("./routes/userRoutes");
 const postRoutes = require("./routes/postRoutes");
+const tagRoutes = require("./routes/tagRoutes");
 const morgan = require("morgan");
 // const userDb = require("./data/helpers/userDb");
 // const postDb = require("./data/helpers/postDb");
-const tagDb = require("./data/helpers/tagDb");
+// const tagDb = require("./data/helpers/tagDb");
 
 const server = express();
 
 //* ROUTES
 server.use("/users", userRoutes);
 server.use("/posts", postRoutes);
+server.use("/tags", tagRoutes);
 
 server.use(express.json());
 server.use(morgan("dev"));
@@ -19,6 +21,7 @@ server.get("/", (req, res) => {
   res.send("Hello World");
 });
 
+server.listen(8000, () => console.log("\n === API Running... ===\n"));
 //! ==================== USER DB ====================
 
 // //* GET Request userDB get()
@@ -222,105 +225,103 @@ server.get("/", (req, res) => {
 //     );
 // });
 
-//! ==================== TAGS DB ====================
+// //! ==================== TAGS DB ====================
 
-//* GET Request tagDB get()
-server.get("/tags", (req, res) => {
-  tagDb
-    .get()
-    .then(tags => res.status(200).json(tags))
-    .catch(err =>
-      res
-        .status(500)
-        .json({ error: "The tags information could not be retrieved." })
-    );
-});
+// //* GET Request tagDB get()
+// server.get("/tags", (req, res) => {
+//   tagDb
+//     .get()
+//     .then(tags => res.status(200).json(tags))
+//     .catch(err =>
+//       res
+//         .status(500)
+//         .json({ error: "The tags information could not be retrieved." })
+//     );
+// });
 
-//* GET with id tagDb
-server.get("/tags/:id", (req, res) => {
-  const { id } = req.params;
-  tagDb
-    .get(id)
-    .then(tag => {
-      if (!tag) {
-        res
-          .status(404)
-          .json({ message: "The tag with the specified ID does not exist." });
-      } else {
-        res.status(200).json(tag);
-      }
-    })
-    .catch(err =>
-      res
-        .status(500)
-        .json({ error: "The user information could not be retrieved." })
-    );
-});
+// //* GET with id tagDb
+// server.get("/tags/:id", (req, res) => {
+//   const { id } = req.params;
+//   tagDb
+//     .get(id)
+//     .then(tag => {
+//       if (!tag) {
+//         res
+//           .status(404)
+//           .json({ message: "The tag with the specified ID does not exist." });
+//       } else {
+//         res.status(200).json(tag);
+//       }
+//     })
+//     .catch(err =>
+//       res
+//         .status(500)
+//         .json({ error: "The user information could not be retrieved." })
+//     );
+// });
 
-//* POST Request tagDb insert()
-server.post("/tags", (req, res) => {
-  if (!req.body.tag) {
-    return res.status(400).json({
-      errorMessage: "Please provide the text for the post."
-    });
-  }
+// //* POST Request tagDb insert()
+// server.post("/tags", (req, res) => {
+//   if (!req.body.tag) {
+//     return res.status(400).json({
+//       errorMessage: "Please provide the text for the post."
+//     });
+//   }
 
-  tagDb
-    .insert({
-      text: req.body.tag
-    })
-    .then(id => res.status(201).json(id))
-    .catch(err =>
-      res.status(500).json({
-        error: "There was an error while saving the tag to the database"
-      })
-    );
-});
+//   tagDb
+//     .insert({
+//       text: req.body.tag
+//     })
+//     .then(id => res.status(201).json(id))
+//     .catch(err =>
+//       res.status(500).json({
+//         error: "There was an error while saving the tag to the database"
+//       })
+//     );
+// });
 
-//* UPDATE Request postDb update().
-server.put("/tags/:id", (req, res) => {
-  const { tag } = req.body;
-  const { id } = req.params;
+// //* UPDATE Request postDb update().
+// server.put("/tags/:id", (req, res) => {
+//   const { tag } = req.body;
+//   const { id } = req.params;
 
-  if (!tag) {
-    res.status(400).json({
-      errorMessage: "Please provide tag and user id for the posts."
-    });
-  }
-  tagDb
-    .update(id, { tag })
-    .then(response => {
-      if (!response) {
-        res
-          .status(404)
-          .json({ message: "The user with the specified ID does not exist." });
-      } else {
-        res.status(200).json({ tag });
-      }
-    })
-    .catch(err =>
-      res.status(500).json({ error: "The user could not be updated" })
-    );
-});
+//   if (!tag) {
+//     res.status(400).json({
+//       errorMessage: "Please provide tag and user id for the posts."
+//     });
+//   }
+//   tagDb
+//     .update(id, { tag })
+//     .then(response => {
+//       if (!response) {
+//         res
+//           .status(404)
+//           .json({ message: "The user with the specified ID does not exist." });
+//       } else {
+//         res.status(200).json({ tag });
+//       }
+//     })
+//     .catch(err =>
+//       res.status(500).json({ error: "The user could not be updated" })
+//     );
+// });
 
-//* DELETE Request postDb remove()
-server.delete("/tags/:id", (req, res) => {
-  const { id } = req.params;
+// //* DELETE Request postDb remove()
+// server.delete("/tags/:id", (req, res) => {
+//   const { id } = req.params;
 
-  postDb
-    .remove(id)
-    .then(tag => {
-      if (!tag) {
-        res
-          .status(404)
-          .json({ message: "The tag with the specified ID does not exist." });
-      } else {
-        res.status(200).json({ message: "The tag has been deleted." });
-      }
-    })
-    .catch(err =>
-      res.status(500).json({ error: "The tag could not be removed" })
-    );
-});
-
-server.listen(8000, () => console.log("\n === API Running... ===\n"));
+//   postDb
+//     .remove(id)
+//     .then(tag => {
+//       if (!tag) {
+//         res
+//           .status(404)
+//           .json({ message: "The tag with the specified ID does not exist." });
+//       } else {
+//         res.status(200).json({ message: "The tag has been deleted." });
+//       }
+//     })
+//     .catch(err =>
+//       res.status(500).json({ error: "The tag could not be removed" })
+//     );
+// });
