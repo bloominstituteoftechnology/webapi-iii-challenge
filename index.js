@@ -129,8 +129,10 @@ server.post('/users/posts/:id', (req, res) => {
 
 // ====== TAG MIDDLEWARE ======
 
-server.get('/users/posts/tags', (req, res) => {
-    postDb.getPostTags()
+server.get('/users/posts/tags/:id', (req, res) => {
+    const { id } = req.params;
+
+    postDb.getPostTags(id)
         .then( response => {
             res.status(200).json(response)
         })
