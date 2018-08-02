@@ -8,6 +8,14 @@ const userDb = require('./data/helpers/userDb.js');
 server.use(express.json());
 
 
+// ==== ERROR MESSAGE ====
+
+const serverErrorMsg = () => {
+    return res.status(500).json({ error: 'server error.' });
+}
+
+// ==== MIDDDLEWARE ====
+
 const checkIfName = (req,res,next) => {
     const { name } = req.body;
     if (name == null) {
@@ -18,7 +26,7 @@ const checkIfName = (req,res,next) => {
 };
 
 
-// ==== MIDDDLEWARE ====
+// ==== USER REQUESTS ====
 
 server.get('/users', (req, res) => {
     userDb.get()
@@ -26,11 +34,9 @@ server.get('/users', (req, res) => {
             res.status(200).json(response)
         )
         .catch(() => {
-            next({ code: 500, message: 'The users data could not be retrieved'})
+            serverErrorMsg;
         })
 });
-
-// ==== USER REQUESTS ====
 
 server.get('/users/:id', (req, res) => {
     const {id} = req.params;
@@ -42,7 +48,7 @@ server.get('/users/:id', (req, res) => {
             res.status(200).json(response)
         })
         .catch(() => {
-            next({ code: 500, message: 'The users data could not be found'})
+            serverErrorMsg;
         })
 });
 
@@ -54,7 +60,7 @@ server.post('/users', checkIfName, (req, res) => {
             res.status(201).json(user)
         })
         .catch(() => {
-            next({ code: 500, message: 'There was an error posting the user'})
+            serverErrorMsg;
         })
 })
 
@@ -68,7 +74,7 @@ server.delete('/users/:id', (req, res) => {
             res.status(200).json(response)
         })
         .catch(() => {
-            next({ code: 500, message: 'There was an error deleting the user'})
+            serverErrorMsg;
         })
 })
 
@@ -83,7 +89,7 @@ server.put('/users/:id', checkIfName, (req, res) => {
             res.status(200).json(user)
         })
         .catch(() => {
-            next({ code: 500, message: 'There was an error updating the user'})
+            serverErrorMsg;
         })
 })
 
@@ -98,16 +104,32 @@ server.get('/users/posts/:id', (req, res) => {
             res.status(200).json(response)
         })
         .catch(() => {
-            next({ code: 500, message: 'There was an error getting the users posts' })
+            serverErrorMsg;
+        })
+})
+
+server.post('/users/posts/:id', (req, res) => {
+    const { id } = req.params;
+    const post = req.body;
+
+    if (post.userId !== id) {
+        res.status(404).json({ message: 'The user with this data does not exist' })
+    } else if (post.text == null ) {
+        res.status(400).json({ errorMessage: 'Please provide text for the post.'})
+    }
+    postDb.insert(id)
+        .then( response => {
+            res.status(200).json(response)
+        })
+        .catch(() => {
+            serverErrorMsg;
         })
 })
 
 
-// ====== ERROR MIDDLEWARE ======
+// ====== TAG MIDDLEWARE ======
 
-server.use((err, req, res, next) => {
-    res.status(500).send({ success: false, data: undefined, error: err.message });
-})
+
 
 server.listen(8000, () => console.log('\n === API running... === \n'))
 
