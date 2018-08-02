@@ -22,7 +22,7 @@ server.get('/api/users/:id', (req, res) => {
     .then(response => {
       if (!response) {
         res.status(404)
-          .json({ errorMessage: "The user with the specified ID does not exist" });
+          .json({ message: "The user with the specified ID does not exist" });
       }
       res.status(200).json(response);
     })
@@ -35,7 +35,7 @@ server.get('/api/users/:id', (req, res) => {
 server.post('/api/users',(req, res) => {
   if (!req.body.name) {
     res.status(400)
-      .json({ errorMessage: "Please provide user name"});
+      .json({ message: "Please provide user name"});
     return;
   }
   userDb.insert(req.body)
@@ -47,5 +47,17 @@ server.post('/api/users',(req, res) => {
         .json({ error: "There was an error saving user to the database"});
     });
 });
+
+server.delete('/api/users/:id', (req,res) => {
+  userDb.remove(req.params.id)
+    .then(response => {
+      if (response === 0) {
+        res.status(404)
+          .json({ message: "The user with the specified ID does not exist"});
+      } else {
+        res.status(200);
+      }
+    })
+})
 
 server.listen(8000, () => console.log('API running on port 8000'));
