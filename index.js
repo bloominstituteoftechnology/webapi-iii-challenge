@@ -258,4 +258,22 @@ server.post('/tags', (req, res) => {
     });
 });
 
+server.delete('/tags/:id', (req, res) => {
+  const { id } = req.params;
+  tagDb
+    .remove(id)
+    .then((tag) => {
+      if (tag === 0) {
+        res.status(404).json({ message: 'The tag with this ID doesnt exist :( ' });
+      } else {
+        res.status(200).json(tag);
+      }
+    })
+    .catch(() => {
+      res.status(500).json({
+        error: 'The tag could not be deleted :('
+      });
+    });
+});
+
 server.listen(5000, () => console.log('\n=== API running... ===\n'));
