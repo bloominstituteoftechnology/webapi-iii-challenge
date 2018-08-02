@@ -33,9 +33,10 @@ server.get('/api/users/:id', (req, res) => {
 });
 
 server.post('/api/users',(req, res) => {
-  if (!req.body.name) {
+  const name = req.body.name;
+  if (!name || name.length > 128) {
     res.status(400)
-      .json({ message: "Please provide user name"});
+      .json({ message: "Please provide a user name up to 128 characters long"});
     return;
   }
   userDb.insert(req.body)
@@ -57,7 +58,11 @@ server.delete('/api/users/:id', (req,res) => {
       } else {
         res.status(200);
       }
-    })
+    });
+});
+
+server.put('/api/users/:id', (req, res) => {
+  if
 })
 
 server.listen(8000, () => console.log('API running on port 8000'));
