@@ -1,0 +1,20 @@
+{
+  "dependencies": {
+    "express": "^4.16.3",
+    "knex": "^0.15.2",
+    "morgan": "^1.9.0",
+    "sqlite3": "^4.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.3"
+  },
+  "name": "Node-Blog",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "repository": "git@github.com:dcitllc/Node-Blog.git",
+  "author": "Daniel Chamorro <dan@dcitllc.com>",
+  "license": "MIT"
+}
