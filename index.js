@@ -117,9 +117,9 @@ server.post('/users/posts/:id', (req, res) => {
     } else if (post.text == null ) {
         res.status(400).json({ errorMessage: 'Please provide text for the post.'})
     }
-    postDb.insert(id)
-        .then( response => {
-            res.status(200).json(response)
+    postDb.insert(post)
+        .then( post => {
+            res.status(200).json(post)
         })
         .catch(() => {
             serverErrorMsg;
@@ -129,6 +129,15 @@ server.post('/users/posts/:id', (req, res) => {
 
 // ====== TAG MIDDLEWARE ======
 
+server.get('/users/posts/tags', (req, res) => {
+    postDb.getPostTags()
+        .then( response => {
+            res.status(200).json(response)
+        })
+        .catch(() => {
+            serverErrorMsg;
+        })
+})
 
 
 server.listen(8000, () => console.log('\n === API running... === \n'))
