@@ -216,4 +216,31 @@ server.get('/users/:id/posts', (req, res) => {
     });
 });
 
+server.get('/tags', (req, res) => {
+  tagDb
+    .get()
+    .then((tags) => {
+      res.json(tags);
+    })
+    .catch(() => {
+      res.status(500).json({ err: 'The tags info cannot be found.' });
+    });
+});
+
+server.get('/tags/:id', (req, res) => {
+  const { id } = req.params;
+  tagDb
+    .get(id)
+    .then((tag) => {
+      if (tag === 0) {
+        res.status(404).json({ message: 'The tag doesnt exist' });
+      } else {
+        res.json(tag);
+      }
+    })
+    .catch(() => {
+      res.status(500).json({ err: 'The tags info cannot be found.' });
+    });
+});
+
 server.listen(5000, () => console.log('\n=== API running... ===\n'));
