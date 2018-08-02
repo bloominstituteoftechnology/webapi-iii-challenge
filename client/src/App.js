@@ -21,7 +21,7 @@ class App extends Component {
         <ul>
           {this.state.posts.map(post => (
             <li key={post.id}>
-              Username: {post.text} <hr />
+              Text: {post.text} <hr />
             </li>
           ))}
         </ul>

@@ -1,4 +1,5 @@
 const express = require("express");
+const userRoutes = require("./routes/usersRoutes");
 const morgan = require("morgan");
 const userDb = require("./data/helpers/userDb");
 const postDb = require("./data/helpers/postDb");
@@ -9,23 +10,25 @@ const server = express();
 server.use(express.json());
 server.use(morgan("dev"));
 
+server.use("/users", userRoutes);
+
 server.get("/", (req, res) => {
   res.send("Hello World");
 });
 
 //! ==================== USER DB ====================
 
-//* GET Request userDB get()
-server.get("/users", (req, res) => {
-  userDb
-    .get()
-    .then(users => res.status(200).json(users))
-    .catch(err =>
-      res
-        .status(500)
-        .json({ error: "The users information could not be retrieved." })
-    );
-});
+// //* GET Request userDB get()
+// server.get("/users", (req, res) => {
+//   userDb
+//     .get()
+//     .then(users => res.status(200).json(users))
+//     .catch(err =>
+//       res
+//         .status(500)
+//         .json({ error: "The users information could not be retrieved." })
+//     );
+// });
 
 //* GET with id
 server.get("/users/:id", (req, res) => {
