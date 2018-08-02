@@ -25,6 +25,16 @@ const checkIfName = (req,res,next) => {
     }
 };
 
+const checkPostBody = (req, res, next) => {
+    const { text, userId } = req.body;
+    
+    if ( text == null || userId == null) {
+        res.status(400).json({ errorMessage: 'Please provide a valid userId and text for the post' })
+    } else {
+        next();
+    }
+}
+
 
 // ==== USER REQUESTS ====
 
@@ -135,6 +145,22 @@ server.delete('/users/posts/:id', (req, res) => {
                 res.status(404).json({ message: 'The specified post could not be found' })
             } 
             res.status(200).json(response)
+        })
+        .catch(() => {
+            serverErrorMsg();
+        })
+})
+
+server.put('/users/posts/:id', checkPostBody, (req, res) => {
+    const { id } = req.params;
+    const post = req.body
+
+    postDb.update(id, post)
+        .then( response => {
+            if ( response < 1 ) {
+                res.status(404).json({ message: 'The post with the specified ID does not exist' })
+            }
+            res.status(200).json(post)
         })
         .catch(() => {
             serverErrorMsg();
