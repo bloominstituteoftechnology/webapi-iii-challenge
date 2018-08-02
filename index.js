@@ -68,6 +68,21 @@ server.delete('/users/:id', (req, res) => {
         })
 })
 
+server.put('/users/:id', checkIfName, (req, res) => {
+    const { id } = req.params;
+    const user = req.body;
+    userDb.update(id, user)
+        .then( response => {
+            if ( response < 1) {
+                res.status(404).json({ message: 'The user with the spcified Id could not be found'})
+            }
+            res.status(200).json(user)
+        })
+        .catch(() => {
+            res.status(500).json({ error: 'There was an error updating the user'})
+        })
+})
+
 
 server.listen(8000, () => console.log('\n === API running... === \n'))
 
