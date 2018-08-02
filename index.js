@@ -243,4 +243,19 @@ server.get('/tags/:id', (req, res) => {
     });
 });
 
+server.post('/tags', (req, res) => {
+  const tag = req.body;
+  if (!tag) {
+    res.status(404).json({ error: 'Please provide a tag.' });
+  }
+  tagDb
+    .insert(tag)
+    .then((tag) => {
+      res.status(201).json(tag);
+    })
+    .catch(() => {
+      res.status(500).json({ error: 'There was an error while saving the tag to the database' });
+    });
+});
+
 server.listen(5000, () => console.log('\n=== API running... ===\n'));
