@@ -276,4 +276,25 @@ server.delete('/tags/:id', (req, res) => {
     });
 });
 
+server.put('/tags/:id', (req, res) => {
+  const { id } = req.params;
+  const tag = req.body;
+  if (!tag) {
+    res.status(404).json({ error: 'please provide a tag' });
+  }
+  tagDb
+    .update(id, tag)
+    .then((id) => {
+      if (id === 0) {
+        res.status(404).json({
+          message: 'the tag doesnt exist'
+        });
+      }
+      res.status(200).json(id);
+    })
+    .catch(() => {
+      res.status(500).json({ error: 'The tag could not be updated :(' });
+    });
+});
+
 server.listen(5000, () => console.log('\n=== API running... ===\n'));
