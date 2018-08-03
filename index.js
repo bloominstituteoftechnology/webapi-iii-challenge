@@ -88,6 +88,22 @@ server.put('/api/users/:id', (req, res) => {
     });
 });
 
+server.get('/api/users/:id/posts', (req, res) => {
+  userDb.getUserPosts(req.params.id)
+    .then(response => {
+      if (response.length === 0) {
+        res.status(404)
+          .json({ message: "There are no posts associated with the specified user" });
+      } else {
+        res.status(200).json(response);
+      }
+    })
+    .catch(err => {
+      res.status(500)
+        .json({ error: "The posts could not be retrieved" });
+    });
+});
+
 //============Posts============
 
 server.get('/api/posts', (req, res) => {
@@ -101,13 +117,13 @@ server.get('/api/posts', (req, res) => {
         .json({ error: "The posts information could not be retrieved"});
     });
 });
-
-server.get('/api/posts/:userId', (req, res) => {
-  postDb.get(req.params.userId)
+ 
+server.get('/api/posts/id', (req, res) => {
+  postDb.get(req.params.id)
     .then(response => {
       if (!response) {
         res.status(404)
-          .json({ message: "The post with the specified user ID does not exist" });
+          .json({ message: "The post with the specified ID does not exist" });
       }
       res.status(200).json(response);
     })
@@ -117,8 +133,6 @@ server.get('/api/posts/:userId', (req, res) => {
     });
 });
 
-server.post('/api/posts', (req, res) => {
 
-})
 
 server.listen(8000, () => console.log('API running on port 8000'));
