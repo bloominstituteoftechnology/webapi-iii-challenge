@@ -118,7 +118,7 @@ server.get('/api/posts', (req, res) => {
     });
 });
  
-server.get('/api/posts/id', (req, res) => {
+server.get('/api/posts/:id', (req, res) => {
   postDb.get(req.params.id)
     .then(response => {
       if (!response) {
@@ -161,13 +161,7 @@ server.delete('/api/posts/:id', (req,res) => {
     });
 });
 
-server.put('/api/users/:id', (req, res) => {
-  const id = req.body.id;
-  if (!id || typeof id !== 'number') {
-    res.status(400)
-      .json({ message: "Please provide a numerical ID for this post"});
-    return;
-  }
+server.put('/api/posts/:id', (req, res) => {
   postDb.update(req.params.id, req.body)
     .then(response => {
       if (response === 0) {
@@ -177,12 +171,27 @@ server.put('/api/users/:id', (req, res) => {
         res.status(200);
       }
     })
-    .catch(() => {
+    .catch((err) => {
+      console.log(err);
       res.status(500)
         .json({ error: "The user information could not be modified"});
     });
 });
 
-
+server.get('/api/posts/:id/tags', (req, res) => {
+  postDb.getPostTags(req.params.id)
+    .then(response => {
+      if (response.length === 0) {
+        res.status(404)
+          .json({ message: "There are no tags associated with the specified post" });
+      } else {
+        res.status(200).json(response);
+      }
+    })
+    .catch(err => {
+      res.status(500)
+        .json({ error: "The tags could not be retrieved" });
+    });
+});
 
 server.listen(8000, () => console.log('API running on port 8000'));
