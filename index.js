@@ -149,5 +149,40 @@ server.post('/api/posts', (req, res) => {
     })
 })
 
+server.delete('/api/posts/:id', (req,res) => {
+  postDb.remove(req.params.id)
+    .then(response => {
+      if (response === 0) {
+        res.status(404)
+          .json({ message: "The post with the specified ID does not exist" });
+      } else {
+        res.status(200);
+      }
+    });
+});
+
+server.put('/api/users/:id', (req, res) => {
+  const id = req.body.id;
+  if (!id || typeof id !== 'number') {
+    res.status(400)
+      .json({ message: "Please provide a numerical ID for this post"});
+    return;
+  }
+  postDb.update(req.params.id, req.body)
+    .then(response => {
+      if (response === 0) {
+        res.status(404)
+          .json({ message: "The post with the specified ID does not exist" });
+      } else {
+        res.status(200);
+      }
+    })
+    .catch(() => {
+      res.status(500)
+        .json({ error: "The user information could not be modified"});
+    });
+});
+
+
 
 server.listen(8000, () => console.log('API running on port 8000'));
