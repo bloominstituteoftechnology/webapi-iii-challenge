@@ -88,8 +88,8 @@ server.put('/api/users/:id', (req, res) => {
     });
 });
 
-server.get('/api/users/:id/posts', (req, res) => {
-  userDb.getUserPosts(req.params.id)
+server.get('/api/users/:userId/posts', (req, res) => {
+  userDb.getUserPosts(req.params.userId)
     .then(response => {
       if (response.length === 0) {
         res.status(404)
@@ -124,8 +124,9 @@ server.get('/api/posts/:id', (req, res) => {
       if (!response) {
         res.status(404)
           .json({ message: "The post with the specified ID does not exist" });
+      } else {
+        res.status(200).json(response);
       }
-      res.status(200).json(response);
     })
     .catch(err => {
       res.status(500)
@@ -177,20 +178,30 @@ server.put('/api/posts/:id', (req, res) => {
         .json({ error: "The user information could not be modified"});
     });
 });
-
-server.get('/api/posts/:id/tags', (req, res) => {
-  postDb.getPostTags(req.params.id)
+ 
+server.get('/posts/:id/tags/', (req, res) => {
+  const id = req.params.id;
+  postDb.get(id)
     .then(response => {
-      if (response.length === 0) {
-        res.status(404)
-          .json({ message: "There are no tags associated with the specified post" });
+      if (!response) {
+        res.status(404).json({ message: "The post with the specified ID does not exist"})
       } else {
-        res.status(200).json(response);
-      }
+        postDb.getPostTags(id)
+          .then(response => {
+            if (response.length === 0) {
+              res.status(404)
+                .json({ message: "There are no tags associated with the specified post" });
+            } else {
+              res.status(200).json(response);
+            }
+          })
+          .catch(err => {
+            res.status(500).json({ error: "The posts could not be retrieved" });
+          });
+      };
     })
     .catch(err => {
-      res.status(500)
-        .json({ error: "The tags could not be retrieved" });
+      res.status(500).json({ error: "The posts could not be retrieved" });
     });
 });
 
