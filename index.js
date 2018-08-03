@@ -132,7 +132,22 @@ server.get('/api/posts/id', (req, res) => {
         .json({ error: "The post information could not be retrieved"});
     });
 });
-
+ 
+server.post('/api/posts', (req, res) => {
+  if (!req.body.text || !req.body.userId) {
+    res.status(400)
+      .json({ message: "Please enter a user id and some text to post" });
+    return;
+  }
+  postDb.insert(req.body)
+    .then(response => {
+      res.status(201).json(response);
+    })
+    .catch(() => {
+      res.status(500)
+        .json({error: "There was an error while saving the post to the database" })
+    })
+})
 
 
 server.listen(8000, () => console.log('API running on port 8000'));
