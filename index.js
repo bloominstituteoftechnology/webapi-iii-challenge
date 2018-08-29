@@ -5,12 +5,8 @@ const userDB = require("./data/helpers/userDb.js");
 
 server.use(express.json());
 
-// test request
-// server.get("/", (req, res) => {
-//   res.send("Working Server Test");
-// });
-
-// GET REQUEST
+//////////////================================= START REQUESTS =================================//////////////
+// GET REQUEST //
 server.get("/users", (req, res) => {
   userDB
     .get()
@@ -43,9 +39,9 @@ server.get("/users/:id", (req, res) => {
         .json({ error: "The post information could not be retrieved." });
     });
 });
-// end GET
+// end GET //
 
-// POST REQUEST
+// POST REQUEST //
 server.post("/users", async (req, res) => {
   const user = req.body;
 
@@ -64,9 +60,9 @@ server.post("/users", async (req, res) => {
     }
   }
 });
-// end POST
+// end POST //
 
-// DELETE REQUEST
+// DELETE REQUEST //
 server.delete("/users/:id", async (req, res) => {
   const { id } = req.params;
   try {
@@ -84,9 +80,9 @@ server.delete("/users/:id", async (req, res) => {
     });
   }
 });
-// end DELETE
+// end DELETE //
 
-// PUT REQUEST
+// PUT REQUEST //
 server.put("/users/:id", (req, res) => {
   const { id } = req.params;
   const user = req.body;
@@ -114,9 +110,9 @@ server.put("/users/:id", (req, res) => {
       });
   }
 });
-// end PUT
+// end PUT //
 
-// GET USER POSTS REQUEST
+// GET USER POSTS REQUEST //
 server.get("/users/:id/posts", (req, res) => {
   const { id } = req.params;
   userDB
@@ -136,6 +132,7 @@ server.get("/users/:id/posts", (req, res) => {
         .json({ error: "The post information could not be retrieved." });
     });
 });
-// end GET USER POSTS
+// end GET USER POSTS //
+//////////////================================= END REQUESTS =================================//////////////
 
 server.listen(8000, () => console.log("\n== API on port 8k ==\n"));
