@@ -15,15 +15,48 @@ app.get('/', (req, res) => {
     res.send('hello');
 });
 
-app.get('/users', (req, res) => {
-	userDB.get()
-		.then(users => {
-			res.status(200).json(users);
-		})
-		.catch(err => {
-			console.log(err);
-			res.status(500).json({ message: 'Error getting the data'});
-		});
+app.get('/users', async (req, res) => {
+	try {
+		const users = await userDB.get();
+		res.status(200).json(users);
+	}
+	catch(err) {
+		res.status(500).json({ message: 'Error getting the data'});
+	}
+});
+
+app.get('/posts', async (req, res) => {
+	try {
+		const posts = await postDB.get();
+		res.status(200).json(posts);
+	}
+	catch(err) {
+		res.status(500).json({ message: 'Error getting the data'});
+	}
+});
+
+app.get('/users/:id', async (req, res) => {
+	const { id } = req.params;
+	console.log(id);
+	try {
+		const user = await userDB.get(id);
+		res.status(200).json(user);
+	}
+	catch(err) {
+		res.status(500).json({ message: 'Error getting the data'});
+	}
+});
+
+app.get('/users/:id/posts', async (req, res) => {
+	const { id } = req.params;
+	console.log(id);
+	try {
+		const posts = await userDB.getUserPosts(id);
+		res.status(200).json(posts);
+	}
+	catch(err) {
+		res.status(500).json({ message: 'Error getting the data'});
+	}
 });
 
 // app.post('/users', async (req, res) => {
