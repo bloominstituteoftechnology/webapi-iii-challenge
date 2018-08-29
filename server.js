@@ -149,67 +149,126 @@ server.post("/posts", async (req, res) => {
   let { text, userId } = req.body;
   try {
     if (text && userId) {
-      let data = await postdb.insert(req.body)
-      return res.status(200).json(data)
+      let data = await postdb.insert(req.body);
+      return res.status(200).json(data);
     } else {
-      return res.status(404).json({ error: "Please provide text and userId for this post." })
+      return res
+        .status(404)
+        .json({ error: "Please provide text and userId for this post." });
     }
   } catch (err) {
-    res.status(500).json(err)
+    res.status(500).json(err);
   }
-})
+});
 
 server.put("/posts/:id", async (req, res) => {
   let { text, userId } = req.body;
   if (!(text && userId)) {
-    return res.status(404).json({ error: "Please provide text and userId for this post." })
+    return res
+      .status(404)
+      .json({ error: "Please provide text and userId for this post." });
   }
   try {
-    let data = await postdb.update(req.params.id, req.body)
+    let data = await postdb.update(req.params.id, req.body);
     if (data) {
-      return res.status(200).json({ id: req.params.id })
+      return res.status(200).json({ id: req.params.id });
     } else {
-      return res.status(400).json({ error: "The post with this id doesn't exist." })
+      return res
+        .status(400)
+        .json({ error: "The post with this id doesn't exist." });
     }
   } catch (err) {
-    res.status(500).json(err)
+    res.status(500).json(err);
   }
-})
+});
 
 server.delete("/posts/:id", async (req, res) => {
   try {
-    let data = await postdb.remove(req.params.id)
+    let data = await postdb.remove(req.params.id);
     if (data) {
-      return res.status(200).json({ id: req.params.id })
+      return res.status(200).json({ id: req.params.id });
     } else {
-      return res.status(404).json({ error: "The post with this id doesn't exist." })
+      return res
+        .status(404)
+        .json({ error: "The post with this id doesn't exist." });
     }
   } catch (err) {
-    res.status(500).json(err)
+    res.status(500).json(err);
   }
-})
+});
 
 //tag requests
 
 server.get("/tags", async (req, res) => {
   try {
-    let data = await tagdb.get()
-    res.status(200).json(data)
+    let data = await tagdb.get();
+    res.status(200).json(data);
   } catch (err) {
-    res.status(500).json(err)
+    res.status(500).json(err);
   }
-})
+});
 
 server.get("/tags/:id", async (req, res) => {
   try {
-    let data = await tagdb.get(req.params.id)
+    let data = await tagdb.get(req.params.id);
     if (data) {
-      return res.status(200).json(data)
+      return res.status(200).json(data);
     } else {
-      return res.status(404).json({ error: "The tag with this id doesn't exist." })
+      return res
+        .status(404)
+        .json({ error: "The tag with this id doesn't exist." });
     }
   } catch (err) {
-    res.status(500).json(err)
+    res.status(500).json(err);
   }
-})
+});
+
+server.post("/tags", async (req, res) => {
+  let { tag } = req.body;
+  try {
+    if (tag) {
+      let data = await tagdb.insert(req.body);
+      res.status(200).json(data);
+    } else {
+      res.status(400).json({ error: "Please provide a tag" });
+    }
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+server.put("/tags/:id", async (req, res) => {
+  let { tag } = req.body;
+  if (!tag) {
+    return res.status(404).json({ error: "Please provide a tag." });
+  }
+  try {
+    let data = await tagdb.update(req.params.id, req.body);
+    if (data) {
+      return res.status(200).json({ id: req.params.id });
+    } else {
+      return res
+        .status(400)
+        .json({ error: "The post with this id doesn't exist." });
+    }
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+server.delete("/tags/:id", async (req, res) => {
+  try {
+    let data = await tagdb.remove(req.params.id);
+    if (data) {
+      return res.status(200).json({ id: req.params.id });
+    } else {
+      return res
+        .status(400)
+        .json({ error: "The post with this id doesn't exist" });
+    }
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 server.listen(8000, () => console.log("\n== API on port 8k ==\n"));
