@@ -19,7 +19,17 @@ const capitalUser = (req, res, next) => {
   }
 };
 
-/* DB requests */
+const validatePost = (req, res, next) => {
+  if (!req.body || !req.body.text) {
+    res.status(404).json({ error: 'Post must have some text.' });
+  } else if (!req.body.userId) {
+    res.status(404).json({ error: 'No user found with the id for that post.' });
+  } else {
+    next();
+  }
+};
+
+/* Users DB requests */
 
 const fetchUsers = (req, res) => {
   db.users.get()
@@ -30,13 +40,13 @@ const fetchUsers = (req, res) => {
     });
 };
 
-app.get('/users', fetchUsers);
+app.get('/api/users', fetchUsers);
 
-app.get('/users/:id', (req, res) => {
+app.get('/api/users/:id', (req, res) => {
   db.users.get(req.params.id)
     .then(user => {
-      if (!user) res.status(404).json({ error: 'No user was found with the specified id.' })
-      else res.status(200).json(user)
+      if (!user) res.status(404).json({ error: 'No user was found with the specified id.' });
+      else res.status(200).json(user);
     })
     .catch(err => {
       console.error(err);
@@ -44,30 +54,30 @@ app.get('/users/:id', (req, res) => {
     });
 });
 
-app.delete('/users/:id', (req, res) => {
+app.delete('/api/users/:id', (req, res) => {
   db.users.remove(req.params.id)
     .then((success) => {
-      if (!success) res.status(404).json({ error: 'No user was found with the specified id.' })
-      else fetchUsers(req, res)
+      if (!success) res.status(404).json({ error: 'No user was found with the specified id.' });
+      else fetchUsers(req, res);
     })
     .catch(err => {
       console.error(err);
       res.status(500).json({ error: 'Error deleting the user.' });
-    })
+    });
 });
 
-app.post('/users', capitalUser, (req, res) => {
+app.post('/api/users', capitalUser, (req, res) => {
   db.users.insert(req.body)
-    .then((id) => {
+    .then(() => {
       fetchUsers(req, res);
     })
     .catch(err => {
       console.error(err);
       res.status(500).json({ error: 'Error adding the user.' });
-    })
+    });
 });
 
-app.put('/users/:id', capitalUser, (req, res) => {
+app.put('/api/users/:id', capitalUser, (req, res) => {
   db.users.update(req.params.id, req.body)
   .then((success) => {
     if (!success) res.status(404).json({ error: 'No user was found with the specified id.' });
@@ -76,7 +86,41 @@ app.put('/users/:id', capitalUser, (req, res) => {
   .catch(err => {
     console.error(err);
     res.status(500).json({ error: 'Error updating the user.' });
-  })
+  });
+});
+
+/* Posts DB requests */
+
+const fetchPosts = (req, res) => {
+  db.posts.get()
+    .then(posts => res.status(200).json(posts))
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ error: 'Error getting posts.' });
+    });
+};
+
+app.get('/api/posts', fetchPosts);
+
+app.get('/api/posts/:id', (req, res) => {
+  db.posts.get(req.params.id)
+    .then(post => {
+      if (!post) res.status(404).json({ error: 'No post was found with the specified id.' });
+      else res.status(200).json(post);
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ error: 'Error getting the post.' });
+    });
+});
+
+app.post('/api/posts', validatePost, (req, res) => {
+  db.posts.insert(req.body)
+    .then(() => fetchPosts(req, res))
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ error: 'Error adding post.' });
+    });
 });
 
 app.listen(5000, () => console.log('Server listening on port 5000.'));
