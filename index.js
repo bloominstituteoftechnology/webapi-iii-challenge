@@ -57,12 +57,24 @@ app.get('/api/users/:id', (req, res) => {
 app.get('/api/users/:id/posts', (req, res) => {
   db.users.getUserPosts(req.params.id)
     .then(posts => {
-      if (!posts) res.status(404).json({ error: 'No associated posts were found with the specified user.' });
+      if (!posts) res.status(404).json({ error: 'No associated posts were found for the specified user.' });
       else res.status(200).json(posts);
     })
     .catch(err => {
       console.error(err);
       res.status(500).json({ error: 'Error getting posts for the specified user.' });
+    });
+});
+
+app.get('/api/users/:id/posts/:postId/tags', (req, res) => {
+  db.posts.getPostTags(req.params.postId)
+    .then(tags => {
+      if (!tags) res.status(404).json({ error: 'No associated tags were found for the specified post.' });
+      else res.status(200).json(tags);
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ error: 'Error getting tags for the specified post.' });
     });
 });
 
@@ -126,6 +138,18 @@ app.get('/api/posts/:id', (req, res) => {
     });
 });
 
+app.get('/api/posts/:id/tags', (req, res) => {
+  db.posts.getPostTags(req.params.id)
+    .then(tags => {
+      if (!tags) res.status(404).json({ error: 'No associated tags were found for the specified post.' });
+      else res.status(200).json(tags);
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ error: 'Error getting tags for the specified post.' });
+    });
+});
+
 app.delete('/api/posts/:id', (req, res) => {
   db.posts.remove(req.params.id)
     .then((success) => {
@@ -158,5 +182,9 @@ app.put('/api/posts/:id', validatePost, (req, res) => {
       res.status(500).json({ error: 'Error updating the post.' });
     });
 });
+
+/* Tags DB requests */
+
+// ... :D
 
 app.listen(5000, () => console.log('Server listening on port 5000.'));
