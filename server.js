@@ -46,7 +46,9 @@ server.get("/users/:userId/posts/:postId", (req,res) => {
             console.log(err);
             res.status(500).json({message: "Post with correlated User ID is not found."})
         })
-    };
+    } else{
+        res.status(400).json({message: "UserId and PostId do not match. Please check and try again."})
+    }
 });
 
 server.post("/users", upperCase, (req,res) => {
