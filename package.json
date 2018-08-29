@@ -2,11 +2,15 @@
   "name": "Node-Blog",
   "version": "1.0.0",
   "description": "## Topics",
-  "main": "knexfile.js",
-  "dependencies": {},
-  "devDependencies": {},
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.16.3"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.4"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon"
   },
   "repository": {
     "type": "git",
