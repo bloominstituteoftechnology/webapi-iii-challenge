@@ -4,7 +4,7 @@
     "knex": "^0.15.2",
     "sqlite3": "^4.0.2"
   },
-  "name": "Node-Blog",
+  "name": "node-blog",
   "version": "1.0.0",
   "main": "index.js",
   "repository": "https://github.com/LaikaFusion/Node-Blog.git",
