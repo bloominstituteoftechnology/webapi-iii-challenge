@@ -31,10 +31,10 @@ server.get("/users", (req, res) => {
 server.get("/users/:userId", (req, res) => {
     const {userId} = req.params;
     dbUsers.get(userId)
-    .then(response => {
+    .then( response => {
         res.status(200).json(response)
     })
-    .catch(err => {
+    .catch( err => {
         console.log(err)
         res.status(500).json({ message: "Failed to retrieve user with the specific userId." })
     });
@@ -44,8 +44,8 @@ server.get("/users/:userId/posts/:postId", (req,res) => {
     const {userId, postId} = req.params
     if(userId === postId) {
         dbUsers.getUserPosts(userId)
-        .then(posts => {res.status(200).json(posts)})
-        .catch(err => {
+        .then( posts => { res.status(200).json(posts) } )
+        .catch( err => {
             console.log(err);
             res.status(500).json({ message: "Post with correlated User ID is not found." })
         })
@@ -75,10 +75,12 @@ server.post("/users", upperCase, (req,res) => {
 
 server.put("/users/:userId", upperCase, (req,res) => {
     const upperName = req.upperName;
+    const {userId} = req.params;
+    const user = req.body
     req.body.name = upperName;
-    dbUsers.update(req.params.userId, req.body)
-    .then(user => { res.status(200).json(user) })
-    .catch(err => {
+    dbUsers.update(userId, user)
+    .then( user => { res.status(200).json(user) })
+    .catch( err => {
         console.log(err)
         res.status(500).json({ message: "Updated failed." })
     });
@@ -86,8 +88,8 @@ server.put("/users/:userId", upperCase, (req,res) => {
 
 server.delete("/users/:userId", (req,res) => {
     dbUsers.remove(req.params.userId)
-    .then(count => { res.status(200).json({ message: `${count} users deleted.`} )})
-    .catch(err => {
+    .then( count => { res.status(200).json({ message: `${count} users deleted.`} )})
+    .catch( err => {
         console.log(err);
         res.status(500).json({ message: "Cannot delete user." })
     })
@@ -114,8 +116,6 @@ server.get("/posts/:postId", (req, res) => {
 })
 
 server.post("/posts", (req, res) => {
-    const {userId} = req.params;
-    console.log(userId);
     const post = req.body;
     if (!post.text) {
         res.status(400).json({ message: "Cannot be blank. Please enter some text." })
@@ -123,17 +123,28 @@ server.post("/posts", (req, res) => {
         res.status(400).json({ message: "Field required. UserId must be entered." })
     } 
     //else if() {
-
+        //need to check if UserId exists
     // } 
     else {
         dbPosts.insert(post)
-        .then(post => { res.status(200).json(post) })
-        .catch(err => {
+        .then( post => { res.status(200).json(post) })
+        .catch( err => {
             console.log(err);
             res.status(500).json({ message: "Failed to create new post." })
         })
     }
 });
+
+server.put("/posts/:postId", (req, res) => {
+    const { postId } = req.params;
+    const post = req.body;
+    dbPosts.update(postId, post)
+    .then( post => { res.status(200).json(post) })
+    .catch( err => {
+        console.log(err);
+        res.status(500).json({ message: "Failed to update post." })
+    } )
+})
 
 server.delete("/posts/:postId", (req, res) => {
     const {postId} = req.params;
