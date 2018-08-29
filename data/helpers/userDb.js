@@ -9,7 +9,7 @@ module.exports = {
 
 		return query;
 	},
-	banana: function(userId) {
+	getUserPosts: function(userId) {
 		return db("posts as p")
 			.join("users as u", "u.id", "p.userId")
 			.select("p.id", "p.text", "u.name as postedBy")
