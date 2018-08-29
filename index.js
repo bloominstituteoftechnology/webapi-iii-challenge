@@ -29,9 +29,10 @@ server.get('/users', (req, res) => {
 
 server.post('/users', (req, res) => {
     const user = req.body;
-    dbUsers.insert(user)
+    if(user.name){
+        dbUsers.insert(user)
         .then(response =>
-            db.findById(response.id).then(user => {
+            dbUsers.get(response.id).then(user => {
                 res.status(201).json(user);
         })
         )        
@@ -39,6 +40,11 @@ server.post('/users', (req, res) => {
             console.error('error', err);
             res.status(500).json({ error: "There was an error while saving the User to the Database."})
         })
+    } else {
+        res
+            .status(400).json({ errorMessage: "Please provide title and contents for the post."});
+    }
+    
 })
 
 
