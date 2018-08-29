@@ -2,6 +2,11 @@ const express = require('express');
 const server = express();
 const dbUser = require('./data/helpers/userDb.js');
 
+function uppercased(req, res, next) {
+    req.body.upper = req.body.name.toUpperCase();
+    next();
+};
+
 server.use(express.json());
 
 
@@ -37,17 +42,18 @@ server.get('/api/users/:id', (req, res) => {
     })
 });
 
-server.post('/api/users', (req, res) => {
-    const { name } = req.body;
+server.post('/api/users', uppercased, (req, res) => {
+    const { name, upper } = req.body;
+    const upperCaser = req.body.upper;
     if (!name) {
         res.status(400).json({ errorMessage: 'Please provide a username.' });
         return;
     }
     dbUser.insert({
-        name
+        name: upperCaser
     })
     .then(response => {
-        res.status(201).json(req.body);
+        res.status(201).json(req.body.upper);
     })
     .catch(error => {
         console.error('error', err);
@@ -70,16 +76,18 @@ server.delete('/api/users/:id', (req, res) => {
         .catch(error => res.status(500).json({ error: 'The user could not be removed' }));
 });
 
-server.put('/api/users/:id', (req, res) => {
+server.put('/api/users/:id', uppercased, (req, res) => {
     const { name } = req.body;
+    const upperCaser = req.body.upper;
     if (!name) {
         res.status(400).json({ errorMessage: 'Please provide the new username.' });
         return;
     }
-    dbUser.update(req.params.id, req.body)
+    dbUser.update(req.params.id, {name: upperCaser})
         .then(user => {
             if (user) {
-                res.status(200).json(req.body)
+                res.status(200).json(req.body.upper)
+                // console.log(req.body);
             } else {
                 res.status(404).json({ message: 'The user with the specified ID does not exist.' })
             }
