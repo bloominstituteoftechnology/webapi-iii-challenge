@@ -56,4 +56,38 @@ server.post('/api/users', (req, res) => {
     })
 })
 
+server.delete('/api/users/:id', (req, res) => {
+    const { id } = req.params;
+    dbUser.remove(id)
+        .then(count => {
+            // console.log(count);
+            if (count) {
+                res.status(204).json({ message: 'User has been deleted'}).end();
+            } else {
+                res.status(404).json({ message: 'The user with the specified ID does not exist.' })
+            }
+        })
+        .catch(error => res.status(500).json({ error: 'The user could not be removed' }));
+});
+
+server.put('/api/users/:id', (req, res) => {
+    const { name } = req.body;
+    if (!name) {
+        res.status(400).json({ errorMessage: 'Please provide the new username.' });
+        return;
+    }
+    dbUser.update(req.params.id, req.body)
+        .then(user => {
+            if (user) {
+                res.status(200).json(req.body)
+            } else {
+                res.status(404).json({ message: 'The user with the specified ID does not exist.' })
+            }
+            
+        })
+        .catch(err => res.status(500).json({ message: 'The user information could not be modified.' }));
+});
+
+
+
 server.listen(8000, () => console.log('/n== API on port 8k ==/n') );
