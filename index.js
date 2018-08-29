@@ -38,7 +38,6 @@ app.get("/posts", (req, res) => {
   postDb
     .get()
     .then(posts => {
-      console.log(posts);
       res.status(200).json(posts);
     })
     .catch(err => {
@@ -53,7 +52,6 @@ app.get("/users/:id", (req, res) => {
   userDb
     .get(req.params.id)
     .then(user => {
-      console.log(user);
       if (user.id) {
         res.status(200).json(user);
       } else {
@@ -74,7 +72,6 @@ app.get("/posts/:id", (req, res) => {
   postDb
     .get(req.params.id)
     .then(post => {
-      console.log(post);
       if (post) {
         res.status(200).json(post);
       } else {
@@ -95,7 +92,6 @@ app.get("/users/:id/posts", (req, res) => {
   userDb
     .getUserPosts(req.params.id)
     .then(posts => {
-      console.log(posts);
       if (posts.length > 0) {
         res.status(200).json(posts);
       } else {
@@ -132,7 +128,6 @@ app.post("/users", upperName, (req, res) => {
 
 app.post("/posts", (req, res) => {
   const newPost = req.body;
-  console.log(newPost);
   if (newPost.userId && newPost.text) {
     postDb
       .insert(newPost)
@@ -159,7 +154,6 @@ app.delete("/users/:id", (req, res) => {
       userDb
         .remove(user.id)
         .then(count => {
-          console.log(count);
           if (count) {
             res.status(200).json(user);
           } else {
@@ -183,10 +177,11 @@ app.delete("/users/:id", (req, res) => {
 
 app.delete("/posts/:id", (req, res) => {
   postDb
-    .remove(post.id)
+    .remove(req.params.id)
     .then(count => {
-      if (count) {
-        res.status(200).json(post);
+        console.log(count);
+      if (count > 0) {
+        res.status(200).json({message: "The post was successfully deleted"});
       } else {
         res.status(404).json({
           message: "The post with the specified ID does not exist."
