@@ -1,0 +1,23 @@
+{
+  "name": "Node-Blog",
+  "version": "1.0.0",
+  "description": "## Topics",
+  "main": "knexfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/careybaldwin02/Node-Blog.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/careybaldwin02/Node-Blog/issues"
+  },
+  "homepage": "https://github.com/careybaldwin02/Node-Blog#readme",
+  "devDependencies": {
+    "nodemon": "^1.18.4"
+  }
+}
