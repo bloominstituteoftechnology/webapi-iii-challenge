@@ -120,6 +120,14 @@ server.put("/posts/", async (req, res) => {
     res.status(500).json(err);
   }
 });
+server.get("/posts/user/:userid", async (req, res) => {
+  try {
+    const results = await postDb.getPostsForUser(req.params.userid);
+    res.status(200).json(results);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 server.put("/posts/:postID", async (req, res) => {
   if (!req.body.userId || !req.body.text) {
     res.status(400).json({ errorMessage: "Content missing" });
@@ -136,6 +144,9 @@ server.put("/posts/:postID", async (req, res) => {
     res.status(500).json(err);
   }
 });
+
+
+
 server.use("/", (req, res) =>
   res
     .status(404)
