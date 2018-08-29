@@ -1,0 +1,15 @@
+{
+  "name": "Node-Blog",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon"
+  },
+  "repository": "https://github.com/MKerbleski/Node-Blog.git",
+  "author": "mkerbleski <mkerbles@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.3",
+    "nodemon": "^1.18.4"
+  }
+}
