@@ -4,18 +4,22 @@ const posts = require('../../data/helpers/postDb');
 const router = express.Router();
 
 //posts endpoints
+
+//get all posts
 router.get('/', (req, res) => {
   posts.get()
         .then(psts => res.status(201).json(psts))
         .catch(err => res.status(500).json({ error: "Failed to retrieve Posts" }));
 });
 
+//get a post by id
 router.get('/:id', (req, res) => {
   posts.get(req.params.id)
         .then(post => res.status(201).json(post))
         .catch(err => res.status(500).json({ error: `Failed to Retrieve Post with id ${id}.` }));
 });
 
+//get all tags of post with id
 router.get('/:id/tags', (req,res)=>{
   const { id } = req.params;
 
@@ -24,6 +28,7 @@ router.get('/:id/tags', (req,res)=>{
         .catch(err => res.status(500).json({ error: `Failed to Retrieve Tags for Post with id ${id}.` }));
 });
 
+//create a new post using text and associated user id
 router.post('/', (req, res) => {
   const { text, userId } = req.body;
   if(!text || !userId) res.status(422).json({ message: 'ID of poster and post text is required!'});
@@ -33,6 +38,7 @@ router.post('/', (req, res) => {
         .catch(err => res.status(500).json({ error: "Database Failure on Inserting New Post" }));
 });
 
+//remove a post
 router.delete('/:id', (req, res) => {
   const { id } = req.params;
 
@@ -44,6 +50,7 @@ router.delete('/:id', (req, res) => {
         .catch(err => res.status(500).json({ error: `Database Failure on Deleting Post with id ${id}` }));
 });
 
+//change the text of a post
 router.put('/:id', (req, res) => {
   const { id } =  req.params;
   const { text } = req.body;
