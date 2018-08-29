@@ -1,8 +1,11 @@
 const express = require('express');
+const users = require('./data/helpers/userDb');
 
-const db = require ('./data/dbConfig.js');
+// const db = require ('./data/dbConfig.js');
 
 const server = express();
+
+server.use(express.json()); //allows parsing of json data from req.body
 
 //Middleware here (practice)
 function greeter(req, res, next) {
@@ -17,6 +20,19 @@ server.get('/',(req, res) => {
 
 server.get('/hello', greeter, (req,res) =>{
     res.send(`hello ${req.name}`);
+});
+
+//GET request for retrieving all users
+server.get('/api/users', (req,res) => {
+    users
+        .get()
+        .then(getUsers => {
+            res.json(getUsers);
+        })    
+    .catch(err => {
+        console.error('error', err);
+        res.status(500).json({message: 'Error getting users'})
+    });
 });
 
 //Start the server
