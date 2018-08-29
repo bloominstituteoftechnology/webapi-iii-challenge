@@ -1,10 +1,10 @@
 const express = require('express');
-const uppercaseMiddle = require('./upperCaseMiddle');
+const upperCase = require('./upperCase');
 const userDB = require('./data/helpers/userDb');
 
 const server = express();
 server.use(express.json());
-server.user(uppercaseMiddle.uppercase);
+server.use(upperCase.uppercase);
 
 
 server.get('/users', async (req, res) => {
@@ -33,4 +33,21 @@ server.get('/users/:id', async (req, res) => {
 });
 
 
+server.delete('/users/:id', async (req, res) => {
+    if (!Number(req.params.id)) {
+        res.status(400).json({ message: 'Please enter a number' });
+    }
+    try {
+        const results = await userDB.remove(Number(req.params.id));
+        if (results === 1) {
+            res.status(200).json({ message: 'Success' });
+        }
+        res.status(500).json({ message: 'Invalid Id' });
+    } catch (err) {
+        res.status(500).json(err);
+    }
+})
+
+
+server.listen(9001);
 
