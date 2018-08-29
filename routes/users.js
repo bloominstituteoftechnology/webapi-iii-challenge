@@ -2,6 +2,13 @@ const express = require('express');
 const db = require('../data/helpers/userDb');
 const router = express.Router();
 
+function nameUppercaser(req, res, next) {
+  if (req.body.name) {
+    req.body.name = req.body.name.toUpperCase();
+  }
+  next();
+}
+
 router
   .route('/')
   .get(async (req, res) => {
@@ -12,7 +19,7 @@ router
       res.status(500).json(err);
     }
   })
-  .post(async (req, res) => {
+  .post(nameUppercaser, async (req, res) => {
     if (!req.body.name)
       res.status(400).json({ message: 'You need to provide a name!' });
     try {
