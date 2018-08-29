@@ -3,7 +3,21 @@ const express = require('express');
 const server =  express(); 
 const userDb = require('./data/helpers/userDb.js')
 
+
+//Middleware that transforms user name to UPPERCASE
+
+const toUppercase = (req, res, next) => {
+    if(req.method === "POST" || req.method === "PUT"){
+        const name = req.body.name.toUpperCase(); 
+        req.body.name = name;
+    }
+    next(); 
+}
+
+
 server.use(express.json());
+server.use(toUppercase); 
+
 
 //User CRUD operations
 
@@ -70,6 +84,8 @@ server.put("/api/users/:id", (req, res) => {
     }else {
         res.status(400).json({message: "Please provide name in updated data"})
     }
-})
+}); 
+
+
 
 server.listen(5000); 
