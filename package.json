@@ -23,6 +23,7 @@
     "sqlite3": "^4.0.2"
   },
   "dependencies": {
-    "express": "^4.16.3"
+    "express": "^4.16.3",
+    "helmet": "^3.13.0"
   }
 }

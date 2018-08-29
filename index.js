@@ -1,9 +1,11 @@
 const express = require("express");
-const PORT = 9000;
 const db = require("./data/helpers/userDb.js");
+const helmet = require('helmet')
+const PORT = 9000;
 const server = express();
 
 server.use(express.json());
+server.use(helmet()); 
 
 //middleware
 function upperCase(req, res, next) {
@@ -109,5 +111,7 @@ server.delete("/api/users/:id", (req, res) => {
       res.status(500).json({ error });
     });
 });
+
+
 
 server.listen(PORT, () => console.log(`\n== API on port ${PORT}==\n`));
