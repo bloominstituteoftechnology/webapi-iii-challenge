@@ -51,6 +51,41 @@ app.get('/users/:id/posts', async (req, res) => {
 	}
 });
 
+app.post('/users', upperUser, async (req, res) => {
+	const { name } = req.body;
+	try {
+		const count = await userDB.insert({name});
+		res.status(201).json({message: 'User successfully added'});
+	}
+	catch(err) {
+		res.status(500).json({ message: 'Something went wrong in our server '})
+	}
+});
+
+app.put('/users/:id', upperUser, async (req, res) => {
+	const { id } = req.params;
+	const { name } = req.body;
+	try {
+		const count = await userDB.update(id, {name});
+		res.status(200).json({message: 'User successfully updated'});
+	}
+	catch(err) {
+		res.status(500).json({ message: 'Something went wrong in our server '})
+	}
+});
+
+app.delete('/users/:id', async (req, res) => {
+	const { id } = req.params;
+	try {
+		const count = await userDB.remove(id);
+		res.status(200).json({ message: 'User successfully deleted' })
+	}
+	catch(err) {
+		console.log(err);
+		res.status(500).json({ message: 'Something went wrong in our server '});
+	}
+ });
+
 app.get('/posts', async (req, res) => {
 	try {
 		const posts = await postDB.get();
@@ -69,17 +104,6 @@ app.get('/posts/:id', async (req, res) => {
 	}
 	catch(err) {
 		res.status(500).json({ message: 'Error getting the data'});
-	}
-});
-
-app.post('/users', upperUser, async (req,res) => {
-	const { name } = req.body;
-	try {
-		const count = await userDB.insert({name});
-		res.status(201).json({message: 'User successfully added'});
-	}
-	catch(err) {
-		res.status(500).json({ message: 'Something went wrong in our server '})
 	}
 });
 
