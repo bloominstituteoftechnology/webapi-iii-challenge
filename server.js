@@ -2,6 +2,7 @@ const express = require("express");
 const userdb = require("./data/helpers/userDb");
 const postdb = require("./data/helpers/postDb");
 const tagdb = require("./data/helpers/tagDb");
+const mw = require("./middleware");
 const cors = require("cors");
 
 const server = express();
@@ -52,31 +53,20 @@ server.get("/userPosts/:id", async (req, res) => {
   }
 });
 
-server.post("/users", async (req, res) => {
-  let { name } = req.body;
+server.post("/users", mw.users, async (req, res) => {
+  let body = req.body;
   try {
-    if (name) {
-      let data = await userdb.insert(req.body);
-      return res.status(200).jspon(data);
-    } else {
-      return res
-        .status(400)
-        .json({ error: "Please provide a name for this user." });
-    }
+    let data = await userdb.insert(body);
+    res.status(200).json(data);
   } catch (err) {
     res.status(500).json(err);
   }
 });
 
-server.put("/users/:id", async (req, res) => {
-  let { name } = req.body;
-  if (!name) {
-    return res
-      .status(400)
-      .json({ error: "Please provide a name for this user." });
-  }
+server.put("/users/:id", mw.users, async (req, res) => {
+  let body = req.body;
   try {
-    let data = await userdb.update(req.params.id, req.body);
+    let data = await userdb.update(req.params.id, body);
     if (data) {
       return res.status(200).json(data);
     } else {
@@ -145,30 +135,31 @@ server.get("/postTags/:id", async (req, res) => {
   }
 });
 
-server.post("/posts", async (req, res) => {
+server.post("/posts", mw.posts, async (req, res) => {
   let body = req.body;
   try {
-    if (body.text && body.userId) {
-      let data = await postdb.insert(body);
+    let data = await postdb.insert(body);
+    if (data) {
       return res.status(200).json(data);
     } else {
       return res
-        .status(400)
-        .json({ error: "Please provide text and userId for this post." });
+        .status(404)
+        .json({ error: "The user with this id doesn't exist." });
     }
   } catch (err) {
     res.status(500).json(err);
   }
 });
 
-server.put("/posts/:id", async (req, res) => {
+server.put("/posts/:id", mw.posts, async (req, res) => {
   let body = req.body;
-  if (!(body.text && body.userId)) {
-    return res
-      .status(400)
-      .json({ error: "Please provide text and userId for this post." });
-  }
   try {
+    let user = await userdb.get(body.userId);
+    if (!user) {
+      return res
+        .status(400)
+        .json({ error: "the user with this id does not exist." });
+    }
     let data = await postdb.update(req.params.id, body);
     if (data) {
       return res.status(200).json(body);
@@ -223,25 +214,17 @@ server.get("/tags/:id", async (req, res) => {
   }
 });
 
-server.post("/tags", async (req, res) => {
-  let { tag } = req.body;
+server.post("/tags", mw.tags, async (req, res) => {
+  let body = req.body;
   try {
-    if (tag) {
-      let data = await tagdb.insert(req.body);
-      res.status(200).json(data);
-    } else {
-      res.status(400).json({ error: "Please provide a tag" });
-    }
+    let data = await tagdb.insert(body);
+    res.status(200).json(data);
   } catch (err) {
     res.status(500).json(err);
   }
 });
 
-server.put("/tags/:id", async (req, res) => {
-  let { tag } = req.body;
-  if (!tag) {
-    return res.status(400).json({ error: "Please provide a tag." });
-  }
+server.put("/tags/:id", mw.tags, async (req, res) => {
   try {
     let data = await tagdb.update(req.params.id, req.body);
     if (data) {
