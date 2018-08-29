@@ -1,0 +1,29 @@
+{
+  "name": "node-blog",
+  "version": "1.0.0",
+  "description": "* Building RESTful APIs.\r * Performing CRUD Operations on Multiple Resources.\r * Configuring CORS.\r * Writing Custom Middleware.\r * Using Express Routers to Modularize Application.",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RandyCalderon/Node-Blog.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RandyCalderon/Node-Blog/issues"
+  },
+  "homepage": "https://github.com/RandyCalderon/Node-Blog#readme",
+  "devDependencies": {
+    "nodemon": "^1.18.3"
+  },
+  "dependencies": {
+    "express": "^4.16.3",
+    "helmet": "^3.13.0",
+    "knex": "^0.15.2",
+    "morgan": "^1.9.0",
+    "sqlite3": "^4.0.2"
+  }
+}
