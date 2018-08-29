@@ -169,10 +169,27 @@ server.put("/posts/:id", async (req, res) => {
     if (data) {
       return res.status(200).json({ id: req.params.id })
     } else {
-      return res.status(400).json({ error: "The post with this id doesn't exist" })
+      return res.status(400).json({ error: "The post with this id doesn't exist." })
     }
   } catch (err) {
     res.status(500).json(err)
   }
 })
+
+server.delete("/posts/:id", async (req, res) => {
+  try {
+    let data = await postdb.remove(req.params.id)
+    if (data) {
+      return res.status(200).json({ id: req.params.id })
+    } else {
+      return res.status(404).json({ error: "The post with this id doesn't exist." })
+    }
+  } catch (err) {
+    res.status(500).json(err)
+  }
+})
+
+//tag requests
+
+
 server.listen(8000, () => console.log("\n== API on port 8k ==\n"));
