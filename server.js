@@ -11,7 +11,7 @@ const userDb = require('./data/helpers/userDb.js');
 } );
 
 server.get('/users', (req, res) => {
-    userDb.find().then(users => {
+    userDb.get().then(users => {
       res.status(200).json(users)
     }).catch(err => {
       console.error('error', err);
