@@ -93,7 +93,78 @@ server.delete('/users/:id', (req, res) => {
         })
 })
 
-
 // Post endpoints
+
+server.post('/posts', async (req, res) => {
+    const { userId, text } = req.body;
+    if (!userId || !text) {
+        res.status(400).json({errorMessage: 'Please provide a userId and text for this post.'});
+    } else {
+        try {
+            const response = await postDb.insert({userId, text});
+            res.status(201).json(response);
+        } catch (ex) {
+            res.status(500).json({errorMessage: 'There was an error while saving the post info.'});
+        }
+    }
+})
+
+server.get('/posts', async (req, res) => {
+    try {
+        const response = await postDb.get();
+        res.status(200).json(response);
+    } catch (ex) {
+        res.status(500).json({errorMessage: 'There was an error retrieving the posts from the database.'});
+    }
+})
+
+server.get('/posts/:id', async (req, res) => {
+    const id = req.params.id;
+    try {
+        const response = await postDb.get(id);
+        res.status(200).json(response);
+    } catch (ex) {
+        res.status(500).json({errorMessage: 'There was an error retrieving the specified post from the database.'});
+    }
+})
+
+server.get('/posts/:id/tags', async (req, res) => {
+    const id = req.params.id;
+    try {
+        const response = await postDb.getPostTags(id);
+        res.status(200).json(response);
+    } catch (ex) {
+        res.status(500).json({errosMessage: 'There was an error retrieving the post tags.'});
+    }
+})
+
+server.put('/posts/:id', async (req, res) => {
+    const id = req.params.id;
+    const { userId, text } = req.body;
+    if (!userId || !text) {
+        res.status(400).json({errorMessage: 'Please provide a userId and new text for this post.'});
+    } else {
+        try {
+            const response = await postDb.update(id, {userId, text});
+            if (response === 1) {
+                res.status(201).json(response);
+            } else {
+                res.json(404).json({errorMessage: 'The post with the specified ID does not exist.'});
+            }
+        } catch (ex) {
+            res.status(500).json({errorMessage: 'There was an error updating the post.'});
+        }
+    }
+})
+
+server.delete('/posts/:id', async (req, res) => {
+    const id = req.params.id;
+    try {
+        const response = await postDb.remove(id);
+        res.status(204).end();
+    } catch (ex) {
+        res.status(500).json({errorMessage: 'There was an error deleting the post from the database.'});
+    }
+})
 
 server.listen(6001, () => console.log('\n-=- Server listening on port 6001 -=-\n'));
