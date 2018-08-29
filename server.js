@@ -7,7 +7,8 @@ const port = 6666;
 
 
 
-const usersRouter = require('./data/Routers/user.js');
+const usersRouter = require('./data/Routers/User.js');
+const postsRouter = require('./data/Routers/Post.js')
 
 
 
@@ -27,6 +28,7 @@ server.use(logger);
 
 
 server.use('/api/users', usersRouter);
+server.use('/api/posts', postsRouter);
 
 
 
