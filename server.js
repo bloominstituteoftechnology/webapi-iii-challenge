@@ -22,6 +22,17 @@ server.get("/users", (req, res) => {
     .catch(err => console.log(err));
 });
 
+server.post("/users", (req,res) => {
+    const user = req.body;
+    if (!user.name){
+        res.status(400).json({message: "Please enter a name."})
+    } else {
+        dbUsers.insert(user)
+        .then(response => res.status(200).json(response.id))
+        .catch(err => console.log(err));
+    }
+})
+
 server.get("/posts", (req, res) => {
     dbPosts.get()
     .then(posts => res.status(200).json(posts))
