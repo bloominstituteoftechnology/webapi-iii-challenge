@@ -107,20 +107,38 @@ app.get('/posts/:id', async (req, res) => {
 	}
 });
 
+app.post('/posts', async (req, res) => {
+	const { userId, text } = req.body;
+	try {
+		const count = await postDB.insert({userId, text});
+		res.status(201).json({message: 'Post successfully added'});
+	}
+	catch(err) {
+		res.status(500).json({ message: 'Something went wrong in our server '})
+	}
+});
 
-// app.post('/users', async (req, res) => {
-// 	const user = req.body;
-// 	if (!user.name || !user.bio){
-// 		res.status(422).json({ message: 'A user needs both a name and a bio'});
-// 	}
-// 	try {
-// 		const response = await db.insert({name: user.name, bio: user.bio});
-// 		res.status(201).json({ message: 'User successfully created '});
-// 	} 
-// 	catch(err) {
-// 		console.log(err);
-// 		res.status(500).json({ message: 'Something went wrong in our server '});
-// 	}
-// })
+app.put('/posts/:id', async (req, res) => {
+	const { id } = req.params
+	const { userId, text } = req.body;
+	try {
+		const count = await postDB.update(id, {userId, text});
+		res.status(200).json({message: 'Post successfully updated'});
+	}
+	catch(err) {
+		res.status(500).json({ message: 'Something went wrong in our server '})
+	}
+});
+
+app.delete('/posts/:id', async (req, res) => {
+	const { id } = req.params;
+	try {
+		const count = await postDB.remove(id);
+		res.status(200).json({message: 'Post successfully deleted'});
+	}
+	catch(err) {
+		res.status(500).json({ message: 'Something went wrong in our server '})
+	}
+})
 
 app.listen(9000, () => console.log('===server is running on port 9000==='));
