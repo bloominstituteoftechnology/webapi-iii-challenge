@@ -2,9 +2,9 @@
   "name": "Node-Blog",
   "version": "1.0.0",
   "description": "## Topics",
-  "main": "knexfile.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon server.js"
   },
   "repository": {
     "type": "git",
@@ -18,7 +18,13 @@
   },
   "homepage": "https://github.com/lfsalazarcruz/Node-Blog#readme",
   "dependencies": {
+    "express": "^4.16.3",
+    "helmet": "^3.13.0",
     "knex": "^0.15.2",
+    "morgan": "^1.9.0",
     "sqlite3": "^4.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.4"
   }
 }
