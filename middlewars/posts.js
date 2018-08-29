@@ -1,12 +1,11 @@
 'use strict'
 
-exports.nameCheck = (req, res, next) => {
-    if (!req.body.name){
+exports.inputCheck = (req, res, next) => {
+    if (!req.body.userId || !req.body.text)
         res.status(500)
             .json({
-                error: "User name is not defined",
+                error: 'UserId or text is not included'
             })
-    }
     next()
 }
 
