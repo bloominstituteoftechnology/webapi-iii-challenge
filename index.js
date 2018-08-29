@@ -54,6 +54,18 @@ app.get('/api/users/:id', (req, res) => {
     });
 });
 
+app.get('/api/users/:id/posts', (req, res) => {
+  db.users.getUserPosts(req.params.id)
+    .then(posts => {
+      if (!posts) res.status(404).json({ error: 'No associated posts were found with the specified user.' });
+      else res.status(200).json(posts);
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ error: 'Error getting posts for the specified user.' });
+    });
+});
+
 app.delete('/api/users/:id', (req, res) => {
   db.users.remove(req.params.id)
     .then((success) => {
