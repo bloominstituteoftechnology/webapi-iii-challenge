@@ -32,4 +32,19 @@ server.get('/users', (req, res) => {
     })
 }); 
 
+server.post("/users", (req, res) => {
+    const data = req.body
+    if (data.name){
+        userDb.insert(data).then(userId => {
+            userDb.get(userId.id).then(user => {
+                res.status(201).json(user)
+            }).catch(err => {
+                res.status(500).json({error: "Error recieving new user info"})
+            })
+        }).catch(err => {
+            res.status(500).json({error: "Error uploading data"})
+        })
+    } else {res.status(400).json({error: "Name required"})}
+}); 
+
  server.listen(8000, () => console.log('/n== API on port 8000 ==/n') )
