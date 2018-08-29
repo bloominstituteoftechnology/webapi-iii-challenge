@@ -20,8 +20,8 @@ server.get('/users', (req, res) => {
 
 server.post('/users', (req, res) => {
     console.log(req.body)
-    const {user} = req.body;
-    dbUsers.insert({user})
+    const user = req.body;
+    dbUsers.insert(user)
         .then(() => {
             dbUsers.get()
             .then(user => {
@@ -32,6 +32,15 @@ server.post('/users', (req, res) => {
             console.error('error', err);
             res.status(500).json({ error: "There was an error while saving the User to the Database."})
         })
+})
+
+server.delete('/users/:id', (req, res) => {
+    const {id} = req.params;
+    dbUsers.remove(id)
+        .then(count => {
+            res.status(204).end();
+        }) 
+        .catch(err => res.status(500).json(err));
 })
 
 server.listen(8000, () => console.log('\n== API on port 8000 ==\n'));
