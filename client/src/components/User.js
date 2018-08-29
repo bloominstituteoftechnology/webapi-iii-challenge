@@ -13,7 +13,7 @@ class User extends Component {
         return(
             <div>
                 <h2>{this.props.user.name}</h2>
-                <p>ID: {this.props.user.id}</p>
+                <p>User ID: {this.props.user.id}</p>
                 <hr/>
             </div>
         )
