@@ -12,6 +12,10 @@ server.use(express.json());
 server.use(helmet());
 server.use(morgan("dev"));
 server.use(cors({}));
+
+const errorHelper = (status, message, res) => {
+  res.status(status).json({ error: message });
+};
 /////Middleware
 const nameCheckMiddleware = (req, res, next) => {
   const { name } = req.body;
@@ -95,4 +99,86 @@ server.delete("/users/:id", (req, res) => {
     });
 });
 
+server.put("/users/:id", nameCheckMiddleware, (req, res) => {
+  const { id } = req.params;
+  const { name } = req.body;
+  userDb
+    .update(id, { name })
+    .then(response => {
+      if (response === 0) {
+        return errorHelper(404, "No user with that id");
+      } else {
+        db.find(id).then(user => {
+          res.json(user);
+        });
+      }
+    })
+    .catch(err => {
+      return errorHelper(500, "Database", res);
+    });
+});
+
+server.get("/posts", (req, res) => {
+  postDb
+    .get()
+    .then(posts => {
+      res.status(200).json(posts);
+    })
+    .catch(err => {
+      return errorHelper(500, "Posts Not Found", res);
+    });
+});
+
+server.get("/posts/:id", (req, res) => {
+  const { id } = req.params;
+  postDb
+    .get(id)
+    .then(post => {
+      if (post === 0) {
+        return errorHelper(404, "No posts by id", res);
+      }
+      res.json(post)
+    })
+    .catch(err => {
+      return errorHelper(500, "Error", res);
+    });
+});
+
+server.post('/posts', (req, res)=>{
+    const {userId, text} = req.body; 
+    postDb
+    .insert({userId, text})
+    .then(newPost =>{
+        res.status(200).json(newPost); 
+    })
+    .catch(err=>{
+        return errorHelper(500, "Error", res);
+    })
+}); 
+
+server.get('/post/tags/:id', (req, res)=>{
+    const {id} = req.params; 
+    postDb
+    .getPostTags(id)
+    .then(tags =>{
+        if(tags === 0){
+            return errorHelper(404, "Post Not Found", res); 
+        }
+        res.json(tags); 
+    })
+    .catch(err=>{
+        return errorHelper(500, "Error", res); 
+    });
+}); 
+
+server.get('/tags', (req, res)=>{
+    userDb
+    .get()
+    .then(tag =>{
+        res.status(200).json({tag});
+    })
+    .catch(err=>{
+        return errorHelper(500, "Error", res); 
+    })
+})
 server.listen(3001, () => console.log("server 3001 started"));
