@@ -26,7 +26,7 @@ server.post('/users',upperCase, (req,res)=>{
         .catch(err=>res.status(500).json({ error: "There was an error while saving the user to the database" }))
     }
 })
-server.put('/users/:id',(req,res)=>{
+server.put('/users/:id',upperCase,(req,res)=>{
     const user=req.body;
     if (!user) {
         res.status(400).json({errorMessage:"Please enter a user name"});
