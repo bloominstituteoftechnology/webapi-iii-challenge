@@ -21,7 +21,7 @@ router
   })
   .post(nameUppercaser, async (req, res) => {
     if (!req.body.name)
-      res.status(400).json({ message: 'You need to provide a name!' });
+      return res.status(400).json({ message: 'You need to provide a name!' });
     try {
       let data = await db.insert({ name: req.body.name });
       res.status(201).json(data);
@@ -29,5 +29,23 @@ router
       res.status(500).json(err);
     }
   });
+
+router.route('/:id').put(nameUppercaser, async (req, res) => {
+  if (!req.body.name)
+    return res.status(400).json({ message: 'You need to provide a name' });
+  try {
+    let data = await db.update(req.params.id, { name: req.body.name });
+    if (data) {
+      return res
+        .status(200)
+        .json({ message: `${data} record(s) updated successfully` });
+    }
+    res
+      .status(404)
+      .json({ message: "The user with specified id doesn't exist" });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 
 module.exports = router;
