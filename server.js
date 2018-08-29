@@ -1,22 +1,18 @@
 const express = require('express');
 const server = express();
-const morgan = require('morgan');
 const helmet = require('helmet');
 
+//db helpers
 const dbUsers = require("./data/helpers/userDb.js");
 const dbPosts = require("./data/helpers/postDb.js");
 
 server.use(express.json());
 server.use(helmet());
-server.use(morgan());
 
-function upperCase( req, res, next) {
-    const name = req.body.name.toUpperCase();
-    if (name !== name.toUpperCase()) {
-        res.status(400).json({message: "Name is not in upper case"})
-    } else{
-        next();
-    }
+//MIDDLEWARE
+function upperCase(req, res, next) {
+    req.body.name.toUpperCase();
+    next();
 };
 
 server.get("/", (req, res) => {
@@ -42,18 +38,42 @@ server.get("/users/:id", (req, res) => {
 })
 
 server.post("/users", upperCase, (req,res) => {
-    const name = req.body.name;
+    const {name} = req.body;
     if (!name){
-        res.status(400).json({message: "Please enter a name."})
+        res.status(400).json({message: "Please enter a name."});
     } 
+    else if (!name.toUpperCase()) {
+        res.status(400).json({message: "Check middleware code"});
+    }
     else if (name.length > 128) {
-        res.status(406).json({message: "Name is too long. Please limit name length to 128 characters or less."})
+        res.status(406).json({message: "Name is too long. Please limit name length to 128 characters or less."});
     } 
     else {
-        dbUsers.insert(user)
-        .then(response => res.status(200).json(response.id))
-        .catch(err => console.log(err));
+        dbUsers.insert(name)
+        .then(user => {res.status(200).json(user.id)})
+        .catch(err => {
+            console.log(err)
+            res.status(500).json({message: "Failed to create new user."})
+        });
     }
+})
+
+server.put("/users/:id", upperCase, (req,res) => {
+    dbUsers.udpate(req.params.id, req.body)
+    .then(user => {res.status(200).json(user)})
+    .catch(err => {
+        console.log(err)
+        res.status(500).json({message: "Updated failed."})
+    });
+})
+
+server.delete("/users/:id", (req,res) => {
+    dbUsers.remove(req.params.id)
+    .then(count => res.status(200).json(count))
+    .catch(err => {
+        console.log(err);
+        res.status(500).json({message: "Cannot delete user."})
+    })
 })
 
 //POSTS
