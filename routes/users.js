@@ -76,4 +76,13 @@ router
     }
   });
 
+router.route('/:id/posts').get(async (req, res) => {
+  try {
+    let data = await db.getUserPosts(req.params.id);
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 module.exports = router;
