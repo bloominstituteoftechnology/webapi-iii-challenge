@@ -5,6 +5,14 @@ const userDB = require("./data/helpers/userDb.js");
 
 server.use(express.json());
 
+//////////////================================= START MIDDLEWARE =================================//////////////
+// converts name to all uppercase
+const nameToUpperCase = (req, res, next) => {
+  req.body.name = req.body.name.toUpperCase();
+  next();
+};
+//////////////================================= END MIDDLEWARE =================================//////////////
+
 //////////////================================= START REQUESTS =================================//////////////
 // GET REQUEST //
 server.get("/users", (req, res) => {
@@ -42,7 +50,7 @@ server.get("/users/:id", (req, res) => {
 // end GET //
 
 // POST REQUEST //
-server.post("/users", async (req, res) => {
+server.post("/users", nameToUpperCase, async (req, res) => {
   const user = req.body;
 
   if (!user.name) {
@@ -83,7 +91,7 @@ server.delete("/users/:id", async (req, res) => {
 // end DELETE //
 
 // PUT REQUEST //
-server.put("/users/:id", (req, res) => {
+server.put("/users/:id", nameToUpperCase, (req, res) => {
   const { id } = req.params;
   const user = req.body;
 
