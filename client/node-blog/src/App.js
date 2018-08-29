@@ -1,41 +1,42 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import { Route, NavLink } from 'react-router-dom';
+
 import logo from './logo.svg';
 import './App.css';
 
-const url = 'http://localhost:7000/users';
+import Home from './components/Home';
+import Users from './components/Users';
+import Posts from './components/Posts';
+import UserPosts from './components/UserPosts';
 
 class App extends Component {
   state = {
-    users: [],
-    posts: []
+    isAtHome: false
   }
 
-  componentDidMount() {
-    axios.get(url)
-    .then(res => {
-      console.log(res.data)
-      this.setState({users: res.data})
+  isAtHomeHandler = () => {
+    this.setState(prevState => {
+      return {isAtHome: !prevState.isAtHome};
     })
-    .catch(err => console.log(err))
   }
 
   render() {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
+          {!this.state.isAtHome ? <NavLink to="/users">Users</NavLink>: null}
+          <div>
+            <NavLink to="/"><img src={logo} className="App-logo" alt="logo" /></NavLink>
+            <h1 className="App-title">Welcome to Your Blog</h1>
+          </div>
+          {!this.state.isAtHome ? <NavLink to="/posts">Posts</NavLink>: null}
         </header>
-        <main>
-          <section>
-            {this.state.users.length === 0 ?
-              <img src={logo} className="App-logo" alt="logo" />
-              :
-              this.state.users.map((user, index) => <div key={index}>{user.id}: {user.name}</div>)
-            }
-          </section>
-        </main>
+        <div>
+          <Route exact path="/" render={() => <Home isAtHomeHandler={this.isAtHomeHandler} /> } />
+          <Route exact path="/users" component={ Users } />
+          <Route path="/posts" component={ Posts } />
+          <Route path="/users/:id" render={props => <UserPosts {...props} /> } />
+        </div>
       </div>
     );
   }
