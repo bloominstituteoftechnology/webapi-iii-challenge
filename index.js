@@ -1,5 +1,6 @@
 const express = require("express");
 const db = require("./data/helpers/userDb.js");
+const postDb = require("./data/helpers/postDb.js")
 const helmet = require('helmet')
 const PORT = 9000;
 const server = express();
@@ -9,15 +10,12 @@ server.use(helmet());
 
 //middleware
 function upperCase(req, res, next) {
-  console.log(req.body.name);
   let name = req.body.name
   const newName = name
     .split(" ")
     .map(name => name[0].toUpperCase() + name.slice(1, name.length))
     .join(" ");
-  console.log(newName);
   req.upperName = newName;
-  console.log(req.upperName);
   next();
 }
 
@@ -112,6 +110,15 @@ server.delete("/api/users/:id", (req, res) => {
     });
 });
 
+server.get("/api/posts", (req, res) => {
+  postDb.get()
+    .then(posts => {
+      console.log(posts)
+      res.status(200).json(posts)
+    }).catch( error => {
+        res.status(500).json({error, message: "Check the url path unable to get posts. Do they exist?"})
+    })
+})
 
 
 server.listen(PORT, () => console.log(`\n== API on port ${PORT}==\n`));
