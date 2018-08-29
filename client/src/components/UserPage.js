@@ -36,7 +36,6 @@ class UserPage extends Component {
                     <div key={post.id}>
                     <p>Post ID: {post.id}</p>
                     <p>Text: {post.text}</p>
-                    {/* <p>Tags: {axios.get(`http://localhost:6001/api/posts/${post.id}`).then(response => <p>{response.data.tags}</p>)}</p> */}
                     <hr/>
                     </div>)}
             </div>
