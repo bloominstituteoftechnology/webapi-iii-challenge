@@ -25,4 +25,19 @@ router
     }
   });
 
+router.route('/:id').get(async (req, res) => {
+  try {
+    let data = await db.get(req.params.id);
+    if (data) {
+      return res.status(200).json(data);
+    }
+
+    res
+      .status(404)
+      .json({ message: 'The post with specified ID cannot be found.' });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 module.exports = router;
