@@ -34,6 +34,21 @@ app.get("/users", (req, res) => {
     });
 });
 
+app.get("/posts", (req, res) => {
+  postDb
+    .get()
+    .then(posts => {
+      console.log(posts);
+      res.status(200).json(posts);
+    })
+    .catch(err => {
+      console.log("error", err);
+      res
+        .status(500)
+        .json({ error: "The posts information could not be retrieved." });
+    });
+});
+
 app.get("/users/:id", (req, res) => {
   userDb
     .get(req.params.id)
@@ -55,6 +70,46 @@ app.get("/users/:id", (req, res) => {
     });
 });
 
+app.get("/posts/:id", (req, res) => {
+  postDb
+    .get(req.params.id)
+    .then(post => {
+      console.log(post);
+      if (post) {
+        res.status(200).json(post);
+      } else {
+        res
+          .status(404)
+          .json({ message: "The post with the specified ID does not exist." });
+      }
+    })
+    .catch(err => {
+      console.log("error", err);
+      res
+        .status(500)
+        .json({ error: "The post information could not be retrieved." });
+    });
+});
+
+app.get("/users/:id/posts", (req, res) => {
+  userDb
+    .getUserPosts(req.params.id)
+    .then(posts => {
+      console.log(posts);
+      if (posts.length > 0) {
+        res.status(200).json(posts);
+      } else {
+        res.status(404).json({ message: "The user has no posts" });
+      }
+    })
+    .catch(err => {
+      console.log("error", err);
+      res
+        .status(500)
+        .json({ error: "The posts information could not be retrieved." });
+    });
+});
+
 app.post("/users", upperName, (req, res) => {
   const newUser = req.body;
 
@@ -72,6 +127,28 @@ app.post("/users", upperName, (req, res) => {
       });
   } else {
     res.status(400).json({ error: "Please provide a name for the user." });
+  }
+});
+
+app.post("/posts", (req, res) => {
+  const newPost = req.body;
+  console.log(newPost);
+  if (newPost.userId && newPost.text) {
+    postDb
+      .insert(newPost)
+      .then(post => {
+        res.status(201).json(post);
+      })
+      .catch(err => {
+        console.log("error", err);
+        res.status(500).json({
+          error: "There was an error while saving the post to the database"
+        });
+      });
+  } else {
+    res
+      .status(400)
+      .json({ error: "Please provide a userId and text for the post." });
   }
 });
 
@@ -101,6 +178,24 @@ app.delete("/users/:id", (req, res) => {
       res.status(404).json({
         message: "The user with the specified ID does not exist."
       });
+    });
+});
+
+app.delete("/posts/:id", (req, res) => {
+  postDb
+    .remove(post.id)
+    .then(count => {
+      if (count) {
+        res.status(200).json(post);
+      } else {
+        res.status(404).json({
+          message: "The post with the specified ID does not exist."
+        });
+      }
+    })
+    .catch(err => {
+      console.log("error", err);
+      res.status(500).json({ error: "The post could not be removed" });
     });
 });
 
