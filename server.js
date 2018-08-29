@@ -37,4 +37,23 @@ server.get('/api/users/:id', (req, res) => {
     })
 });
 
+server.post('/api/users', (req, res) => {
+    const { name } = req.body;
+    if (!name) {
+        res.status(400).json({ errorMessage: 'Please provide a username.' });
+        return;
+    }
+    dbUser.insert({
+        name
+    })
+    .then(response => {
+        res.status(201).json(req.body);
+    })
+    .catch(error => {
+        console.error('error', err);
+        res.status(500).json({ error: 'There was an error while saving the username to the database' });
+        return;
+    })
+})
+
 server.listen(8000, () => console.log('/n== API on port 8k ==/n') );
