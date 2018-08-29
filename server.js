@@ -20,7 +20,7 @@ server.use(cors());
 
 
 // User endpoints
-server.post('/users', upperCase, (req, res) => {
+server.post('/api/users', upperCase, (req, res) => {
     const { name } = req.body;
     const upperName = req.upperName;
     if (!name) {
@@ -37,7 +37,7 @@ server.post('/users', upperCase, (req, res) => {
     }
 })
 
-server.get('/users', async (req, res) => {
+server.get('/api/users', async (req, res) => {
     try {
         const response = await userDb.get();
         res.status(200).json(response);
@@ -46,7 +46,7 @@ server.get('/users', async (req, res) => {
     }
 })
 
-server.get('/users/:id', (req, res) => {
+server.get('/api/users/:id', (req, res) => {
     const id = req.params.id;
     userDb.getUserPosts(id)
         .then(posts => {
@@ -57,7 +57,7 @@ server.get('/users/:id', (req, res) => {
         })
 })
 
-server.put('/users/:id', upperCase, (req, res) => {
+server.put('/api/users/:id', upperCase, (req, res) => {
     const id = req.params.id;
     const { name } = req.body;
     const upperName = req.upperName;
@@ -78,7 +78,7 @@ server.put('/users/:id', upperCase, (req, res) => {
     }
 })
 
-server.delete('/users/:id', (req, res) => {
+server.delete('/api/users/:id', (req, res) => {
     const id = req.params.id;
     userDb.remove(id)
         .then(count => {
@@ -95,7 +95,7 @@ server.delete('/users/:id', (req, res) => {
 
 // Post endpoints
 
-server.post('/posts', async (req, res) => {
+server.post('/api/posts', async (req, res) => {
     const { userId, text } = req.body;
     if (!userId || !text) {
         res.status(400).json({errorMessage: 'Please provide a userId and text for this post.'});
@@ -109,7 +109,7 @@ server.post('/posts', async (req, res) => {
     }
 })
 
-server.get('/posts', async (req, res) => {
+server.get('/api/posts', async (req, res) => {
     try {
         const response = await postDb.get();
         res.status(200).json(response);
@@ -118,7 +118,7 @@ server.get('/posts', async (req, res) => {
     }
 })
 
-server.get('/posts/:id', async (req, res) => {
+server.get('/api/posts/:id', async (req, res) => {
     const id = req.params.id;
     try {
         const response = await postDb.get(id);
@@ -128,7 +128,7 @@ server.get('/posts/:id', async (req, res) => {
     }
 })
 
-server.get('/posts/:id/tags', async (req, res) => {
+server.get('/api/posts/:id/tags', async (req, res) => {
     const id = req.params.id;
     try {
         const response = await postDb.getPostTags(id);
@@ -138,7 +138,7 @@ server.get('/posts/:id/tags', async (req, res) => {
     }
 })
 
-server.put('/posts/:id', async (req, res) => {
+server.put('/api/posts/:id', async (req, res) => {
     const id = req.params.id;
     const { userId, text } = req.body;
     if (!userId || !text) {
@@ -157,7 +157,7 @@ server.put('/posts/:id', async (req, res) => {
     }
 })
 
-server.delete('/posts/:id', async (req, res) => {
+server.delete('/api/posts/:id', async (req, res) => {
     const id = req.params.id;
     try {
         const response = await postDb.remove(id);
