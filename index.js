@@ -79,14 +79,14 @@ app.post('/api/users', capitalUser, (req, res) => {
 
 app.put('/api/users/:id', capitalUser, (req, res) => {
   db.users.update(req.params.id, req.body)
-  .then((success) => {
-    if (!success) res.status(404).json({ error: 'No user was found with the specified id.' });
-    else fetchUsers(req, res);
-  })
-  .catch(err => {
-    console.error(err);
-    res.status(500).json({ error: 'Error updating the user.' });
-  });
+    .then((success) => {
+      if (!success) res.status(404).json({ error: 'No user was found with the specified id.' });
+      else fetchUsers(req, res);
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ error: 'Error updating the user.' });
+    });
 });
 
 /* Posts DB requests */
@@ -114,12 +114,36 @@ app.get('/api/posts/:id', (req, res) => {
     });
 });
 
+app.delete('/api/posts/:id', (req, res) => {
+  db.posts.remove(req.params.id)
+    .then((success) => {
+      if (!success) res.status(404).json({ error: 'No post was found with the specified id.' });
+      else fetchPosts(req, res);
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ error: 'Error deleting the post.' });
+    });
+});
+
 app.post('/api/posts', validatePost, (req, res) => {
   db.posts.insert(req.body)
     .then(() => fetchPosts(req, res))
     .catch(err => {
       console.error(err);
       res.status(500).json({ error: 'Error adding post.' });
+    });
+});
+
+app.put('/api/posts/:id', validatePost, (req, res) => {
+  db.posts.update(req.params.id, req.body)
+    .then((success) => {
+      if (!success) res.status(404).json({ error: 'No post was found with the specified id.' });
+      else fetchPosts(req, res);
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ error: 'Error updating the post.' });
     });
 });
 
