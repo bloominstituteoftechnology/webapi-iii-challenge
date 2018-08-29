@@ -1,9 +1,13 @@
 const express = require('express');
+const cors = require('cors');
+const helmet = require('helmet');
 const postDB = require('./data/helpers/postDb.js');
 const userDB = require('./data/helpers/userDb.js');
 
 const app = express();
 
+app.use(cors());
+app.use(helmet());
 app.use(express.json());
 
 function upperUser(req, res, next){
