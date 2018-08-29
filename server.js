@@ -5,8 +5,13 @@ const users = require('./data/helpers/userDb');
 
 const server = express();
 
-server.use(express.json());
+//local middleware
+function capitalize (req, res, next) {
+    req.body.name = req.body.name.toUpperCase();
+    next();
+}
 
+server.use(express.json());
 
 server.get('/users', (req, res) => {
     users.get()
@@ -47,7 +52,7 @@ server.get('/users/:id/posts', (req, res) => {
     });
 })
 
-server.post('/users', (req, res) => {
+server.post('/users', capitalize, (req, res) => {
     const userData = req.body;
     users.insert(userData)
     .then(user => {
@@ -79,7 +84,7 @@ server.post('/users', (req, res) => {
         });
   })
 
-  server.put('/users/:id', (req, res) => {
+  server.put('/users/:id', capitalize, (req, res) => {
     const id = req.params.id;
     const userData = req.body;
     users.update(id, userData)
