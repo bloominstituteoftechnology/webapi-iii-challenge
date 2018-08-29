@@ -9,20 +9,21 @@ const morgan = require('morgan');
 const server = express();
 
 server.use(helmet());
-server.use(express('short'));
 server.use(morgan());
 
 //MIDDLEWARE
 function upperCase(req, res, next) {
     req.body.name = req.body.name.toUpperCase();
     next();
-}
+};
+
+server.use(express.json());
 
 //GET METHOD
 server.get('/users', (req, res) => {
     userDB.get()
     .then(users => {
-        res.status(200).json(posts);
+        res.status(200).json(users);
     })
     .catch(err => {
         console.error('error', err);
@@ -32,13 +33,14 @@ server.get('/users', (req, res) => {
 });
 
 //POST METHOD
-server.post('/users', async (req, res) => {
+server.post('/users', upperCase, async (req, res) => {
     const user = req.body;
-    if (user.title && user.contents) {
+    if (user.name) {
         try {
-            const response = await db.insert(post);
-            res.status(201).json(response);
-        } catch(err) {
+            const response = await userDB.insert(user);
+            res.status(201).json({ message: "Added new user!"});
+        } 
+        catch(err) {
             res.status(500).json({
                 title: 'Error',
                 description: 'There was an error while saving the post to the database',
