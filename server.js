@@ -100,8 +100,18 @@ server.get("/posts", (req, res) => {
     });
 });
 
-// server.post("/posts", upperCase, (req, res) => {
+server.get("/posts/:postId", (req, res) => {
+    const {postId} = req.params;
+    dbPosts.get(postId)
+    .then(post => {res.status(200).json(post)})
+    .catch(err => {
+        console.log(err);
+        res.status(500).json({message: "Failed to retrieve post(s) with the specific PostId."})
+    })
+})
+
+//server.post("/posts", upperCase, (req, res) => {
 
 // });
 
-server.listen(9000, () => console.log("===API on port 9000==="))
+server.listen(9000, () => console.log("===API on port 9000==="));
