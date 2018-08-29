@@ -43,5 +43,27 @@ server.get("/users/:id", (req, res) => {
         .json({ error: "The post information could not be retrieved." });
     });
 });
+// end GET
+
+// POST REQUEST
+server.post("/users", async (req, res) => {
+  const user = req.body;
+
+  if (!user.name) {
+    return res.status(400).json({
+      errorMessage: "Please provide a name for the user."
+    });
+  } else {
+    try {
+      const response = await userDB.insert(user);
+      res.status(201).json(response);
+    } catch (err) {
+      res.status(500).json({
+        error: "There was an error while saving the post to the database."
+      });
+    }
+  }
+});
+// end POST
 
 server.listen(8000, () => console.log("\n== API on port 8k ==\n"));
