@@ -40,7 +40,7 @@ server.get('/users/:id', async (req, res) => {
 server.get('/userPosts/:id', async (req, res) => {
   try {
     let data = await userdb.getUserPosts(req.params.id)
-    if (data.length > 0) {
+    if (data.length) {
       return res.status(200).json(data)
     } else {
       return res.status(404).json({ error: 'This user does not have any posts.' })
@@ -58,6 +58,36 @@ server.post('/users', async (req, res) => {
       return res.status(200).jspon(data)
     } else {
       return res.status(404).json({ error: 'Please provide a name for this user.' })
+    }
+  } catch (err) {
+    res.status(500).json(err)
+  }
+})
+
+server.put('/users/:id', async (req, res) => {
+  let { name } = req.body;
+  if (!name) {
+    return res.status(400).json({ error: 'Please provide a name for this user.' })
+  }
+  try {
+    let data = await userdb.update(req.params.id, req.body)
+    if (data) {
+      return res.status(200).json(data)
+    } else {
+      return res.status(404).json({ error: 'The user with this id does not exist.' })
+    }
+  } catch (err) {
+    res.status(500).json(err)
+  }
+})
+
+server.delete('/users/:id', async (req, res) => {
+  try {
+    let data = await userdb.remove(req.params.id)
+    if (data) {
+      return res.status(200).json({ id: req.params.id })
+    } else {
+      return res.status(404).json({ error: 'The user with this id does not exist.' })
     }
   } catch (err) {
     res.status(500).json(err)
