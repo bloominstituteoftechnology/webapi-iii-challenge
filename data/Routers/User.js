@@ -67,6 +67,7 @@ router.delete('/:id/delete', (req, res) => {
 
 router.post('/add', (req, res) => {
     const user = req.body;
+    const length = 128;
     //We are checking for single entry, if empty, we skip to the entry that is missing.
       if (Object.keys(user).length <= 1) {
           //Checking for the correct entry              
@@ -77,7 +78,13 @@ router.post('/add', (req, res) => {
             if (user.name.trim().length === 0) {
               res.status(422)
               .json(console.error('Name is required'));
-            } else {
+            } 
+                // Checking that name is no longer than 128 characters
+                if (user.name.trim().length > length) {
+                    res.status(411)
+                    .json(console.error('Name is too long.'));
+                }
+            else {
               db.insert(user)
               .then(user => {
                 res.status(200).json(user);
