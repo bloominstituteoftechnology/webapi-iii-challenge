@@ -58,6 +58,19 @@ router
     } catch (err) {
       res.status(500).json(err);
     }
+  })
+  .delete(async (req, res) => {
+    try {
+      let count = await db.remove(req.params.id);
+      if (count) {
+        return res.status(201).json({ message: `${count} record(s) deleted` });
+      }
+      res
+        .status(404)
+        .json({ message: 'The post with specified ID cannot be found.' });
+    } catch (err) {
+      res.status(500).json(err);
+    }
   });
 
 module.exports = router;
