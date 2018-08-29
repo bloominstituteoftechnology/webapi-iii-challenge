@@ -7,7 +7,7 @@ module.exports = {
         .status(400)
         .json({ error: "Please provide a name for this user." });
     }
-    if (body.name.length >= 128) {
+    if (body.name.length > 128) {
       return res.status(400).json({ error: "name must be 128 characters" });
     }
     body.name = body.name.charAt(0).toUpperCase() + body.name.slice(1);
@@ -28,6 +28,9 @@ module.exports = {
     let body = req.body;
     if (!body.tag) {
       return res.status(400).json({ error: "Please provide a tag." });
+    }
+    if (body.tag.length > 80) {
+      return res.status(400).json({ error: "tag must be less than 80 characters"})
     }
     next();
   },
