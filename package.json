@@ -1,0 +1,30 @@
+{
+  "dependencies": {
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "helmet": "^3.13.0",
+    "knex": "^0.15.2",
+    "morgan": "^1.9.0",
+    "sqlite3": "^4.0.2"
+  },
+  "name": "Node-Blog",
+  "description": "## Topics",
+  "version": "1.0.0",
+  "main": "knexfile.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1", 
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LambdaSchool/Node-Blog.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LambdaSchool/Node-Blog/issues"
+  },
+  "homepage": "https://github.com/LambdaSchool/Node-Blog#readme"
+}
