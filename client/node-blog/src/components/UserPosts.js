@@ -13,14 +13,12 @@ class UserPosts extends React.Component {
   componentDidMount() {
     axios.get(`${url}/${this.props.match.params.id}`)
     .then(res => {
-      console.log('OI',res.data)
       this.setState({userPosts: res.data})
     })
     .catch(err => console.log(err))
   }
 
   render() {
-    console.log('rferferf',this.state.userPosts)
     return (
       <main>
         <section>

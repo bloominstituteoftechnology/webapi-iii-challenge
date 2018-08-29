@@ -13,14 +13,12 @@ class Posts extends React.Component {
   componentDidMount() {
     axios.get(url)
     .then(res => {
-      console.log(res.data)
       this.setState({posts: res.data})
     })
     .catch(err => console.log(err))
   }
 
   render() {
-    console.log('erf',this.state.posts)
     return (
       <main>
         <section>
