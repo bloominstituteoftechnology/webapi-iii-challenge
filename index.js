@@ -86,4 +86,33 @@ server.delete("/users/:id", async (req, res) => {
 });
 // end DELETE
 
+// PUT REQUEST
+server.put("/users/:id", (req, res) => {
+  const { id } = req.params;
+  const user = req.body;
+
+  if (!user.name) {
+    return res.status(400).json({
+      errorMessage: "Please provide a name for the user."
+    });
+  } else {
+    userDB
+      .update(id, user)
+      .then(count => {
+        if (count) {
+          res.status(200).json({ message: `The count is ${count}` });
+        } else {
+          res.status(404).json({
+            message: "The user with the specified ID does note exist."
+          });
+        }
+      })
+      .catch(err => {
+        res
+          .status(500)
+          .json({ error: "The user information could not be modified." });
+      });
+  }
+});
+
 server.listen(8000, () => console.log("\n== API on port 8k ==\n"));
