@@ -2,11 +2,22 @@ const express = require("express");
 const userdb = require("./data/helpers/userDb");
 const postdb = require("./data/helpers/postDb");
 const cors = require("cors");
+const morgan = require("morgan");
+const helmet = require("helmet");
 
 const server = express();
 
 server.use(express.json());
+
+server.use(helmet());
+server.use(morgan("dev"));
 server.use(cors());
+
+function uppercase(req, res, next) {
+	req.body.name =
+		req.body.name.charAt(0).toUpperCase() + req.body.name.slice(1);
+	next();
+}
 
 server.get("/", (req, res) => {
 	res.send("you da realmvp");
@@ -52,7 +63,7 @@ server.get("/usersPosts/:id", async (req, res) => {
 	}
 });
 
-server.post("/users", async (req, res) => {
+server.post("/users", uppercase, async (req, res) => {
 	let body = req.body;
 	try {
 		if (body.name) {
@@ -66,7 +77,7 @@ server.post("/users", async (req, res) => {
 	}
 });
 
-server.put("/users/:id", async (req, res) => {
+server.put("/users/:id", uppercase, async (req, res) => {
 	let body = req.body;
 	if (!body.name) return res.status(400).json({ message: "need more info" });
 	try {
