@@ -57,6 +57,8 @@ server.post("/users", upperCase, (req,res) => {
 })
 
 server.put("/users/:id", upperCase, (req,res) => {
+    const upperName = req.upperName;
+    req.body.name = upperName;
     dbUsers.update(req.params.id, req.body)
     .then(user => {res.status(200).json(user)})
     .catch(err => {
