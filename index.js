@@ -115,7 +115,7 @@ server.delete('/posts/:id', (req, res) => {
             res.status(200).json(posts); 
         })
         .catch(err => {
-            res.status(500).json({error: "The post could not be updated."})
+            res.status(500).json({error: "The post could not be deleted."})
         })
 })
 
