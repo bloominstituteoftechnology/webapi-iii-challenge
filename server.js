@@ -13,6 +13,7 @@ function capitalize (req, res, next) {
 
 server.use(express.json());
 
+// USER ROUTES .....................................................................
 server.get('/users', (req, res) => {
     users.get()
     .then(users => {
@@ -38,7 +39,7 @@ server.get('/users/:id', (req, res) => {
     });
 })
 
-server.get('/users/:id/posts', (req, res) => {
+server.get('/users/:id/user-posts', (req, res) => {
     const id = req.params.id;
     users.getUserPosts(id)
     .then(posts => {
@@ -58,7 +59,11 @@ server.post('/users', capitalize, (req, res) => {
     .then(user => {
         if (!userData.name) {
             res.status(400).json({ error: "Please provide a name for this user." });
+        } else if (Number(userData.name.length) > 128) {
+            res.status(400).json({ error: "Please provide a username that is less than 128 characters long." });
         } else {
+            console.log(userData.name)
+            console.log(userData.name.length)
             res.status(201).json(user);
         }
     })
@@ -93,6 +98,8 @@ server.post('/users', capitalize, (req, res) => {
             res.status(404).json({ message: "The user with the specified ID does not exist." });
           } else if (!userData.name) {
             res.status(400).json({ errorMessage: "Please provide a name for this user." });
+          } else if (Number(userData.name.length) > 128) {
+            res.status(400).json({ error: "Please provide a username that is less than 128 characters long." });
           } else {
             res.status(200).json({ message: "The user was updated successfully." });
           }
@@ -102,6 +109,5 @@ server.post('/users', capitalize, (req, res) => {
         res.status(500).json({ error: "The user information could not be modified." })
     });
   })
-
 
 server.listen(7000, () => console.log('API running on port 7000'));
