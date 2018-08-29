@@ -41,6 +41,7 @@ server.get("/users/:id", async (req, res) => {
 server.get("/userPosts/:id", async (req, res) => {
   try {
     let data = await userdb.getUserPosts(req.params.id);
+    console.log(data)
     if (data.length) {
       return res.status(200).json(data);
     } else {

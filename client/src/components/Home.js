@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { fetchUsers } from "../actions/usersActions";
+import { fetchUsers } from "../actions";
 import styled from "styled-components";
 import UserCard from './UserCard';
+import { Link } from 'react-router-dom';
 
 const HomeWrapper = styled.div`
   display: flex;
@@ -13,7 +14,7 @@ const HomeWrapper = styled.div`
   overflow: scroll;
 `;
 
-const UserCardWrapper = styled.div`
+const UserCardWrapper = styled(Link)`
   border-radius: 3px;
   width: 200px;
   padding: 5px;
@@ -34,7 +35,7 @@ class Home extends Component {
           <p> usrs comin </p>
         ) : (
           this.props.users.map(user => (
-            <UserCardWrapper key={user.id}>
+            <UserCardWrapper to={`/user/${user.id}`} key={user.id}>
               <UserCard user={user}/>
             </UserCardWrapper>
           ))
