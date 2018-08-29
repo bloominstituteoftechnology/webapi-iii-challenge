@@ -115,6 +115,16 @@ server.get("/posts/:postId", (req, res) => {
     })
 })
 
+server.get("/posts/:postId/tags", (req,res) => {
+    const { postId } = req.params;
+    dbPosts.getPostTags(postId)
+    .then( post => res.status(200).json(post) )
+    .catch( err => {
+        console.log(err);
+        res.status(500).json({ message: "Failed to get this post's tags." })
+    })
+})
+
 server.post("/posts", (req, res) => {
     const post = req.body;
     if (!post.text) {
