@@ -5,11 +5,14 @@
   "repository": "https://github.com/jordan-massingill/Node-Blog.git",
   "author": "jordan-massingill <jordan_massingill@hotmail.com>",
   "license": "MIT",
-  "start": "nodemon",
+  "scripts": {
+    "start": "nodemon"
+  },
   "devDependencies": {
     "nodemon": "^1.18.4"
   },
   "dependencies": {
+    "express": "^4.16.3",
     "knex": "^0.15.2",
     "sqlite3": "^4.0.2"
   }
