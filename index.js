@@ -114,5 +114,28 @@ server.put("/users/:id", (req, res) => {
       });
   }
 });
+// end PUT
+
+// GET USER POSTS REQUEST
+server.get("/users/:id/posts", (req, res) => {
+  const { id } = req.params;
+  userDB
+    .getUserPosts(id)
+    .then(user => {
+      if (user.length === 0) {
+        res
+          .status(404)
+          .json({ message: "The user with the specified ID does not exist." });
+      } else {
+        return res.status(200).json({ user });
+      }
+    })
+    .catch(err => {
+      res
+        .status(500)
+        .json({ error: "The post information could not be retrieved." });
+    });
+});
+// end GET USER POSTS
 
 server.listen(8000, () => console.log("\n== API on port 8k ==\n"));
