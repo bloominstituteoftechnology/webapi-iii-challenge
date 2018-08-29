@@ -60,7 +60,7 @@ server.post("/users", async (req, res) => {
       return res.status(200).jspon(data);
     } else {
       return res
-        .status(404)
+        .status(400)
         .json({ error: "Please provide a name for this user." });
     }
   } catch (err) {
@@ -146,14 +146,14 @@ server.get("/postTags/:id", async (req, res) => {
 });
 
 server.post("/posts", async (req, res) => {
-  let { text, userId } = req.body;
+  let body = req.body;
   try {
-    if (text && userId) {
-      let data = await postdb.insert(req.body);
+    if (body.text && body.userId) {
+      let data = await postdb.insert(body);
       return res.status(200).json(data);
     } else {
       return res
-        .status(404)
+        .status(400)
         .json({ error: "Please provide text and userId for this post." });
     }
   } catch (err) {
@@ -162,19 +162,19 @@ server.post("/posts", async (req, res) => {
 });
 
 server.put("/posts/:id", async (req, res) => {
-  let { text, userId } = req.body;
-  if (!(text && userId)) {
+  let body = req.body;
+  if (!(body.text && body.userId)) {
     return res
-      .status(404)
+      .status(400)
       .json({ error: "Please provide text and userId for this post." });
   }
   try {
-    let data = await postdb.update(req.params.id, req.body);
+    let data = await postdb.update(req.params.id, body);
     if (data) {
-      return res.status(200).json({ id: req.params.id });
+      return res.status(200).json(body);
     } else {
       return res
-        .status(400)
+        .status(404)
         .json({ error: "The post with this id doesn't exist." });
     }
   } catch (err) {
@@ -240,7 +240,7 @@ server.post("/tags", async (req, res) => {
 server.put("/tags/:id", async (req, res) => {
   let { tag } = req.body;
   if (!tag) {
-    return res.status(404).json({ error: "Please provide a tag." });
+    return res.status(400).json({ error: "Please provide a tag." });
   }
   try {
     let data = await tagdb.update(req.params.id, req.body);
@@ -248,7 +248,7 @@ server.put("/tags/:id", async (req, res) => {
       return res.status(200).json({ id: req.params.id });
     } else {
       return res
-        .status(400)
+        .status(404)
         .json({ error: "The post with this id doesn't exist." });
     }
   } catch (err) {
@@ -263,7 +263,7 @@ server.delete("/tags/:id", async (req, res) => {
       return res.status(200).json({ id: req.params.id });
     } else {
       return res
-        .status(400)
+        .status(404)
         .json({ error: "The post with this id doesn't exist" });
     }
   } catch (err) {
