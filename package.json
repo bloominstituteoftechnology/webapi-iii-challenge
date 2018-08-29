@@ -1,0 +1,16 @@
+{
+  "name": "Node-Blog",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/jordan-massingill/Node-Blog.git",
+  "author": "jordan-massingill <jordan_massingill@hotmail.com>",
+  "license": "MIT",
+  "start": "nodemon",
+  "devDependencies": {
+    "nodemon": "^1.18.4"
+  },
+  "dependencies": {
+    "knex": "^0.15.2",
+    "sqlite3": "^4.0.2"
+  }
+}
