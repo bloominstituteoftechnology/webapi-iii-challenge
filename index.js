@@ -2,12 +2,14 @@ const express = require("express");
 const server = express();
 
 const userDB = require("./data/helpers/userDb.js");
+const postDB = require("./data/helpers/postDb.js");
 
 server.use(express.json());
 
 //////////////================================= START MIDDLEWARE =================================//////////////
 // converts name to all uppercase
 const nameToUpperCase = (req, res, next) => {
+  // gets rid of name if too many chars
   if (req.body.name.length > 128) {
     res.status(400).json({ message: "Username contains too many characters." });
   }
@@ -16,7 +18,7 @@ const nameToUpperCase = (req, res, next) => {
 };
 //////////////================================= END MIDDLEWARE =================================//////////////
 
-//////////////================================= START REQUESTS =================================//////////////
+//////////////================================= START USERDB REQUESTS =================================//////////////
 // GET REQUEST //
 server.get("/users", (req, res) => {
   userDB
@@ -55,7 +57,6 @@ server.get("/users/:id", (req, res) => {
 // POST REQUEST //
 server.post("/users", nameToUpperCase, async (req, res) => {
   const user = req.body;
-
   if (!user.name) {
     return res.status(400).json({
       errorMessage: "Please provide a name for the user."
@@ -97,7 +98,6 @@ server.delete("/users/:id", async (req, res) => {
 server.put("/users/:id", nameToUpperCase, (req, res) => {
   const { id } = req.params;
   const user = req.body;
-
   if (!user.name) {
     return res.status(400).json({
       errorMessage: "Please provide a name for the user."
@@ -107,7 +107,7 @@ server.put("/users/:id", nameToUpperCase, (req, res) => {
       .update(id, user)
       .then(count => {
         if (count) {
-          res.status(200).json({ message: `The count is ${count}` });
+          res.status(200).json({ message: "User successfully modified." });
         } else {
           res.status(404).json({
             message: "The user with the specified ID does note exist."
@@ -144,6 +144,42 @@ server.get("/users/:id/posts", (req, res) => {
     });
 });
 // end GET USER POSTS //
-//////////////================================= END REQUESTS =================================//////////////
+//////////////================================= END USERDB REQUESTS =================================//////////////
+
+//////////////================================= START POSTDB REQUESTS =================================//////////////
+server.get("/posts", (req, res) => {
+  postDB
+    .get()
+    .then(posts => {
+      res.status(200).json(posts);
+    })
+    .catch(err => {
+      res
+        .status(500)
+        .json({ error: "The posts information could not be retrieved." });
+    });
+});
+
+server.get("/posts/:id", (req, res) => {
+  const { id } = req.params;
+  postDB
+    .get(id)
+    .then(post => {
+      if (post.length === 0) {
+        res
+          .status(404)
+          .json({ message: "The post with the specified ID does not exist." });
+      } else {
+        return res.status(200).json({ post });
+      }
+    })
+    .catch(err => {
+      res
+        .status(500)
+        .json({ error: "The post information could not be retrieved." });
+    });
+});
+// end GET //
+//////////////================================= END POSTDB REQUESTS =================================//////////////
 
 server.listen(8000, () => console.log("\n== API on port 8k ==\n"));
