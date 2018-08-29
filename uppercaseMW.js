@@ -1,8 +1,8 @@
 module.exports = {
-
-  uppercase: (req, res, next) =>{
-  req.body.username = req.body.username.toUpperCase();
-
-  next();
-}
-}
+  uppercase: (req, res, next) => {
+    if(req.body.username){
+      req.body.username = req.body.username.toUpperCase();
+    }
+    next();
+  }
+};
