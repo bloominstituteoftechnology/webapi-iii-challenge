@@ -11,7 +11,7 @@ server.use(helmet());
 
 //MIDDLEWARE
 function upperCase(req, res, next) {
-    req.body.name.toUpperCase();
+    req.upperName = req.body.name.toUpperCase();
     next();
 };
 
@@ -39,18 +39,16 @@ server.get("/users/:id", (req, res) => {
 
 server.post("/users", upperCase, (req,res) => {
     const {name} = req.body;
+    const upperName = req.upperName;
     if (!name){
         res.status(400).json({message: "Please enter a name."});
     } 
-    else if (!name.toUpperCase()) {
-        res.status(400).json({message: "Check middleware code"});
-    }
     else if (name.length > 128) {
         res.status(406).json({message: "Name is too long. Please limit name length to 128 characters or less."});
     } 
     else {
-        dbUsers.insert(name)
-        .then(user => {res.status(200).json(user.id)})
+        dbUsers.insert({name: upperName})
+        .then(user => {res.status(200).json(upperName)})
         .catch(err => {
             console.log(err)
             res.status(500).json({message: "Failed to create new user."})
@@ -59,7 +57,7 @@ server.post("/users", upperCase, (req,res) => {
 })
 
 server.put("/users/:id", upperCase, (req,res) => {
-    dbUsers.udpate(req.params.id, req.body)
+    dbUsers.update(req.params.id, req.body)
     .then(user => {res.status(200).json(user)})
     .catch(err => {
         console.log(err)
