@@ -25,7 +25,7 @@ server.get("/users", (req, res) => {
 });
 
 server.get("/users/:id", (req, res) => {
-  const id = req.params.id;
+  const { id } = req.params;
   userDB
     .get(id)
     .then(user => {
@@ -34,7 +34,7 @@ server.get("/users/:id", (req, res) => {
           .status(404)
           .json({ message: "The user with the specified ID does not exist." });
       } else {
-        return res.status(200).json(user);
+        return res.status(200).json({ user });
       }
     })
     .catch(err => {
@@ -56,7 +56,7 @@ server.post("/users", async (req, res) => {
   } else {
     try {
       const response = await userDB.insert(user);
-      res.status(201).json(response);
+      res.status(201).json({ message: "New user created successfully." });
     } catch (err) {
       res.status(500).json({
         error: "There was an error while saving the post to the database."
@@ -65,5 +65,25 @@ server.post("/users", async (req, res) => {
   }
 });
 // end POST
+
+// DELETE REQUEST
+server.delete("/users/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const response = await userDB.remove(id);
+    if (response === 0) {
+      return res.status(404).json({
+        message: "The user with the specified ID does not exist."
+      });
+    } else {
+      return res.status(200).json({ message: "User deleted successfully." });
+    }
+  } catch (err) {
+    return res.status(500).json({
+      error: "The user could not be removed."
+    });
+  }
+});
+// end DELETE
 
 server.listen(8000, () => console.log("\n== API on port 8k ==\n"));
