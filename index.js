@@ -8,7 +8,7 @@ app.use(express.json());
 
 function upperUser(req, res, next){
 	if (!req.body || !req.body.name){
-		res.status(422).json({ message: 'A user needs a name'})
+		res.status(422).json({ message: 'A user needs a name' })
 	} else {
 		req.body.name = req.body.name[0].toUpperCase() + req.body.name.substr(1, req.body.name.length-1);
 		next();
@@ -33,10 +33,12 @@ app.get('/users/:id', async (req, res) => {
 	const { id } = req.params;
 	try {
 		const user = await userDB.get(id);
-		res.status(200).json(user);
+		user
+		? res.status(200).json(user)
+		: res.status(404).json({ message: 'Specified user could not be found' })
 	}
 	catch(err) {
-		res.status(500).json({ message: 'Error getting the data'});
+		res.status(500).json({ message: 'Error getting the data' });
 	}
 });
 
@@ -44,10 +46,12 @@ app.get('/users/:id/posts', async (req, res) => {
 	const { id } = req.params;
 	try {
 		const posts = await userDB.getUserPosts(id);
-		res.status(200).json(posts);
+		posts.length > 0
+		? res.status(200).json(posts)
+		: res.status(404).json({ message: 'User does not have posts' })
 	}
 	catch(err) {
-		res.status(500).json({ message: 'Error getting the data'});
+		res.status(500).json({ message: 'Error getting the data' });
 	}
 });
 
@@ -55,7 +59,7 @@ app.post('/users', upperUser, async (req, res) => {
 	const { name } = req.body;
 	try {
 		const count = await userDB.insert({name});
-		res.status(201).json({message: 'User successfully added'});
+		res.status(201).json({ message: 'User successfully added' });
 	}
 	catch(err) {
 		res.status(500).json({ message: 'Something went wrong in our server '})
@@ -67,7 +71,9 @@ app.put('/users/:id', upperUser, async (req, res) => {
 	const { name } = req.body;
 	try {
 		const count = await userDB.update(id, {name});
-		res.status(200).json({message: 'User successfully updated'});
+		count > 0
+		? res.status(200).json({ message: 'User successfully updated' })
+		: res.status(404).json({ message: 'Specified user could not be found '})
 	}
 	catch(err) {
 		res.status(500).json({ message: 'Something went wrong in our server '})
@@ -78,7 +84,9 @@ app.delete('/users/:id', async (req, res) => {
 	const { id } = req.params;
 	try {
 		const count = await userDB.remove(id);
-		res.status(200).json({ message: 'User successfully deleted' })
+		count > 0
+		? res.status(200).json({ message: 'User successfully deleted' })
+		: res.status(404).json({ message: 'Specified user could not be found '})
 	}
 	catch(err) {
 		console.log(err);
@@ -92,7 +100,7 @@ app.get('/posts', async (req, res) => {
 		res.status(200).json(posts);
 	}
 	catch(err) {
-		res.status(500).json({ message: 'Error getting the data'});
+		res.status(500).json({ message: 'Error getting the data' });
 	}
 });
 
@@ -100,10 +108,12 @@ app.get('/posts/:id', async (req, res) => {
 	const { id } = req.params;
 	try {
 		const post = await postDB.get(id);
-		res.status(200).json(post);
+		post
+		? res.status(200).json(post)
+		: res.status(404).json({ message: 'Specified post could not be found '})
 	}
 	catch(err) {
-		res.status(500).json({ message: 'Error getting the data'});
+		res.status(500).json({ message: 'Error getting the data' });
 	}
 });
 
@@ -111,7 +121,7 @@ app.post('/posts', async (req, res) => {
 	const { userId, text } = req.body;
 	try {
 		const count = await postDB.insert({userId, text});
-		res.status(201).json({message: 'Post successfully added'});
+		res.status(201).json({ message: 'Post successfully added' });
 	}
 	catch(err) {
 		res.status(500).json({ message: 'Something went wrong in our server '})
@@ -123,10 +133,12 @@ app.put('/posts/:id', async (req, res) => {
 	const { userId, text } = req.body;
 	try {
 		const count = await postDB.update(id, {userId, text});
-		res.status(200).json({message: 'Post successfully updated'});
+		count > 0
+		? res.status(200).json({ message: 'Post successfully updated' })
+		: res.status(404).json({ message: 'Specified post could not be found' })
 	}
 	catch(err) {
-		res.status(500).json({ message: 'Something went wrong in our server '})
+		res.status(500).json({ message: 'Something went wrong in our server' })
 	}
 });
 
@@ -134,10 +146,12 @@ app.delete('/posts/:id', async (req, res) => {
 	const { id } = req.params;
 	try {
 		const count = await postDB.remove(id);
-		res.status(200).json({message: 'Post successfully deleted'});
+		count > 0
+		? res.status(200).json({ message: 'Post successfully deleted' })
+		: res.status(404).json({ message: 'Specified post could not be found' })
 	}
 	catch(err) {
-		res.status(500).json({ message: 'Something went wrong in our server '})
+		res.status(500).json({ message: 'Something went wrong in our server' })
 	}
 })
 
