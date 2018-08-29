@@ -46,7 +46,6 @@ server.post("/api/users", upperCase,  (req, res) => {
   const send = {name: req.upperName}
   console.log(send)
   if(name && name.length <= 128){
-    console.log("got here")
     db.insert(send)
       .then(user => {
         res.status(201).json(send)
@@ -65,7 +64,11 @@ server.put("/api/users/:id", upperCase, (req, res) => {
   if(name && name.length <= 128){
     db.update(id, send)
     .then(user => {
-      res.status(200).json(send)
+      if(user){
+        res.status(200).json(send)
+      } else {
+        res.status(404).json({message: `The user with id ${id} was not found.`})
+      }
     }).catch(error => {
       res.status(500).json({error})
     })
@@ -75,7 +78,19 @@ server.put("/api/users/:id", upperCase, (req, res) => {
 });
 
 server.delete("/api/users/:id", (req, res) => {
-  res.send("Deleting");
+  const {id} = req.params;
+  console.log(id)
+  db.remove(id)
+    .then(user => {
+        if(user){
+          console.log(user)
+          res.status(204).end()
+        } else {
+          res.status(404).json({message: `The user with id ${id} was not found.`})
+        }
+    }).catch( error => {
+      res.status(500).json({error})
+    })
 });
 
 server.listen(PORT, () => console.log(`\n== API on port ${PORT}==\n`));
