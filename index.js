@@ -5,6 +5,14 @@ const server = express();
 
 server.use(express.json());
 
+//middleware 
+function upperCase(req,res,next) {
+    console.log(req.body)
+    req.upperName = req.body.name.toUpperCase()
+    console.log(req.upperName); 
+    next(); 
+}
+
 server.get("/api/users", (req, res) => {
   db.get()
     .then(users => {
@@ -33,11 +41,24 @@ server.get("/api/users/:id", (req, res) => {
     });
 });
 
-server.post("/api/users", (req, res) => {
-  res.send("Creating");
+server.post("/api/users", upperCase,  (req, res) => {
+  const {name}  = req.body;
+  const send = {name: req.upperName}
+  console.log(send)
+  if(name && name.length <= 128){
+    console.log("got here")
+    db.insert(send)
+      .then(user => {
+        res.status(201).json(send)
+      }).catch(error => {
+        res.status(500).json({error})
+      })
+    } else {
+      res.status(400).json({message: "You need a name and it has to be less than 128 characters"})
+  }
 });
 
-server.put("/api/users/:id", (req, res) => {
+server.put("/api/users/:id", upperCase, (req, res) => {
   res.send("Updating");
 });
 
