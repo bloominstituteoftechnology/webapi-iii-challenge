@@ -59,7 +59,19 @@ server.post("/api/users", upperCase,  (req, res) => {
 });
 
 server.put("/api/users/:id", upperCase, (req, res) => {
-  res.send("Updating");
+  const {name}  = req.body;
+  const {id} = req.params; 
+  const send = {name: req.upperName}
+  if(name && name.length <= 128){
+    db.update(id, send)
+    .then(user => {
+      res.status(200).json(send)
+    }).catch(error => {
+      res.status(500).json({error})
+    })
+  } else {
+    res.status(400).json({message: "You need a name and it has to be less than 128 characters"})
+  }
 });
 
 server.delete("/api/users/:id", (req, res) => {
