@@ -51,7 +51,7 @@ server.post("/api/users", uppercase, (req, res)=> {
       }
 });
 
-server.put("/api/users/:id", (req, res) => {
+server.put("/api/users/:id", uppercase, (req, res) => {
     users.update(req.params.id, req.body)
       .then(users => {
         res.status(200).json(users);
