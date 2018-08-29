@@ -2,12 +2,16 @@ const express = require('express');
 const userDb = require('./data/helpers/userDb.js');
 const postDb = require('./data/helpers/postDb');
 const server = express();
+
 server.use(express.json());
 
 
 
+
 function auth(req, res, next){
-    if(req.body.name.charAt(0) !== req.body.name.charAt(0).toLowerCase()){
+    let [body] = [req.body]
+
+    if(body.name.charAt(0) !== body.name.charAt(0).toLowerCase()){
         next(); 
     } else {
         res.status(400).json({error: "User Name must be capitalized."})
@@ -17,7 +21,9 @@ function auth(req, res, next){
 //==========================USERDB ENDPOINTS ===============================
 
 server.get('/users/:id', (req, res) => {
-    userDb.get(req.params.id)
+    let [id] = [req.params.id]
+
+    userDb.get(id)
         .then(users => { 
             res.status(200).json(users); 
         })
@@ -27,7 +33,9 @@ server.get('/users/:id', (req, res) => {
 })
 
 server.get('/user-posts/:id', (req, res) => {
-    userDb.getUserPosts(req.params.id)
+    let [id] = [req.params.id]
+
+    userDb.getUserPosts(id)
         .then(users => { 
             res.status(200).json(users); 
         })
@@ -37,7 +45,9 @@ server.get('/user-posts/:id', (req, res) => {
 })
 
 server.post('/users', auth, (req, res) => {
-    userDb.insert(req.body)
+    let [body] = [req.body]
+    
+    userDb.insert(body)
         .then(users => { 
             res.status(200).json(users); 
         })
@@ -47,7 +57,9 @@ server.post('/users', auth, (req, res) => {
 })
 
 server.put('/users/:id', auth, (req, res) => {
-    userDb.update(req.params.id, req.body)
+    let [id, body] = [id, req.body]
+
+    userDb.update(id, body)
         .then(users => { 
             res.status(200).json(users); 
         })
@@ -57,7 +69,9 @@ server.put('/users/:id', auth, (req, res) => {
 })
 
 server.delete('/users/:id', (req, res) => {
-    userDb.remove(req.params.id)
+    let [id] = [req.params.id]
+
+    userDb.remove(id)
         .then(users => { 
             res.status(200).json(users); 
         })
@@ -70,7 +84,9 @@ server.delete('/users/:id', (req, res) => {
 //==========================POSTDB ENDPOINTS ===============================
 
 server.get('/posts/:id', (req, res) => {
-    postDb.get(req.params.id)
+    let [id] = [req.params.id]
+
+    postDb.get(id)
         .then(posts => { 
             res.status(200).json(posts); 
         })
@@ -80,7 +96,9 @@ server.get('/posts/:id', (req, res) => {
 })
 
 server.get('/posts-tags/:id', (req, res) => {
-    postDb.getPostTags(req.params.id)
+    let [id] = [req.params.id]
+
+    postDb.getPostTags(id)
         .then(posts => { 
             res.status(200).json(posts); 
         })
@@ -89,8 +107,11 @@ server.get('/posts-tags/:id', (req, res) => {
         })
 })
 
+//====BUGGING===============
 server.post('/posts', (req, res) => {
-    postDb.insert(req.body)
+    let [body] = [req.body]
+
+    postDb.insert(body)
         .then(posts => { 
             res.status(200).json(posts); 
         })
@@ -99,8 +120,11 @@ server.post('/posts', (req, res) => {
         })
 })
 
+//====BUGGING===============
 server.put('/posts/:id', (req, res) => {
-    postDb.update(req.params.id, req.body)
+    let [id, body] = [id, req.body]
+
+    postDb.update(id, body)
         .then(posts => { 
             res.status(200).json(posts); 
         })
@@ -110,7 +134,9 @@ server.put('/posts/:id', (req, res) => {
 })
 
 server.delete('/posts/:id', (req, res) => {
-    postDb.remove(req.params.id)
+    let [id] = [req.params.id]
+
+    postDb.remove(id)
         .then(posts => { 
             res.status(200).json(posts); 
         })
