@@ -1,7 +1,7 @@
 const express = require("express");
 const userdb = require("./data/helpers/userDb");
 const postdb = require("./data/helpers/postDb");
-const tabdb = require("./data/helpers/tagDb");
+const tagdb = require("./data/helpers/tagDb");
 const cors = require("cors");
 
 const server = express();
@@ -191,5 +191,25 @@ server.delete("/posts/:id", async (req, res) => {
 
 //tag requests
 
+server.get("/tags", async (req, res) => {
+  try {
+    let data = await tagdb.get()
+    res.status(200).json(data)
+  } catch (err) {
+    res.status(500).json(err)
+  }
+})
 
+server.get("/tags/:id", async (req, res) => {
+  try {
+    let data = await tagdb.get(req.params.id)
+    if (data) {
+      return res.status(200).json(data)
+    } else {
+      return res.status(404).json({ error: "The tag with this id doesn't exist." })
+    }
+  } catch (err) {
+    res.status(500).json(err)
+  }
+})
 server.listen(8000, () => console.log("\n== API on port 8k ==\n"));
