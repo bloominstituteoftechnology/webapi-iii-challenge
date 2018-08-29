@@ -10,6 +10,8 @@
   "license": "MIT",
   "dependencies": {
     "express": "^4.16.3",
-    "nodemon": "^1.18.4"
+    "knex": "^0.15.2",
+    "nodemon": "^1.18.4",
+    "sqlite3": "^4.0.2"
   }
 }

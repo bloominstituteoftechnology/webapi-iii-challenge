@@ -5,6 +5,8 @@ const server = express();
 const postDb = require('./data/helpers/postDb.js');
 const userDb = require('./data/helpers/userDb.js');
 
+
+
 server.use(express.json());
 
 server.get('/posts', (req, res) => {
@@ -21,8 +23,9 @@ server.get('/posts/:id', (req, res) => {
   })
 });
 
-server.get('/users', (req, res) => {
+server.get('/users',(req, res) => {
   console.log('users requested')
+
   userDb.get().then(allUsers => {
     res.status(200).json(allUsers)
   })
@@ -35,7 +38,16 @@ server.get('/users/:id', (req, res) => {
   })
 });
 
-server.post('/users/', (req, res) => {
+
+
+function custom(req, res, next){
+  console.log("custom", req.body.name)
+  req.body.name = req.body.name.toUpperCase();
+  console.log("custom", req.body.name)
+  next();
+}
+
+server.post('/users/', custom, (req, res) => {
   userDb.insert(req.body)
   .then( newUserId => {
     res.status(201).json(newUserId)
@@ -44,6 +56,8 @@ server.post('/users/', (req, res) => {
     res.status(400).json(err)
   })
 });
+
+
 
 server.post('/posts/', (req, res) => {
   console.log('new post requested', req.body)
