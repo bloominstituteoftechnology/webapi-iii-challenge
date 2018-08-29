@@ -6,6 +6,14 @@ server.use(express.json());
 
 
 
+function auth(req, res, next){
+    if(req.body.name.charAt(0) !== req.body.name.charAt(0).toLowerCase()){
+        next(); 
+    } else {
+        res.status(400).json({error: "User Name must be capitalized."})
+    }
+}
+
 server.get('/users/:id', (req, res) => {
     userDb.get(req.params.id)
         .then(posts => { 
@@ -26,7 +34,7 @@ server.get('/user-posts/:id', (req, res) => {
         })
 })
 
-server.post('/users', (req, res) => {
+server.post('/users', auth, (req, res) => {
     userDb.insert(req.body)
         .then(posts => { 
             res.status(200).json(posts); 
@@ -36,7 +44,7 @@ server.post('/users', (req, res) => {
         })
 })
 
-server.put('/users/:id', (req, res) => {
+server.put('/users/:id', auth, (req, res) => {
     userDb.update(req.params.id, req.body)
         .then(posts => { 
             res.status(200).json(posts); 
