@@ -25,19 +25,39 @@ router
     }
   });
 
-router.route('/:id').get(async (req, res) => {
-  try {
-    let data = await db.get(req.params.id);
-    if (data) {
-      return res.status(200).json(data);
-    }
+router
+  .route('/:id')
+  .get(async (req, res) => {
+    try {
+      let data = await db.get(req.params.id);
+      if (data) {
+        return res.status(200).json(data);
+      }
 
-    res
-      .status(404)
-      .json({ message: 'The post with specified ID cannot be found.' });
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
+      res
+        .status(404)
+        .json({ message: 'The post with specified ID cannot be found.' });
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  })
+  .put(async (req, res) => {
+    let { userId, text } = req.body;
+
+    if (!userId || !text)
+      return res.status(400).json({ message: 'Text  or userID is missing' });
+
+    try {
+      let count = await db.update(req.params.id, { userId, text });
+      if (count) {
+        return res.status(201).json({ message: `${count} record(s) updated` });
+      }
+      res
+        .status(404)
+        .json({ message: 'The post with specified ID cannot be found.' });
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  });
 
 module.exports = router;
