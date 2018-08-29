@@ -4,7 +4,8 @@
   "description": "- Building RESTful APIs.\r - Performing CRUD Operations on Multiple Resources.\r - Configuring CORS.\r - Writing Custom Middleware.\r - Using Express Routers to Modularize Application.",
   "main": "knexfile.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,12 @@
   "bugs": {
     "url": "https://github.com/francistse23/Node-Blog/issues"
   },
-  "homepage": "https://github.com/francistse23/Node-Blog#readme"
+  "homepage": "https://github.com/francistse23/Node-Blog#readme",
+  "dependencies": {
+    "knex": "^0.15.2",
+    "sqlite3": "^4.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.4"
+  }
 }
