@@ -31,3 +31,8 @@ a:visited, a:hover, a:link, a:active {
   color: black;
   text-decoration: none;
 }
+
+.homeLink a:visited, .homeLink a:hover, .homeLink a:active, .homeLink a:link {
+  color: blue;
+  text-decoration: underline;
+}

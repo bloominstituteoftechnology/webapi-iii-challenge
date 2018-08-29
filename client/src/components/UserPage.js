@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 class UserPage extends Component {
     constructor(props) {
@@ -38,6 +39,7 @@ class UserPage extends Component {
                     <p>Text: {post.text}</p>
                     <hr/>
                     </div>)}
+                <div className="homeLink"><Link to="/">Home</Link></div>
             </div>
             )
         } else {
