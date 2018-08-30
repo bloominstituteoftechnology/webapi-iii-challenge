@@ -8,7 +8,7 @@ const router = express.Router();
 
 // middleware used here instead of index.js because
 // only 2 requests use the middleware function
-const nameToUpperCase = require("../middleware/middleware.js");
+const nameToUpperCase = require("../middleware/nameToUpperMW.js");
 
 // IMPORTANT "/users" turns into "/" you link url
 // on index.js when using express.Router()

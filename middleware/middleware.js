@@ -1,20 +1,15 @@
-//////////////================================= START MIDDLEWARE =================================//////////////
-// converts name to all uppercase
-// const nameToUpperCase = (req, res, next) => {
-//   // gets rid of name if too many chars
-//   if (req.body.name.length > 128) {
-//     res.status(400).json({ message: "Username contains too many characters." });
-//   }
-//   req.body.name = req.body.name.toUpperCase();
-//   next();
-// };
-//////////////================================= END MIDDLEWARE =================================//////////////
+const express = require("express");
 
-module.exports = nameToUpperCase = (req, res, next) => {
-  // gets rid of name if too many chars
-  if (req.body.name.length > 128) {
-    res.status(400).json({ message: "Username contains too many characters." });
-  }
-  req.body.name = req.body.name.toUpperCase();
-  next();
+const userRoutes = require("../users/userRoutes.js");
+const postRoutes = require("../posts/postRoutes.js");
+
+module.exports = server => {
+  // causes express middleware
+  // stack to be added to every layer (request function)
+  server.use(express.json());
+
+  // must be used when using express Router
+  // links url with requests
+  server.use("/users", userRoutes);
+  server.use("/posts", postRoutes);
 };
