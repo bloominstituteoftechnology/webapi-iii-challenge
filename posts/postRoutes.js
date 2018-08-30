@@ -1,6 +1,6 @@
 const express = require("express");
+const postModel = require("./postModel.js");
 
-const postDB = require("../data/helpers/postDb.js");
 const router = express.Router();
 
 // IMPORTANT "/users" turns into "/" you link url
@@ -8,7 +8,7 @@ const router = express.Router();
 
 // GET REQUESTS
 router.get("/", (req, res) => {
-  postDB
+  postModel
     .get()
     .then(posts => {
       res.status(200).json(posts);
@@ -22,7 +22,7 @@ router.get("/", (req, res) => {
 
 router.get("/:id", (req, res) => {
   const { id } = req.params;
-  postDB
+  postModel
     .get(id)
     .then(post => {
       if (post.length === 0) {
@@ -51,7 +51,7 @@ router.post("/", async (req, res) => {
     });
   } else {
     try {
-      const response = await postDB.insert(post);
+      const response = await postModel.insert(post);
       res.status(201).json({ message: "New post created successfully." });
     } catch (err) {
       res.status(500).json({
@@ -66,7 +66,7 @@ router.post("/", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   const { id } = req.params;
   try {
-    const response = await postDB.remove(id);
+    const response = await postModel.remove(id);
     if (response === 0) {
       return res.status(404).json({
         message: "The post with the specified ID does not exist.",
@@ -91,7 +91,7 @@ router.put("/:id", (req, res) => {
       errorMessage: "Please provide the correct User ID and text.",
     });
   } else {
-    postDB
+    postModel
       .update(id, post)
       .then(count => {
         if (count) {

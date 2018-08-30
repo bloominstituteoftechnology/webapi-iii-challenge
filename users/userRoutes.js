@@ -1,6 +1,7 @@
 const express = require("express");
 
 const userModel = require("./userModel.js");
+
 // const server = express();
 // above turns into below when
 // using routes
