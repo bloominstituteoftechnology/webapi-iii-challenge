@@ -1,10 +1,14 @@
 const express = require("express");
 const upperCase = require("./upperCase");
 const userDB = require("./data/helpers/userDb");
+const helmet = require("helmet");
+const morgan = require("morgan");
 
 const server = express();
 server.use(express.json());
 server.use(upperCase.uppercase);
+server.use(helmet());
+server.use(morgan());
 
 server.get("/users", async (req, res) => {
   try {
@@ -25,21 +29,6 @@ server.get("/users/:id", async (req, res) => {
       res.status(200).json(results);
     }
     res.status(500).json({ message: "Your Id is invalid" });
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-server.delete("/users/:id", async (req, res) => {
-  if (!Number(req.params.id)) {
-    res.status(400).json({ message: "Please enter a number" });
-  }
-  try {
-    const results = await userDB.remove(Number(req.params.id));
-    if (results === 1) {
-      res.status(200).json({ message: "Success" });
-    }
-    res.status(500).json({ message: "Invalid Id" });
   } catch (err) {
     res.status(500).json(err);
   }
@@ -73,6 +62,46 @@ server.put("/users/:id", async (req, res) => {
       res.status(200).json({ message: "Success" });
     }
     res.status(500).json({ message: "Cannot remove with that ID" });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+server.delete("/users/:id", async (req, res) => {
+  if (!Number(req.params.id)) {
+    res.status(400).json({ message: "Please enter a number" });
+  }
+  try {
+    const results = await userDB.remove(Number(req.params.id));
+    if (results === 1) {
+      res.status(200).json({ message: "Success" });
+    }
+    res.status(500).json({ message: "Invalid Id" });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+// POST Routes
+server.get("/posts", async (req, res) => {
+  try {
+    const results = await postDB.get();
+    res.status(200).json(results);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+server.get("posts/:id", async (req, res) => {
+  if (!Number(req.params.id)) {
+    res.status(400).json({ message: "ID is not a number" });
+  }
+  try {
+    const results = await postDB.get(Number(req.params.id));
+    if (results) {
+      res.status(200).json(results);
+    }
+    res.status(500).json({ message: "Invalid lookup criterion" });
   } catch (err) {
     res.status(500).json(err);
   }
