@@ -1,74 +1,20 @@
 const express = require("express");
-const helmet = require("helmet");
 const server = express();
-const db = require("./data/helpers/userDb.js");
+const userRoutes = require("./users/userRoutes.js");
 
-server.use(express.json());
+const configMiddleware = require("./config/middleware");
 
-server.get("/api/users", (req, res) => {
-  db.get()
-    .then(LOTR => {
-      res.status(200).json(LOTR);
-    })
-    .catch(err => {
-      console.error("error", err);
-      res
-        .status(500)
-        .json({ error: "the user information could not be retrieved" });
-    });
-});
+configMiddleware(server);
 
-server.get("/api/users/:id", (req, res) => {
-  db.get(req.params.id)
-    .then(LOTR => {
-      res.status(200).json(LOTR);
-    })
-    .catch(err => {
-      console.error("error", err);
-      res
-        .status(500)
-        .json({ error: "the user information could not be retrieved" });
-    });
-});
+server.use("/api/users", userRoutes);
 
-server.post("/api/users", (req, res) => {
-  if (req.body.name.length < 128) {
-    db.insert(req.body)
-      .then(LOTR => {
-        res.status(200).json(LOTR);
-      })
-      .catch(err => {
-        console.log("error", err);
-        res
-          .status(500)
-          .json({ error: "the user information could not be posted" });
-      });
-  } else {
-    res.status(401).json({ error: "tooLong" });
-  }
-});
+function uppercase(req, res, next) {
+  req.body.name = req.body.name.charAt().toUpperCase() + req.body.name.slice(1);
+  next();
+}
 
-server.put("/api/users/:id", (req, res) => {
-  db.update(req.params.id, req.body)
-    .then(LOTR => {
-      res.status(200).json(LOTR);
-    })
-    .catch(err => {
-      console.log("error", err);
-      res.status(500).json({ message: "cannotUpdate" });
-    });
-});
-
-server.delete("/api/users/:id", (req, res) => {
-  db
-    .remove(req.params.id)
-    .then(LOTR => {
-      res.status(200).json(LOTR);
-    })
-    .catch(err => {
-      console.log("error", err);
-      res.status(500).json({ message: "cannotDelete" });
-    });
+server.get("/", (req, res) => {
+  res.send("api running");
 });
 
 const port = 5000;
