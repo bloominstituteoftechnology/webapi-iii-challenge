@@ -211,5 +211,55 @@ server.get('/api/posts/:id', (req,res) => {
         });
     });
 
+//POST request to list of 'posts'
+server.post('/api/posts', (req,res) => {
+    const {userId, text} = req.body;
+    posts
+        .insert({userId, text})
+        .then(response => {
+            res.json(response);
+        })
+        .catch(error => {
+            console.error('error', error);
+            res.status(500).json({message: 'Error getting post'});
+            return;
+        });
+});
+
+//GET the tags for a given post
+server.get ('/api/posts/tags/:id', (req,res) => {
+    const id =req.params.id;
+    posts
+        .getPostTags(id)
+        .then(postTags => {
+            if(postTags === 0) {
+                res.status(404).json({message: 'Unable to find specified post'});
+                return;
+            }
+            res.json(postTags);
+        })
+        .catch(error => {
+            console.error('error', error);
+            res.status(500).json({message: 'Error getting post'});
+            return;
+        });
+});
+
+
+//GET all of the tags
+server.get('/api/tags', (req,res) => {
+    user
+        .get()
+        .then(tags => {
+            res.json({ tags });
+        })
+        .catch(error => {
+            console.error('error', error);
+            res.status(500).json({message: 'Error getting post'});
+            return;
+        });
+})
+
+
 //Start the server
 server.listen(9000, () => console.log('\n == API on port 9000 == \n'));
