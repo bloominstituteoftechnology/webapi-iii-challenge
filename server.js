@@ -1,258 +1,41 @@
-const express = require("express");
-const userdb = require("./data/helpers/userDb");
-const postdb = require("./data/helpers/postDb");
-const tagdb = require("./data/helpers/tagDb");
-const mw = require("./middleware");
-const cors = require("cors");
+const express = require('express');
+var morgan = require('morgan');
+
+const userRoutes = require('./routes/userRoutes');
+const postRoutes = require('./routes/postsRoutes');
+
+const mw = require('./middleware');
+const cors = require('cors');
 
 const server = express();
 
 server.use(express.json());
 server.use(cors());
+server.use(morgan('dev'));
 
-server.get("/", (req, res) => {
-  res.send("Sup fam");
+server.use('/users', userRoutes);
+server.use('/posts', postRoutes);
+
+server.get('/', (req, res) => {
+  res.send('Sup fam');
 });
 
-//user requests
+function errorHandler(err, req, res, next) {
+  console.log(err);
 
-server.get("/users", async (req, res) => {
-  try {
-    let data = await userdb.get();
-    res.status(200).json(data);
-  } catch (err) {
-    res.status(500).json(error);
+  switch (err.statusCode) {
+    case 404:
+      res.status(404).json({
+        message: 'The requested file does not exist.',
+      });
+
+      break;
+
+    default:
+      res.status(500).json({
+        message: 'There was an error performing the required operation',
+      });
+      break;
   }
-});
-
-server.get("/users/:id", async (req, res) => {
-  try {
-    let data = await userdb.get(req.params.id);
-    if (data) {
-      return res.status(200).json(data);
-    } else {
-      return res.status(404).json({ error: "This user does not exist." });
-    }
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-server.get("/userPosts/:id", async (req, res) => {
-  try {
-    let data = await userdb.getUserPosts(req.params.id);
-    console.log(data)
-    if (data.length) {
-      return res.status(200).json(data);
-    } else {
-      return res
-        .status(404)
-        .json({ error: "This user does not have any posts." });
-    }
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-server.post("/users", mw.users, async (req, res) => {
-  let body = req.body;
-  try {
-    let data = await userdb.insert(body);
-    res.status(200).json(data);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-server.put("/users/:id", mw.users, async (req, res) => {
-  let body = req.body;
-  try {
-    let data = await userdb.update(req.params.id, body);
-    if (data) {
-      return res.status(200).json(data);
-    } else {
-      return res
-        .status(404)
-        .json({ error: "The user with this id does not exist." });
-    }
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-server.delete("/users/:id", async (req, res) => {
-  try {
-    let data = await userdb.remove(req.params.id);
-    if (data) {
-      return res.status(200).json({ id: req.params.id });
-    } else {
-      return res
-        .status(404)
-        .json({ error: "The user with this id does not exist." });
-    }
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-//posts requests
-
-server.get("/posts", async (req, res) => {
-  try {
-    let data = await postdb.get();
-    res.status(200).json(data);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-server.get("/posts/:id", async (req, res) => {
-  try {
-    let data = await postdb.get(req.params.id);
-    if (data) {
-      return res.status(200).json(data);
-    } else {
-      return res
-        .status(404)
-        .json({ error: "The post with this id does not exist." });
-    }
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-server.get("/postTags/:id", async (req, res) => {
-  try {
-    let data = await postdb.getPostTags(req.params.id);
-    if (data) {
-      return res.status(200).json(data);
-    } else {
-      return res
-        .status(404)
-        .json({ error: "The post with thid id does not exist." });
-    }
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-server.post("/posts", mw.posts, async (req, res) => {
-  let body = req.body;
-  try {
-    let data = await postdb.insert(body);
-    if (data) {
-      return res.status(200).json(data);
-    } else {
-      return res
-        .status(404)
-        .json({ error: "The user with this id doesn't exist." });
-    }
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-server.put("/posts/:id", mw.posts, async (req, res) => {
-  let body = req.body;
-  try {
-    let user = await userdb.get(body.userId);
-    if (!user) {
-      return res
-        .status(400)
-        .json({ error: "the user with this id does not exist." });
-    }
-    let data = await postdb.update(req.params.id, body);
-    if (data) {
-      return res.status(200).json(body);
-    } else {
-      return res
-        .status(404)
-        .json({ error: "The post with this id doesn't exist." });
-    }
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-server.delete("/posts/:id", async (req, res) => {
-  try {
-    let data = await postdb.remove(req.params.id);
-    if (data) {
-      return res.status(200).json({ id: req.params.id });
-    } else {
-      return res
-        .status(404)
-        .json({ error: "The post with this id doesn't exist." });
-    }
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-//tag requests
-
-server.get("/tags", async (req, res) => {
-  try {
-    let data = await tagdb.get();
-    res.status(200).json(data);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-server.get("/tags/:id", async (req, res) => {
-  try {
-    let data = await tagdb.get(req.params.id);
-    if (data) {
-      return res.status(200).json(data);
-    } else {
-      return res
-        .status(404)
-        .json({ error: "The tag with this id doesn't exist." });
-    }
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-server.post("/tags", mw.tags, async (req, res) => {
-  let body = req.body;
-  try {
-    let data = await tagdb.insert(body);
-    res.status(200).json(data);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-server.put("/tags/:id", mw.tags, async (req, res) => {
-  try {
-    let data = await tagdb.update(req.params.id, req.body);
-    if (data) {
-      return res.status(200).json({ id: req.params.id });
-    } else {
-      return res
-        .status(404)
-        .json({ error: "The post with this id doesn't exist." });
-    }
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-server.delete("/tags/:id", async (req, res) => {
-  try {
-    let data = await tagdb.remove(req.params.id);
-    if (data) {
-      return res.status(200).json({ id: req.params.id });
-    } else {
-      return res
-        .status(404)
-        .json({ error: "The post with this id doesn't exist" });
-    }
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-server.listen(8000, () => console.log("\n== API on port 8k ==\n"));
+}
+server.listen(8000, () => console.log('\n== API on port 8k ==\n'));
