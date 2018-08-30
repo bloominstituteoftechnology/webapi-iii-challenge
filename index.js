@@ -6,8 +6,7 @@ const db = require("./data/helpers/userDb.js");
 server.use(express.json());
 
 server.get("/api/users", (req, res) => {
-  db
-    .get()
+  db.get()
     .then(LOTR => {
       res.status(200).json(LOTR);
     })
@@ -20,12 +19,55 @@ server.get("/api/users", (req, res) => {
 });
 
 server.get("/api/users/:id", (req, res) => {
-    db.get(req.params.id).then(LOTR => {
-        res.status(200).json(LOTR);
+  db.get(req.params.id)
+    .then(LOTR => {
+      res.status(200).json(LOTR);
     })
     .catch(err => {
-        console.error("error", err);
-        res.status(500).json({ error: "the user information could not be retrieved"});
+      console.error("error", err);
+      res
+        .status(500)
+        .json({ error: "the user information could not be retrieved" });
+    });
+});
+
+server.post("/api/users", (req, res) => {
+  if (req.body.name.length < 128) {
+    db.insert(req.body)
+      .then(LOTR => {
+        res.status(200).json(LOTR);
+      })
+      .catch(err => {
+        console.log("error", err);
+        res
+          .status(500)
+          .json({ error: "the user information could not be posted" });
+      });
+  } else {
+    res.status(401).json({ error: "tooLong" });
+  }
+});
+
+server.put("/api/users/:id", (req, res) => {
+  db.update(req.params.id, req.body)
+    .then(LOTR => {
+      res.status(200).json(LOTR);
+    })
+    .catch(err => {
+      console.log("error", err);
+      res.status(500).json({ message: "cannotUpdate" });
+    });
+});
+
+server.delete("/api/users/:id", (req, res) => {
+  db
+    .remove(req.params.id)
+    .then(LOTR => {
+      res.status(200).json(LOTR);
+    })
+    .catch(err => {
+      console.log("error", err);
+      res.status(500).json({ message: "cannotDelete" });
     });
 });
 
