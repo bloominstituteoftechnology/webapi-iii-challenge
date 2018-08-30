@@ -1,7 +1,8 @@
 const express = require('express');
 const db = {
+  users: require('./data/helpers/userDb'),
   posts: require('./data/helpers/postDb'),
-  users: require('./data/helpers/userDb')
+  tags: require('./data/helpers/tagDb')
 };
 const app = express();
 
@@ -9,7 +10,7 @@ const app = express();
 
 app.use(express.json());
 
-const capitalUser = (req, res, next) => {
+const validateUser = (req, res, next) => {
   let { name } = req.body;
   if (!req.body || !name) {
     res.status(404).json({ error: 'User must have a name.' });
@@ -29,6 +30,14 @@ const validatePost = (req, res, next) => {
   }
 };
 
+const validateTag = (req, res, next) => {
+  if (!req.body || !req.body.tag) {
+    res.status(404).json({ error: 'Tag must have some text.' });
+  } else {
+    next();
+  }
+};
+
 /* Users DB requests */
 
 const fetchUsers = (req, res) => {
@@ -36,7 +45,7 @@ const fetchUsers = (req, res) => {
     .then(users => res.status(200).json(users))
     .catch(err => {
       console.error(err);
-      res.status(500).json({ error: 'Error getting the users.' });
+      res.status(500).json({ error: 'Error getting users.' });
     });
 };
 
@@ -66,18 +75,6 @@ app.get('/api/users/:id/posts', (req, res) => {
     });
 });
 
-app.get('/api/users/:id/posts/:postId/tags', (req, res) => {
-  db.posts.getPostTags(req.params.postId)
-    .then(tags => {
-      if (!tags) res.status(404).json({ error: 'No associated tags were found for the specified post.' });
-      else res.status(200).json(tags);
-    })
-    .catch(err => {
-      console.error(err);
-      res.status(500).json({ error: 'Error getting tags for the specified post.' });
-    });
-});
-
 app.delete('/api/users/:id', (req, res) => {
   db.users.remove(req.params.id)
     .then((success) => {
@@ -90,18 +87,16 @@ app.delete('/api/users/:id', (req, res) => {
     });
 });
 
-app.post('/api/users', capitalUser, (req, res) => {
+app.post('/api/users', validateUser, (req, res) => {
   db.users.insert(req.body)
-    .then(() => {
-      fetchUsers(req, res);
-    })
+    .then(() => fetchUsers(req, res))
     .catch(err => {
       console.error(err);
       res.status(500).json({ error: 'Error adding the user.' });
     });
 });
 
-app.put('/api/users/:id', capitalUser, (req, res) => {
+app.put('/api/users/:id', validateUser, (req, res) => {
   db.users.update(req.params.id, req.body)
     .then((success) => {
       if (!success) res.status(404).json({ error: 'No user was found with the specified id.' });
@@ -126,8 +121,8 @@ const fetchPosts = (req, res) => {
 
 app.get('/api/posts', fetchPosts);
 
-app.get('/api/posts/:id', (req, res) => {
-  db.posts.get(req.params.id)
+app.get('/api/posts/:postId', (req, res) => {
+  db.posts.get(req.params.postId)
     .then(post => {
       if (!post) res.status(404).json({ error: 'No post was found with the specified id.' });
       else res.status(200).json(post);
@@ -138,8 +133,8 @@ app.get('/api/posts/:id', (req, res) => {
     });
 });
 
-app.get('/api/posts/:id/tags', (req, res) => {
-  db.posts.getPostTags(req.params.id)
+app.get('/api/posts/:postId/tags', (req, res) => {
+  db.posts.getPostTags(req.params.postId)
     .then(tags => {
       if (!tags) res.status(404).json({ error: 'No associated tags were found for the specified post.' });
       else res.status(200).json(tags);
@@ -147,11 +142,11 @@ app.get('/api/posts/:id/tags', (req, res) => {
     .catch(err => {
       console.error(err);
       res.status(500).json({ error: 'Error getting tags for the specified post.' });
-    });
+    })
 });
 
-app.delete('/api/posts/:id', (req, res) => {
-  db.posts.remove(req.params.id)
+app.delete('/api/posts/:postId', (req, res) => {
+  db.posts.remove(req.params.postId)
     .then((success) => {
       if (!success) res.status(404).json({ error: 'No post was found with the specified id.' });
       else fetchPosts(req, res);
@@ -171,8 +166,8 @@ app.post('/api/posts', validatePost, (req, res) => {
     });
 });
 
-app.put('/api/posts/:id', validatePost, (req, res) => {
-  db.posts.update(req.params.id, req.body)
+app.put('/api/posts/:postId', validatePost, (req, res) => {
+  db.posts.update(req.params.postId, req.body)
     .then((success) => {
       if (!success) res.status(404).json({ error: 'No post was found with the specified id.' });
       else fetchPosts(req, res);
@@ -185,6 +180,60 @@ app.put('/api/posts/:id', validatePost, (req, res) => {
 
 /* Tags DB requests */
 
-// ... :D
+const fetchTags = (req, res) => {
+  db.tags.get()
+    .then(tags => res.status(200).json(tags))
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ error: 'Error getting tags.' });
+    });
+};
+
+app.get('/api/tags', fetchTags);
+
+app.get('/api/tags/:tagId', (req, res) => {
+  db.tags.get(req.params.tagId)
+    .then(tag => {
+      if (!tag) res.status(404).json({ error: 'No tag was found with the specified id.' });
+      else res.status(200).json(tag);
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ error: 'Error getting the tag.' });
+    });
+});
+
+app.delete('/api/tags/:tagId', (req, res) => {
+  db.tags.remove(req.params.tagId)
+    .then((success) => {
+      if (!success) res.status(404).json({ error: 'No tag was found with the specified id.' });
+      else fetchPosts(req, res);
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ error: 'Error deleting the tag.' });
+    });
+});
+
+app.post('/api/tags', validateTag, (req, res) => {
+  db.tags.insert(req.body)
+    .then(() => fetchTags(req, res))
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ error: 'Error adding tag.' });
+    });
+});
+
+app.put('/api/tags/:tagId', validateTag, (req, res) => {
+  db.tags.update(req.params.tagId, req.body)
+    .then((success) => {
+      if (!success) res.status(404).json({ error: 'No tag was found with the specified id.' });
+      else fetchTags(req, res);
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ error: 'Error updating tag.' });
+    });
+});
 
 app.listen(5000, () => console.log('Server listening on port 5000.'));
