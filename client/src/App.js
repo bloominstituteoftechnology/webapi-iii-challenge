@@ -1,21 +1,21 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
-
+import {withRouter,Route} from 'react-router-dom';
+import UserList from './components/userlist.js';
+import UserInfo from './components/userinfo.js';
 class App extends Component {
+ 
+  componentDidMount(){
+    this.props.history.push('/users');
+  }
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+        <Route exact path='/users' component={UserList}/>
+        <Route exact path='/users/:id' component={UserInfo}/>
       </div>
     );
   }
 }
 
-export default App;
+export default withRouter(App);

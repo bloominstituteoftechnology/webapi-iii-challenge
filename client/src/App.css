@@ -26,3 +26,18 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+.card{
+  max-width: 400px;
+  width: 100%;
+  height: 50px;
+  margin: 0 auto;
+  display: flex;
+  margin-bottom: 30px;
+  justify-content: center;
+}
+.userCard{
+  height: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
