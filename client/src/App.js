@@ -27,7 +27,7 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to the *sweet* users DBs</h1>
+          <h1 className="App-title">Welcome to the *sweet* users DB</h1>
         </header>
           {this.state.users.map(user => <Route exact path="/" render={props => <Link to={`/${user.id}`}><User user={user} key={user.id} {...props} /></Link>} />)}
           <Route path="/:id" render={props => <UserPage array={this.state.users} {...props}/>} />
