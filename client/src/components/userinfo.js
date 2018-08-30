@@ -12,9 +12,11 @@ class UserInfo extends React.Component{
         }
     }
     componentDidMount() {
-        axios.get(`http://localhost:9000/users/${this.props.match.params.id}`).then(res=>this.setState(res.data)).catch(err=>console.log(err));
+        axios.get(`http://localhost:9000/users/${this.props.match.params.id}`)
+        .then(res=>this.setState(res.data))
+        .catch(err=>console.log(err));
         axios.get(`http://localhost:9000/posts/${this.props.match.params.id}`)
-        .then(res=>this.setState({userPosts:res.data,loading:false}))
+        .then(res=>{console.log(res);this.setState({userPosts:res.data,loading:false})})
         .catch(err=>console.log(err));
     }
     render(){
