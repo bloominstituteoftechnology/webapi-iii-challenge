@@ -179,9 +179,9 @@ app.delete("/posts/:id", (req, res) => {
   postDb
     .remove(req.params.id)
     .then(count => {
-        console.log(count);
+      console.log(count);
       if (count > 0) {
-        res.status(200).json({message: "The post was successfully deleted"});
+        res.status(200).json({ message: "The post was successfully deleted" });
       } else {
         res.status(404).json({
           message: "The post with the specified ID does not exist."
@@ -236,6 +236,54 @@ app.put("/users/:id", upperName, (req, res) => {
       });
   } else {
     res.status(400).json({ error: "Please provide a name for the user." });
+  }
+});
+
+app.put("/posts/:id", (req, res) => {
+  const { userId, text } = req.body;
+  const { id } = req.params;
+  if (!id) {
+    res
+      .status(400)
+      .json({ message: "The post with the specified ID does not exist." });
+  } else if (userId && text) {
+    postDb
+      .update(id, req.body)
+      .then(count => {
+        if (count) {
+          postDb
+            .get(id)
+            .then(post => {
+              if (post) {
+                res.status(200).json(post);
+              } else {
+                res.status(404).json({
+                  message: "The post with the specified ID does not exist."
+                });
+              }
+            })
+            .catch(err => {
+              console.log("error", err);
+              res.status(500).json({
+                error: "The post information could not be retrieved."
+              });
+            });
+        } else {
+          res.status(404).json({
+            message: "The post with the specified ID does not exist."
+          });
+        }
+      })
+      .catch(err => {
+        console.log("error", err);
+        res
+          .status(500)
+          .json({ error: "The post information could not be modified." });
+      });
+  } else {
+    res
+      .status(400)
+      .json({ error: "Please provide a userId and text for the post." });
   }
 });
 
