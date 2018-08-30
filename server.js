@@ -1,169 +1,57 @@
 const express = require("express");
-const userdb = require("./data/helpers/userDb");
-const postdb = require("./data/helpers/postDb");
-const cors = require("cors");
-const morgan = require("morgan");
-const helmet = require("helmet");
+const usersRoute = require("./usersRoute");
+const postsRoute = require("./postsRoute");
+const path = require("path");
 
+// const cors = require("cors");
+// const morgan = require("morgan");
+// const helmet = require("helmet");
+// const path = require("path");
 const server = express();
+server.use("/users", usersRoute);
+server.use("/posts", postsRoute);
 
-server.use(express.json());
+const configureMiddleware = require("./middleware");
 
-server.use(helmet());
-server.use(morgan("dev"));
-server.use(cors());
-
-function uppercase(req, res, next) {
-	req.body.name =
-		req.body.name.charAt(0).toUpperCase() + req.body.name.slice(1);
-	next();
-}
-
-server.get("/", (req, res) => {
-	res.send("you da realmvp");
-});
-
-server.get("/users", async (req, res) => {
-	try {
-		let userdata = await userdb.get();
-		if (userdata.length > 0) {
-			return res.status(200).json(userdata);
-		}
-		return res.status(404).json({
-			message: "that's why i'm sober on weekends except for alcohol",
-		});
-	} catch (err) {
-		res.status(500).json(err);
-	}
-});
-
-server.get("/users/:id", async (req, res) => {
-	try {
-		let userdata = await userdb.get(req.params.id);
-		if (userdata) {
-			return res.status(200).json(userdata);
+server.get("/download", (req, res, next) => {
+	const filePath = path.join(__dirname, "index.html");
+	res.sendFile(filePath, err => {
+		// if there is an error the callback function will get an error as it's first argument
+		if (err) {
+			// we could handle the error here or pass it down to error-handling middleware like so:
+			next(err); // call the next error-handling middleware in the queue
 		} else {
-			return res.status(404).json({ message: "User doesn't exist" });
+			console.log("File sent successfully");
 		}
-	} catch (err) {
-		res.status(500).json(err);
-	}
+	});
 });
 
-server.get("/usersPosts/:id", async (req, res) => {
-	try {
-		let userdata = await userdb.getUserPosts(req.params.id);
-		if (userdata.length > 0) {
-			return res.status(200).json(userdata);
-		} else {
-			return res.status(404).json({ message: "Id not found" });
-		}
-	} catch (err) {
-		res.status(500).json(err);
-	}
-});
+// server.use(express.json());
+// server.use(helmet());
+// server.use(morgan("dev"));
+// server.use(cors());
 
-server.post("/users", uppercase, async (req, res) => {
-	let body = req.body;
-	try {
-		if (body.name) {
-			let userdata = await userdb.insert(body);
-			return res.status(200).json(userdata);
-		} else {
-			return res.status(400).json({ message: "Enter info" });
-		}
-	} catch (err) {
-		res.status(500).json(err);
-	}
-});
+// server.use(errorHandler);
+configureMiddleware(server);
+server.listen(8000, () => console.log("sup fool i'm runnin"));
 
-server.put("/users/:id", uppercase, async (req, res) => {
-	let body = req.body;
-	if (!body.name) return res.status(400).json({ message: "need more info" });
-	try {
-		let userdata = await userdb.update(req.params.id, body);
-		if (userdata) {
-			return res.status(200).json(userdata);
-		} else {
-			return res.status(404).json({ message: "This ide doesn't exist" });
-		}
-	} catch (err) {
-		res.status(500).json(err);
-	}
-});
+// function errorHandler(err, req, res, next) {
+// 	console.error(err);
+// 	switch (err.statusCode) {
+// 		case 404:
+// 			res.status(404).json({
+// 				message:
+// 					"Hey, buster.  There's no file by that name here ya ding-dong.",
+// 			});
+// 			break;
 
-server.delete("/users/:id", async (req, res) => {
-	try {
-		let userdata = await userdb.remove(req.params.id);
-		if (userdata) {
-			return res.status(200).json({ message: "❤🐱‍💻🐱‍👓" });
-		} else {
-			return res.status(404).json({ message: "Id doesn't exist" });
-		}
-	} catch (err) {
-		res.status(500).json(err);
-	}
-});
-
-server.get("/posts", async (req, res) => {
-	try {
-		let postdata = await postdb.get();
-		if (postdata.length > 0) {
-			return res.status(200).json(postdata);
-		}
-		return res.status(404).json({
-			message: "that's why i'm sober on weekends except for alcohol",
-		});
-	} catch (err) {
-		res.status(500).json(err);
-	}
-});
-
-server.get("/posts/:id", async (req, res) => {
-	try {
-		let postdata = await postdb.get(req.params.id);
-		if (postdata) {
-			return res.status(200).json(postdata);
-		}
-		return res.status(404).json({
-			message: "no id found",
-		});
-	} catch (err) {
-		res.status(500).json(err);
-	}
-});
-
-server.post("/posts", async (req, res) => {
-	let body = req.body;
-	try {
-		if (body.text && body.userId) {
-			let postdata = await postdb.insert(body);
-			return res.status(200).json(postdata);
-		} else {
-			return res
-				.status(400)
-				.json({ message: "Bad form Trevor, bad form" });
-		}
-	} catch (err) {
-		res.status(500).json(err);
-	}
-});
-
-server.put("/posts/:id", async (req, res) => {
-	let body = req.body;
-	if (!body.userId && body.text)
-		return res.status(400).json({ message: "need more info" });
-	try {
-		let postdata = await postdb.update(req.params.id, body);
-		if (postdata) {
-			return res.status(200).json(userdata);
-		} else {
-			return res.status(404).json({ message: "this id doesn't exist" });
-		}
-	} catch (err) {
-		res.status(500).json(err);
-	}
-});
+// 		default:
+// 			res.status(500).json({
+// 				message: "There was an error performing the required operation",
+// 			});
+// 			break;
+// 	}
+// }
 
 // server.get("/banana/:banana", async (banana, bananas) => {
 // 	try {
@@ -195,5 +83,3 @@ server.put("/posts/:id", async (req, res) => {
 // 			});
 // 		});
 // });
-
-server.listen(8000, () => console.log("sup fool i'm runnin"));
