@@ -66,19 +66,31 @@ server.delete('/users/:id',async(req,res)=>{
 })
 server.get('/posts',async(req,res)=>{
     try {
-        const posts=await posts.get();
-        res.status(200).json(posts);
+        const allPosts=await posts.get();
+        res.status(200).json(allPosts);
     } catch(error) {
         res.status(500).json({error:'Posts could not be retrieved.'});
     }
 });
 server.get('/posts/:id',async(req,res)=>{
     try {
-        const posts=await users.getUserPosts(req.params.id);
-        res.status(200).json(posts);
+        const userPosts=await users.getUserPosts(req.params.id);
+        res.status(200).json(userPosts);
     } catch(error) {
         res.status(500).json({error:'Posts could not be retrieved'});
     }
+});
+server.post('/posts/:id',async(req,res)=>{
+    const postBody=req.body;
+    postBody.userId=req.params.id;
+    if (postBody.text) {
+        try {
+            const response=await posts.insert(postBody);
+            res.status(201).json(response);
+        } catch (error) {
+            res.status(500).json({ error: "There was an error while saving the post to the database" });
+        }}  else {
+        res.status(400).json({message: 'Posts need both a text field completed.'});
+        }
 })
-
 server.listen(9000,()=>console.log('Engines firing server starting new horizons venturing.'))
