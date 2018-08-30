@@ -7,6 +7,10 @@ const server = express();
 
 server.use(express.json());
 
+function upperCase(req, res, next) {
+    req.body.name=req.body.name.toUpperCase();
+    next();
+}
 
 server.get('/', (req, res) => {
     res.send('Hello FSW12');
@@ -21,7 +25,7 @@ server.get('/api/users', (req, res) => {
     });
 });
 
-server.post('/api/users', (req, res) => {
+server.post('/api/users', upperCase, (req, res) => {
     
     userDB.insert(req.body).then(response => {
         res.status(201).json(response);
@@ -47,7 +51,7 @@ server.delete('/api/users/:id', (req, res) => {
         .catch(err => res.status(500).json(err));
 });
 
-server.put('/api/users/:id', (req, res) => {
+server.put('/api/users/:id', upperCase, (req, res) => {
     userDB.update(req.params.id, req.body).then(users => {
         res.status(200).json(users);
     })
