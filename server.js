@@ -6,7 +6,7 @@ const dbPost = require('./data/helpers/postDb.js');
 // custom middleware
 function uppercased(req, res, next) {
     req.body.upper = req.body.name.toUpperCase();
-    console.log(req.body);
+    // console.log(req.body);
     next();
 };
 
@@ -177,6 +177,40 @@ server.post('/api/posts', validUserId, (req, res) => {
         res.status(500).json({ error: 'There was an error while saving the post to the database' });
         return;
     })
-})
+});
+
+server.delete('/api/posts/:id', (req, res) => {
+    const { id } = req.params;
+    dbPost.remove(id)
+        .then(count => {
+            console.log(count);
+            if (count) {
+                res.status(204).json({ message: 'Post has been deleted'}).end();
+            } else {
+                res.status(404).json({ message: 'The post with the specified ID does not exist.' })
+            }
+        })
+        .catch(error => res.status(500).json({ error: 'The post could not be removed' }));
+});
+
+server.put('/api/posts/:id', (req, res) => {
+    const { text } = req.body;
+    if (!text) {
+        res.status(400).json({ errorMessage: 'Please provide the new post content.' });
+        return;
+    }
+    dbPost.update(req.params.id, req.body)
+        .then(post => {
+            // console.log(post);
+            if (post) {
+                res.status(200).json(req.body)
+                // console.log(req.body);
+            } else {
+                res.status(404).json({ message: 'The post with the specified ID does not exist.' })
+            }
+            
+        })
+        .catch(err => res.status(500).json({ message: 'The post information could not be modified.' }));
+});
 
 server.listen(8000, () => console.log('/n== API on port 8k ==/n') );
