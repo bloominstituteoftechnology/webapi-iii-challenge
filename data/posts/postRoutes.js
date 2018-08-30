@@ -3,6 +3,39 @@ const postDb = require('../helpers/userDb');
 const router = express.Router(); 
 
 
+function postCreateCheck(req, res, next){
+    let [body] = [req.body]
+
+    if(body.text) {
+        next(); 
+    } else {
+        res.status(400).json({error: "Text is a required property with a value as string and no size limit."})
+        }
+
+    if(!body.id){
+        next(); 
+    } else {
+        res.status(400).json({error: "No Id required."})
+        } 
+
+    if(body.userId){
+        next(); 
+    } else {
+        res.status(400).json({error: "userId is a required property and must be the id of an existing user."})
+        } 
+}
+
+function postUpdateCheck(req, res, next){
+    let [body] = [req.body]
+
+    if(body.userId){
+        next(); 
+    } else {
+        res.status(400).json({error: "userId is a required property and must be the id of an existing user."})
+        } 
+}
+
+
 router.get('/:id', (req, res) => {
     let [id] = [req.params.id]
 
@@ -28,7 +61,7 @@ router.get('/tags/:id', (req, res) => {
 })
 
 
-router.post('/', (req, res) => {
+router.post('/', postCreateCheck, (req, res) => {
     let body = req.body
 
     postDb.insert(body)
@@ -41,7 +74,7 @@ router.post('/', (req, res) => {
 })
 
 
-router.put('/:id', (req, res) => {
+router.put('/:id', postUpdateCheck, (req, res) => {
     let [id, body] = [id, req.body]
 
     postDb.update(id, body)

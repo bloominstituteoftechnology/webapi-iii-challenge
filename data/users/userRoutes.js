@@ -3,7 +3,7 @@ const userDb = require('../helpers/userDb');
 const router = express.Router(); 
 
 
-function userNameCheck(req, res, next){
+function userCheck(req, res, next){
     let [body] = [req.body]
 
     if(body.name.charAt(0) !== body.name.charAt(0).toLowerCase()){
@@ -17,6 +17,12 @@ function userNameCheck(req, res, next){
     } else {
         res.status(400).json({error: "User Name cannot be more than 128 characters long."})
         }
+
+    if(!body.id){
+        next(); 
+    } else {
+        res.status(400).json({error: "No User Id required."})
+        } 
 }
 
 
@@ -45,7 +51,7 @@ router.get('/posts/:id', (req, res) => {
         })
 })
 
-router.post('/', userNameCheck, (req, res) => {
+router.post('/', userCheck, (req, res) => {
     let [body] = [req.body]
     
     userDb.insert(body)
@@ -57,7 +63,7 @@ router.post('/', userNameCheck, (req, res) => {
         })
 })
 
-router.put('/:id', userNameCheck, (req, res) => {
+router.put('/:id', userCheck, (req, res) => {
     let [id, body] = [id, req.body]
 
     userDb.update(id, body)
