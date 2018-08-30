@@ -18,7 +18,7 @@ function errorHandler(err, req, res, next) {
 			break;
 		default:
 			res.status(500).json({
-				message: 'There was an error performing the required operation'
+				message: 'There was an error performing the specified operation'
 			})
 			break;
 	}
