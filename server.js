@@ -50,6 +50,25 @@ server.get('/users/:id', (req, res) => {
     });
 });
 
+//GET LIST OF POSTS FOR A SPECIFIC ID.
+server.get('/users/:id/posts', (req, res) => {
+    userDB.getUserPosts(req.params.id)
+    .then(userPosts => {
+        if( userPosts.length === 0) {
+            res.status(404).json({ error: 'The posts with the specified ID do not exist.' })
+        }
+        else {
+            res.status(200).json({userPosts});
+        }  
+    })
+    .catch(err => {
+        console.error('error', err);
+
+        res.status(500).json({ error: 'The posts information could not be retrieved.' });
+    });
+});
+
+
 //POST METHOD -- ADDED upperCase middleware as a function to perform when adding a new user name
 server.post('/users', upperCase, async (req, res) => {
     const user = req.body;
