@@ -23,7 +23,10 @@ router.get("/:userID", async (req, res) => {
     if (results) {
       res.status(200).json(results);
     }
-    res.status(500).json({ errorMessage: "Invalid ID for lookup" });
+    else{
+      res.status(500).json({ errorMessage: "Invalid ID for lookup" });
+    }
+    
   } catch (err) {
     console.log(err);
     res.status(500).json(err);
@@ -38,7 +41,10 @@ router.delete("/:userID", async (req, res) => {
     if (results === 1) {
       res.status(200).json({ message: "Success" });
     }
-    res.status(500).json({ errorMessage: "Invalid ID for removal" });
+    else{
+      res.status(500).json({ errorMessage: "Invalid ID for removal" });
+    }
+ 
   } catch (err) {
     console.log(err);
     res.status(500).json(err);
@@ -57,8 +63,10 @@ router.put("", async (req, res) => {
     if (err.errno === 19) {
       res.status(500).json({ errorMessage: "Need a unique username" });
     }
-    console.log(err);
-    res.status(500).json(err);
+    else{
+      console.log(err);
+      res.status(500).json(err);
+    }
   }
 });
 router.put("/:userID", async (req, res) => {
@@ -73,7 +81,9 @@ router.put("/:userID", async (req, res) => {
     if (results === 1) {
       res.status(200).json({ message: "Success" });
     }
-    res.status(500).json({ errorMessage: "Invalid ID for removal" });
+    else{
+      res.status(500).json({ errorMessage: "Invalid ID for removal" });
+    }
   } catch (err) {
     console.log(err);
     res.status(500).json(err);

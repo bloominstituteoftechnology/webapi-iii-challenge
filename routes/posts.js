@@ -23,7 +23,10 @@ router.get("/:postID", async (req, res) => {
     if (results) {
       res.status(200).json(results);
     }
-    res.status(500).json({ errorMessage: "Invalid post for lookup" });
+    else{
+      res.status(500).json({ errorMessage: "Invalid post for lookup" });
+    }
+    
   } catch (err) {
     console.log(err);
     res.status(500).json(err);
