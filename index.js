@@ -2,11 +2,15 @@ const express = require("express");
 const db = require("./data/helpers/userDb.js");
 const postDb = require("./data/helpers/postDb.js")
 const helmet = require('helmet')
+const morgan = require('morgan')
+const cors = require('cors')
 const PORT = 9000;
 const server = express();
 
 server.use(express.json());
 server.use(helmet()); 
+server.use(cors());
+server.use(morgan('dev'));
 
 //middleware
 function upperCase(req, res, next) {
@@ -120,5 +124,19 @@ server.get("/api/posts", (req, res) => {
     })
 })
 
+server.post("/api/posts", (req,res) => {
+  if(req.body.userId && req.body.text){
+    console.log(req.body)
+    postDb.insert(req.body)
+    .then(post => {
+      res.status(201).json(req.body)
+    })
+    .catch(error => {
+      res.status(404).json({error, message: "unable to save the post check userId"})
+    })
+  } else {
+    res.status(500).json({error: "Check that you have a valid userID and contents for your your post"})
+  }
+})
 
 server.listen(PORT, () => console.log(`\n== API on port ${PORT}==\n`));
