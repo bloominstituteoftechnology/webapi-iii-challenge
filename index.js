@@ -1,154 +1,16 @@
 const express = require("express");
 const server = express();
 // databases
-const userDB = require("./data/helpers/userDb.js");
+const userRoutes = require("./users/userRoutes.js");
 const postDB = require("./data/helpers/postDb.js");
-// middleware
-const nameToUpperCase = require("./middleware/middleware.js");
+
 // causes express middleware
 // stack to be added to every layer (request function)
 server.use(express.json());
 
-//////////////================================= START MIDDLEWARE =================================//////////////
-// converts name to all uppercase
-// const nameToUpperCase = (req, res, next) => {
-//   // gets rid of name if too many chars
-//   if (req.body.name.length > 128) {
-//     res.status(400).json({ message: "Username contains too many characters." });
-//   }
-//   req.body.name = req.body.name.toUpperCase();
-//   next();
-// };
-//////////////================================= END MIDDLEWARE =================================//////////////
-
-//////////////================================= START USERDB REQUESTS =================================//////////////
-// GET REQUEST //
-server.get("/users", (req, res) => {
-  userDB
-    .get()
-    .then(users => {
-      res.status(200).json(users);
-    })
-    .catch(err => {
-      res
-        .status(500)
-        .json({ error: "The users information could not be retrieved." });
-    });
-});
-
-server.get("/users/:id", (req, res) => {
-  const { id } = req.params;
-  userDB
-    .get(id)
-    .then(user => {
-      if (user.length === 0) {
-        res
-          .status(404)
-          .json({ message: "The user with the specified ID does not exist." });
-      } else {
-        return res.status(200).json({ user });
-      }
-    })
-    .catch(err => {
-      res
-        .status(500)
-        .json({ error: "The post information could not be retrieved." });
-    });
-});
-
-// GET USER POSTS REQUEST
-server.get("/users/:id/posts", (req, res) => {
-  const { id } = req.params;
-  userDB
-    .getUserPosts(id)
-    .then(user => {
-      if (user.length === 0) {
-        res
-          .status(404)
-          .json({ message: "The user with the specified ID does not exist." });
-      } else {
-        return res.status(200).json({ user });
-      }
-    })
-    .catch(err => {
-      res
-        .status(500)
-        .json({ error: "The post information could not be retrieved." });
-    });
-});
-
-// end GETS //
-
-// POST REQUEST //
-server.post("/users", nameToUpperCase, async (req, res) => {
-  const user = req.body;
-  if (!user.name) {
-    return res.status(400).json({
-      errorMessage: "Please provide a name for the user.",
-    });
-  } else {
-    try {
-      const response = await userDB.insert(user);
-      res.status(201).json({ message: "New user created successfully." });
-    } catch (err) {
-      res.status(500).json({
-        error: "There was an error while saving the post to the database.",
-      });
-    }
-  }
-});
-// end POST //
-
-// DELETE REQUEST //
-server.delete("/users/:id", async (req, res) => {
-  const { id } = req.params;
-  try {
-    const response = await userDB.remove(id);
-    if (response === 0) {
-      return res.status(404).json({
-        message: "The user with the specified ID does not exist.",
-      });
-    } else {
-      return res.status(200).json({ message: "User deleted successfully." });
-    }
-  } catch (err) {
-    return res.status(500).json({
-      error: "The user could not be removed.",
-    });
-  }
-});
-// end DELETE //
-
-// PUT REQUEST //
-server.put("/users/:id", nameToUpperCase, (req, res) => {
-  const { id } = req.params;
-  const user = req.body;
-  if (!user.name) {
-    return res.status(400).json({
-      errorMessage: "Please provide a name for the user.",
-    });
-  } else {
-    userDB
-      .update(id, user)
-      .then(count => {
-        if (count) {
-          res.status(200).json({ message: "User successfully modified." });
-        } else {
-          res.status(404).json({
-            message: "The user with the specified ID does note exist.",
-          });
-        }
-      })
-      .catch(err => {
-        res
-          .status(500)
-          .json({ error: "The user information could not be modified." });
-      });
-  }
-});
-// end PUT //
-
-//////////////================================= END USERDB REQUESTS =================================//////////////
+// must be used when using express Router
+// links url with requests
+server.use("/users", userRoutes);
 
 //////////////================================= START POSTDB REQUESTS =================================//////////////
 // GET REQUESTS
@@ -188,7 +50,6 @@ server.get("/posts/:id", (req, res) => {
 
 // POST REQUEST //
 //// MUST BE ID OF EXISTING USER ////
-
 server.post("/posts", async (req, res) => {
   const post = req.body;
   if (!post.userId || !post.text) {
