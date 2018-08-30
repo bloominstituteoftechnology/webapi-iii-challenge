@@ -1,25 +1,23 @@
 
 const express = require('express'); 
 const server =  express(); 
-const userDb = require('./data/helpers/userDb.js')
+const userDb = require('./data/helpers/userDb.js');
+const postDb = require('./data/helpers/postDb.js'); 
 
 
 //Middleware that transforms user name to UPPERCASE
 
 const toUppercase = (req, res, next) => {
-    if(req.method === "POST" || req.method === "PUT"){
-        const name = req.body.name.toUpperCase(); 
-        req.body.name = name;
-    }
+   const name = req.body.name.toUpperCase(); 
+    req.body.name = name;
     next(); 
 }
 
-
 server.use(express.json());
-server.use(toUppercase); 
 
 
-//User CRUD operations
+
+//-------------------------User CRUD operations---------------------------------------------
 
 server.get("/api/users", (req,res) => {
     userDb.get().then(users => {
@@ -42,7 +40,7 @@ server.get("/api/users/:id", (req,res) => {
     })
 }); 
 
-server.post("/api/users", (req, res) => {
+server.post("/api/users", toUppercase, (req, res) => {
     const data = req.body
     if (data.name){
         userDb.insert(data).then(userId => {
@@ -68,7 +66,7 @@ server.delete("/api/users/:id", (req, res) => {
     })
 }); 
 
-server.put("/api/users/:id", (req, res) => {
+server.put("/api/users/:id", toUppercase, (req, res) => {
     const id = req.params.id; 
     const updatedData = req.body; 
     if(updatedData.name){
@@ -85,6 +83,31 @@ server.put("/api/users/:id", (req, res) => {
         res.status(400).json({message: "Please provide name in updated data"})
     }
 }); 
+
+// --------------------------Posts CRUD Operations-----------------------------------------
+
+server.get('/api/posts', (req,res) => {
+    postDb.get().then(posts => {
+        res.status(200).json(posts)
+    }).catch(err => {
+        res.status(500).json({error: "There was an error retrieving the posts from the database"})
+    })
+}); 
+
+server.post('/api/posts', (req,res) => {
+    const data = req.body; 
+    if(data.userId && data.text){
+        postDb.insert(data).then(postId => {
+            res.status(201).json({message: "New post successfully created!"})
+        }).catch(err => {
+            res.status(500).json({error: "There was an error creating the post in the database"})
+        })
+    }else {
+        res.status(400).json({message: "Please provide userId and text for post request body"})
+    }
+}); 
+
+
 
 
 
