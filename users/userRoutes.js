@@ -20,26 +20,28 @@ router.get('/', (req, res) => {
 });
 
 router.get('/:id', (req, res) => {
-  console.log('user id requested')
   userDb.get(req.params.id).then(user => {
     res.status(200).json(user)
   })
 });
 
 router.post('/', allCapTheReq, (req, res) => {
-  //if longer than 128 characters respond with error
-  // if id present say it is disregarding the id
-  userDb.insert(req.body)
-  .then( newUserId => {
-    res.status(201).json(newUserId)
-  })
-  .catch(err => {
-    res.status(400).json(err)
-  })
+  if (req.body.id){
+    res.status(400).json({message: 'please remove id and submit again.'})
+  } else if (req.body.name.length > 128) {
+    res.status(400).json({message: 'please choose a shorter name and submit again.'})
+  } else {
+    userDb.insert(req.body)
+    .then( newUserId => {
+      res.status(201).json(newUserId)
+    })
+    .catch(err => {
+      res.status(400).json(err)
+    })
+  }
 });
 
 router.put('/:id', allCapTheReq, (req, res) => {
-  console.log('update user', req.params.id, req.body)
   userDb.update(req.params.id, req.body)
   .then( count => {
     res.status(201).json(count)
