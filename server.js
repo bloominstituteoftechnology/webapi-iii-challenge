@@ -58,8 +58,8 @@ server.put('/users/:id', upperCase, async(req,res)=>{
 server.delete('/users/:id',async(req,res)=>{
     try{
         const removed=await users.remove(req.params.id);
-        removed===1?res.status(200).json({success: `Deleted user.`}):
-        res.status(404).json({message:"The user with the specified ID does not exist"})
+        removed===1?res.status(200).json({success: 'Deleted user.'}):
+        res.status(404).json({message:"The user with the specified ID does not exist"});
     } catch(error) {
         res.status(500).json({error: "The user could not be removed" })
     }
@@ -92,5 +92,13 @@ server.post('/posts/:id',async(req,res)=>{
         }}  else {
         res.status(400).json({message: 'Posts need both a text field completed.'});
         }
+})
+server.delete('/posts/:postId',async(req,res)=>{
+    try {
+        const removedPost=await posts.remove(req.params.postId);
+        removedPost===1?res.status(200).json({success:'Deleted post.'}):res.status(404).json({message:"The post with the specified ID does not exist"});
+    } catch(error){
+        res.status(500).json({error:'The post could not be removed'});
+    }
 })
 server.listen(9000,()=>console.log('Engines firing server starting new horizons venturing.'))
