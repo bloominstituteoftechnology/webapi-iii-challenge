@@ -94,6 +94,18 @@ server.get('/api/posts', (req,res) => {
     })
 }); 
 
+server.get('/api/posts/:id', (req,res) => {
+    const id = req.params.id; 
+    postDb.get(id).then(post => {
+        console.log(post)
+        if(post){
+            res.status(200).json(post);
+        }
+    }).catch(err => {
+        res.status(500).status.json({error:"The post information could not be retrieved"})
+    })
+}); 
+
 server.post('/api/posts', (req,res) => {
     const data = req.body; 
     if(data.userId && data.text){
@@ -107,6 +119,36 @@ server.post('/api/posts', (req,res) => {
     }
 }); 
 
+server.delete('/api/posts/:id', (req,res) => {
+    const id = req.params.id; 
+    postDb.remove(id).then(count => {
+        if(count > 0){
+            res.status(200).json({message: "Successfully removed post!"})
+        }else {
+            res.status(404).json({error: "Post with speficied ID does not exist"})
+        }
+    }).catch(err => {
+        res.status(500).json({error: "Error accessing data from the database"})
+    })
+}); 
+
+server.put("/api/posts/:id", (req, res) => {
+    const id = req.params.id; 
+    const updatedData = req.body; 
+    if(updatedData.userId && updatedData.text){
+        postDb.update(id, updatedData).then(count => {
+            if(count > 0){
+                res.status(200).json({message:"post information updated"})
+            }else {
+                res.status(404).json({error: "The post with the specified ID does not exist"})
+            }
+        }).catch(err => {
+            res.status(500).json({error: "Error when updating post information in database"})
+        })
+    }else {
+        res.status(400).json({message: "Please provide userId and text in updated data"})
+    }
+}); 
 
 
 
