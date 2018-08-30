@@ -65,7 +65,15 @@ server.get("/api/users/:id", (req, res) => {
   db.get(id)
     .then(user => {
       if (user) {
-        res.status(200).json(user);
+        db.getUserPosts(user.id)
+          .then(posts => {
+            //console.log(posts)
+            res.status(200).json({id: user.id, name: user.name, posts})
+          })
+          .catch(error => {
+            res.status(500).json({error, message: "Problem getting posts"})
+          })
+        //res.status(200).json(user);
       } else {
         res
           .status(404)
