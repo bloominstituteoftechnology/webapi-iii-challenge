@@ -1,11 +1,12 @@
 const express = require("express");
 const server = express();
-
+// databases
 const userDB = require("./data/helpers/userDb.js");
 const postDB = require("./data/helpers/postDb.js");
-
+// middleware
 const nameToUpperCase = require("./middleware/middleware.js");
-
+// causes express middleware
+// stack to be added to every layer (request function)
 server.use(express.json());
 
 //////////////================================= START MIDDLEWARE =================================//////////////
