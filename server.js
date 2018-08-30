@@ -30,14 +30,28 @@ app.get('/', (req, res) => {
     res.send('Whuddup.');
 });
 
-app.get('/users/:id', (req, res) => {
+app.get('/users', (req, res) => {
     userDb.get()
         .then(users => {
-            res.status(200).json({message: 'Yea, users.'})
+            res.status(200).json({message: users})
         })
         .catch( err => {
             console.log('Error', err)
             res.status(500).json({message: 'Unable to grab users.'})
+        });
+});
+
+app.get('/users/:id', (req, res) => {
+    console.log(req.params);
+    
+    let {id} = req.params;
+    userDb.getUserPosts(id)
+        .then(user => {
+            res.status(200).json({ message: user })
+        })
+        .catch(err => {
+            console.log('Error', err)
+            res.status(500).json({ message: 'Unable to grab user posts.' })
         });
 });
 
@@ -54,7 +68,14 @@ app.post('/users', (req, res) => {
 })
 
 app.put('/users/:id', (req, res)=>{
-    let 
+    let { id } = req.params;
+    userDb.update(id, req.body)
+        .then(user => {
+            res.status(200).json({user})
+        })
+        .catch(err => {
+            res.status(500).json(err);
+        })
 })
 
 app.listen(9000, () => console.log("Listening on 9000"));
