@@ -4,7 +4,10 @@ const server = express();
 const userDb = require('./data/helpers/userDb.js');
 const postDb = require('./data/helpers/postDb.js');
 
+
+
  server.use(express.json());
+ 
 
  server.get('/', (req, res) => {
     res.send('Welcome to Node-Blog');
@@ -47,7 +50,7 @@ server.post("/users", (req, res) => {
     } else {res.status(400).json({error: "Name required"})}
 }); 
 
-server.put("users/:id", (req, res) => {
+server.put("/users/:id", (req, res) => {
     const id = req.params.id; 
     const updatedData = req.body; 
     if(updatedData.name){
@@ -65,7 +68,7 @@ server.put("users/:id", (req, res) => {
     }
 })
 
-server.delete("users/:id", (req, res) => {
+server.delete("/users/:id", (req, res) => {
     const id = req.params.id; 
     userDb.remove(id).then(count => {
         if(count > 0){
