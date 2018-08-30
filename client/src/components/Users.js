@@ -1,4 +1,15 @@
 import React from 'react';
+import styled from 'styled-components';
+
+const Div = styled.div`
+    border: 1px solid black;
+`
+
+const ID = styled.h1`
+    font-weight: 800;
+    font-size: 1.5rem;
+`;
+
 
 class Users extends React.Component {
     constructor(props){
@@ -27,10 +38,10 @@ class Users extends React.Component {
         <div>
             {this.state.users.map( user => {
                 return (
-                    <div key={user.id}>
-                        <p>User ID: {user.id}</p>
+                    <Div key={user.id}>
+                        <ID>User ID: {user.id}</ID>
                         <p>Username: {user.name}</p>
-                    </div>
+                    </Div>
                 )
             })}
         </div>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route } from 'react-router';
+import { Link, Route } from 'react-router-dom';
 import './App.css';
 
 import Users from './components/Users';
@@ -23,6 +23,22 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+        <Link to="/users" style={{
+          textDecoration: 'none',
+          fontSize: "2rem",
+          color: "coral",
+          padding: "1rem"
+        }}> 
+            Users 
+        </Link>
+        <Link to="/posts" style={{
+          textDecoration: 'none',
+          fontSize: "2rem",
+          color: "coral",
+          padding: "1rem"
+        }}> 
+            Posts
+        </Link>
         <Route exact path="/users" component={Users} />
         <Route exact path="/posts" component={Posts} />
       </div>

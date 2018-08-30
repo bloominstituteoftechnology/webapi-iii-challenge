@@ -1,4 +1,14 @@
 import React from 'react';
+import styled from 'styled-components';
+
+const Div = styled.div`
+    border: 1px solid black;
+`
+
+const ID = styled.h1`
+    font-weight: 800;
+    font-size: 1.5rem;
+`;
 
 class Posts extends React.Component {
     constructor(props){
@@ -27,11 +37,11 @@ class Posts extends React.Component {
         <div>
             {this.state.posts.map( post => {
                 return (
-                    <div key={post.id}>
-                        <p>Post ID: {post.id}</p>
+                    <Div key={post.id}>
+                        <ID>Post ID: {post.id}</ID>
                         <p>Content: {post.text}</p>
                         <p>Correlated UserID: {post.userId}</p>
-                    </div>
+                    </Div>
                 )
             })}
         </div>
