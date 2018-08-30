@@ -1,15 +1,18 @@
 const express = require('express');
 const server = express();
 const dbUser = require('./data/helpers/userDb.js');
+const dbPost = require('./data/helpers/postDb.js');
 
+// custom middleware
 function uppercased(req, res, next) {
     req.body.upper = req.body.name.toUpperCase();
     next();
 };
 
+// configure middleware
 server.use(express.json());
 
-
+// User routing
 server.get('/', (req, res) => {
     res.send('Welcome to Node-Blog, an express middleware production');
 } );
@@ -96,6 +99,50 @@ server.put('/api/users/:id', uppercased, (req, res) => {
         .catch(err => res.status(500).json({ message: 'The user information could not be modified.' }));
 });
 
+server.get('/api/users/:id/posts', (req, res) => {
+    dbUser.getUserPosts(req.params.id)
+    .then(userPosts => {
+        console.log(userPosts);
+        if (!userPosts) {
+            res.status(404).json({ message: 'The user with the specified ID does not have any posts.' });
+            return;
+        }
+        res.status(200).json(userPosts);
+    })
+    .catch(err => {
+        console.error('error', err);
+        res.status(500).json({ error: 'The user information could not be retrieved.'})
+    })
+});
+
+// Posts routing
+server.get('/api/posts', (req, res) => {
+    dbPost.get()
+    .then(posts => {
+        res.status(200).json(posts);
+    })
+    .catch(err => {
+        console.error('error', err);
+
+        res.status(500).json({ error: 'The posts information could not be retrieved.' });
+    })
+})
+
+server.get('/api/posts/:id', (req, res) => {
+    dbPost.get(req.params.id)
+    .then(post => {
+        // console.log(user);
+        if (!post) {
+            res.status(404).json({ message: 'The post with the specified ID does not exist.' });
+            return;
+        }
+        res.status(200).json(post);
+    })
+    .catch(err => {
+        console.error('error', err);
+        res.status(500).json({ error: 'The post information could not be retrieved.'})
+    })
+});
 
 
 server.listen(8000, () => console.log('/n== API on port 8k ==/n') );
