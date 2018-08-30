@@ -1,18 +1,12 @@
 const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
 const routes = require('./routes');
+const configMiddleware = require('./config/middleware.js');
 
 const app = express();
 
-app.use(cors());
-app.use(helmet());
-app.use(express.json());
-app.use('/', routes);
+configMiddleware(app);
 
-app.get('/', (req, res) => {
-    res.send('hello');
-});
+app.use('/', routes);
 
 function errorHandler(err, req, res, next) {
 	console.log(err);
