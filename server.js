@@ -78,6 +78,22 @@ server.post('/users', capitalizeUserName, (req, res) => {
   });
 });
 
+// Add Post
+server.post('/posts', (req, res) => {
+  const { userId, text } = req.body;
+  !text || !userId ?
+  res.status(400).json({message: 'You need a userId and content'}) : null
+  const body = {text, userId}
+  postdb.insert(body)
+  .then(postId => {
+    res.status(200).json(postId)
+  })
+  .catch(err => {
+    console.log(err)
+    res.status(500).json({messege: 'The post could not added'});
+  });
+});
+
 
 // Delete User
 server.delete('/users/:id', (req, res) => {
@@ -96,17 +112,31 @@ server.delete('/users/:id', (req, res) => {
 })
 
 
+// Delete Post
+server.delete('/posts/:id', (req, res) => {
+  const {id} = req.params;
+  postdb.remove(id)
+    .then(users => {
+      users === 0 ?
+      res.status(400).json({message:'This ID does not exist'})
+      :
+      res.status(200).json(users)
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(500).json({message: 'Error removing post'})
+    });
+})
+
+
 // Update User
 server.put('/users/:id', capitalizeUserName, (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
-
   !name ? res.status(400).json({message: "Please provide a name."}) 
   :
   null
-
   const body = { name }
-
   userdb.update(id, body)
     .then(users => {
       users === 0 ?
@@ -116,7 +146,29 @@ server.put('/users/:id', capitalizeUserName, (req, res) => {
     })
     .catch(err => {
       console.log(err)
-      res.status(500).json({message: 'Error removing user'})
+      res.status(500).json({message: 'Error updating user'})
+    });
+})
+
+
+// Update Post
+server.put('/posts/:id', (req, res) => {
+  const { id } = req.params;
+  const { userId, text } = req.body;
+  !userId && !text ? res.status(400).json({message: "Please provide a name."}) 
+  :
+  null
+  const body = { userId, text }
+  postdb.update(id, body)
+    .then(posts => {
+      posts === 0 ?
+      res.status(400).json({message:'This ID does not exist'})
+      :
+      res.status(200).json(posts)
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(500).json({message: 'Error updating post'})
     });
 })
 
