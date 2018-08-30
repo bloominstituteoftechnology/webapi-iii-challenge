@@ -32,7 +32,25 @@ server.get('/users', (req, res) => {
     });
 });
 
-//POST METHOD
+//GET BY ID METHOD
+server.get('/users/:id', (req, res) => {
+    userDB.get(parseInt(req.params.id))
+    .then(user => {
+        if( user.length === 0) {
+            res.status(404).json({ error: 'The post with the specified ID does not exist.' })
+        }
+        else {
+            res.status(200).json(user);
+        }  
+    })
+    .catch(err => {
+        console.error('error', err);
+
+        res.status(500).json({ error: 'The post information could not be retrieved.' });
+    });
+});
+
+//POST METHOD -- ADDED upperCase middleware as a function to perform when adding a new user name
 server.post('/users', upperCase, async (req, res) => {
     const user = req.body;
     if (user.name) {
@@ -50,5 +68,15 @@ server.post('/users', upperCase, async (req, res) => {
         res.status(422).json({ errorMessage: 'Please provide title and contents for the post.' });
     }
 });
+
+server.put('/users/:id', upperCase, (req, res) => {
+    userDB.update(req.params.id, req.body)
+    .then(user => {
+        res.status(200).json(user);
+    })
+    .catch(err => res.status(500).json({ message: "Update failed." }));
+});
+
+
 
 server.listen(port, () => console.log(`API on port ${port}`))
