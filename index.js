@@ -1,6 +1,8 @@
 // import your node modules
 const express = require("express");
 
+const cors = require("cors");
+
 const postDb = require("./data/helpers/postDb.js");
 
 const userDb = require("./data/helpers/userDb.js");
@@ -9,7 +11,9 @@ const userDb = require("./data/helpers/userDb.js");
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
+
 
 function upperName(req, res, next) {
   req.body.name = req.body.name.toUpperCase();
