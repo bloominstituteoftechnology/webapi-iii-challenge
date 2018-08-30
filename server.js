@@ -71,7 +71,9 @@ app.put('/users/:id', (req, res)=>{
     let { id } = req.params;
     userDb.update(id, req.body)
         .then(user => {
-            res.status(200).json({user})
+            console.log("res in put", res.name);
+            
+            res.status(200).json({message: `${res.body} updated name`})
         })
         .catch(err => {
             res.status(500).json(err);
