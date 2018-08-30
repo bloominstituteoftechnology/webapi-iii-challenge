@@ -4,10 +4,10 @@ const router = express.Router();
 
 router.get("/", (req, res) => {
   db.get()
-    .then(lotr => {
-      res.status(200).json(lotr);
-    })
-    .catch(err => {
+    .then(lotr => {  // <----calls this after the above call is successful
+      res.status(200).json(lotr); //<== sends status code and then the data we ask for
+    })                            //in this case a json of lotr characters
+    .catch(err => {//<== calls this if above fails and sends back error
       console.error("error", err);
       res
         .status(500)

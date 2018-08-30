@@ -1,11 +1,12 @@
 const express = require("express");
 const server = express();
 const userRoutes = require("./users/userRoutes.js");
-
+const postRoutes = require("./posts/postRoutes.js");
 const configMiddleware = require("./config/middleware");
 
 configMiddleware(server);
 
+server.use("/api/posts", postRoutes);
 server.use("/api/users", userRoutes);
 
 function uppercase(req, res, next) {
