@@ -5,7 +5,8 @@ import "./App.css";
 
 class App extends Component {
   state = {
-    users: []
+    users: [],
+    posts: []
   };
 
   componentDidMount() {
@@ -13,6 +14,15 @@ class App extends Component {
       .get("http://localhost:7000/users")
       .then(res => {
         this.setState({ users: res.data });
+      })
+      .catch(err => {
+        console.log("Error getting user data", err);
+      });
+
+    axios
+      .get("http://localhost:7000/posts")
+      .then(res => {
+        this.setState({ posts: res.data });
       })
       .catch(err => {
         console.log("Error getting user data", err);
@@ -33,6 +43,13 @@ class App extends Component {
           return (
             <div>
               <p>{user.name}</p>
+            </div>
+          );
+        })}
+        {this.state.posts.map(post => {
+          return (
+            <div>
+              <p>{post.text}</p>
             </div>
           );
         })}
