@@ -6,7 +6,22 @@ const dbPost = require('./data/helpers/postDb.js');
 // custom middleware
 function uppercased(req, res, next) {
     req.body.upper = req.body.name.toUpperCase();
+    console.log(req.body);
     next();
+};
+
+function validUserId(req, res, next) {
+    const { userId } = req.body;
+    dbUser.get(userId)
+    .then(user => {
+        console.log(user);
+        if (!user) {
+            res.status(404).json({ message: 'The user with the specified ID does not exist. Please enter a valid userId and try again.' });
+            return;
+        } else {
+            next();
+        }
+    })
 };
 
 // configure middleware
@@ -102,7 +117,7 @@ server.put('/api/users/:id', uppercased, (req, res) => {
 server.get('/api/users/:id/posts', (req, res) => {
     dbUser.getUserPosts(req.params.id)
     .then(userPosts => {
-        console.log(userPosts);
+        // console.log(userPosts);
         if (!userPosts) {
             res.status(404).json({ message: 'The user with the specified ID does not have any posts.' });
             return;
@@ -144,5 +159,24 @@ server.get('/api/posts/:id', (req, res) => {
     })
 });
 
+server.post('/api/posts', validUserId, (req, res) => {
+    const { userId, text } = req.body;
+    if (!userId || !text) {
+        res.status(400).json({ errorMessage: 'Please provide a valid userId and post text.' });
+        return;
+    }
+    dbPost.insert({
+        text,
+        userId
+    })
+    .then(response => {
+        res.status(201).json(req.body);
+    })
+    .catch(error => {
+        console.error('error', err);
+        res.status(500).json({ error: 'There was an error while saving the post to the database' });
+        return;
+    })
+})
 
 server.listen(8000, () => console.log('/n== API on port 8k ==/n') );
