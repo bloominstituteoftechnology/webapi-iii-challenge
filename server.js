@@ -64,5 +64,21 @@ server.delete('/users/:id',async(req,res)=>{
         res.status(500).json({error: "The user could not be removed" })
     }
 })
+server.get('/posts',async(req,res)=>{
+    try {
+        const posts=await posts.get();
+        res.status(200).json(posts);
+    } catch(error) {
+        res.status(500).json({error:'Posts could not be retrieved.'});
+    }
+});
+server.get('/posts/:id',async(req,res)=>{
+    try {
+        const posts=await users.getUserPosts(req.params.id);
+        res.status(200).json(posts);
+    } catch(error) {
+        res.status(500).json({error:'Posts could not be retrieved'});
+    }
+})
 
 server.listen(9000,()=>console.log('Engines firing server starting new horizons venturing.'))
