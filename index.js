@@ -28,7 +28,21 @@ function upperCase(req, res, next) {
 
 
 //middleware posts below
-
+function doesUserExist (req, res, next) {
+  db.get()
+    .then( users => {
+      let user = users.filter(usr => usr.id === req.body.userId)
+      req.user = user.length ? user[0] : []
+      req.users = users // this can be used to get items for get
+      //once I make this a global on the posts in single file
+      //designed for posts. 
+      next()
+    }).catch( error => {
+      res.status(500).json({error, message: "unable to get users to perform check"})
+    })
+}//This is going to be local on the post only
+//later it can be used globally on the posts.
+//only the userId will not matter in case of removing a post. 
 
 //middleware posts above 
 
@@ -132,34 +146,50 @@ server.get("/api/posts", (req, res) => {
         res.status(500).json({error, message: "Check the url path unable to get posts. Do they exist?"})
     })
 })
-
-server.post("/api/posts", (req,res) => {
+server.post("/api/posts", doesUserExist, (req,res) => {
   if(req.body.userId && req.body.text){
-    console.log(req.body)
-    db.get()
-    .then(users => {
-      console.log(users)
-      let user = users.filter(usr => usr.id === req.body.userId)
-      user = user.length ? user[0] : []
-      console.log(user,"user")
-      if(user.id){
-        postDb.insert(req.body)
-          .then(post => {
-            res.status(201).json(req.body)
-        })
-        .catch(error => {
-          res.status(500).json({error, message: "unable to save the post"})
-        })
+    postDb.insert(req.body)
+    .then(post => {
+      if(req.user.id){
+        res.status(201).json(req.body)
       } else {
-        res.status(404).json({message: "The user you are trying to add a post for does not exit"})
+        res.status(404).json({message: "user was not found"})
       }
     })
     .catch(error => {
-      res.status(500).json({error, message: "unable to get users to find out if the userId exits for the post creation"})
+      res.status(500).json({error, message: "Unable to save post"})
     })
   } else {
-    res.status(500).json({error: "Check that you have a valid userID and contents for your your post"})
+    res.status(500).json({message: "userId and text required and were missing"})
   }
 })
+// server.post("/api/posts", (req,res) => {
+//   if(req.body.userId && req.body.text){
+//     console.log(req.body)
+//     db.get()
+//     .then(users => {
+//       console.log(users)
+//       let user = users.filter(usr => usr.id === req.body.userId)
+//       user = user.length ? user[0] : []
+//       console.log(user,"user")
+//       if(user.id){
+//         postDb.insert(req.body)
+//           .then(post => {
+//             res.status(201).json(req.body)
+//         })
+//         .catch(error => {
+//           res.status(500).json({error, message: "unable to save the post"})
+//         })
+//       } else {
+//         res.status(404).json({message: "The user you are trying to add a post for does not exit"})
+//       }
+//     })
+//     .catch(error => {
+//       res.status(500).json({error, message: "unable to get users to find out if the userId exits for the post creation"})
+//     })
+//   } else {
+//     res.status(500).json({error: "Check that you have a valid userID and contents for your your post"})
+//   }
+// })
 
 server.listen(PORT, () => console.log(`\n== API on port ${PORT}==\n`));
