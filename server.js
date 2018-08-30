@@ -18,11 +18,8 @@ const logger = (req, res, next ) => {
     next();
 };
 
-
-
-
 server.use(helmet());
-server.use(cors());
+server.use(cors({origin: 'http://localhost:3000'}));
 server.use(express.json());
 server.use(logger);
 
