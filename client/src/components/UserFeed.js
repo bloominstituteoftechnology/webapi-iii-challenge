@@ -5,9 +5,7 @@ import axios from 'axios';
 class UserFeed extends Component{
   constructor(){
     super();
-    this.state = {
-
-    };
+    this.state = {};
   }
 
   componentDidMount(){

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import UserCard from './UserCard';
 import axios from 'axios';
 
@@ -22,9 +21,7 @@ class Home extends Component{
       <section className="home-page">
         {this.state.users &&
           this.state.users
-            .map(user => <Link to={`/user/${user.id}`} key={user.id}>
-                            <UserCard {...user} />
-                          </Link> )
+            .map(user =><UserCard key={user.id} {...user} />)
         }
         {this.state.error &&
           <p>{this.state.error}</p>}

@@ -1,11 +1,14 @@
 import React from 'react';
+import { Card } from 'semantic-ui-react';
 
 const PostCard = ({ text, postedBy }) => {
   return(
-    <div className="post-card">
-      <p>{postedBy}</p>
-      <p>{text}</p>
-    </div>
+    <Card>
+      <Card.Content>
+        <Card.Header>{postedBy}</Card.Header>
+        <Card.Description>{text}</Card.Description>
+      </Card.Content>
+    </Card>
   );
 }
 
