@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import Post from './Post';
 
 class UserPage extends Component {
     constructor(props) {
@@ -33,12 +34,7 @@ class UserPage extends Component {
                 <h1>{this.state.user.name}</h1>
                 <p>User ID: {this.state.user.id}</p>
                 <hr/>
-                {this.state.posts.map(post => 
-                    <div key={post.id}>
-                    <p>Post ID: {post.id}</p>
-                    <p>Text: {post.text}</p>
-                    <hr/>
-                    </div>)}
+                {this.state.posts.map(post => <Post post={post} key={post.id} />)}
                 <div className="homeLink"><Link to="/">Home</Link></div>
             </div>
             )
