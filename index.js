@@ -81,7 +81,7 @@ server.post("/users", nameToUpperCase, async (req, res) => {
   const user = req.body;
   if (!user.name) {
     return res.status(400).json({
-      errorMessage: "Please provide a name for the user."
+      errorMessage: "Please provide a name for the user.",
     });
   } else {
     try {
@@ -89,7 +89,7 @@ server.post("/users", nameToUpperCase, async (req, res) => {
       res.status(201).json({ message: "New user created successfully." });
     } catch (err) {
       res.status(500).json({
-        error: "There was an error while saving the post to the database."
+        error: "There was an error while saving the post to the database.",
       });
     }
   }
@@ -103,14 +103,14 @@ server.delete("/users/:id", async (req, res) => {
     const response = await userDB.remove(id);
     if (response === 0) {
       return res.status(404).json({
-        message: "The user with the specified ID does not exist."
+        message: "The user with the specified ID does not exist.",
       });
     } else {
       return res.status(200).json({ message: "User deleted successfully." });
     }
   } catch (err) {
     return res.status(500).json({
-      error: "The user could not be removed."
+      error: "The user could not be removed.",
     });
   }
 });
@@ -122,7 +122,7 @@ server.put("/users/:id", nameToUpperCase, (req, res) => {
   const user = req.body;
   if (!user.name) {
     return res.status(400).json({
-      errorMessage: "Please provide a name for the user."
+      errorMessage: "Please provide a name for the user.",
     });
   } else {
     userDB
@@ -132,7 +132,7 @@ server.put("/users/:id", nameToUpperCase, (req, res) => {
           res.status(200).json({ message: "User successfully modified." });
         } else {
           res.status(404).json({
-            message: "The user with the specified ID does note exist."
+            message: "The user with the specified ID does note exist.",
           });
         }
       })
@@ -190,7 +190,7 @@ server.post("/posts", async (req, res) => {
   const post = req.body;
   if (!post.userId || !post.text) {
     return res.status(400).json({
-      errorMessage: "Please provide the correct User ID and text."
+      errorMessage: "Please provide the correct User ID and text.",
     });
   } else {
     try {
@@ -198,12 +198,61 @@ server.post("/posts", async (req, res) => {
       res.status(201).json({ message: "New post created successfully." });
     } catch (err) {
       res.status(500).json({
-        error: "There was an error while saving the post to the database."
+        error: "There was an error while saving the post to the database.",
       });
     }
   }
 });
 // end POST //
+
+// DELETE REQUEST //
+server.delete("/posts/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const response = await postDB.remove(id);
+    if (response === 0) {
+      return res.status(404).json({
+        message: "The post with the specified ID does not exist.",
+      });
+    } else {
+      return res.status(200).json({ message: "Post deleted successfully." });
+    }
+  } catch (err) {
+    return res.status(500).json({
+      error: "The post could not be removed.",
+    });
+  }
+});
+// end DELETE //
+
+// PUT REQUEST //
+server.put("/posts/:id", (req, res) => {
+  const { id } = req.params;
+  const post = req.body;
+  if (!post.userId || !post.text) {
+    return res.status(400).json({
+      errorMessage: "Please provide the correct User ID and text.",
+    });
+  } else {
+    postDB
+      .update(id, post)
+      .then(count => {
+        if (count) {
+          res.status(200).json({ message: "Post successfully modified." });
+        } else {
+          res.status(404).json({
+            message: "The user with the specified ID does not exist.",
+          });
+        }
+      })
+      .catch(err => {
+        res
+          .status(500)
+          .json({ error: "The post information could not be modified." });
+      });
+  }
+});
+// end PUT //
 
 //////////////================================= END POSTDB REQUESTS =================================//////////////
 
