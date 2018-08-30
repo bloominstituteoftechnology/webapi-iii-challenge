@@ -42,6 +42,8 @@ server.get('/',(req, res) => {
 //     res.send(`hello ${req.name}`);
 // });
 
+
+
 //GET request for retrieving all users needs: 'const users = require('./data/helpers/userDb')' to work
 server.get('/api/users', (req,res) => {
     users
@@ -51,7 +53,8 @@ server.get('/api/users', (req,res) => {
         })    
     .catch(err => {
         console.error('error', err);
-        res.status(500).json({message: 'Error getting users'})
+        res.status(500).json({message: 'Error getting users'});
+        return;
     });
 });
 
@@ -61,14 +64,15 @@ server.get('/api/users/:id', (req,res) => {
     users
     .get(id)
     .then(user => {
-        if (user===0) {
+        if (user === 0) {
             res.status(404).json({message: 'No user corresponding to that identifier'});
             return;
         }
         res.json(user);
     })
     .catch(err =>{
-        res.status(500).json({message: 'Error getting user information'})
+        res.status(500).json({message: 'Error getting user information'});
+        return;
     });
 });
 
@@ -76,13 +80,19 @@ server.get('/api/users/:id', (req,res) => {
 //POST request
 server.post('/api/users', capitalize, (req,res) => { //add capitalize function between route and (req,res)
     const name = req.body.name;
+    const capName = req.capName;
+    console.log(capName);
+    if (name.length === 0){
+        res.status(400).json({message:"character must have a name"})
+    }
     users
-    .insert({name}) //replace with capName?
+    .insert({name: capName}) //replace with capName?
     .then(response => {
         res.json(response);
     })
     .catch(err => {
-        res.status(500).json({message: 'Error posting user information'})
+        res.status(500).json({message: 'Error posting user information'});
+        return;
     });
 });
 
@@ -102,7 +112,65 @@ server.delete('/api/users/:id', (req, res) => {
         }
     })
     .catch(err => {
-        res.status(500).json({message: 'Error accessing user information'})
+        res.status(500).json({message: 'Error accessing user information'});
+        return;
+    });
+});
+
+
+//PUT Request to Modify an individual user
+server.put('/api/users/:id', (req,res) => {
+    const id = req.params.id;
+    const name = req.body.name;
+    if(!name){
+        res.status(400).json({message: 'Must provide title and contents'});
+        return;
+    }
+    users
+        .update(id, name)
+        .then(response => {
+            if(response == 0){
+                res.status(404).json({message:'There is no post with that identifier'});
+                return;
+            }else{
+                res.status(200).json({message: 'successful update'});
+            }
+            users
+                .findById(id)
+                .then(updated => {
+                    if(updated.length === 0){
+                    res.status(404).json({message: 'Unable to find specified user'});
+                    return;
+                    }
+                    res.json(updated);
+                })
+                .catch(error => {
+                    res.status(500).json({message: 'Error looking up user'});
+                });
+            })
+            .catch(error=> {
+                res.status(500).json({message: 'problem encountered in database'});
+                return;
+            });
+        });
+
+
+//GET request to retrieve posts by user id
+//test on Postman with: http://localhost:9000//api/users/posts/4
+server.get('/api/users/posts/:userId', (req,res)=> {
+    const userId = req.params.userId;
+    users
+    .getUserPosts(userId) //function defined in 'userDb.js'
+    .then(userPosts => {
+        if (userPosts===0){
+            res.status(404).json({message: 'Unable to find specified user'});
+            return;
+        }
+        res.json(userPosts);
+    })
+    .catch(error => {
+        res.status(500).json({message: 'problem encountered in database'});
+        return;
     });
 });
 
