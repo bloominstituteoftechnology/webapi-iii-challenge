@@ -43,7 +43,7 @@ server.get('/',(req, res) => {
 // });
 
 
-
+// ------------------------- Endpoints for Users -----------------------
 //GET request for retrieving all users needs: 'const users = require('./data/helpers/userDb')' to work
 server.get('/api/users', (req,res) => {
     users
@@ -154,7 +154,6 @@ server.put('/api/users/:id', (req,res) => {
             });
         });
 
-
 //GET request to retrieve posts by user id
 //test on Postman with: http://localhost:9000//api/users/posts/4
 server.get('/api/users/posts/:userId', (req,res)=> {
@@ -174,6 +173,22 @@ server.get('/api/users/posts/:userId', (req,res)=> {
     });
 });
 
+//  ------------------- Endponts for posts --------------------
+
+//GET request for retrieving all posts needs: 'const posts = require('./data/helpers/postDb')' to work
+// test on postman with: http://localhost:9000/api/posts
+server.get('/api/posts', (req,res) => {
+    posts
+        .get()
+        .then(getPosts => {
+            res.json(getPosts);
+        })    
+    .catch(err => {
+        console.error('error', err);
+        res.status(500).json({message: 'Error getting posts'});
+        return;
+    });
+});
 
 //Start the server
 server.listen(9000, () => console.log('\n == API on port 9000 == \n'));
