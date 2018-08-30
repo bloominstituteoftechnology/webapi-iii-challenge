@@ -9,6 +9,8 @@ const app = express();
 /* Middleware */
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(require('cors')());
 
 const validateUser = (req, res, next) => {
   let { name } = req.body;
