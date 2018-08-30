@@ -63,7 +63,33 @@ server.post('/users', uppercase, async (req, res) => {
     } 
 })
 
+server.put('/user/:id', uppercase, async (req, res) => {
+    if (!req.body.name) return status(400).json({ message: 'Please input a name.' })
+    try {
+        const user = await dbUsers.update(req.params.id, req.body.name);
+        if (user) {
+            return res.status(200).json(user);
+        }
+        return res.status(404).json({
+            message: "Information not found"
+        })
+    } catch (err) {
+        res.status(500).json({ error: "The User information could not be retrieved."})
+    } 
+})
 
+server.delete("/users/:id", async (req, res) => {
+	try {
+		let user = await dbUsers.remove(req.params.id);
+		if (user) {
+			return res.status(200).json(user);
+		} else {
+			return res.status(404).json({ message: "Id doesn't exist" });
+		}
+	} catch (err) {
+		res.status(500).json(err);
+	}
+});
 
 server.listen(5000, () =>     
     console.log(`server is listening on port 5000`));
