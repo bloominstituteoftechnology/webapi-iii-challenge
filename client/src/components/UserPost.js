@@ -23,7 +23,7 @@ class UserPost extends Component {
             <div className="body-container">
                 <h3>{ this.state.user.id }</h3>
                 <h3>{ this.state.user.name }</h3>
-                <Link to="/users">Go back</Link>
+                <Link to="/users/">Go back</Link>
             </div>
         );
     }
