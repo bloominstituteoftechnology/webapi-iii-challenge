@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios'; 
+import {Route} from 'react-router-dom'
 import './App.css';
+import UserList from './Components/UserList';
 
 class App extends Component {
   constructor(props){
@@ -28,7 +30,8 @@ class App extends Component {
     console.log(this.state.users)
     return (
       <div className="App">
-        {this.state.users.map(user => <div key = {user.id}>{user.name}</div>)}
+        {/* {this.state.users.map(user => <div key = {user.id}>{user.name}</div>)} */}
+        <Route exact path = '/' render = {(props) => <UserList users ={this.state.users}/>}/>
         
       </div>
     );
