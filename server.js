@@ -3,12 +3,12 @@ const cors = require('cors');
 const helmet = require('helmet');
 
 const server = express();
-const port = 6666;
+const port = 9000;
 
 
 
 const usersRouter = require('./data/Routers/User.js');
-const postsRouter = require('./data/Routers/Post.js')
+const postsRouter = require('./data/Routers/Post.js');
 
 
 

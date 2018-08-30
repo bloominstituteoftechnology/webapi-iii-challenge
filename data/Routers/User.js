@@ -3,6 +3,13 @@ const router = express.Router();
 
 const db = require('../helpers/userDb');
 
+function uppercaseName(req, res, next) {
+    if(req.body.name) {
+        req.body.name = req.body.name.toUpperCase();
+    }
+    next();
+}
+
 router.get('/', (req, res) => {
 
     db.get()
@@ -65,24 +72,22 @@ router.delete('/:id/delete', (req, res) => {
     })
 })
 
-router.post('/add', (req, res) => {
+router.post('/add', uppercaseName, (req, res) => {
     const user = req.body;
     const length = 128;
     //We are checking for single entry, if empty, we skip to the entry that is missing.
-      if (Object.keys(user).length <= 1) {
+    if (Object.keys(user).length <= 1) {
           //Checking for the correct entry              
         if (Object.keys(user).includes('name')) { 
             //Checking for the entry type      
           if (typeof user.name === 'string') {
               //Making sure the entry is not an empty string
             if (user.name.trim().length === 0) {
-              res.status(422)
-              .json(console.error('Name is required'));
+              res.status(422).json(console.error('Name is required'));
             } 
                 // Checking that name is no longer than 128 characters
                 if (user.name.trim().length > length) {
-                    res.status(411)
-                    .json(console.error('Name is too long.'));
+                    res.status(411).json(console.error('Name is too long.'));
                 }
             else {
               db.insert(user)
