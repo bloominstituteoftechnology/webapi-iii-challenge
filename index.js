@@ -49,8 +49,9 @@ app.get("/posts", (req, res) => {
 });
 
 app.get("/users/:id", (req, res) => {
+  const { id } = req.params;
   userDb
-    .get(req.params.id)
+    .get(id)
     .then(user => {
       if (user.id) {
         res.status(200).json(user);
@@ -69,8 +70,9 @@ app.get("/users/:id", (req, res) => {
 });
 
 app.get("/posts/:id", (req, res) => {
+  const { id } = req.params;
   postDb
-    .get(req.params.id)
+    .get(id)
     .then(post => {
       if (post) {
         res.status(200).json(post);
@@ -89,8 +91,9 @@ app.get("/posts/:id", (req, res) => {
 });
 
 app.get("/users/:id/posts", (req, res) => {
+  const { id } = req.params;
   userDb
-    .getUserPosts(req.params.id)
+    .getUserPosts(id)
     .then(posts => {
       if (posts.length > 0) {
         res.status(200).json(posts);
@@ -148,8 +151,9 @@ app.post("/posts", (req, res) => {
 });
 
 app.delete("/users/:id", (req, res) => {
+  const { id } = req.params;
   userDb
-    .get(req.params.id)
+    .get(id)
     .then(user => {
       userDb
         .remove(user.id)
@@ -176,8 +180,9 @@ app.delete("/users/:id", (req, res) => {
 });
 
 app.delete("/posts/:id", (req, res) => {
+  const { id } = req.params;
   postDb
-    .remove(req.params.id)
+    .remove(id)
     .then(count => {
       console.log(count);
       if (count > 0) {
@@ -195,17 +200,17 @@ app.delete("/posts/:id", (req, res) => {
 });
 
 app.put("/users/:id", upperName, (req, res) => {
-  if (!req.params.id) {
-    res
-      .status(400)
-      .json({ message: "The user with the specified ID does not exist." });
-  } else if (req.body.name) {
+  const { name } = req.body;
+  const { id } = req.params;
+  if (id != Number(id)) {
+    res.status(400).json({ message: "Please enter a valid user id" });
+  } else if (name) {
     userDb
-      .update(req.params.id, req.body)
+      .update(id, req.body)
       .then(count => {
         if (count) {
           userDb
-            .get(req.params.id)
+            .get(id)
             .then(user => {
               console.log(user);
               if (user.id) {
@@ -242,7 +247,7 @@ app.put("/users/:id", upperName, (req, res) => {
 app.put("/posts/:id", (req, res) => {
   const { userId, text } = req.body;
   const { id } = req.params;
-  if (id !== Number(id)) {
+  if (id != Number(id)) {
     res.status(400).json({ message: "Please enter a valid post id" });
   } else if (userId && text) {
     postDb
