@@ -6,10 +6,10 @@ const router = express.Router();
 //custom user middleware
 const capitalizeUsername = (req, res, next) => {
   if(!req.body.name) {
-    res.status(422).json({ error: "A name is required" })
+    // res.status(422).json({ error: "A name is required" })
+    next({ errorCode: 422, errorMessage: 'A name is required' });
   }else{
     req.body.name = req.body.name.toLowerCase().split(' ').map(n => n.charAt(0).toUpperCase() + n.substring(1)).join(' ');
-    console.log(req.body.name);
     next();
   }
 }

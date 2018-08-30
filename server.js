@@ -10,5 +10,15 @@ server.use(cors({}));
 
 server.use('/api', apiRoutes);
 
+//error handler
 
-server.listen(9000, ()=> console.log('SERVER - PORT: 9000 - LISTENING'));
+function errorHandler(err, req, res, next){
+  console.error(err);
+
+  res.status(err.errorCode).json({ errorMessage: err.errorMessage });
+}
+
+server.use(errorHandler);
+
+
+server.listen(9000, () => console.log('SERVER - PORT: 9000 - LISTENING'));
