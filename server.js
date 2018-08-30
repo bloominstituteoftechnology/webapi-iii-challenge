@@ -1,12 +1,16 @@
 const express = require('express');
+const cors = require('cors');
 //pull in helper method to get user data
 const users = require('./data/helpers/userDb');
+const posts = require('./data/helpers/postDb');
+const tags = require('./data/helpers/tagDb');
 
 // const db = require ('./data/dbConfig.js');
 
 const server = express();
 
 server.use(express.json()); //allows parsing of json data from req.body
+server.use(cors());
 
 // //Middleware here (practice)
 // function greeter(req, res, next) {
@@ -16,9 +20,15 @@ server.use(express.json()); //allows parsing of json data from req.body
 
 
 //Middleware to capitalize user name
+
+//use if typeOf(req.body.name)...
+
 function capitalize(req, res, next) {
-    req.name = req.body.toUpperCase();
-    next;
+    console.log(req.body) // empty object
+    console.log(req.body.name) //undefined
+    const name = req.body.name
+    capName = name.toUpperCase();
+    next();
 }
 
 
@@ -59,6 +69,40 @@ server.get('/api/users/:id', (req,res) => {
     })
     .catch(err =>{
         res.status(500).json({message: 'Error getting user information'})
+    });
+});
+
+
+//POST request
+server.post('/api/users', capitalize, (req,res) => { //add capitalize function between route and (req,res)
+    const name = req.body.name;
+    users
+    .insert({name}) //replace with capName?
+    .then(response => {
+        res.json(response);
+    })
+    .catch(err => {
+        res.status(500).json({message: 'Error posting user information'})
+    });
+});
+
+//post works, but capitalize doesn't work
+
+//DELETE a user
+server.delete('/api/users/:id', (req, res) => {
+    const id = req.params.id;
+    users
+    .remove(id)
+    .then(removeUser => {
+        if(removeUser === 0) {
+            res.status(404).json({message: 'No user corresponding to that identifier'});
+            return;
+        }else{
+            res.json({success: 'User Successfully Removed'});
+        }
+    })
+    .catch(err => {
+        res.status(500).json({message: 'Error accessing user information'})
     });
 });
 
