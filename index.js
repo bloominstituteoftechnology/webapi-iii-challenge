@@ -8,14 +8,24 @@ server.use(express.json());
 server.get("/api/users", (req, res) => {
   db
     .get()
-    .then(users => {
-      res.status(200).json(users);
+    .then(LOTR => {
+      res.status(200).json(LOTR);
     })
     .catch(err => {
       console.error("error", err);
       res
         .status(500)
         .json({ error: "the user information could not be retrieved" });
+    });
+});
+
+server.get("/api/users/:id", (req, res) => {
+    db.get(req.params.id).then(LOTR => {
+        res.status(200).json(LOTR);
+    })
+    .catch(err => {
+        console.error("error", err);
+        res.status(500).json({ error: "the user information could not be retrieved"});
     });
 });
 
