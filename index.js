@@ -40,14 +40,15 @@ server.get('/users/:id', (req, res) => {
 
 
 
-function custom(req, res, next){
+function allCapTheReq(req, res, next){
   console.log("custom", req.body.name)
   req.body.name = req.body.name.toUpperCase();
   console.log("custom", req.body.name)
   next();
 }
 
-server.post('/users/', custom, (req, res) => {
+
+server.post('/users/', allCapTheReq, (req, res) => {
   userDb.insert(req.body)
   .then( newUserId => {
     res.status(201).json(newUserId)
