@@ -29,13 +29,16 @@ function upperCase(req, res, next) {
 
 //middleware posts below
 function doesUserExist (req, res, next) {
+  console.log(req.body, "body")
   db.get()
     .then( users => {
+      //console.log(users,"users")
       let user = users.filter(usr => usr.id === req.body.userId)
       req.user = user.length ? user[0] : []
       req.users = users // this can be used to get items for get
       //once I make this a global on the posts in single file
       //designed for posts. 
+      //console.log(req.user,"|user >> users", req.users)
       next()
     }).catch( error => {
       res.status(500).json({error, message: "unable to get users to perform check"})
@@ -191,5 +194,24 @@ server.post("/api/posts", doesUserExist, (req,res) => {
 //     res.status(500).json({error: "Check that you have a valid userID and contents for your your post"})
 //   }
 // })
+server.put('/api/posts/:id', doesUserExist, (req, res) =>{
+  const {id, text, userId} = req.body 
+  console.log(text.length, id)
+  if(text.length){
+    console.log("inside if statement")
+    postDb.update(id,{text,userId})
+    .then(count => {
+      if(count){
+        res.status(200).json(req.body)
+      } else {
+        res.status(500).json({message: "unable to update"})
+      }
+    }).catch(error => {
+      res.status(500).json({error, message:"Not sure what happened recheck inputs and paths"})
+    })
+  } else {
+    res.status(404).json({message: "The information as probided is not valid check that there is content in the text section"})
+  } 
+})
 
 server.listen(PORT, () => console.log(`\n== API on port ${PORT}==\n`));
