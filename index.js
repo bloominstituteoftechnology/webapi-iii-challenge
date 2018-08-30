@@ -11,7 +11,8 @@ const server = express();
 server.use(express.json());
 server.use(helmet());
 server.use(morgan("dev"));
-server.use(cors({}));
+server.use(cors());
+server.use(errorHandler);
 
 const errorHelper = (status, message, res) => {
   res.status(status).json({ error: message });
@@ -137,48 +138,78 @@ server.get("/posts/:id", (req, res) => {
       if (post === 0) {
         return errorHelper(404, "No posts by id", res);
       }
-      res.json(post)
+      res.json(post);
     })
     .catch(err => {
       return errorHelper(500, "Error", res);
     });
 });
 
-server.post('/posts', (req, res)=>{
-    const {userId, text} = req.body; 
-    postDb
-    .insert({userId, text})
-    .then(newPost =>{
-        res.status(200).json(newPost); 
+server.post("/posts", (req, res) => {
+  const { userId, text } = req.body;
+  postDb
+    .insert({ userId, text })
+    .then(newPost => {
+      res.status(200).json(newPost);
     })
-    .catch(err=>{
-        return errorHelper(500, "Error", res);
-    })
-}); 
-
-server.get('/post/tags/:id', (req, res)=>{
-    const {id} = req.params; 
-    postDb
-    .getPostTags(id)
-    .then(tags =>{
-        if(tags === 0){
-            return errorHelper(404, "Post Not Found", res); 
-        }
-        res.json(tags); 
-    })
-    .catch(err=>{
-        return errorHelper(500, "Error", res); 
+    .catch(err => {
+      return errorHelper(500, "Error", res);
     });
-}); 
+});
 
-server.get('/tags', (req, res)=>{
-    userDb
+server.get("/post/tags/:id", (req, res) => {
+  const { id } = req.params;
+  postDb
+    .getPostTags(id)
+    .then(tags => {
+      if (tags === 0) {
+        return errorHelper(404, "Post Not Found", res);
+      }
+      res.json(tags);
+    })
+    .catch(err => {
+      return errorHelper(500, "Error", res);
+    });
+});
+
+server.get("/tags", (req, res) => {
+  userDb
     .get()
-    .then(tag =>{
-        res.status(200).json({tag});
+    .then(tag => {
+      res.status(200).json({ tag });
     })
-    .catch(err=>{
-        return errorHelper(500, "Error", res); 
-    })
-})
+    .catch(err => {
+      return errorHelper(500, "Error", res);
+    });
+
+  server.get("/download", (req, res, next) => {
+    const filePath = path.join(__dirname, "index.html");
+    res.sendFile(filePath, err => {
+      if (err) {
+        next(err);
+      } else {
+        console.log("File sent successfully");
+      }
+    });
+  });
+});
 server.listen(3001, () => console.log("server 3001 started"));
+
+function errorHandler(err, req, res, next) {
+  console.error(err);
+
+  switch (err.statusCode) {
+    case 404:
+      res.status(404).json({
+        message: "The requested file does not exist."
+      });
+
+      break;
+
+    default:
+      res.status(500).json({
+        message: "There was an error performing the required operation"
+      });
+      break;
+  }
+}
