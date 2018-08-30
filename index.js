@@ -1,13 +1,14 @@
 const express = require('express');
-
+const path = require('path');
 const server = express();
 
 const postDb = require('./data/helpers/postDb.js');
-const userDb = require('./data/helpers/userDb.js');
 
+const userRoutes = require('./users/userRoutes.js');
+const configMiddleware = require('./config/middleware.js');
+configMiddleware(server);
 
-
-server.use(express.json());
+server.use('/users/', userRoutes)
 
 server.get('/posts', (req, res) => {
   console.log('posts requested')
@@ -23,22 +24,6 @@ server.get('/posts/:id', (req, res) => {
   })
 });
 
-server.get('/users',(req, res) => {
-  console.log('users requested')
-
-  userDb.get().then(allUsers => {
-    res.status(200).json(allUsers)
-  })
-});
-
-server.get('/users/:id', (req, res) => {
-  console.log('user id requested')
-  userDb.get(req.params.id).then(user => {
-    res.status(200).json(user)
-  })
-});
-
-
 
 function allCapTheReq(req, res, next){
   console.log("custom", req.body.name)
@@ -48,20 +33,10 @@ function allCapTheReq(req, res, next){
 }
 
 
-server.post('/users/', allCapTheReq, (req, res) => {
-  userDb.insert(req.body)
-  .then( newUserId => {
-    res.status(201).json(newUserId)
-  })
-  .catch(err => {
-    res.status(400).json(err)
-  })
-});
-
-
-
 server.post('/posts/', (req, res) => {
-  console.log('new post requested', req.body)
+  //text is required
+  //userId is required from existing user
+  // if Id present say it will be disgarded
   postDb.insert(req.body)
     .then(postId => {
       res.status(200).json(postId)
@@ -71,33 +46,12 @@ server.post('/posts/', (req, res) => {
     })
 });
 
-server.put('/users/:id', (req, res) => {
-  console.log('update user', req.params.id, req.body)
-  userDb.update(req.params.id, req.body)
-  .then( count => {
-    res.status(201).json(count)
-  })
-  .catch(err => {
-    res.status(400).json(err)
-  })
-});
 
 server.put('/posts/:id', (req, res) => {
   console.log('update post')
   postDb.update(req.params.id, req.body)
   .then(count => {
     res.status(201).json(count)
-  })
-  .catch(err => {
-    res.status(400).json(err)
-  })
-});
-
-server.delete('/users/:id', (req, res) => {
-  console.log('remove user')
-  userDb.remove(req.params.id)
-  .then( newUserId => {
-    res.status(201).json(newUserId)
   })
   .catch(err => {
     res.status(400).json(err)
