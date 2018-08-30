@@ -7,31 +7,31 @@ class UserPage extends Component {
         super(props);
 
         this.state = {
-            users: [],
+            user: '',
             posts: []
         }
     }
 
     componentDidMount = () => {
-        axios.get('http://localhost:6001/api/users/')
-            .then(response => {
-                this.setState({users: response.data})
-            })
         axios.get(`http://localhost:6001/api/users/${this.props.match.params.id}`)
+            .then(response => {
+                this.setState({user: response.data})
+            })
+        axios.get(`http://localhost:6001/api/users/${this.props.match.params.id}/posts`)
             .then(response => {
                 this.setState({posts: response.data})
             })
     }
 
     render() {
-        if ((this.state.posts.length > 0) && (this.state.users.length > 0)) {
+        if ((this.state.posts.length > 0) && (this.state.user)) {
 
-            let user = this.state.users.find(user => user.id === Number(this.props.match.params.id))
-            console.log(user);
+            // let user = this.state.users.find(user => user.id === Number(this.props.match.params.id))
+            console.log(this.state.user);
             return (
                 <div>
-                <h1>{user.name}</h1>
-                <p>User ID: {user.id}</p>
+                <h1>{this.state.user.name}</h1>
+                <p>User ID: {this.state.user.id}</p>
                 <hr/>
                 {this.state.posts.map(post => 
                     <div key={post.id}>

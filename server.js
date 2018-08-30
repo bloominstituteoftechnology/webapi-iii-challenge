@@ -27,7 +27,7 @@ function errorHandler(err, req, res, next) {
 server.use(express.json());
 server.use(express.urlencoded({extended: true}));
 server.use(cors());
-server.use(logger('short'));
+server.use(logger('dev'));
 server.use(helmet());
 
 
