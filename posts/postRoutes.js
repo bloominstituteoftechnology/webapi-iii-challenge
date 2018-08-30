@@ -10,73 +10,66 @@ const userDb = require('../data/helpers/userDb.js');
 router.use(express.json());
 
 function isValidUser(req, res, next){
-  userDb.get().then(allUsers => {
-    let filter = allUsers.filter(users => {
-      return users.id == req.body.userId
-    })
-    console.log(filter[0])
-    if(filter[0]) {
-      next();
-    } else {
-      res.status(403).json({message: "userId is not valid. Please try again."})
-    }
-  }).catch(err => {
-    res.status(500).json({message: "error validating userId"})
-  })
+  if(req.body.userId) {
+    userDb.get().then(allUsers => {
+        let filter = allUsers.filter(users => {
+          return users.id == req.body.userId
+        })
+        if(filter[0]) {
+          next();
+        } else {
+          res.status(401).json({message: "The included userId is not valid. Please include a vallid userId and try again."})
+        }
+      }).catch(err => {
+        res.status(500).json({message: "There was an error validating userId"})
+      })
+  } else {
+    res.status(400).json({message: "Please include a userId in your request"})
+  }
 }
 
-
 router.get('/', (req, res) => {
-  console.log('posts requested')
   postDb.get().then(allPosts => {
     res.status(200).json(allPosts)
   })
 });
 
 router.get('/:id', (req, res) => {
-  console.log('id requested')
   postDb.get(req.params.id).then(post => {
     res.status(200).json(post)
   })
 });
 
 router.post('/', isValidUser, (req, res) => {
-  //userId is required from existing user
-  // if Id present say it will be disgarded
-// console.log('filter', filter)
   if (!req.body.text) {
-    res.json(400).json({message: "please add text and resubmit request"})
-  } else if (!req.body.userId) {
-    res.json(400).json({message: "please include userId and resubmit request"})
-  } else if (req.body.id){
-    res.status(400).json({message: 'please remove id and submit again.'})
+    res.json(400).json({message: "Please add text and resubmit request"})
+  } else if (req.body.id) {
+    res.status(400).json({message: 'Please remove id and submit again. A new Id will be added automatically.'})
   } else {
     postDb.insert(req.body)
       .then(postId => {
         res.status(200).json(postId)
       })
       .catch(err => {
-        res.status(400).json(err)
+        res.status(500).json(err)
       })
   }
 });
 
 router.put('/:id', (req, res) => {
-  console.log('update post')
   postDb.update(req.params.id, req.body)
   .then(count => {
-    res.status(201).json(count)
+    res.status(200).json(count)
   })
   .catch(err => {
-    res.status(400).json(err)
+    res.status(500).json(err)
   })
 });
 
 router.delete('/:id', (req, res) => {
-  console.log('remove post')
   postDb.remove(req.params.id)
   .then( newUserId => {
-    res.status(201).json(newUserId)
+    res.status(200).json(newUserId)
   })
   .catch(err => {
     res.status(400).json(err)

@@ -52,10 +52,9 @@ router.put('/:id', allCapTheReq, (req, res) => {
 });
 
 router.delete('/:id', (req, res) => {
-  console.log('remove user')
   userDb.remove(req.params.id)
   .then( newUserId => {
-    res.status(201).json(newUserId)
+    res.status(200).json(newUserId)
   })
   .catch(err => {
     res.status(400).json(err)
