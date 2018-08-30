@@ -63,11 +63,14 @@ server.post('/users', uppercase, async (req, res) => {
     } 
 })
 
-server.put('/user/:id', uppercase, async (req, res) => {
-    if (!req.body.name) return status(400).json({ message: 'Please input a name.' })
-    try {
-        const user = await dbUsers.update(req.params.id, req.body.name);
-        if (user) {
+server.put('/users/:id', uppercase, async (req, res) => {
+    if (!req.body.name) {
+        return status(400).json({ message: 'Please input a name.' })
+    }        
+    try { 
+        const user = await dbUsers.update(req.params.id, req.body);       
+        if (req.body.name) {
+            
             return res.status(200).json(user);
         }
         return res.status(404).json({
@@ -83,12 +86,89 @@ server.delete("/users/:id", async (req, res) => {
 		let user = await dbUsers.remove(req.params.id);
 		if (user) {
 			return res.status(200).json(user);
-		} else {
-			return res.status(404).json({ message: "Id doesn't exist" });
-		}
+        }
+        return res.status(404).json({
+            message: "Information not found"
+        })
 	} catch (err) {
-		res.status(500).json(err);
-	}
+        res.status(500).json({ error: "The User information could not be retrieved."})
+    } 
+});
+
+//=========POSTS
+
+server.get('/posts', async (req, res) => {
+    try{
+        const posts = await dbPosts.get();
+        if (posts.length > 0){
+            res.status(200).json(posts);
+        }
+        return res.status(404).json({
+            message: "Information not found"
+        })
+    } catch (err) {
+        res.status(500).json({ error: "The Post information could not be retrieved."})
+    }
+});
+
+server.get('/posts/:id', async (req, res) => {
+    try {
+        const post = await dbPosts.get(req.params.id);
+        if (post) {
+            return res.status(200).json(post);
+        } 
+        return res.status(404).json({
+            message: "Information not found"
+        })
+    } catch (err) {
+        res.status(500).json({ error: "The Post information could not be retrieved."})
+    }
+})
+
+server.post('/posts', async (req, res) => {
+    try{
+        if (req.body){
+            const post = await dbPosts.insert(req.body);
+            return res.status(200).json(post);
+        }
+        return res.status(404).json({
+            message: "Information not found"
+        })
+    } catch (err) {
+        res.status(500).json({ error: "The Post information could not be retrieved."})
+    } 
+})
+
+server.put('/posts/:id', async (req, res) => {
+    if (!req.body) {
+        return status(400).json({ message: 'Please input a name.' })
+    }        
+    try { 
+        const post = await dbPosts.update(req.params.id, req.body.name);       
+        if (req.body.name) {
+            
+            return res.status(200).json(post);
+        }
+        return res.status(404).json({
+            message: "Information not found"
+        })
+    } catch (err) {
+        res.status(500).json({ error: "The Post information could not be retrieved."})
+    } 
+})
+
+server.delete("/posts/:id", async (req, res) => {
+	try {
+		let post = await dbPosts.remove(req.params.id);
+		if (post) {
+			return res.status(200).json(post);
+        }
+        return res.status(404).json({
+            message: "Information not found"
+        })
+	} catch (err) {
+        res.status(500).json({ error: "The Post information could not be retrieved."})
+    } 
 });
 
 server.listen(5000, () =>     
