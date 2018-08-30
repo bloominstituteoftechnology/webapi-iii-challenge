@@ -60,4 +60,22 @@ server.put("/users", async (req, res) => {
   }
 });
 
+server.put("/users/:id", async (req, res) => {
+  if (!Number(req.params.id)) {
+    res.status(400).json({ message: "ID is not a number" });
+  }
+  if (!req.body.name) {
+    res.status(400).json({ message: "Username Needed" });
+  }
+  try {
+    const results = await userDB.update(Number(req.params.id), req.body);
+    if (results === 1) {
+      res.status(200).json({ message: "Success" });
+    }
+    res.status(500).json({ message: "Cannot remove with that ID" });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 server.listen(9001);
