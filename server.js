@@ -1,6 +1,6 @@
 const express = require('express');
 const userDB = require('./data/helpers/userDb.js');
-const postdb = require('./data/helpers/postDb.js');
+const postDB = require('./data/helpers/postDb.js');
 const tabdb = require('./data/helpers/tagDb.js');
 
 const server = express();
@@ -56,6 +56,25 @@ server.put('/api/users/:id', upperCase, (req, res) => {
         res.status(200).json(users);
     })
     .catch(err => res.status(500).json({ message: 'update failed' }));
+});
+
+server.get('/api/posts', (req, res) => {
+    postDB.get().then(posts => {
+        res.status(200).json(posts);
+    }).catch(err => {
+        console.error('Error', err);
+        res.status(500).json({message: "Error getting posts"});
+    });
+});
+
+server.post('/api/posts', (req, res) => {
+    
+    postDB.insert(req.body).then(response => {
+        res.status(201).json(response);
+    }).catch(err => {
+        console.error('Error', err);
+        res.status(500).json({message: "Error"});
+    });
 });
 
 server.listen(9000, () => console.log('\n== API on port 9k ==\n'));
