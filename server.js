@@ -15,155 +15,201 @@ function upperCase(req, res, next) {
     next();
 };
 
-server.get("/", (req, res) => {
+server.get("/", async (req, res) => {
     res.send("Testing")
 });
 
 //USERS
-server.get("/users", (req, res) => {
-    dbUsers.get()
-    .then(users => {
+server.get("/users", async (req, res) => {
+    try {
+        const users = await dbUsers.get();
         res.status(200).json(users)
-    })
-    .catch(err => console.log(err));
-});
-
-server.get("/users/:userId", (req, res) => {
-    const {userId} = req.params;
-    dbUsers.get(userId)
-    .then( response => {
-        res.status(200).json(response)
-    })
-    .catch( err => {
-        console.log(err)
-        res.status(500).json({ message: "Failed to retrieve user with the specific userId." })
-    });
-})
-
-server.get("/users/:userId/posts/:postId", (req,res) => {
-    const {userId, postId} = req.params
-    if(userId === postId) {
-        dbUsers.getUserPosts(userId)
-        .then( posts => { res.status(200).json(posts) } )
-        .catch( err => {
-            console.log(err);
-            res.status(500).json({ message: "Post with correlated User ID is not found." })
+    }
+    catch(err) {
+        res.status(500).json({
+            message: "Failed to retrieve user data."
         })
-    } else {
-        res.status(400).json({ message: "UserId and PostId do not match. Please check and try again." })
     }
 });
 
-server.post("/users", upperCase, (req,res) => {
+server.get("/users/:userId", async (req, res) => {
+    const {userId} = req.params;
+    try {
+        const user = await dbUsers.get(userId)
+        res.status(200).json(user)
+    }
+    catch(err) {
+        res.status(500).json({
+            message: "Failed to retrieve user with the specific userId."
+        })
+    };
+});
+
+server.get("/users/:userId/posts/:postId", async (req, res) => {
+    const {userId, postId} = req.params
+    if(userId === postId) {
+        try {
+            const userPosts = await dbUsers.getUserPosts(userId);
+            res.status(200).json(userPosts)
+        }
+        catch(err) {
+            res.status(500).json({
+                message: "Post with correlated User ID is not found."
+            })
+        }
+    } else {
+        res.status(400).json({
+            message: "UserId and PostId do not match. Please check and try again."
+        })
+    };
+});
+
+server.post("/users", upperCase, async (req, res) => {
     const {name} = req.body;
     const upperName = req.upperName;
     if(!name) {
-        res.status(400).json({ message: "Please enter a name." });
-    } 
-    else if(name.length > 128) {
-        res.status(406).json({ message: "Name is too long. Please limit name length to 128 characters or less." });
-    } 
-    else {
-        dbUsers.insert({name: upperName})
-        .then(user => { res.status(200).json(user) })
-        .catch(err => {
-            console.log(err)
-            res.status(500).json({ message: "Failed to create new user." })
+        res.status(400).json({
+            message: "Please enter a name."
         });
-    }
-})
+    } else if(name.length > 128) {
+        res.status(406).json({
+            message: "Name is too long. Please limit name length to 128 characters or less." 
+        });
+    } else {
+        const createUser = await dbUsers.insert({name: upperName});
+        try { 
+            res.status(200).json(createUser)
+        }
+        catch(err) {
+            res.status(500).json({
+                message: "Failed to create new user."
+            })
+        }
+    };
+});
 
-server.put("/users/:userId", upperCase, (req,res) => {
+server.put("/users/:userId", upperCase, async (req, res) => {
     const upperName = req.upperName;
     const {userId} = req.params;
     const user = req.body
     req.body.name = upperName;
-    dbUsers.update(userId, user)
-    .then( user => { res.status(200).json(user) })
-    .catch( err => {
-        console.log(err)
-        res.status(500).json({ message: "Updated failed." })
-    });
-})
-
-server.delete("/users/:userId", (req,res) => {
-    dbUsers.remove(req.params.userId)
-    .then( count => { res.status(200).json({ message: `${count} users deleted.`} )})
-    .catch( err => {
-        console.log(err);
-        res.status(500).json({ message: "Cannot delete user." })
-    })
-})
-
-//POSTS
-server.get("/posts", (req, res) => {
-    dbPosts.get()
-    .then(posts => { res.status(200).json(posts) })
-    .catch(err => {
-        console.log(err)
-        res.status(500).json({ message: "Failed to retrieve post data." })
-    });
+    try {
+        const updateUser = await dbUsers.update(userId, user);
+        res.status(200).json(updateUser)
+    }
+    catch(err) {
+        res.status(500).json({
+            message: "Updated failed."
+        })
+    };
 });
 
-server.get("/posts/:postId", (req, res) => {
+server.delete("/users/:userId", async (req, res) => {
+    try {
+        const removeUser = await dbUsers.remove(req.params.userId);
+        res.status(200).json({ message: `User deleted.`} )
+    }
+    catch(err) {
+        res.status(500).json({
+            message: "Cannot delete user."
+        })
+    };
+});
+
+//POSTS
+server.get("/posts", async (req, res) => {
+    try {
+        const posts = dbPosts.get();
+        res.status(200).json(posts)
+    }
+    catch(err) {
+        res.status(500).json({
+            message: "Failed to retrieve post data."
+        })
+    };
+});
+
+server.get("/posts/:postId", async (req, res) => {
     const {postId} = req.params;
-    dbPosts.get(postId)
-    .then(post => { res.status(200).json(post) })
-    .catch(err => {
-        console.log(err);
-        res.status(500).json({ message: "Failed to retrieve post(s) with the specific PostId." })
-    })
-})
+    try {
+        const post = await dbPosts.get(postId);
+        res.status(200).json(post)
+    }
+    catch(err) {
+        res.status(500).json({
+            message: "Failed to retrieve post(s) with the specific PostId."
+        })
+    };
+});
 
-server.get("/posts/:postId/tags", (req,res) => {
+server.get("/posts/:postId/tags", async (req, res) => {
     const { postId } = req.params;
-    dbPosts.getPostTags(postId)
-    .then( post => res.status(200).json(post) )
-    .catch( err => {
-        console.log(err);
-        res.status(500).json({ message: "Failed to get this post's tags." })
-    })
-})
+    try {
+        const tag = await dbPosts.getPostTags(postId);
+        res.status(200).json(tag);
+    }
+   catch(err) {
+        res.status(500).json({
+            message: "Failed to get this post's tags."
+        })
+    };
+});
 
-server.post("/posts", (req, res) => {
+server.post("/posts", async (req, res) => {
+    console.log(req.params.userId)
     const post = req.body;
     if (!post.text) {
-        res.status(400).json({ message: "Cannot be blank. Please enter some text." })
+        res.status(400).json({
+            message: "Cannot be blank. Please enter some text."
+        })
     } else if(!post.userId) {
-        res.status(400).json({ message: "Field required. UserId must be entered." })
+        res.status(400).json({
+            message: "Field required. UserId must be entered."
+        })
     } 
     //else if() {
         //need to check if UserId exists
     // } 
     else {
-        dbPosts.insert(post)
-        .then( post => { res.status(200).json(post) })
-        .catch( err => {
-            console.log(err);
-            res.status(500).json({ message: "Failed to create new post." })
-        })
-    }
+        try {
+            const createPost = await dbPosts.insert(post);
+            res.status(200).json(createPost);
+        }
+        catch(err) {
+            res.status(500).json({
+                message: "Failed to create new post."
+            })
+        };
+    };
 });
 
-server.put("/posts/:postId", (req, res) => {
+server.put("/posts/:postId", async (req, res) => {
     const { postId } = req.params;
     const post = req.body;
-    dbPosts.update(postId, post)
-    .then( post => { res.status(200).json(post) })
-    .catch( err => {
-        console.log(err);
-        res.status(500).json({ message: "Failed to update post." })
-    } )
-})
+    try {
+        const updatePost = await dbPosts.update(postId, post);
+        res.status(200).json(updatePost)
+    }
+    catch(err) {
+        res.status(500).json({
+            message: "Failed to update post."
+        })
+    };
+});
 
-server.delete("/posts/:postId", (req, res) => {
+server.delete("/posts/:postId", async (req, res) => {
     const {postId} = req.params;
-    dbPosts.remove(postId)
-    .then(count => res.status(200).json({ message: `${count} posts deleted.`} ))
-    .catch(err => {
-        console.log(err);
-        res.status(500).json({ message: "Failed to delete post." })
-    });
+    try {
+        const removePost = await dbPosts.remove(postId);
+        res.status(200).json({
+            message: `${count} posts deleted.`
+        })
+    }
+   catch(err) {
+        res.status(500).json({
+            message: "Failed to delete post."
+        });
+    };
 });
 
 server.listen(9000, () => console.log("===API on port 9000==="));
