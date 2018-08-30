@@ -17,6 +17,11 @@ server.use(errorHandler);
 const errorHelper = (status, message, res) => {
   res.status(status).json({ error: message });
 };
+
+function upperCase(req, res, next) {
+  req.body.upper = req.body.title.toUpperCase();
+  next();
+}
 /////Middleware
 const nameCheckMiddleware = (req, res, next) => {
   const { name } = req.body;
@@ -145,12 +150,14 @@ server.get("/posts/:id", (req, res) => {
     });
 });
 
-server.post("/posts", (req, res) => {
+server.post("/posts", upperCase, (req, res) => {
   const { userId, text } = req.body;
+  const upperCased = req.body.upper;
+  console.log(upperCase);
   postDb
-    .insert({ userId, text })
+    .insert({ userId, text, title: upperCased })
     .then(newPost => {
-      res.status(200).json(newPost);
+      res.status(200).json(newPost, req.body.upper);
     })
     .catch(err => {
       return errorHelper(500, "Error", res);
