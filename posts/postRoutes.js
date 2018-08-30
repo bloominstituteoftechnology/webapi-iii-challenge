@@ -24,7 +24,7 @@ function isValidUser(req, res, next){
         res.status(500).json({message: "There was an error validating userId"})
       })
   } else {
-    res.status(400).json({message: "Please include a userId in your request"})
+      res.status(400).json({message: "Please include a userId in your request"})
   }
 }
 
