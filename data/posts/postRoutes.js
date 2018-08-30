@@ -3,7 +3,7 @@ const postDb = require('../helpers/userDb');
 const router = express.Router(); 
 
 
-router.get('/posts/:id', (req, res) => {
+router.get('/:id', (req, res) => {
     let [id] = [req.params.id]
 
     postDb.get(id)
@@ -15,7 +15,7 @@ router.get('/posts/:id', (req, res) => {
         })
 })
 
-router.get('/posts-tags/:id', (req, res) => {
+router.get('/tags/:id', (req, res) => {
     let [id] = [req.params.id]
 
     postDb.getPostTags(id)
@@ -28,7 +28,7 @@ router.get('/posts-tags/:id', (req, res) => {
 })
 
 
-router.post('/posts', (req, res) => {
+router.post('/', (req, res) => {
     let body = req.body
 
     postDb.insert(body)
@@ -41,7 +41,7 @@ router.post('/posts', (req, res) => {
 })
 
 
-router.put('/posts/:id', (req, res) => {
+router.put('/:id', (req, res) => {
     let [id, body] = [id, req.body]
 
     postDb.update(id, body)
@@ -53,7 +53,7 @@ router.put('/posts/:id', (req, res) => {
         })
 })
 
-router.delete('/posts/:id', (req, res) => {
+router.delete('/:id', (req, res) => {
     let [id] = [req.params.id]
 
     postDb.remove(id)
@@ -64,3 +64,5 @@ router.delete('/posts/:id', (req, res) => {
             res.status(500).json({error: "The post could not be deleted."})
         })
 })
+
+module.exports = router; 
