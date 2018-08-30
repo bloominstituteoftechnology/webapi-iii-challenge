@@ -77,6 +77,20 @@ server.put('/users/:id', upperCase, (req, res) => {
     .catch(err => res.status(500).json({ message: "Update failed." }));
 });
 
+server.delete('/users/:id', (req, res) => {
+    const { id } = req.params; // the same as const id = req.params.id but destructuring the code
+    userDB.remove(id)
+        .then(count => {
+            console.log('count: ', count);
+            if(count) {
+                res.status(204).end()
+            } else {
+                res.status(404).json({ message: 'No user with this id was found.' });
+            }
+        })
+        .catch(err => res.status(500).json(err));
+});
+
 
 
 server.listen(port, () => console.log(`API on port ${port}`))
