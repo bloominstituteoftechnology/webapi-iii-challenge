@@ -11,40 +11,56 @@ logger = (req, res, next) => {
 server.use(logger);
 server.use(express.json());
 
+uppercase = (req, res, next) => {
+	req.body.name =
+		req.body.name.charAt(0).toUpperCase() + req.body.name.slice(1);
+	next();
+}
 
 server.get('/', (req, res) =>{
     res.send('running')
 })
 
-server.get('/users', (req, res) => {
-    dbUsers.get()
-        .then(users => {
+server.get('/users', async (req, res) => {
+    try{
+        const users = await dbUsers.get();
+        if (users.length > 0){
             res.status(200).json(users);
+        }
+        return res.status(404).json({
+            message: "Information not found"
         })
-        .catch(err => {
-            console.error('error', err);
-            res.status(500).json({ error: "The User information could not be retrieved."})
-        });
+    } catch (err) {
+        res.status(500).json({ error: "The User information could not be retrieved."})
+    }
 });
 
-server.post('/users', (req, res) => {
-    const user = req.body;
-    if(user.name){
-        dbUsers.insert(user)
-        .then(response =>
-            dbUsers.get(response.id).then(user => {
-                res.status(201).json(user);
+server.get('/users/:id', async (req, res) => {
+    try {
+        const user = await dbUsers.get(req.params.id);
+        if (user) {
+            return res.status(200).json(user);
+        } 
+        return res.status(404).json({
+            message: "Information not found"
         })
-        )        
-        .catch( err => {
-            console.error('error', err);
-            res.status(500).json({ error: "There was an error while saving the User to the Database."})
-        })
-    } else {
-        res
-            .status(400).json({ errorMessage: "Please provide title and contents for the post."});
+    } catch (err) {
+        res.status(500).json({ error: "The User information could not be retrieved."})
     }
-    
+})
+
+server.post('/users', uppercase, async (req, res) => {
+    try{
+        if (req.body.name){
+            const user = await dbUsers.insert(req.body);
+            return res.status(200).json(user);
+        }
+        return res.status(404).json({
+            message: "Information not found"
+        })
+    } catch (err) {
+        res.status(500).json({ error: "The User information could not be retrieved."})
+    } 
 })
 
 
