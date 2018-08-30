@@ -77,4 +77,27 @@ server.post('/api/posts', (req, res) => {
     });
 });
 
+server.delete('/api/posts/:id', (req, res) => {
+    const { id } = req.params;
+    postDB.remove(id)
+        .then(response => {
+            console.log(response);
+            if(response) {
+                res.status(204).end();
+            }
+            else {
+                res.status(404).json({ message: 'No post with this id found'});
+            }
+            res.status(204).end();
+        })
+        .catch(err => res.status(500).json(err));
+});
+
+server.put('/api/posts/:id', (req, res) => {
+    userDB.update(req.params.id, req.body).then(users => {
+        res.status(200).json(users);
+    })
+    .catch(err => res.status(500).json({ message: 'update failed' }));
+});
+
 server.listen(9000, () => console.log('\n== API on port 9k ==\n'));
