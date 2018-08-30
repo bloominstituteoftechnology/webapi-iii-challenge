@@ -4,25 +4,25 @@ const express = require('express');
 
 const router = express.Router();
 
-const postDb = require('./data/helpers/postDb.js');
+const postDb = require('../data/helpers/postDb.js');
 
 router.use(express.json());
 
-server.get('/posts', (req, res) => {
+router.get('/', (req, res) => {
   console.log('posts requested')
   postDb.get().then(allPosts => {
     res.status(200).json(allPosts)
   })
 });
 
-server.get('/posts/:id', (req, res) => {
+router.get('/:id', (req, res) => {
   console.log('id requested')
   postDb.get(req.params.id).then(post => {
     res.status(200).json(post)
   })
 });
 
-server.post('/posts/', (req, res) => {
+router.post('/', (req, res) => {
   //text is required
   //userId is required from existing user
   // if Id present say it will be disgarded
@@ -35,7 +35,7 @@ server.post('/posts/', (req, res) => {
     })
 });
 
-server.put('/posts/:id', (req, res) => {
+router.put('/:id', (req, res) => {
   console.log('update post')
   postDb.update(req.params.id, req.body)
   .then(count => {
@@ -46,7 +46,7 @@ server.put('/posts/:id', (req, res) => {
   })
 });
 
-server.delete('/posts/:id', (req, res) => {
+router.delete('/:id', (req, res) => {
   console.log('remove post')
   postDb.remove(req.params.id)
   .then( newUserId => {
@@ -56,3 +56,5 @@ server.delete('/posts/:id', (req, res) => {
     res.status(400).json(err)
   })
 });
+
+module.exports = router;

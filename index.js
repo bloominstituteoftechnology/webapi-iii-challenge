@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const server = express();
 
-const postRoutes = require('./posts/postsRoutes.js');
+const postRoutes = require('./posts/postRoutes.js');
   //brings in post endpoints
 const userRoutes = require('./users/userRoutes.js');
   //brings in user endpoint
