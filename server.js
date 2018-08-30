@@ -119,7 +119,7 @@ server.delete("/users/:userId", async (req, res) => {
 //POSTS
 server.get("/posts", async (req, res) => {
     try {
-        const posts = dbPosts.get();
+        const posts = await dbPosts.get();
         res.status(200).json(posts)
     }
     catch(err) {
@@ -202,7 +202,7 @@ server.delete("/posts/:postId", async (req, res) => {
     try {
         const removePost = await dbPosts.remove(postId);
         res.status(200).json({
-            message: `${count} posts deleted.`
+            message: `Post deleted.`
         })
     }
    catch(err) {
