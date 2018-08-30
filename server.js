@@ -5,6 +5,7 @@ const users = require('./data/helpers/userDb');
 const posts = require('./data/helpers/postDb');
 const tags = require('./data/helpers/tagDb');
 
+
 // const db = require ('./data/dbConfig.js');
 
 const server = express();
@@ -189,6 +190,26 @@ server.get('/api/posts', (req,res) => {
         return;
     });
 });
+
+//GET request to retrieve specific post
+// test on postman with: http://localhost:9000/api/posts/5
+server.get('/api/posts/:id', (req,res) => {
+    const id = req.params.id;
+    posts
+        .get(id)
+        .then(post => {
+            if (post === 0){
+                res.status(404).json({message: 'Unable to find specified post'});
+                return;
+            }
+            res.json(post);
+        })
+        .catch(err => {
+            console.error('error', err);
+            res.status(500).json({message: 'Error getting post'});
+            return;
+        });
+    });
 
 //Start the server
 server.listen(9000, () => console.log('\n == API on port 9000 == \n'));
