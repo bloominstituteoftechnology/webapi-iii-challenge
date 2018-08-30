@@ -5,11 +5,6 @@ const dbUsers = require('./data/helpers/userDb.js')
 
 const server = express();
 
-function uppercase (req, res, next) {
-    req.body.name = req.body.name.toUpperCase();
-    next();
-}
-
 server.use(express.json());
 
 server.use('/users', userRoutes);

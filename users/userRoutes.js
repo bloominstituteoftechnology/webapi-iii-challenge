@@ -35,6 +35,17 @@ router.get('/:id', (req, res) => {
         })
 })
 
+router.get('/:id/posts', (req, res) => {
+    dbUsers.getUserPosts(req.params.id)
+        .then(posts => {
+            res.status(200).json(posts)
+        })
+        .catch(err => {
+            console.error('error', err);
+            res.status(500).json({ error: "The User's posts could not be retrieved."})
+        })
+})
+
 router.post('', uppercase, (req, res) => {
     const user = req.body;
     if(!user) {
