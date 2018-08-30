@@ -1,15 +1,18 @@
 const postDB = require('./data/helpers/postDb');
 const userDB = require('./data/helpers/userDb');
 
+
 const port = 9000;
 const helmet = require('helmet');
 const express = require('express');
 const morgan = require('morgan');
+const cors = require('cors')
 
 const server = express();
 
 server.use(helmet());
 server.use(morgan());
+server.use(cors());
 
 //MIDDLEWARE
 function upperCase(req, res, next) {
