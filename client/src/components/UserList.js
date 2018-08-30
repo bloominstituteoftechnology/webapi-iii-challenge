@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { Route, Link } from "react-router-dom";
+
+import UserPost from './UserPost';
+
 
 class UserList extends Component {
     constructor(props) {
@@ -25,13 +29,19 @@ class UserList extends Component {
     render() {
         return (
             <div>
-                {this.state.users.map(user => {
-                    return (
-                        <div key={ user.id }>
-                            <h3>name: { user.name } </h3>
-                        </div>       
-                    )
-                })}
+                <ul>
+                    {this.state.users.map(user => {
+                        return (
+                            <li key={ user.id }>
+                                <Link to={`/users/${ user.id }`}>
+                                    name: { user.name }
+                                </Link>
+                            </li>       
+                        )
+                    })}
+                </ul>
+
+                <Route exact path="/users/:id" render={(props) => <UserPost {...props} users={ this.state.users } />}/>
             </div>
         )    
     }
