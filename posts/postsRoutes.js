@@ -2,9 +2,8 @@ const express = require('express');
 const router = express.Router();
 const postsModel = require('./postsModel.js');
 
-router.get('/:id', (req, res) => {
-    let { id } = req.params;
-    postsModel.get(id)
+router.get('/', (req, res) => {
+    postsModel.get()
         .then(data => {
             res.status(200).json({ message: data })
         })
@@ -45,3 +44,5 @@ router.delete('/:id', (req, res) => {
             res.status(500).json({ message: 'Unable to delete user.' })
         });
 });
+
+module.exports = router;
