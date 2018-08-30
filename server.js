@@ -96,9 +96,25 @@ server.post('/posts/:id',async(req,res)=>{
 server.delete('/posts/:postId',async(req,res)=>{
     try {
         const removedPost=await posts.remove(req.params.postId);
-        removedPost===1?res.status(200).json({success:'Deleted post.'}):res.status(404).json({message:"The post with the specified ID does not exist"});
+        removedPost===1?res.status(200).json({success:'Deleted post.'})
+        :res.status(404).json({message:"The post with the specified ID does not exist"});
     } catch(error){
         res.status(500).json({error:'The post could not be removed'});
+    }
+})
+server.put('/posts/:postId', async(req,res)=>{
+    const postBody=req.body;
+    if (postBody) {
+        try {
+            const response=await posts.update(req.params.postId,postBody);
+            response===1?res.status(200).json(postBody):
+            res.status(404).json({message:"The post with the specified ID does not exist"});
+        }
+        catch (error) {
+            res.status(500).json({ error: "The post information could not be modified." })     
+        }
+    } else {
+        res.status(400).json({errorMessage:"Please enter text"});
     }
 })
 server.listen(9000,()=>console.log('Engines firing server starting new horizons venturing.'))
