@@ -242,10 +242,8 @@ app.put("/users/:id", upperName, (req, res) => {
 app.put("/posts/:id", (req, res) => {
   const { userId, text } = req.body;
   const { id } = req.params;
-  if (!id) {
-    res
-      .status(400)
-      .json({ message: "The post with the specified ID does not exist." });
+  if (id !== Number(id)) {
+    res.status(400).json({ message: "Please enter a valid post id" });
   } else if (userId && text) {
     postDb
       .update(id, req.body)
