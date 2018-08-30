@@ -12,7 +12,7 @@ server.use(helmet());
 server.use(cors());
 server.use(morgan('dev'));
 
-//middleware
+//middleware users below
 function upperCase(req, res, next) {
   let name = req.body.name
   const newName = name
@@ -22,6 +22,15 @@ function upperCase(req, res, next) {
   req.upperName = newName;
   next();
 }
+
+//middleware users above
+
+
+
+//middleware posts below
+
+
+//middleware posts above 
 
 server.get("/api/users", (req, res) => {
   db.get()
@@ -127,12 +136,26 @@ server.get("/api/posts", (req, res) => {
 server.post("/api/posts", (req,res) => {
   if(req.body.userId && req.body.text){
     console.log(req.body)
-    postDb.insert(req.body)
-    .then(post => {
-      res.status(201).json(req.body)
+    db.get()
+    .then(users => {
+      console.log(users)
+      let user = users.filter(usr => usr.id === req.body.userId)
+      user = user.length ? user[0] : []
+      console.log(user,"user")
+      if(user.id){
+        postDb.insert(req.body)
+          .then(post => {
+            res.status(201).json(req.body)
+        })
+        .catch(error => {
+          res.status(500).json({error, message: "unable to save the post"})
+        })
+      } else {
+        res.status(404).json({message: "The user you are trying to add a post for does not exit"})
+      }
     })
     .catch(error => {
-      res.status(404).json({error, message: "unable to save the post check userId"})
+      res.status(500).json({error, message: "unable to get users to find out if the userId exits for the post creation"})
     })
   } else {
     res.status(500).json({error: "Check that you have a valid userID and contents for your your post"})
