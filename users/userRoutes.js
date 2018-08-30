@@ -1,6 +1,6 @@
 const express = require("express");
 
-const userDB = require("../data/helpers/userDb.js");
+const userModel = require("./userModel.js");
 // const server = express();
 // above turns into below when
 // using routes
@@ -15,7 +15,7 @@ const nameToUpperCase = require("../middleware/nameToUpperMW.js");
 
 // GET REQUEST //
 router.get("/", (req, res) => {
-  userDB
+  userModel
     .get()
     .then(users => {
       res.status(200).json(users);
@@ -29,7 +29,7 @@ router.get("/", (req, res) => {
 
 router.get("/:id", (req, res) => {
   const { id } = req.params;
-  userDB
+  userModel
     .get(id)
     .then(user => {
       if (user.length === 0) {
@@ -50,7 +50,7 @@ router.get("/:id", (req, res) => {
 // GET USER POSTS REQUEST
 router.get("/:id/posts", (req, res) => {
   const { id } = req.params;
-  userDB
+  userModel
     .getUserPosts(id)
     .then(user => {
       if (user.length === 0) {
@@ -78,7 +78,7 @@ router.post("/", nameToUpperCase, async (req, res) => {
     });
   } else {
     try {
-      const response = await userDB.insert(user);
+      const response = await userModel.insert(user);
       res.status(201).json({ message: "New user created successfully." });
     } catch (err) {
       res.status(500).json({
@@ -93,7 +93,7 @@ router.post("/", nameToUpperCase, async (req, res) => {
 router.delete("/:id", async (req, res) => {
   const { id } = req.params;
   try {
-    const response = await userDB.remove(id);
+    const response = await userModel.remove(id);
     console.log("RESPONSE", response);
     if (response === 0) {
       return res.status(404).json({
@@ -119,7 +119,7 @@ router.put("/:id", nameToUpperCase, (req, res) => {
       errorMessage: "Please provide a name for the user.",
     });
   } else {
-    userDB
+    userModel
       .update(id, user)
       .then(count => {
         if (count) {
