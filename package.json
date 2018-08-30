@@ -1,0 +1,31 @@
+{
+  "dependencies": {
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "helmet": "^3.13.0",
+    "knex": "^0.15.2",
+    "morgan": "^1.9.0",
+    "npm": "^6.2.0",
+    "sqlite3": "^4.0.2"
+  },
+  "name": "node-blog",
+  "description": "* Building RESTful APIs.\r * Performing CRUD Operations on Multiple Resources.\r * Configuring CORS.\r * Writing Custom Middleware.\r * Using Express Routers to Modularize Application.",
+  "version": "1.0.0",
+  "main": "server.js",
+  "devDependencies": {
+    "nodemon": "^1.18.3"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AppMkrATL/Node-Blog.git"
+  },
+  "author": "Sam Khaled",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AppMkrATL/Node-Blog/issues"
+  },
+  "homepage": "https://github.com/AppMkrATL/Node-Blog#readme"
+}
