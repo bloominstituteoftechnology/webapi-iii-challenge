@@ -1,5 +1,5 @@
 const express = require('express');
-const userDB = require('../data/helpers/userDb.js');
+const userModel = require('./userModel.js');
 const router = express.Router();
 
 function upperUser(req, res, next){
@@ -15,7 +15,7 @@ router
 	.route('/')
 	.get(async (req, res, next) => {
 		try {
-			const users = await userDB.get();
+			const users = await userModel.get();
 			res.status(200).json(users);
 		}
 		catch(err) {
@@ -26,7 +26,7 @@ router
 	.post(upperUser, async (req, res, next) => {
 		const { name } = req.body;
 		try {
-			const count = await userDB.insert({name});
+			const count = await userModel.insert({name});
 			res.status(201).json({ message: 'User successfully added' });
 		}
 		catch(err) {
@@ -40,7 +40,7 @@ router
 	.get(async (req, res, next) => {
 		const { id } = req.params;
 		try {
-			const user = await userDB.get(id);
+			const user = await userModel.get(id);
 			user
 			? res.status(200).json(user)
 			// : res.status(404).json({ message: 'Specified user could not be found' })
@@ -55,7 +55,7 @@ router
 		const { id } = req.params;
 		const { name } = req.body;
 		try {
-			const count = await userDB.update(id, {name});
+			const count = await userModel.update(id, {name});
 			count > 0
 			? res.status(200).json({ message: 'User successfully updated' })
 			// : res.status(404).json({ message: 'Specified user could not be found '})
@@ -69,7 +69,7 @@ router
 	.delete(async (req, res, next) => {
 		const { id } = req.params;
 		try {
-			const count = await userDB.remove(id);
+			const count = await userModel.remove(id);
 			count > 0
 			? res.status(200).json({ message: 'User successfully deleted' })
 			// : res.status(404).json({ message: 'Specified user could not be found' })
@@ -86,7 +86,7 @@ router
 	.get(async (req, res, next) => {
 		const { id } = req.params;
 		try {
-			const posts = await userDB.getUserPosts(id);
+			const posts = await userModel.getUserPosts(id);
 			posts.length > 0
 			? res.status(200).json(posts)
 			// : res.status(404).json({ message: 'User does not have posts' })

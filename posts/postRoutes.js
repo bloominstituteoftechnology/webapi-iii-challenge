@@ -1,12 +1,12 @@
 const express = require('express');
-const postDB = require('../data/helpers/postDb.js');
+const postModel = require('./postModel.js');
 const router = express.Router();
 
 router
 	.route('/')
 	.get(async (req, res, next) => {
 		try {
-			const posts = await postDB.get();
+			const posts = await postModel.get();
 			res.status(200).json(posts);
 		}
 		catch(err) {
@@ -17,7 +17,7 @@ router
 	.post(async (req, res, next) => {
 		const { userId, text } = req.body;
 		try {
-			const count = await postDB.insert({userId, text});
+			const count = await postModel.insert({userId, text});
 			res.status(201).json({ message: 'Post successfully added' });
 		}
 		catch(err) {
@@ -31,7 +31,7 @@ router
 	.get(async (req, res, next) => {
 		const { id } = req.params;
 		try {
-			const post = await postDB.get(id);
+			const post = await postModel.get(id);
 			post
 			? res.status(200).json(post)
 			// : res.status(404).json({ message: 'Specified post could not be found' })
@@ -46,7 +46,7 @@ router
 		const { id } = req.params
 		const { userId, text } = req.body;
 		try {
-			const count = await postDB.update(id, {userId, text});
+			const count = await postModel.update(id, {userId, text});
 			count > 0
 			? res.status(200).json({ message: 'Post successfully updated' })
 			// : res.status(404).json({ message: 'Specified post could not be found' })
@@ -60,7 +60,7 @@ router
 	.delete(async (req, res, next) => {
 		const { id } = req.params;
 		try {
-			const count = await postDB.remove(id);
+			const count = await postModel.remove(id);
 			count > 0
 			? res.status(200).json({ message: 'Post successfully deleted' })
 			// : res.status(404).json({ message: 'Specified post could not be found' })
