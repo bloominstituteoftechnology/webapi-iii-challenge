@@ -45,3 +45,5 @@ router.delete('/:id', (req, res)=>{
             res.status(500).json({message: 'Unable to delete user.'})
         });
 });
+
+module.exports = router;
