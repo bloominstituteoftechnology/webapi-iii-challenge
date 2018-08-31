@@ -1,2 +1,17 @@
 GET http://localhost:5000/api/users HTTP/1.1
 ###
+
+GET http://localhost:5000/api/posts HTTP/1.1
+###
+
+GET http://localhost:5000/api/posts/5 HTTP/1.1
+###
+
+POST http://localhost:5000/api/posts HTTP/1.1
+Content-Type: application/json
+
+{
+  "userId": 10,
+  "text": "New post by Ash"
+}
+###
