@@ -1,11 +1,13 @@
 const express = require('express');
-const cors = require('cors');
-const logger = require('morgan');
-const helmet = require('helmet');
+
+const server = express();
+
 const userRoutes = require('./users/userRoutes');
 const postRoutes = require('./posts/postRoutes');
 
-const server = express();
+const configMiddleware = require('./config/middleware');
+
+configMiddleware(server);
 
 
 function errorHandler(err, req, res, next) {
@@ -24,11 +26,7 @@ function errorHandler(err, req, res, next) {
     }
 }
 
-server.use(express.json());
-server.use(express.urlencoded({extended: true}));
-server.use(cors());
-server.use(logger('dev'));
-server.use(helmet());
+
 
 
 
