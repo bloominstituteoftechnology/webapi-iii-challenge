@@ -2,11 +2,11 @@ const express = require('express');
 const router = express.Router();
 const userModel = require('./usersModel.js');
 
-router.get('/:id', (req, res)=>{
+router.get('/', (req, res)=>{
     let { id } = req.params;
-    userModel.get(id)
-        .then(data => {
-            res.status(200).json({message: data})
+    userModel.get()
+        .then(users => {
+            res.status(200).json(users)
         })
         .catch(err => {
             res.status(500).json({ message: 'Unable to grab user list.' })
@@ -14,30 +14,33 @@ router.get('/:id', (req, res)=>{
 });
 
 router.post('/', (req, res)=>{
-    let { name } = req.params;
-    userModel.insert(name)
+
+    userModel.insert(req.body)
         .then(data => {
-            res.status(201).json({message: 'Made a new user.'})
+            res.status(201).json({ message: data})
         })
         .catch(err => {
-            res.status(500).json({message: 'Unable to create a new user.'})
+            res.status(500).json({message: `Unable to create a new user. ${err}`})
         });
 });
 
 router.put('/:id', (req, res)=>{
-    let { id } = req.params;
-    usersModel.udpate(id, req.params)
+    console.log(req.body.name);
+    
+    userModel.update(req.params.id, req.body)
         .then(data => {
             res.status(200).json({message: `${data} updated.`})
         })
         .catch(err => {
-            res.status(500).json({message: 'Unalbe to update user name'})
+            res.status(500).json({message: `Unalbe to update user name, error: ${err}`})
         });
 });
 
 router.delete('/:id', (req, res)=>{
     let { id } = req.params;
-    usersModel.remove(id)
+    console.log(id);
+    
+    userModel.remove(id)
         .then(data => {
             res.status(204).json({message: 'User deleted.'});
         })

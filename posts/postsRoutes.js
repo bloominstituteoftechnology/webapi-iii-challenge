@@ -4,10 +4,11 @@ const postsModel = require('./postsModel.js');
 
 router.get('/', (req, res) => {
     postsModel.get()
-        .then(data => {
-            res.status(200).json({ message: data })
+        .then(posts => {
+            res.status(200).json(posts);
         })
         .catch(err => {
+            console.log('Error... ',err);
             res.status(500).json({ message: 'Unable to grab user list.' })
         })
 });
