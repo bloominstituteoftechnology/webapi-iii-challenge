@@ -32,7 +32,7 @@ router.post("/", (req, res) => {
   if (req.body.name.length < 128) {
     db.insert(req.body)
       .then(lotr => {
-        res.status(200).json(lotr);
+        res.status(201).json(lotr);
       })
       .catch(err => {
         console.log("error", err);
