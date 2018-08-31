@@ -13,8 +13,22 @@ router.get('/', (req, res) => {
         })
 });
 
+router.get('/:id', (req, res) => {
+    let { id } = req.params;
+    console.log('req bod', req.body);
+    console.log('req param', req.params);
+   
+    postsModel.get(id)
+        .then(posts => {
+            res.status(200).json(posts);
+        })
+        .catch(err => {
+            console.log('Error... ', err);
+            res.status(500).json({ message: 'Unable to grab user list.' })
+        })
+});
+
 router.post('/', (req, res) => {
-    console.log(req.body);
     postsModel.insert(req.body)
         .then(data => {
             res.status(201).json({ message: 'Made a new user.' })
