@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Container, Grid } from 'semantic-ui-react';
 import UserCard from './UserCard';
 import axios from 'axios';
 
@@ -18,14 +19,18 @@ class Home extends Component{
 
   render(){
     return(
-      <section className="home-page">
+      <Container centered>
+      <Grid centered textAlign="left">
         {this.state.users &&
           this.state.users
-            .map(user =><UserCard key={user.id} {...user} />)
+            .map(user =><Grid.Row textAlign="left" key={user.id}>
+                          <UserCard key={user.id} {...user} />
+                        </Grid.Row>)
         }
         {this.state.error &&
           <p>{this.state.error}</p>}
-      </section>
+      </Grid>
+      </Container>
     );
   }
 }

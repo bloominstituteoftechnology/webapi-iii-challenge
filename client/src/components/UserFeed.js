@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PostCard from './PostCard';
 import axios from 'axios';
+import { Container } from 'semantic-ui-react';
 
 class UserFeed extends Component{
   constructor(){
@@ -17,7 +18,7 @@ class UserFeed extends Component{
 
   render(){
     return(
-      <div className="user-feed">
+      <Container>
         {this.state.posts && this.state.posts.length > 0 &&
           this.state.posts.map(post => <PostCard key={post.id}
                                            {...post}
@@ -26,7 +27,7 @@ class UserFeed extends Component{
           <p>There are no posts to show</p>}
         {this.state.error &&
           <p>{this.state.error}</p>}
-      </div>
+      </Container>
     );
   }
 }
