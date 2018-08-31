@@ -1,222 +1,266 @@
-const express = require("express");
-const helmet = require("helmet");
-const cors = require("cors");
-const morgan = require("morgan");
-const userDb = require("./data/helpers/userDb.js");
-const postDb = require("./data/helpers/postDb.js");
-const tagsDb = require("./data/helpers/tagDb");
+const express = require('express');
+const cors = require('cors');
+//pull in helper method to get user data
+const users = require('./data/helpers/userDb');
+const posts = require('./data/helpers/postDb');
+const tags = require('./data/helpers/tagDb');
+
+
+// const db = require ('./data/dbConfig.js');
 
 const server = express();
 
-server.use(express.json());
-server.use(helmet());
-server.use(morgan("dev"));
+server.use(express.json()); //allows parsing of json data from req.body
 server.use(cors());
-server.use(errorHandler);
 
-const errorHelper = (status, message, res) => {
-  res.status(status).json({ error: message });
-};
+// //Middleware here (practice)
+// function greeter(req, res, next) {
+//     req.name = 'FSW 12: Middleware Enthusiasts';
+//     next();
+// }
 
-function upperCase(req, res, next) {
-  req.body.upper = req.body.title.toUpperCase();
-  next();
+
+//Middleware to capitalize user name
+
+//use if typeOf(req.body.name)...
+
+function capitalize(req, res, next) {
+    console.log(req.body) // empty object
+    console.log(req.body.name) //undefined
+    const name = req.body.name
+    capName = name.toUpperCase();
+    next();
 }
-/////Middleware
-const nameCheckMiddleware = (req, res, next) => {
-  const { name } = req.body;
-  if (!name) {
-    errorHelper(404, "Name must be included", res);
-    next();
-  } else {
-    next();
-  }
-};
-/////EndPoints
-server.get("/", (req, res) => {
-  res.send("Hello World");
+
+
+//Initiate the Server at /
+server.get('/',(req, res) => {
+    res.send('Initiating Server');
 });
-server.get("/users", (req, res) => {
-  userDb
-    .get()
-    .then(users => {
-      res.status(200).json(users);
-    })
+
+// //using greeter function (practice)
+// server.get('/hello', greeter, (req,res) =>{
+//     res.send(`hello ${req.name}`);
+// });
+
+
+// ------------------------- Endpoints for Users -----------------------
+//GET request for retrieving all users needs: 'const users = require('./data/helpers/userDb')' to work
+server.get('/users', (req,res) => {
+    users
+        .get()
+        .then(users => {
+            res.json(users);
+        })    
     .catch(err => {
-      console.log("error", err);
-      res.status(500).json({ message: "Error Getting Data" });
+        console.error('error', err);
+        res.status(500).json({message: 'Error getting users'});
+        return;
     });
 });
-server.get("/users", nameCheckMiddleware, (req, res) => {
-  const { name } = req.body;
-  userDb
-    .insert({ name })
-    .then(posts => {
-      res.status(200).json(posts);
-    })
-    .catch(err => {
-      console.log("error", err);
-      res.status(500).json({ message: "Error Getting MiddleWare" });
-    });
-});
-server.get("/users/:id", (req, res) => {
-  const { id } = req.params;
-  userDb
+
+//GET request for retrieving individual user
+server.get('/users/:id', (req,res) => {
+    const id = req.params.id;
+    users
     .get(id)
     .then(user => {
-      if (user === 0) {
-        return errorHelper(404, "No user by that Id in the DataBase", res);
-      }
-      res.json(user);
+        if (user === 0) {
+            res.status(404).json({message: 'No user corresponding to that identifier'});
+            return;
+        }
+        res.json(user);
     })
-    .catch(err => {
-      return errorHelper(500, "Database", res);
+    .catch(err =>{
+        res.status(500).json({message: 'Error getting user information'});
+        return;
     });
 });
 
-server.get("/users/posts/:userId", (req, res) => {
-  const { userId } = req.params;
-  userDb
-    .getUserPosts(userId)
-    .then(posts => {
-      if (posts === 0) {
-        return errorHelper(404, "NO POSTS", res);
-      }
-      res.json(posts);
-    })
-    .catch(err => {
-      return errorHelper(500, "Database", res);
-    });
-});
 
-server.delete("/users/:id", (req, res) => {
-  const { id } = req.params;
-  userDb
-    .remove(id)
-    .then(removed => {
-      if (removed === 0) {
-        return errorHelper(404, "No User With That ID");
-      } else {
-        res.json({ success: "User Removed" });
-      }
-    })
-    .catch(err => {
-      return errorHelper(500, "Database", res);
-    });
-});
-
-server.put("/users/:id", nameCheckMiddleware, (req, res) => {
-  const { id } = req.params;
-  const { name } = req.body;
-  userDb
-    .update(id, { name })
+//POST request
+server.post('/users', capitalize, (req,res) => { //add capitalize function between route and (req,res)
+    const name = req.body.name;
+    const capName = req.capName;
+    console.log(capName);
+    if (name.length === 0){
+        res.status(400).json({message:"character must have a name"})
+    }
+    users
+    .insert({name: capName}) //replace with capName?
     .then(response => {
-      if (response === 0) {
-        return errorHelper(404, "No user with that id");
-      } else {
-        db.find(id).then(user => {
-          res.json(user);
+        res.json(response);
+    })
+    .catch(err => {
+        console.log("error", err)
+        res.status(500).json({message: 'Error posting user information'});
+        return;
+    });
+});
+
+//post works, but capitalize doesn't work
+
+//DELETE a user
+server.delete('/users/:id', (req, res) => {
+    const id = req.params.id;
+    users
+    .remove(id)
+    .then(remove => {
+        if(remove === 0) {
+            res.status(404).json({message: 'No user corresponding to that identifier'});
+            return;
+        }else{
+            res.json({success: 'User Successfully Removed'});
+        }
+    })
+    .catch(err => {
+        console.log("error", err)
+        res.status(500).json({message: 'Error accessing user information'});
+        return;
+    });
+});
+
+
+//PUT Request to Modify an individual user
+server.put('/users/:id', (req,res) => {
+    const id = req.params.id;
+    const name = req.body.name;
+    if(!name){
+        res.status(400).json({message: 'Must provide title and contents'});
+        return;
+    }
+    users
+        .update(id, name)
+        .then(response => {
+            if(response == 0){
+                res.status(404).json({message:'There is no post with that identifier'});
+                return;
+            }else{
+                res.status(200).json({message: 'successful update'});
+            }
+            users
+                .findById(id)
+                .then(updated => {
+                    if(updated.length === 0){
+                    res.status(404).json({message: 'Unable to find specified user'});
+                    return;
+                    }
+                    res.json(updated);
+                })
+                .catch(err => {
+                    console.log("error", err)
+                    res.status(500).json({message: 'Error looking up user'});
+                });
+            })
+            .catch(err=> {
+                console.log("error", err)
+                res.status(500).json({message: 'problem encountered in database'});
+                return;
+            });
         });
-      }
+
+//GET request to retrieve posts by user id
+
+server.get('/users/posts/:userId', (req,res)=> {
+    const userId = req.params.userId;
+    users
+    .getUserPosts(userId) //function defined in 'userDb.js'
+    .then(userPosts => {
+        if (userPosts===0){
+            res.status(404).json({message: 'Unable to find specified user'});
+            return;
+        }
+        res.json(userPosts);
     })
     .catch(err => {
-      return errorHelper(500, "Database", res);
+        console.log("error", err)
+        res.status(500).json({message: 'problem encountered in database'});
+        return;
     });
 });
 
-server.get("/posts", (req, res) => {
-  postDb
-    .get()
-    .then(posts => {
-      res.status(200).json(posts);
-    })
+//  ------------------- Endponts for posts --------------------
+
+//GET request for retrieving all posts needs: 'const posts = require('./data/helpers/postDb')' to work
+
+server.get('/posts', (req,res) => {
+    posts
+        .get()
+        .then(getPosts => {
+            res.json(getPosts);
+        })    
     .catch(err => {
-      return errorHelper(500, "Posts Not Found", res);
+        console.error('error', err);
+        res.status(500).json({message: 'Error getting posts'});
+        return;
     });
 });
 
-server.get("/posts/:id", (req, res) => {
-  const { id } = req.params;
-  postDb
-    .get(id)
-    .then(post => {
-      if (post === 0) {
-        return errorHelper(404, "No posts by id", res);
-      }
-      res.json(post);
-    })
-    .catch(err => {
-      return errorHelper(500, "Error", res);
-    });
-});
+//GET request to retrieve specific post
 
-server.post("/posts", upperCase, (req, res) => {
-  const { userId, text } = req.body;
-  const upperCased = req.body.upper;
-  console.log(upperCase);
-  postDb
-    .insert({ userId, text, title: upperCased })
-    .then(newPost => {
-      res.status(200).json(newPost, req.body.upper);
-    })
-    .catch(err => {
-      return errorHelper(500, "Error", res);
-    });
+server.get('/posts/:id', (req,res) => {
+    const id = req.params.id;
+    posts
+        .get(id)
+        .then(post => {
+            if (post === 0){
+                res.status(404).json({message: 'Unable to find specified post'});
+                return;
+            }
+            res.json(post);
+        })
+        .catch(err => {
+            console.error('error', err);
+            res.status(500).json({message: 'Error getting post'});
+            return;
+       });
+   });
+//POST request to list of 'posts'
+server.post('/posts', (req,res) => {
+   const {userId, text} = req.body;
+   posts
+       .insert({userId, text})
+       .then(response => {
+           res.json(response);
+       })
+       .catch(error => {
+           console.error('error', error);
+           res.status(500).json({message: 'Error getting post'});
+           return;
+       });
 });
-
-server.get("/post/tags/:id", (req, res) => {
-  const { id } = req.params;
-  postDb
-    .getPostTags(id)
-    .then(tags => {
-      if (tags === 0) {
-        return errorHelper(404, "Post Not Found", res);
-      }
-      res.json(tags);
-    })
-    .catch(err => {
-      return errorHelper(500, "Error", res);
-    });
+//GET the tags for a given post
+server.get ('/posts/tags/:id', (req,res) => {
+   const id =req.params.id;
+   posts
+       .getPostTags(id)
+       .then(postTags => {
+           if(postTags === 0) {
+               res.status(404).json({message: 'Unable to find specified post'});
+               return;
+           }
+           res.json(postTags);
+       })
+       .catch(error => {
+           console.error('error', error);
+           res.status(500).json({message: 'Error getting post'});
+           return;
+       });
 });
-
-server.get("/tags", (req, res) => {
-  userDb
-    .get()
-    .then(tag => {
-      res.status(200).json({ tag });
-    })
-    .catch(err => {
-      return errorHelper(500, "Error", res);
-    });
-
-  server.get("/download", (req, res, next) => {
-    const filePath = path.join(__dirname, "index.html");
-    res.sendFile(filePath, err => {
-      if (err) {
-        next(err);
-      } else {
-        console.log("File sent successfully");
-      }
-    });
-  });
-});
+//GET all of the tags
+server.get('/tags', (req,res) => {
+   user
+       .get()
+       .then(tags => {
+           res.json({ tags });
+       })
+       .catch(error => {
+           console.error('error', error);
+           res.status(500).json({message: 'Error getting post'});
+           return;
+       });
+})
+  
 server.listen(3001, () => console.log("server 3001 started"));
 
-function errorHandler(err, req, res, next) {
-  console.error(err);
 
-  switch (err.statusCode) {
-    case 404:
-      res.status(404).json({
-        message: "The requested file does not exist."
-      });
-
-      break;
-
-    default:
-      res.status(500).json({
-        message: "There was an error performing the required operation"
-      });
-      break;
-  }
-}
