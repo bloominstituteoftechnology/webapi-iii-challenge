@@ -14,8 +14,8 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-    let { name } = req.params;
-    postsModel.insert(name)
+    console.log(req.body);
+    postsModel.insert(req.body)
         .then(data => {
             res.status(201).json({ message: 'Made a new user.' })
         })
