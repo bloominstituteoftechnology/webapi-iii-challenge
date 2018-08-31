@@ -1,33 +1,39 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 import { fetchUserData } from "../actions/index";
+import AllUserCards from "./allusercards/AllUserCards";
 
 import "../css/App.css";
 
 class App extends Component {
-  // constructor(props) {
-  //   super(props);
-  //   this.state = {
-  //     users: [],
-  //   };
-  // }
-
   componentDidMount() {
     this.props.fetchUserData();
   }
 
   render() {
     console.log("New State", this.props);
-    return (
-      <div className="App">
-        <header className="App-header">
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
-    );
+    if (this.props.users.length < 1) {
+      return (
+        <div>
+          <h1>Loading Please Wait...</h1>
+        </div>
+      );
+    } else {
+      return (
+        <div className="App">
+          <Router>
+            <Route
+              exact
+              path="/users"
+              render={props => (
+                <AllUserCards {...props} users={this.props.users} />
+              )}
+            />
+          </Router>
+        </div>
+      );
+    }
   }
 }
 
@@ -35,6 +41,8 @@ const mapStateToProps = state => {
   return {
     users: state.users,
     isFetching: state.isFetching,
+    isFetched: state.isFetched,
+    hasError: state.hasError,
   };
 };
 
