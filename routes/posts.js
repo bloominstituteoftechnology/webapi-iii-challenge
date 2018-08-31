@@ -1,9 +1,10 @@
-const express = require('express');
-const db = require('../data/helpers/postDb');
+const express = require("express");
+const db = require("../data/helpers/postDb");
+const users = require("../data/helpers/userDb");
 const router = express.Router();
 
 router
-  .route('/')
+  .route("/")
   .get(async (req, res) => {
     try {
       let data = await db.get();
@@ -14,10 +15,15 @@ router
   })
   .post(async (req, res) => {
     let { userId, text } = req.body;
+
     if (!userId || !text)
-      return res.status(400).json({ message: 'Text  or userID is missing' });
+      return res.status(400).json({ message: "Text  or userID is missing" });
 
     try {
+      let user = await users.get(userId);
+
+      if (!user) return res.status(400).json({ message: "UserID is invalid" });
+
       let data = await db.insert({ userId, text });
       res.status(201).json(data);
     } catch (err) {
@@ -26,7 +32,7 @@ router
   });
 
 router
-  .route('/:id')
+  .route("/:id")
   .get(async (req, res) => {
     try {
       let data = await db.get(req.params.id);
@@ -36,7 +42,7 @@ router
 
       res
         .status(404)
-        .json({ message: 'The post with specified ID cannot be found.' });
+        .json({ message: "The post with specified ID cannot be found." });
     } catch (err) {
       res.status(500).json(err);
     }
@@ -45,7 +51,7 @@ router
     let { userId, text } = req.body;
 
     if (!userId || !text)
-      return res.status(400).json({ message: 'Text  or userID is missing' });
+      return res.status(400).json({ message: "Text  or userID is missing" });
 
     try {
       let count = await db.update(req.params.id, { userId, text });
@@ -54,7 +60,7 @@ router
       }
       res
         .status(404)
-        .json({ message: 'The post with specified ID cannot be found.' });
+        .json({ message: "The post with specified ID cannot be found." });
     } catch (err) {
       res.status(500).json(err);
     }
@@ -67,7 +73,7 @@ router
       }
       res
         .status(404)
-        .json({ message: 'The post with specified ID cannot be found.' });
+        .json({ message: "The post with specified ID cannot be found." });
     } catch (err) {
       res.status(500).json(err);
     }
