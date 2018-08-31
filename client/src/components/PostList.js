@@ -33,7 +33,7 @@ class  PostList extends Component {
     }
 
     getUser() {
-        const {id} = this.props.match.params.id;
+        const id = this.props.match.params.id;
         axios.get(`${userUrl}${id}`)
             .then(response => {
                 this.setState({user: response.data.name})

@@ -30,6 +30,7 @@ class List extends Component {
                     return (
                         <UserView
                             key={user.id}
+                            id={user.id}
                             user={user.name}
                         />    
                     )

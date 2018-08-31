@@ -9,7 +9,7 @@ import PostList from './components/PostList';
 ReactDOM.render(<Router>
                 <div>
                     <Route exact path='/' component={App} />
-                    <Route path='/posts:id' component={PostList} />
+                    <Route path='/posts/:id' component={PostList} />
                 </div>    
                 </Router>, document.getElementById('root'));
 registerServiceWorker();

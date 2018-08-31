@@ -3,9 +3,9 @@ import {withRouter} from 'react-router-dom';
 
 const UserView = (props) => {
     return (
-        <div onClick={() => props.history.push(`/posts/${props.id}`)}>
+        <a onClick={() => props.history.push(`/posts/${props.id}`)}>
             <p>{props.user}</p>
-        </div>
+        </a>
     )
 }
 
