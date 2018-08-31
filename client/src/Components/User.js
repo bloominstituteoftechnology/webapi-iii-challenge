@@ -19,7 +19,6 @@ class User extends React.Component{
     const promise = axios.get(`http://localhost:9000/api/users/${id}`)
     promise
     .then(response => {
-      console.log(response.data)
       this.setState({user: response.data, loaded: true})
     })
     .catch(error => {
@@ -28,11 +27,8 @@ class User extends React.Component{
   }
 
   render(){
-    console.log(this.props)
-    console.log(this.state)
     const {name, posts} = this.state.loaded === true ? this.state.user : {name: "Loading", posts: []}
     if (this.state.loaded === true){
-      console.log(posts[0].text)
       return (
         <div>
           <h1>{name} <Link to = '/'>Home</Link></h1>

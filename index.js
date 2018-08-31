@@ -22,28 +22,6 @@ function upperCase(req, res, next) {
   req.upperName = newName;
   next();
 }
-// function getPosts (req, res, next){
-//   const userData = {}
-//   db.get()
-//   .then(users => {
-//     users.map(user => {
-//       db.getUserPosts(user.id)
-//       .then(user => {
-//         console.log(user)
-//         userData.push()
-//       })
-//       .catch(error => {
-//         console.log(error)
-//       })
-//     })
-//   }).catch(error => {
-//     res.status(500).json({message: "error", error})
-//   })
-//   res.posts = userData; 
-//   console.log(res.posts,"req.posts")
-//   next()
-// }
-//middleware users above
 
 
 
@@ -53,7 +31,6 @@ function doesUserExist (req, res, next) {
   console.log(req.body, "body")
   db.get()
     .then( users => {
-      //console.log(users,"users")
       let user = users.filter(usr => usr.id === req.body.userId)
       req.user = user.length ? user[0] : []
       req.users = users // this can be used to get items for get
@@ -73,7 +50,6 @@ function doesUserExist (req, res, next) {
 server.get("/api/users", (req, res) => {
   db.get()
     .then(users => {
-      // console.log(users);
       res.status(200).json(users);
     })
     .catch(error => {
@@ -88,13 +64,11 @@ server.get("/api/users/:id", (req, res) => {
       if (user) {
         db.getUserPosts(user.id)
           .then(posts => {
-            //console.log(posts)
             res.status(200).json({id: user.id, name: user.name, posts})
           })
           .catch(error => {
             res.status(500).json({error, message: "Problem getting posts"})
           })
-        //res.status(200).json(user);
       } else {
         res
           .status(404)
@@ -109,7 +83,6 @@ server.get("/api/users/:id", (req, res) => {
 server.post("/api/users", upperCase, (req, res) => {
   const { name } = req.body;
   const send = { name: req.upperName };
-  console.log(send);
   if (name && name.length <= 128) {
     db.insert(send)
       .then(user => {
@@ -152,11 +125,9 @@ server.put("/api/users/:id", upperCase, (req, res) => {
 
 server.delete("/api/users/:id", (req, res) => {
   const { id } = req.params;
-  console.log(id);
   db.remove(id)
     .then(user => {
       if (user) {
-        console.log(user);
         res.status(204).end();
       } else {
         res
@@ -172,7 +143,6 @@ server.delete("/api/users/:id", (req, res) => {
 server.get("/api/posts", (req, res) => {
   postDb.get()
     .then(posts => {
-      console.log(posts)
       res.status(200).json(posts)
     }).catch( error => {
         res.status(500).json({error, message: "Check the url path unable to get posts. Do they exist?"})
@@ -198,9 +168,7 @@ server.post("/api/posts", doesUserExist, (req,res) => {
 
 server.put('/api/posts/:id', doesUserExist, (req, res) =>{
   const {id, text, userId} = req.body 
-  console.log(text.length, id)
   if(text.length){
-    console.log("inside if statement")
     postDb.update(id,{text,userId})
     .then(count => {
       if(count){

@@ -8,14 +8,12 @@ class UserList extends React.Component {
 
     }
   }
-// componentWillReceiveProps
+
 
 
   
 
   render(){
-    console.log(this.props)
-    console.log(this.state)
     return(
       <div>
         {this.props.users.map(user => <Link 
