@@ -15,7 +15,8 @@ function errorHandler(err, req, res, next) {
     switch(err.status) {
         case 400:
             res.status(400).json({errorMessage: 'Please provide the required information.'})
-
+            break;
+            
         case 404:
             res.status(404).json({errorMessage: 'The requested resource could not be found.'});
             break;
