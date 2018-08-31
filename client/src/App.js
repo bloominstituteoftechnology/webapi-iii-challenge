@@ -9,13 +9,15 @@ class App extends Component {
   constructor(props){
     super(props)
     this.state = {
-      users: []
+      users: [],
+      usersPosts: [],
     }
   }
 
   componentDidMount() {
     this.fetchUsers();
   }
+   
 
   fetchUsers = () => {
     const promise = axios.get('http://localhost:9000/api/users');
@@ -25,15 +27,16 @@ class App extends Component {
       })
       .catch(error => {
         console.log(error); 
-      })
+      }) 
   }
+
   render() {
-    console.log(this.state.users)
+    
     return (
       <div className="App">
         {/* {this.state.users.map(user => <div key = {user.id}>{user.name}</div>)} */}
-        <Route exact path = '/' render = {(props) => <UserList users ={this.state.users}/>}/>
-        <Route path = '/:id' component = {User} />
+        <Route exact path = '/' render = {(props) => <UserList users ={this.state.users} />}/>
+        <Route path = '/:id' render = {(props) => <User /> } />
         
       </div>
     );

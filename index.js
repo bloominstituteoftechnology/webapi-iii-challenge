@@ -22,12 +22,33 @@ function upperCase(req, res, next) {
   req.upperName = newName;
   next();
 }
-
+// function getPosts (req, res, next){
+//   const userData = {}
+//   db.get()
+//   .then(users => {
+//     users.map(user => {
+//       db.getUserPosts(user.id)
+//       .then(user => {
+//         console.log(user)
+//         userData.push()
+//       })
+//       .catch(error => {
+//         console.log(error)
+//       })
+//     })
+//   }).catch(error => {
+//     res.status(500).json({message: "error", error})
+//   })
+//   res.posts = userData; 
+//   console.log(res.posts,"req.posts")
+//   next()
+// }
 //middleware users above
 
 
 
 //middleware posts below
+
 function doesUserExist (req, res, next) {
   console.log(req.body, "body")
   db.get()
@@ -52,7 +73,7 @@ function doesUserExist (req, res, next) {
 server.get("/api/users", (req, res) => {
   db.get()
     .then(users => {
-      console.log(users);
+      // console.log(users);
       res.status(200).json(users);
     })
     .catch(error => {
