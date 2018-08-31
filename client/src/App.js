@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 import styled from "styled-components";
 import axios from "axios";
+import { Route } from "react-router-dom";
+
 import User from "./components/User";
+import UserDetail from "./components/UserDetail";
 
 const Header = styled.header`
   text-align: center;
@@ -51,18 +54,49 @@ class App extends Component {
     );
   }
 
+  fetchPosts = id => () => {
+    this.setState({ loading: true }, () =>
+      axios
+        .get(`/api/users/${id}/posts`)
+        .then(response =>
+          this.setState({ userPosts: response.data, loading: false })
+        )
+        .catch(err => console.log(err))
+    );
+  };
+
   render() {
     return (
       <div>
         <Header>
           <Title>NODE BLOG</Title>
         </Header>
-        <UsersContainer>
-          <UsersTitle>&lt; Users &gt;</UsersTitle>
-          {this.state.users.map(user => (
-            <User user={user} key={user.id} />
-          ))}
-        </UsersContainer>
+        <Route
+          exact
+          path="/"
+          render={({ history }) => (
+            <UsersContainer>
+              <UsersTitle>&lt; Users &gt;</UsersTitle>
+              {this.state.users.map(user => (
+                <User history={history} user={user} key={user.id} />
+              ))}
+            </UsersContainer>
+          )}
+        />
+        <Route
+          exact
+          path="/users/:id"
+          render={props => (
+            <UserDetail
+              {...props}
+              user={this.state.users.find(
+                user => user.id === Number(props.match.params.id)
+              )}
+              fetchPosts={this.fetchPosts(props.match.params.id)}
+              userPosts={this.state.userPosts}
+            />
+          )}
+        />
       </div>
     );
   }

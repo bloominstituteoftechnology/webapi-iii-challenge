@@ -7,7 +7,7 @@ import {
   tertiaryColorLight
 } from "../styles";
 
-const Paper = styled.div`
+export const Paper = styled.div`
   /* padding: 5rem; */
   background-color: ${secondaryColor};
   color: ${primaryColor};
@@ -27,6 +27,12 @@ const UserName = styled.div`
   letter-spacing: 1px;
 `;
 
+const background = `linear-gradient(
+    to right,
+    ${tertiaryColor},
+    ${tertiaryColorLight}
+  )`;
+
 const Avatar = styled.div`
   width: 8rem;
   height: 5.5rem;
@@ -34,12 +40,7 @@ const Avatar = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-image: linear-gradient(
-    to right,
-    ${tertiaryColor},
-    ${tertiaryColorLight}
-  );
-
+  background-image: ${background};
   color: ${secondaryColor};
   margin-right: 2rem;
   font-size: 2.4rem;
@@ -47,9 +48,9 @@ const Avatar = styled.div`
   clip-path: polygon(0 0, 100% 0, 80% 50%, 100% 100%, 0 100%);
 `;
 
-const User = ({ user: { id, name } }) => {
+const User = ({ user: { id, name }, history }) => {
   return (
-    <Paper>
+    <Paper onClick={() => history.push(`/users/${id}`)}>
       <Avatar>{name.charAt(0).toUpperCase()}</Avatar>
       <UserName>{name}</UserName>
     </Paper>
