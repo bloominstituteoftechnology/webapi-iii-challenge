@@ -33,6 +33,19 @@ router.get("/:id", (req,res) => {
     })
 }); 
 
+router.get("/:id/posts", (req, res) => {
+    const id = req.params.id; 
+    userDb.getUserPosts(id).then(userPosts => {
+        if(userPosts){
+            res.status(200).json(userPosts); 
+        }else {
+            res.status(404).json({error: "The specified ID for users does not exist, therefore no posts"})
+        }
+    }).catch(err => {
+        res.status(500).json({error: "The posts could not be retrieved from the database."})
+    })
+});
+
 router.post("/", toUppercase, (req, res) => {
     const data = req.body
     if (data.name){
