@@ -1,10 +1,17 @@
 import React, { PureComponent } from "react";
 import styled from "styled-components";
 import Link from "react-router-dom/Link";
+import posed from "react-pose";
 import { primaryColor, secondaryColor } from "../styles";
+import { UsersContainer as UC } from "../App";
 import { Paper } from "./User";
 
-const UsersContainer = styled.div`
+const ListContainer = posed.div({
+  enter: { staggerChildren: 50 },
+  exit: { staggerChildren: 20, staggerDirection: -1 }
+});
+
+const UsersContainer = styled(ListContainer)`
   max-width: 50rem;
   margin: 4rem auto;
   position: relative;
@@ -39,8 +46,12 @@ const PostPaper = Paper.extend`
 `;
 
 class UserDetail extends PureComponent {
+  state = {
+    loading: true
+  };
+
   componentDidMount() {
-    this.props.fetchPosts();
+    this.props.fetchPosts(() => this.setState({ loading: false }));
   }
   render() {
     return (
@@ -49,9 +60,13 @@ class UserDetail extends PureComponent {
         <SecondaryHeading>
           {this.props.user && this.props.user.name}
         </SecondaryHeading>
-        {this.props.userPosts.map(post => (
-          <PostPaper key={post.id}>{post.text}</PostPaper>
-        ))}
+        {this.state.loading ? (
+          <div>Loading...</div>
+        ) : (
+          this.props.userPosts.map(post => (
+            <PostPaper key={post.id}>{post.text}</PostPaper>
+          ))
+        )}
       </UsersContainer>
     );
   }

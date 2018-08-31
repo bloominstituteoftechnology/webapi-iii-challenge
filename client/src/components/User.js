@@ -1,5 +1,7 @@
 import React from "react";
 import styled from "styled-components";
+import posed from "react-pose";
+
 import {
   secondaryColor,
   primaryColor,
@@ -7,7 +9,15 @@ import {
   tertiaryColorLight
 } from "../styles";
 
-export const Paper = styled.div`
+const Item = posed.div({
+  pressable: true,
+  init: { scale: 1 },
+  press: { scale: 0.8 },
+  enter: { y: 0, opacity: 1 },
+  exit: { y: 50, opacity: 0 }
+});
+
+export const Paper = styled(Item)`
   /* padding: 5rem; */
   background-color: ${secondaryColor};
   color: ${primaryColor};

@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import styled from "styled-components";
 import axios from "axios";
-import { Route } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
+import posed, { PoseGroup } from "react-pose";
 
 import User from "./components/User";
 import UserDetail from "./components/UserDetail";
@@ -22,7 +23,12 @@ const Title = styled.h1`
   text-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.4);
 `;
 
-const UsersContainer = styled.div`
+const ListContainer = posed.div({
+  enter: { staggerChildren: 50 },
+  exit: { staggerChildren: 20, staggerDirection: -1 }
+});
+
+export const UsersContainer = styled(ListContainer)`
   max-width: 50rem;
   margin: 4rem auto;
 `;
@@ -35,6 +41,11 @@ const UsersTitle = styled.h2`
   letter-spacing: 3px;
   text-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.4);
 `;
+
+const RouteContainer = posed.div({
+  enter: { opacity: 1, delay: 300, beforeChildren: true },
+  exit: { opacity: 0 }
+});
 
 class App extends Component {
   state = {
@@ -54,50 +65,61 @@ class App extends Component {
     );
   }
 
-  fetchPosts = id => () => {
+  fetchPosts = id => cb => {
     this.setState({ loading: true }, () =>
       axios
         .get(`/api/users/${id}/posts`)
-        .then(response =>
-          this.setState({ userPosts: response.data, loading: false })
-        )
+        .then(response => {
+          this.setState({ userPosts: response.data, loading: false });
+          cb();
+        })
         .catch(err => console.log(err))
     );
   };
 
   render() {
     return (
-      <div>
-        <Header>
-          <Title>NODE BLOG</Title>
-        </Header>
-        <Route
-          exact
-          path="/"
-          render={({ history }) => (
-            <UsersContainer>
-              <UsersTitle>&lt; Users &gt;</UsersTitle>
-              {this.state.users.map(user => (
-                <User history={history} user={user} key={user.id} />
-              ))}
-            </UsersContainer>
-          )}
-        />
-        <Route
-          exact
-          path="/users/:id"
-          render={props => (
-            <UserDetail
-              {...props}
-              user={this.state.users.find(
-                user => user.id === Number(props.match.params.id)
-              )}
-              fetchPosts={this.fetchPosts(props.match.params.id)}
-              userPosts={this.state.userPosts}
-            />
-          )}
-        />
-      </div>
+      <Route
+        children={({ location }) => (
+          <div>
+            <Header>
+              <Title>NODE BLOG</Title>
+            </Header>
+            <PoseGroup>
+              <RouteContainer key={location.key}>
+                <Switch location={location}>
+                  <Route
+                    exact
+                    path="/"
+                    render={({ history }) => (
+                      <UsersContainer>
+                        <UsersTitle>&lt; Users &gt;</UsersTitle>
+                        {this.state.users.map(user => (
+                          <User history={history} user={user} key={user.id} />
+                        ))}
+                      </UsersContainer>
+                    )}
+                  />
+                  <Route
+                    exact
+                    path="/users/:id"
+                    render={props => (
+                      <UserDetail
+                        {...props}
+                        user={this.state.users.find(
+                          user => user.id === Number(props.match.params.id)
+                        )}
+                        fetchPosts={this.fetchPosts(props.match.params.id)}
+                        userPosts={this.state.userPosts}
+                      />
+                    )}
+                  />
+                </Switch>
+              </RouteContainer>
+            </PoseGroup>
+          </div>
+        )}
+      />
     );
   }
 }
