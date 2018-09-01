@@ -4,17 +4,65 @@ body {
   font-family: sans-serif;
 }
 
+a {
+  text-decoration: none;
+  color: black;
+}
+
+a:active {
+  text-decoration: none;
+  color: black;
+}
+
 .App {
   text-align: center;
 }
 
 .App-header {
   background-color: #222;
-  height: 150px;
+  height: 100px;
   padding: 20px;
   color: white;
 }
 
+.App-header h3 {
+  font-style: italic;
+}
+
 .App-title {
   font-size: 1.5em;
+}
+
+.users {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.users .user {
+  border-bottom: 1px solid black;
+  width: 220px;
+  margin: 0 20px;
+}
+
+.posts {
+  border: 1px solid black;
+  margin: 25px 0;
+  background: lightsteelblue;
+}
+
+.posts :not(:last-child) {
+  border-bottom: 1px solid black;
+}
+
+.tags {
+  border: 1px solid black;
+  width: 50%;
+  margin: 10px auto;
+  padding-bottom: 20px;
+  background: lightsteelblue;
+}
+
+.tags h3 {
+  margin-top: 5px;
 }

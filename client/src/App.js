@@ -40,6 +40,7 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
           <h1 className="App-title">Node Blog</h1>
+          <h3>Click things for more information.</h3>
         </header>
 
         <Route exact path="/" render={() => (
@@ -53,7 +54,7 @@ class App extends Component {
                       to={`/users/${id}`} 
                       onClick={() => this.getUserPosts(id)}
                     >
-                    {name}
+                      {name}
                     </Link>
                   </h3>
                 </div>
@@ -98,7 +99,6 @@ class App extends Component {
               <span>
                 {tag.tag}
               </span>
-              &emsp;
             </div>
           ))}
         </div>
