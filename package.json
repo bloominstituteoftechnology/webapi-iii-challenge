@@ -1,0 +1,17 @@
+{
+  "name": "Node-Blog",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/AI2EJAY/Node-Blog.git",
+  "author": "AI2EJAY <JHammett1314@gmail.com>",
+  "license": "MIT",
+  "scripts": {"start": "nodemon"},
+  "devDependencies": {
+    "nodemon": "^1.18.4"
+  },
+  "dependencies": {
+    "express": "^4.16.3",
+    "knex": "^0.15.2",
+    "sqlite3": "^4.0.2"
+  }
+}
