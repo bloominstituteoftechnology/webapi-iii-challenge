@@ -3,13 +3,9 @@
   "version": "1.0.0",
   "description": "- Building RESTful APIs.\r - Performing CRUD Operations on Multiple Resources.\r - Configuring CORS.\r - Writing Custom Middleware.\r - Using Express Routers to Modularize Application.",
   "main": "index.js",
-  "dependencies": {
-    "knex": "^0.15.2",
-    "sqlite3": "^4.0.2"
-  },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon"
   },
   "repository": {
     "type": "git",
@@ -21,5 +17,13 @@
   "bugs": {
     "url": "https://github.com/vanceleon/Node-Blog/issues"
   },
-  "homepage": "https://github.com/vanceleon/Node-Blog#readme"
+  "homepage": "https://github.com/vanceleon/Node-Blog#readme",
+  "dependencies": {
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "knex": "^0.15.2",
+    "morgan": "^1.9.0",
+    "nodemon": "^1.18.4",
+    "sqlite3": "^4.0.2"
+  }
 }
