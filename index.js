@@ -18,7 +18,16 @@ const logger = (req, res, next) => {
     next(); //calls the next middleware in the queue
 }
 
+const lengthCheck = (req, res, next) => {
+    if (req.body.length < 1 || req.body.lengh > 128) {
+        res.status(401).json({message: 'name is required and cannot exceed 128 characters'})
+    } else {
+        next();
+    }
+}
+
 server.use(logger)
+server.use(lengthCheck)
 
 // configure routing
 server.get('/', (req, res) => {
@@ -26,7 +35,7 @@ server.get('/', (req, res) => {
     res.send('Api running');
 });
 
-server.post('/users', (req, res) => {
+server.post('/users', lengthCheck, (req, res) => {
     db.insert(req.body)
     .then(response => res.status(201).json({message: 'user creation success'}))
     .catch(err => res.status(500).json({message: 'error creating user'}))
@@ -45,6 +54,27 @@ server.put('/users/:id', (req, res) => {
     db.update(id, req.body)
     .then(users => res.status(200).json(users))
     .catch(err => res.status(500).json({message: 'user update fail'}))
+})
+
+server.post('/posts', (req, res) => {
+    db.insert(req.body)
+    .then(response => res.status(201).json({message: 'post creation success'}))
+    .catch(err => res.status(500).json({message: 'error creating posts'}))
+})
+
+server.delete('/posts/:id', (req, res) => {
+    const {id} = req.params
+
+    db.remove(id)
+    .then(count => res.status(204).end())
+    .catch(err => res.status(500).json({message: 'delete unsuccessful'}))
+})
+
+server.put('/posts/:id', (req, res) => {
+    const {id} = req.params
+    db.update(id, req.body)
+    .then(posts => res.status(200).json(posts))
+    .catch(err => res.status(500).json({message: 'post update fail'}))
 })
 
 
