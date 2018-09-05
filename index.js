@@ -9,22 +9,21 @@ server.use(express.json());
 
 //add middleware
 function upperCase(req, res, next) {
-  //   console.log("UpperCase Middleware: ", req.params);
   req.uppercase = true;
   next();
 }
 
-// server.use(upperCase);
+server.use(upperCase);
 
 //global use of middleware
-// server.use(express.json());
+server.use(express.json());
 
 //add routes
 server.get("/users", (req, res) => {
     db.get()
     .then(users => {
       if (users) {
-        user = users.map(eachUser => eachUser.name.toUpperCase())
+        if(req.uppercase) users = users.map(eachUser => eachUser.name.toUpperCase())
         res.status(200).json(users);
       } else {
         res.status(404).json({ message: "No users found" });
