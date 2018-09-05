@@ -10,3 +10,10 @@ Inside the Server...
 request -[-> m1 > m2 > m3 > mn] -> response [Client]
 
 const middlware = [ m1, m2, m3 ];
+
+
+axios
+    .put(`${APIroot}${editedNote.id}`, editedNote)
+    .then(res => {
+        console.log(res.data);
+    };
