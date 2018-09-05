@@ -23,7 +23,7 @@ function upperCase(req, res, next) {
 // server.use(upperCase);
 
 //add routes
-server.get("/users", upperCase, (req, res) => {
+server.get("/users", (req, res) => {
   db.get()
     .then(users => {
       if (users) {
@@ -54,6 +54,13 @@ server.get("/users/:id", /*auth,*/ (req, res) => {
       res.status(500).json({ error: "whoops again" });
     });
 });
+
+server.post("/users/posts", async (req, res) => {
+    const post = req.body;
+    
+    if(post.name)
+})
+
 
 //start my server up
 server.listen(8000, () => console.log("\n=== API on port 8k ===\n"));
