@@ -19,4 +19,5 @@ exports.seed = function(knex, Promise) {
         { tag: 'prancing pony' }, // 14
       ]);
     });
+    
 };
