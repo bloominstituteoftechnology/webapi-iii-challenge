@@ -12,6 +12,7 @@ class App extends Component {
     axios
       .get("http://localhost:8000/users")
       .then(res => {
+        console.log("res: ", res.data);
         this.setState({ users: res.data });
       })
       .catch(err => {
@@ -33,10 +34,9 @@ class App extends Component {
             </tr>
           </thead>
           <tbody>
-            {this.state.users.map(users => {
-              <tr key={users.id}>
-                <p>{users.name}</p>
-                <div>{console.log("users: ", users)}</div>
+            {this.state.users.map(user => {
+              <tr key={user.id}>
+                <td className="users">{user.name}</td>
               </tr>;
             })}
           </tbody>

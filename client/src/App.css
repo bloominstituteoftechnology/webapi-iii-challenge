@@ -27,6 +27,8 @@
   to { transform: rotate(360deg); }
 }
 
-td {
+.users {
   color: black;
+  border: 1px solid red;
+  font-family: 'Times New Roman', Times, serif;
 }

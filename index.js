@@ -2,8 +2,14 @@ const express = require("express");
 const db = require("./data/helpers/userDb.js");
 const server = express();
 const cors = require("cors");
+const helmet = require("helmet");
+const morgan = require("morgan");
+const userDb = require("./data/helpers/userDb.js");
+const postDb = require("./data/helpers/postDb.js");
 
 server.use(express.json());
+server.use(helmet());
+server.use(morgan("dev"));
 server.use(cors());
 //add middleware
 // function auth(req, res, next) {
@@ -41,9 +47,7 @@ server.get("/users", upperCase, (req, res) => {
     });
 });
 
-server.get(
-  "/users/:id",
-  /*auth,*/ (req, res) => {
+server.get("/users/:id", /*auth,*/ (req, res) => {
     const id = req.params.id;
     db.get(id)
       .then(user => {
@@ -65,7 +69,7 @@ server.post("/users/posts", async (req, res) => {
   db.insert(posts)
     .then(post => {
       if (!posts.name) {
-        res.status(400).json({ error: "Provide name" });
+        res.status(400).json({ error: "Provide name for user" });
       } else {
         res.status(201).json(post);
       }
@@ -74,6 +78,13 @@ server.post("/users/posts", async (req, res) => {
       console.log(err);
       res.status(500).json({ error: "There was error" });
     });
+});
+
+server.put("/users/:id", (req, res) => {
+  const id = req.param.id;
+  const user = req.body;
+
+  users.update;
 });
 
 //start my server up
