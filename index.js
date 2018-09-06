@@ -8,9 +8,11 @@
 
 const express = require('express');
 const helmet = require('helmet');
+// const morgan = require('morgan')
 const cors = require('cors')
 const server = express();
-const db = require('./data/dbConfig')
+const userDb = require('./data/helpers/userDb');
+const postDb = require('./data/helpers/postDb');
 
 // add middleware
 const logger = (req, res, next) => {
@@ -18,26 +20,33 @@ const logger = (req, res, next) => {
     next(); //calls the next middleware in the queue
 }
 
-const lengthCheck = (req, res, next) => {
-    if (req.body.length < 1 || req.body.lengh > 128) {
-        res.status(401).json({ message: 'name is required and cannot exceed 128 characters' })
-    } else {
-        req.body.toUppercase();
-        next();
-    }
-}
+// const upperCase = (req, res, next) => {
+//     console.log(req.body)
+//     req.body.name.toUpperCase();
+//     next()
 
-const textCheck = (req, res, next) => {
-    if (req.body.length < 1) {
-        res.status(401).json({ message: 'text is required' })
-    } else {
-        next();
-    }
-}
+    // if (req.body.length < 1 || req.body.lengh > 128) {
+    //     res.status(401).json({ message: 'name is required and cannot exceed 128 characters' })
+    // } else {
+    //     req.body.toUpperCase();
+    //     next();
+    // }
+// }
 
+// const textCheck = (req, res, next) => {
+//     if (req.body.length < 1) {
+//         res.status(401).json({ message: 'text is required' })
+//     } else {
+//         next();
+//     }
+// }
+server.use(helmet())
+// server.use(morgan('short'))
 server.use(logger)
-server.use(lengthCheck)
-server.use(textCheck)
+// server.use(upperCase)
+// server.use(textCheck)
+server.use(express.json()); 
+
 
 // configure routing
 server.get('/', (req, res) => {
@@ -47,17 +56,25 @@ server.get('/', (req, res) => {
 
 // USERS
 
+server.get('/users', (req, res) => {
+
+    userDb.get().then(users => {
+        res.status(200).json(users)
+    })
+        .catch(err => res.status(404).json({ message: "couldnt access users" }))
+})
+
 server.get('/users/:id', (req, res) => {
     const id = req.params;
 
-    db.find(id).then(posts => {
-        res.status(200).json(posts)
+    userDb.get(id).then(user => {
+        res.status(200).json(user.id)
     })
         .catch(err => res.status(404).json({ message: "The user with the specified ID does not exist." }))
 })
 
-server.post('/users', lengthCheck, (req, res) => {
-    db.insert(req.body)
+server.post('/users', (req, res) => {
+    userDb.insert(req.body)
         .then(response => res.status(201).json({ message: 'user creation success' }))
         .catch(err => res.status(500).json({ message: 'error creating user' }))
 })
@@ -65,31 +82,39 @@ server.post('/users', lengthCheck, (req, res) => {
 server.delete('/users/:id', (req, res) => {
     const { id } = req.params
 
-    db.remove(id)
+    userDb.remove(id)
         .then(count => res.status(204).end())
         .catch(err => res.status(500).json({ message: 'delete unsuccessful' }))
 })
 
 server.put('/users/:id', (req, res) => {
     const { id } = req.params
-    db.update(id, req.body)
+    userDb.update(id, req.body)
         .then(users => res.status(200).json(users))
         .catch(err => res.status(500).json({ message: 'user update fail' }))
 })
 
 // POSTS
 
+server.get('/posts', (req, res) => {
+
+    postDb.get().then(posts => {
+        res.status(200).json(posts)
+    })
+        .catch(err => res.status(404).json({ message: "couldnt access posts" }))
+})
+
 server.get('/posts/:id', (req, res) => {
     const id = req.params;
 
-    db.find(id).then(posts => {
-        res.status(200).json(posts)
+    postDb.get(id).then(posts => {
+        res.status(200).json(posts.id)
     })
         .catch(err => res.status(404).json({ message: "The post with the specified ID does not exist." }))
 })
 
-server.post('/posts', textCheck, (req, res) => {
-    db.insert(req.body)
+server.post('/posts', (req, res) => {
+    postDb.insert(req.body)
         .then(response => res.status(201).json({ message: 'post creation success' }))
         .catch(err => res.status(500).json({ message: 'error creating posts' }))
 })
@@ -97,14 +122,14 @@ server.post('/posts', textCheck, (req, res) => {
 server.delete('/posts/:id', (req, res) => {
     const { id } = req.params
 
-    db.remove(id)
-        .then(count => res.status(204).end())
+    postDb.remove(id)
+        .then(count => res.status(204).json({message: 'delete successful'}).end())
         .catch(err => res.status(500).json({ message: 'delete unsuccessful' }))
 })
 
 server.put('/posts/:id', (req, res) => {
     const { id } = req.params
-    db.update(id, req.body)
+    postDb.update(id, req.body)
         .then(posts => res.status(200).json(posts))
         .catch(err => res.status(500).json({ message: 'post update fail' }))
 })
@@ -112,3 +137,4 @@ server.put('/posts/:id', (req, res) => {
 
 // start the server
 server.listen(4000, () => console.log('API On Port 4000'));
+
