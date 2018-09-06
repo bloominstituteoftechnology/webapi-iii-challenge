@@ -12,7 +12,6 @@ server.get("/", (req, res) => {
 });
 
 server.get("/users", (req, res) => {
-  //   console.log(userDb.user)
   userDb
     .get()
     .then(users => {
@@ -36,6 +35,34 @@ server.get("/users/:id", (req, res) => {
       res.status(500).json({ error: "The USER data could not be retrieved" });
     });
 });
+
+server.post("/users", (req, res) => {
+  const postContents = req.body;
+  const response = userDb.insert(postContents);
+  userDb
+    .insert(postContents)
+    .then(users => {
+      res.status(203).json(response);
+    })
+    .catch(err => {
+      console.error("error", err);
+      res.status(422).json({ error: "Unable to create post" });
+    });
+});
+
+// server.put("/users", (req, res) => {
+//   userDb
+//     .update()
+//     .then()
+//     .catch();
+// });
+
+// server.delete("/users/:id", (req, res) => {
+//   userDb
+//     .remove()
+//     .then()
+//     .catch();
+// });
 
 const port = 8000;
 
