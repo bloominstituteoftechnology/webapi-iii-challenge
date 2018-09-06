@@ -44,6 +44,7 @@ server.get('/', (req, res) => {
 })
 // --Get all Users and capatlize
 server.get('/users', userToUpperCase, (req, res) => {
+
     const id = req.params.id;
     userdb.get(id)
     .then(users => {
@@ -64,6 +65,7 @@ server.get('/users', userToUpperCase, (req, res) => {
 })
 //posts
 server.get('/posts', (req, res) => {
+
     const id = req.params.id;
     postdb.get(id)
     .then(users => {
@@ -76,6 +78,7 @@ server.get('/posts', (req, res) => {
 })
 //posts by post id, cannot seem to do it by userId this way.
 server.get('/posts/:id', (req, res) => {
+
     const id = req.params.id;
     postdb.get(id)
     .then(posts => {
@@ -93,7 +96,9 @@ server.get('/posts/:id', (req, res) => {
 })
 // --Get User By id
 server.get('/users/:id',  (req, res) => {
+
     const id = req.params.id;
+
     userdb.get(id)
     .then(users => {
       if(users){
@@ -111,7 +116,9 @@ server.get('/users/:id',  (req, res) => {
 })
 //--Get post for a given user:
 server.get('/users/posts/:id', (req,res) => {
+
   const id = req.params.id;
+
   userdb.getUserPosts(id)
     .then(user => {
       if(user.length === 0){
@@ -128,6 +135,7 @@ server.get('/users/posts/:id', (req,res) => {
 })
 //--Add user through Post
 server.post('/users/:id', capatlize, (req, res) => {
+
   const username = req.body.name;
   if(!username){
     res.status(400).json({message: "Please provide a name for this user"})
@@ -142,6 +150,50 @@ server.post('/users/:id', capatlize, (req, res) => {
   })
 })
 //getting sql  constraint for duplicate names how to  handle this exception?
+// How to add with specified route id?
 
+//Delete User
+server.delete('/users/:id', (req, res) => {
+
+  const id = req.params.id;
+  userdb.remove(id)
+  .then(user => {
+    if(user === 0) {
+      res.status(400).json({ message: "please use a valid id"})
+    }
+    else{
+      res.status(200).json(user)
+    }
+    })
+    .catch(err =>{
+      console.log(err)
+      res.status(500).json({ error: "can't delete user" })
+  })
+})
+//Update User
+server.put('/users/:id', capatlize, (req, res) =>{
+
+  const id = req.params.id;
+  const name = req.body.name;
+  const body = req.body
+
+  if(!name){
+    res.status(400).json({error: "Please christen this poor virtual soul"})
+  }
+
+  userdb.update(id, body)
+  .then(user => {
+    if(user === 0){
+      res.status(400).json({message: 'This Id does not exist'})
+    }
+    else{
+      res.status(200).json(user)
+    }
+  })
+  .catch(err => {
+    console.log(err)
+    res.status(500).json({message: "Failed to update user, please discipline database accordingly"})
+  })
+})
 //Listener
 server.listen(8000, ( ) => console.log('\n == API on port 8000 =='))
