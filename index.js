@@ -3,7 +3,9 @@ const postDb = require("./data/helpers/postDb.js");
 const userDb = require("./data/helpers/userDb.js");
 const server = express();
 
-const upercaseChecker = (req, res, next) => {};
+const upercaseChecker = (req, res, next) => {
+    
+};
 
 server.use(express.json());
 
@@ -41,7 +43,7 @@ server.post("/users", (req, res) => {
   const response = userDb.insert(postContents);
   userDb
     .insert(postContents)
-    .then(users => {
+    .then(() => {
       res.status(203).json(response);
     })
     .catch(err => {
@@ -50,19 +52,31 @@ server.post("/users", (req, res) => {
     });
 });
 
-// server.put("/users", (req, res) => {
-//   userDb
-//     .update()
-//     .then()
-//     .catch();
-// });
+server.put("/users/:id", (req, res) => {
+  userDb
+    .update(req.params.id, req.body)
+    .then(user => {
+      console.log(user);
+      res.status(200).json(user);
+    })
+    .catch(err => {
+      console.error("error", err);
+      res.status(500).json({ error: "Unable to PUT" });
+    });
+});
 
-// server.delete("/users/:id", (req, res) => {
-//   userDb
-//     .remove()
-//     .then()
-//     .catch();
-// });
+server.delete("/users/:id", (req, res) => {
+  const id = req.params.id;
+  userDb
+    .remove(id)
+    .then(user => {
+      res.status(200).json(user);
+    })
+    .catch(err => {
+      console.error("error", err);
+      res.status(500).json({ error: "UNABLE TO DELETE" });
+    });
+});
 
 const port = 8000;
 
