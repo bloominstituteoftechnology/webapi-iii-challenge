@@ -4,7 +4,10 @@ const userDb = require("./data/helpers/userDb.js");
 const server = express();
 
 const upercaseChecker = (req, res, next) => {
-    
+    word = req.body.name
+  if (word[0] === word[0].toUpperCase()) {
+      next()
+  } else res.status(400).json({error: "Please enter a capitilized/propercase name"})
 };
 
 server.use(express.json());
@@ -38,7 +41,7 @@ server.get("/users/:id", (req, res) => {
     });
 });
 
-server.post("/users", (req, res) => {
+server.post("/users", upercaseChecker , (req, res) => {
   const postContents = req.body;
   const response = userDb.insert(postContents);
   userDb
@@ -56,7 +59,6 @@ server.put("/users/:id", (req, res) => {
   userDb
     .update(req.params.id, req.body)
     .then(user => {
-      console.log(user);
       res.status(200).json(user);
     })
     .catch(err => {
