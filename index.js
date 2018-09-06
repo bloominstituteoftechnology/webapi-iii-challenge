@@ -20,7 +20,20 @@ server.get("/users", (req, res) => {
     })
     .catch(err => {
       console.error("error", err);
-      res.status(500).json({ error: "The USER data could not be retrieved." });
+      res.status(500).json({ error: "The USERS data could not be retrieved." });
+    });
+});
+
+server.get("/users/:id", (req, res) => {
+  const id = req.params.id;
+  userDb
+    .get(id)
+    .then(user => {
+      res.status(200).json(user);
+    })
+    .catch(err => {
+      console.error("error", err);
+      res.status(500).json({ error: "The USER data could not be retrieved" });
     });
 });
 
