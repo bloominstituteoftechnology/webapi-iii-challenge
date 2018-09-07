@@ -73,7 +73,7 @@ router.put("/:id", (req, res) => {
 // POST 
 router.post("/", (req, res) => {
     const post = req.body;
-    users
+    posts
       .insert(post)
       .then(response => {
         if (post.text) {
@@ -98,11 +98,11 @@ router.delete('/:id', (req, res) => {
     .then(flag => {
         if (flag > 0) res.json(id);
         else {
-            res.status(404).json({errorMessage: "That user does not exist"});
+            res.status(404).json({errorMessage: "That post does not exist"});
         }
     })
     .catch(error => {
-        res.status(500).json({error: "There was an error deleting the user"});
+        res.status(500).json({error: "There was an error deleting the post"});
     })
 })
 
