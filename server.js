@@ -46,11 +46,14 @@ server.get('/', (req, res) => {
 server.get('/users', userToUpperCase, (req, res) => {
 
     const id = req.params.id;
+    console.log(req.params, req.body, req.query)
     userdb.get(id)
     .then(users => {
       if(users){
-        if(req.monkey) {users = users.map(each =>
-            each.name.toUpperCase())
+        if(req.monkey) {users = users.map(each => {
+            each.name = each.name.toUpperCase();
+            return each;
+          })
             res.status(200).json(users)
           }
             else{
