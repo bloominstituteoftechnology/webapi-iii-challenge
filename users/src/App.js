@@ -1,8 +1,26 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import axios from 'axios';
 
 class App extends Component {
+  state = {
+    users: []
+  }
+
+  componentDidMount() {
+    axios
+    .get("http://localhost:8000/users)" )
+    .then(res => {
+      console.log("res: ", res.data);
+      this.setState({users: res.data});
+    })
+    .catch(err => {
+      console.error("Error getting data", err);
+    });
+  }
+
+
   render() {
     return (
       <div className="App">
@@ -14,7 +32,7 @@ class App extends Component {
           To get started, edit <code>src/App.js</code> and save to reload.
         </p>
       </div>
-    );
+    );  
   }
 }
 

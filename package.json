@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "- Building RESTful APIs.\r - Performing CRUD Operations on Multiple Resources.\r - Configuring CORS.\r - Writing Custom Middleware.\r - Using Express Routers to Modularize Application.",
   "main": "index.js",
-  "devDependencies": {},
+  "devDependencies": {
+    "nodemon": "^1.18.4"
+  },
   "scripts": {
     "start": "nodemon"
   },
@@ -23,7 +25,6 @@
     "express": "^4.16.3",
     "knex": "^0.15.2",
     "morgan": "^1.9.0",
-    "nodemon": "^1.18.4",
     "sqlite3": "^4.0.2"
   }
 }
