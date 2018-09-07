@@ -11,11 +11,11 @@ class App extends Component {
   componentDidMount() {
     axios
       .get("http://localhost:8000/users")
-      .then(res => {
+      .then((res) => {
         console.log("res: ", res.data);
         this.setState({ users: res.data });
       })
-      .catch(err => {
+      .catch((err) => {
         console.error("Error getting data", err);
       });
   }
@@ -34,11 +34,13 @@ class App extends Component {
             </tr>
           </thead>
           <tbody>
-            {this.state.users.map(user => {
-              <tr key={user.id}>
-                <td className="users">{user.name}</td>
-              </tr>;
-            })}
+            <tr>
+              {this.state.users.map((user) => (
+                <td key={user.id} className="users">
+                  {user.name}
+                </td>
+              ))}
+            </tr>
           </tbody>
         </table>
       </div>
