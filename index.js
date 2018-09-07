@@ -22,38 +22,23 @@ server.use(cors());
 //   }
 // }
 
-// note we added the third parameter here: next
-// server.get("/download", (req, res, next) => {
-//   const filePath = path.join(__dirname, "index.html");
-//   res.sendFile(filePath, err => {
-//     // if there is an error the callback function will get an error as it's first argument
-//     if (err) {
-//       // we could handle the error here or pass it down to error-handling middleware like so:
-//       next(err); // call the next error-handling middleware in the queue
-//     } else {
-//       console.log("File sent successfully");
-//     }
-//   });
-// });
-
-function upperCase(req, res, next) {
+function capitalName(req, res, next) {
   req.body.name = req.body.name.toUpperCase();
   next();
 }
 
-// server.use(upperCase);
 
 //add routes
 server.get("/users", (req, res) => {
   db.get()
-    .then(users => {
+    .then((users) => {
       if (users) {
         res.status(200).json(users);
       } else {
         res.status(404).json({ message: "No users found" });
       }
     })
-    .catch(err => {
+    .catch((err) => {
       console.log("error: ", err);
       res.status(500).json({ error: "Users cannot be retrieved" });
     });
@@ -64,54 +49,63 @@ server.get(
   /*auth,*/ (req, res) => {
     const id = req.params.id;
     db.get(id)
-      .then(user => {
+      .then((user) => {
         if (user) {
           res.status(200).json(user);
         } else {
           res.status(404).json({ message: "whoops" });
         }
       })
-      .catch(err => {
+      .catch((err) => {
         console.log("error: ", err);
         res.status(500).json({ error: "whoops again" });
       });
   }
 );
 
-server.post("/users/posts", async (req, res) => {
-  //http message = headers + body(data)
-  const post = req.body; //this requies the express.json() middleware
-
-  if (post.title && post.contents) {
-    try {
-      const response = await db.insert(post);
-      res.status(201).json({ message: "User created successfully" });
-      //200-299: success, 300-399: redirection, 400-499: client error, 500+: server error
-    } catch (err) {
-      // handle error
-      res.status(500).json({
-        error: "There was an error while saving the post to the database."
-      });
-    }
-  } else {
-    res.status(400).json({
-      errorMessage: "Please provide title and contents for the post."
+server.get("/users/:id/posts", (req, res) => {
+  const id = req.params.id;
+  db.getUserPosts(id)
+    .then((posts) => {
+      if (posts) {
+        res.status(200).json(posts);
+      } else {
+        res.status(404).json({ message: "Has no posts" });
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).json({ error: "Could not be retrieved" });
     });
-  }
 });
 
-server.put("/users/posts/:id", upperCase, (req, res) => {
+
+server.post("/users/:id", capitalName, async (req, res) => {
+  const user = req.body;
+  db.insert(user)
+    .then((response) => {
+      if (user.name) {
+        res.status(201).json({ message: "User Created" });
+      } else {
+        res.status(404).json({ message: "User needs a name" });
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({ error: "User information could not be modified" });
+    });
+});
+
+server.put("/users/:id", capitalName, (req, res) => {
   if (req.body.name) {
-    users
-      .update(req.param.id, req.body)
-      .then(user => {
+    db.update(req.param.id, req.body)
+      .then((user) => {
         if (user) {
           res.status(200).json(user);
         } else {
           res.status(404).json({ message: "Need ID" });
         }
       })
-      .catch(err => {
+      .catch((err) => {
         res.status(500).json({ error: "Not be modified" });
       });
   } else {
@@ -119,48 +113,23 @@ server.put("/users/posts/:id", upperCase, (req, res) => {
   }
 });
 
-server.delete("/users/posts/:id", (req, res) => {
-  const { id } = req.params; //const id = req.params.id;
-
-  db.remove(id)
-    .then(count => {
-      console.log("Count: ", count);
-      if (count) {
-        res.status(204).end();
+server.delete("/users/:id", (req, res) => {
+  db.remove(req.params.id)
+    .then((response) => {
+      if (response) {
+        res.status(204).json({ message: "User Deleted" });
       } else {
         res
           .status(404)
-          .json({ message: "The post with the specified ID does not exist." });
+          .json({ message: "The User with that ID does not exist" });
       }
     })
-    .catch(err =>
-      res.status(500).json({ error: "The post could not be removed" })
-    );
+    .catch((err) => {
+      res.status(500).json({ error: "The user could not be removed" });
+    });
 });
 
-// server.use(errorHandler);
 
 //start my server up
 server.listen(8000, () => console.log("\n=== API on port 8k ===\n"));
 
-// function errorHandler(err, req, res, next) {
-//   console.error(err);
-
-//   switch (err.statusCode) {
-//     case 404:
-//       res
-//         .status(404)
-//         .json({
-//           message: "The requested file does not exist."
-//         });
-//       break;
-
-//     default:
-//       res
-//         .status(500)
-//         .json({
-//           message: "There was an error performing the required operation"
-//         });
-//       break;
-//   }
-// }
