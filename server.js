@@ -108,11 +108,11 @@ server.delete('/posts/:id', (req, res) => {
 
     posts.remove(id)
         .then((post) => {
-            response.json(post);
+            res.json(post);
         })
         .catch((fail) => {
             console.log(fail);
-            response.status(500).json({
+            res.status(500).json({
                 error: "The post could not be removed"
             });
         })
