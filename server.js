@@ -27,19 +27,38 @@ server.get('/api/users', (req, res) => {
 	})
 })
 
-// server.get('')
+const middeUp = (req, res, next) => {
+	console.log(req.body.name)
+	//req.body
+	// if (req.body.name.length === 0){
+	// 	console.log('no name length')
+	// }
+	//req.body.name = req.body.name.char
 
-// server.get('/api/posts', (req, res) => {
-// 	db
-// 	.find()
-// 	.then(posts => {
-// 		res.status(200).json({ posts })
-// 	})
-// 	.catch(error => {
-// 		console.log(error)
-// 		res.status(500).json({ error: "The posts information could not be retrieved." })
-// 	});
-// })
+
+
+// function capitalizeFirstLetter(string) {
+//   return string.charAt(0).toUpperCase() + string.slice(1);
+// }
+
+	next();
+}
+
+server.post('/api/users', middeUp, (req,res) => {
+	const {name} = req.body;
+	if (!req.body.name){
+		res.status(400).json({error: 'please provide name'})
+	} else {
+		users
+		.insert({name})
+		.then(response => {
+			res.status(201).json(response)
+		})
+		.catch(error)
+		res.status(500).json({error: "there was an error while saving user"})
+	}
+})
+
 
 
 // server.post('/api/posts', (req, res) => {
