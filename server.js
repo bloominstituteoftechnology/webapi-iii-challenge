@@ -8,6 +8,9 @@ const tags = require('./data/helpers/tagDb.js');
 
 
 server.use(express.json());
+const cors = require('cors')
+server.use(cors())
+
 
 //make sure server is working
 server.get('/', (req, res) => {
@@ -19,7 +22,7 @@ server.get('/api/users', (req, res) => {
 	users
 	.get()
 	.then(users => {
-		res.status(200).json({ users })
+		res.status(200).json(users)
 	})
 	.catch(error => {
 		console.log(error)
