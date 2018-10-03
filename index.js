@@ -82,6 +82,27 @@ server.get("/posts/:id", (req, res) => {
     .catch(err => res.status(500).send(err));
 });
 
+// POST a new post 
+server.post("/posts", (req, res) => {
+  
+  const { text, userId } = req.body;
+  const newPost = { text, userId };
+  
+  postdb
+    .insert(newPost)
+    .then(post => {
+      postdb
+        .get(post.id)
+        .then(newPostConfirmed => res.status(200).send(newPostConfirmed))
+        .catch(err => res.status(500).send(err));
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).send(err);
+    });
+
+});
+
 // DELETE a specific post by id
 server.delete("/posts/:id", (req, res) => {
   const { id } = req.params;
@@ -91,3 +112,7 @@ server.delete("/posts/:id", (req, res) => {
 });
 
 ///////
+
+// Port listening
+const port = 5000;
+server.listen(port, () => console.log(`Server is listening to port ${port}`)); 
