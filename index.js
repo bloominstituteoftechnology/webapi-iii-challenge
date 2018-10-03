@@ -21,23 +21,23 @@ const upperCaseUser = (req, res, next) => {
 
 //global middleware
 server.use(cors());
+server.use(express.json());
 // server.use(helmet());
 
 //Create/Post User
     server.post('/users', (req, res) => {
-        const {name} = req.body;
-        res.json(name);
-    //     if(!name) {
-    //         res.status(400).json({error: "Please provide a key/value pair with the key set as 'name'."});
-    //     }
-    //     const newUser = {name};
-    //     userDb.insert(newUser)
-    //         .then(newUserId => {
-    //             console.log(newUserId);
-    //             res.status(200).json(newUserId);
-    //         })
-    //         .catch(() => res.status(500).json({error: "There was an error creating the user."}))
-    // })
+        if(!req.body.name) {
+            res.status(400).json({errorMessage: "Please provide name for new user."})
+        } else if (req.body.name.length > 128) {
+            res.status(400).json({errorMessage: "Please choose a username that is less than 128 characters."})
+        } 
+        userDb.insert(req.body)
+            .then(userId => {
+                console.log(userId);
+                res.status(201).json(userId); 
+            })
+            .catch(() => res.status(500).json({error: "There was an error while saving the user to the database"}))
+    });
 
 //Read/Get Users/User
     server.get('/users', (req, res) => {
@@ -64,7 +64,7 @@ server.use(cors());
                 res.status(200).json(posts);
             })
             .catch(() => res.status(500).json({error: `The posts for user with id:${id} could not be retrieved.`}))
-    })
+    });
 
 //Create/Post Post
 
