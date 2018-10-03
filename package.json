@@ -1,0 +1,20 @@
+{
+  "name": "Node-Blog",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/cornielleandres/Node-Blog.git",
+  "author": "<cornielleandres@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "knex": "^0.15.2",
+    "sqlite3": "^4.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.4"
+  }
+}
