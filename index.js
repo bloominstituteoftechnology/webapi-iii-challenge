@@ -21,7 +21,8 @@ server.use(express.json(), cors(), logger('combined'), helmet());
 server.get('/', (req, res) => {
   res.send(`
     <h1>Root Page</h1>
-    <a href="http://localhost:${process.env.PORT}/users"/users>All Users</a>
+    <li><a href="http://localhost:${process.env.PORT}/users">All Users</a></li>
+    <li><a href="http://localhost:${process.env.PORT}/posts">All Posts</a></li>
   `)
 })
 
