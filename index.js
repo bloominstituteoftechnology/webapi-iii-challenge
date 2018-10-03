@@ -51,6 +51,17 @@ server.use(express.json());
 //Update/Put User
 
 //Delete/Delete User
+    server.delete('/user/:id', (req, res) => {
+        const id = req.params.id; 
+        if(!id) {
+            res.status(404).json({message: "Could not find specified user"});
+        }
+        userDb.remove(id)
+            .then(removedUser => {
+                res.status(200).json(removedUser);
+            })
+            .catch(() => res.status(500).json({error: "The user could not be removed."}))
+    })
 
 //Read/Get Posts by User
     server.get('/user/:id', (req, res) => {
