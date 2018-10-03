@@ -112,7 +112,7 @@ server.delete('/api/users/:id', (req, res) => {
 });
 
 // update user by id
-server.put('/api/users/:id', (req, res) => {
+server.put('/api/users/:id', cruiseControl, (req, res) => {
 	if (!req.body.name) {
 		console.log(`\n=== USER NAME NOT PROVIDED ===\n\n`);
 		return res.status(400).json({
