@@ -16,6 +16,8 @@ server.listen(port, () => {
 
 
 
+/*                        USERS                              */
+
 server.get('/', (req, res) => {
   res.send('<h3>Welcome to INSTANT-GRAM!</h3>');
 });
@@ -66,3 +68,28 @@ server.put('/users/:id', (req, res) => {
     })
     .catch(err => console.log(err));
 });
+
+server.get('/users/:id', (req, res) => {
+  const { id } = req.params;  
+
+  db.getUserPosts(id)
+    .then(posts => {
+      if (posts.length === 0) {
+        return res.status(404).send({ errorMessage: `User has no posts available.` })
+      }
+      res.status(200).json(posts);
+    })
+    .catch(err => console.log(err));
+});
+
+/* ============================= END ====================== */
+
+
+
+
+
+
+
+
+/*                           POSTS                          */
+
