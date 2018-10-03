@@ -11,18 +11,18 @@ const server = express();
 
 // MIDDLEWARES
 
-// const allCaps = (req, res, next) => {
-//   console.log(req.params);
+const allCaps = (req, res, next) => {
+  console.log(req.body);
 
-//   req.user = req.params.user.toUpperCase();
+  Object.assign(req.body, { name: req.body.name.toUpperCase() });
 
-//   next();
-// };
+  next();
+};
 
 server.use(logger("tiny"), cors(), helmet(), express.json());
 
 // ROUTES
-// server.get("/users/:id", allCaps, (req, res) => {
+// server.get("/api/users/:id", allCaps, (req, res) => {
 //   res.send(`${req.user}`);
 // });
 
@@ -41,7 +41,7 @@ server.get("/api/users", (req, res) => {
 });
 
 //Get posts of a specific user
-server.get("/api/users/:id", (req, res) => {
+server.get("/api/users/:id/posts", (req, res) => {
   userDb
     .getUserPosts(req.params.id)
     .then(user => {
@@ -60,16 +60,14 @@ server.get("/api/users/:id", (req, res) => {
 });
 
 //Add a new User
-server.post("/api/users", (req, res) => {
+server.post("/api/users", allCaps, (req, res) => {
   const newUser = req.body;
-  console.log({ newUser });
   userDb
     .insert(newUser)
     .then(user => {
       res.status(201).json(user);
     })
     .catch(err => {
-      console.log(err);
       res.status(500).json({
         error: "There was an error while saving the user to the database."
       });
