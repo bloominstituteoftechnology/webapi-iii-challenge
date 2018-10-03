@@ -1,20 +1,20 @@
-// dependencies
+// DEPENDENCIES
 const express = require('express');
 const logger = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
 
-// databases
+// DATABASES
 const userDb = require('./data/helpers/userDb');
 const postDb = require('./data/helpers/postDb');
 const tagDb = require('./data/helpers/tagDb');
 
-// server
+// SERVER
 const server = express();
 
-// middleware
+// MIDDLEWARE
 const cruiseControl = (req, res, next) => {
-	req.name = req.params.name.toUpperCase();
+	req.body.name = req.body.name.toUpperCase();
 	next();
 };
 
@@ -23,7 +23,7 @@ server.use(logger('tiny'), cors(), helmet(), express.json());
 // console logging
 // consoleLarge()
 
-// ROUTES
+// ROUTING
 // get users (for testing)
 server.get('/api/users', (req, res) => {
 	userDb
@@ -63,7 +63,7 @@ server.get('/api/users/:id', (req, res) => {
 });
 
 // add new user
-server.post('/api/users', (req, res) => {
+server.post('/api/users', cruiseControl, (req, res) => {
 	console.log(req);
 	if (!req.body.name) {
 		return res.status(400).json({
@@ -86,7 +86,7 @@ server.post('/api/users', (req, res) => {
 		});
 });
 
-// call server.listen w/ a port of your choosing
+// listen to port
 const port = 5000;
 server.listen(port, () => {
 	console.log(`\n=== LISTENING TO PORT ${port} ===\n`);
