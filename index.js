@@ -33,6 +33,15 @@ server.route('/users')
   })
 
   server.route('/users/:id')
+    .get((req, res) => {
+      const { id } = req.params;
+      userDb.get(id)
+        .then(user => {
+          if (!user) return res.status(404).json({ message: "The user with the specified ID does not exist." });
+          return res.status(200).json(user);
+        })
+        .catch(err => res.status(500).json({ error: "The user information could not be retrieved." }));
+    })
     .put(upperCaser, (req, res) => {
       const { id } = req.params;
       const { name } = req;
