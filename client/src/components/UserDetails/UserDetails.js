@@ -1,23 +1,50 @@
-import React from "react";
+import React, { Component } from "react";
+import PostList from "./PostList";
+import axios from "axios";
 
-const UserDetails = props => {
-  const user = props.users.find(user => {
-    return user.id === parseInt(props.match.params.id);
-  });
+class UserDetails extends Component {
+  state = {
+    posts: [],
+    newPostInput: ''
+  };
 
-  if (!user) props.history.push("/users");
-  const { name, id } = user ? user: {name:'', id:''};
+  fetchUserPostsData = () => {
+    axios
+      .get(`http://localhost:7000/users/posts/${this.props.match.params.id}`)
+      .then(res => {
+        this.setState({
+          posts: res.data
+        });
+      });
+  };
 
-  return (
+  handleInput = event => {
+      this.setState({
+          newPostInput: event.target.value
+      })
+  }
+
+  render() {
+    const user = this.props.users.find(user => {
+      return user.id === parseInt(this.props.match.params.id);
+    });
+    const { name, id } = user ? user : { name: "", id: "" };
+    const { posts, newPostInput } = this.state;
+    return (
       <div>
-          <h1>{name}</h1>
-          <div>
-              {}
-          </div>
+        <h1>{name}</h1>
+        <div>
+          <h3>New Post:</h3>
+          <input onChange={this.handleInput} value={newPostInput}/>
+        </div>
+        <PostList posts={posts} {...this.props} />
       </div>
-      
+    );
+  }
 
-  )
-};
+  componentDidMount() {
+    this.fetchUserPostsData();
+  }
+}
 
 export default UserDetails;

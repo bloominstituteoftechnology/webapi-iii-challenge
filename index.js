@@ -24,8 +24,23 @@ server.get('/posts', (req,res) => {
     })
 })
 
-server.get(`/users/posts`, (res,req) =>{
-    
+server.get(`/users/posts/:userId`, (req,res) =>{
+    console.log(req.params);
+    const {userId} = req.params
+    userDb.getUserPosts(userId).then(userPosts => {
+        res.json(userPosts)
+    })
+})
+
+server.post("/users/posts", (req,res) => {
+   const {text, userId} = req.body
+   postDb.insert({text, userId})
+   .then(() =>{
+        userDb.getUserPosts(userId)
+        .then(newUserPosts => {
+            res.json(newUserPosts)
+        })
+   })
 })
 
 server.listen(port, err =>{
