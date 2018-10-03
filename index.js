@@ -38,3 +38,14 @@ server.post('/users', (req, res) => {
     })
     .catch(err => console.log(err));
 });
+
+server.delete('/users/:id', (req, res) => {
+  const { id } = req.params;
+  
+  db.remove(id)
+    .then(removedUser => {
+      res.status(200).json(removedUser)
+    })
+    .catch(err => console.log(err));
+  res.send(req.params);
+});
