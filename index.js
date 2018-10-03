@@ -31,8 +31,7 @@ server.get('/users', (req, res) => {
   userdb.get()
   .then(users => {
     res.status(200).json(users)
-  }).catch(err => {
-    console.log(err)
+  }).catch(() => {
     res.status(500).json({message: 'Internal Server Error'})
   });
 })
@@ -42,8 +41,7 @@ server.get('/posts', (req, res) => {
   postdb.get()
   .then(posts => {
     res.status(200).json(posts)
-  }).catch(err => {
-    console.log(err)
+  }).catch(() => {
     res.status(500).json({message: 'Internal Server Error'})
   });
 })
@@ -57,11 +55,12 @@ server.get('/users/:id', (req, res) => {
       :
       res.status(200).json(userId)
     })
-    .catch(err => {
-      console.log(err)
+    .catch(() => {
       res.status(500).json({message: 'Internal Server Error'})
     });
 })
+
+// #################### POST #######################
 
 // ******************** GET ADD USER **********************
 
@@ -73,8 +72,7 @@ server.post('/users',yell, (req, res) => {
   .then(userId => {
     res.status(200).json(userId)
   })
-  .catch(err => {
-    console.log(err)
+  .catch(() => {
     res.status(500).json({message: 'Internal Server Error'});
   });
 });
