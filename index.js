@@ -18,13 +18,11 @@ const upperCaser = (req, res, next) => {
 server.route('/users')
   .post(upperCaser, (req, res) => {
     const { name } = req;
-    const newUser = {};
-    newUser.name = name;
-    console.log(newUser);
+    const newUser = { name };
       if (!name) return res.status(400).json({ errorMessage: "Please provide a user name." });
       userDb.insert(newUser)
         .then(user => res.status(201).json(user))
-        .catch(err => res.status(500).json({ error: "There was an error while saving the post to the database" }));
+        .catch(err => res.status(500).json({ error: "There was an error while saving the user to the database" }));
   })
   .get((req, res) => {
     userDb.get()
@@ -66,6 +64,16 @@ server.route('/users')
 
 // POSTS ROUTE HANDLERS
 server.route('/posts')
+  .post((req, res) => {
+    const { text } = req.body;
+    const newPost = {};
+    newPost.name = name;
+    console.log(newPost);
+      if (!name) return res.status(400).json({ errorMessage: "Please provide a user name." });
+      userDb.insert(newPost)
+        .then(user => res.status(201).json(user))
+        .catch(err => res.status(500).json({ error: "There was an error while saving the user to the database" }));
+  })
   .get((req, res) => {
     postDb.get()
     .then(data => res.status(200).json(data))
