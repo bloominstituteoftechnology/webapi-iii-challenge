@@ -2,7 +2,7 @@ const express = require('express');
 
 // middle ware pull-ins
 const cors = require('cors'); // port-to-port interaction
-const logger = require('morgan'); // logger of things...
+const logger = require('morgan'); // http request logger
 const helmet = require('helmet'); // encrypt res header...
 
 // server helper functions
@@ -13,7 +13,7 @@ const postdb = require('./data/helpers/postDb');
 const server = express();
 
 // middleware usage
-server.use(express.json(), cors(), logger('combined'), helmet());
+server.use(express.json(), cors(), logger(':method :url :status :response-time ms'), helmet());
 
 // route handlers
 
@@ -52,6 +52,38 @@ server.get('/posts/:id', (req, res) => {
   postdb
     .get(req.params.id)
     .then(post => res.status(200).send(post))
+    .catch(err => res.status(500).send(err));
+})
+
+server.post('/posts', (req, res) => {
+  const {text, userId} = req.body;
+  const newPost = {text, userId};
+  console.log(req.body);
+  postdb
+    .insert(newPost)
+    .then(post => {
+      postdb
+        .get(post.id)
+        .then(foundPost => res.status(200).send(foundPost))
+        .catch(err => res.status(500).send(err));
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).send(err)
+    });
+})
+
+server.post('/users', (req, res) => {
+  const {name} = req.body;
+  const newUser = {name};
+  userdb
+    .insert(newUser)
+    .then(user => {
+      userdb
+        .get(user.id)
+        .then(foundUser => res.status(200).send(foundUser))
+        .catch(err => res.status(500).send(err));
+    })
     .catch(err => res.status(500).send(err));
 })
 
