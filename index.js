@@ -19,6 +19,8 @@ server.use(cors());// this neeeded to connect from react
 server.use(logger ('combined'));// combined or tiny
 server.use(helmet());
 
+
+
 //ROUTES
 
 //Add home route
@@ -65,6 +67,27 @@ server.delete("/api/users/:id", async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: "The user could not be removed" });
   }
+});
+
+//Add PUT ROUTE to update a user's information...which right now is name
+server.put('/api/users/:id', async (req, res) => {
+  if (!req.body.name) {
+    return res.status(400).send({ errorMessage: "Please provide name for the user." });
+   } try {
+    await users.update(req.params.id, req.body);
+    try {
+    const user = await users.get(req.params.id);
+    if (user.length === 0) {
+      return res.status(404).send({ message: "The user with the specified ID does not exist." });
+    } else {
+      return res.status(200).json(user);
+    }
+   } catch (error) {
+      return res.status(500).send({ error: "The user information could not be modified." });
+   }
+  } catch (error) {
+    return res.status(500).send({ error: "The user information could not be modified." });
+ }
 });
 
 // call server.listen w/ a port of 8250
