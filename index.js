@@ -18,12 +18,14 @@ const yell = (req, res, next) => {
 	next();
 };
 
+// get all users
 server.get('/api/users', (req, res) => {
 	userDb.get()
 		.then(users => res.status(200).json(users))
 		.catch(err => res.status(500).json({ error: 'The users information could not be retrieved.' }));
 });
 
+// get user with given id
 server.get('/api/users/:id', (req, res) => {
 	const { id } = req.params;
 	userDb.get(id)
@@ -36,6 +38,7 @@ server.get('/api/users/:id', (req, res) => {
 		.catch(err => res.status(500).json({ error: 'The users information could not be retrieved.' }));
 });
 
+// get all posts from user with given id
 server.get('/api/users/:id/posts', (req, res) => {
 	const { id } = req.params;
 	userDb.getUserPosts(parseInt(id))
@@ -48,6 +51,7 @@ server.get('/api/users/:id/posts', (req, res) => {
 		.catch(err => res.status(500).json({ error: 'The users information could not be retrieved.' }));
 });
 
+// create new user using yell middleware
 server.post('/api/users', yell, (req, res) => {
 	const newUser = req.yelledUser;
 	userDb.insert(newUser)
@@ -65,6 +69,7 @@ server.post('/api/users', yell, (req, res) => {
 		.catch(err => res.status(500).json({ error: 'There was an error while saving the user to the database.' }));
 });
 
+// update user with given id using yell middleware
 server.put('/api/users/:id', yell, (req, res) => {
 	const { id } = req.params;
 	const updatedUser = req.yelledUser;
@@ -85,6 +90,7 @@ server.put('/api/users/:id', yell, (req, res) => {
 		.catch(err => res.status(500).json({ error: 'There was an error while updating the user information in the database.' }));
 });
 
+// delete user with given id
 server.delete('/api/users/:id', (req, res) => {
 	const { id } = req.params;
 	userDb.remove(parseInt(id))
