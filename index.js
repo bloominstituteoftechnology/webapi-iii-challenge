@@ -74,6 +74,14 @@ server.route('/users')
   })
 // POSTS ROUTE HANDLERS
 server.route('/posts')
+  .post((req, res) => {
+    const { userId, text } = req.body;
+    const newPost = { userId, text };
+      if (!userId) return res.status(400).json({ errorMessage: "Please provide a user id." });
+      postDb.insert(newPost)
+        .then(newPost => res.status(201).json(newPost))
+        .catch(err => res.status(500).json({ error: "There was an error while saving the post to the database" }));
+  })
   .get((req, res) => {
     postDb.get()
     .then(data => res.status(200).json(data))
