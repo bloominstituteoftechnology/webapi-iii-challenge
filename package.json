@@ -1,0 +1,14 @@
+{
+  "name": "Node-Blog",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/TrevMike/Node-Blog.git",
+  "author": "Michael Trevino <preince560m@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "helmet": "^3.13.0",
+    "morgan": "^1.9.1"
+  }
+}
