@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
+
+import User from "../UserComponents/User";
 import "./index.css";
 
 class App extends Component {
@@ -31,7 +33,11 @@ class App extends Component {
         <h1>Node Blog</h1>
         <div>
           {this.state.users.map(user => {
-            return <h3>{user.name}</h3>;
+            return (
+              <h4>
+                <User user={user.name} />
+              </h4>
+            );
           })}
         </div>
       </div>
