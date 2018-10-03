@@ -104,4 +104,33 @@ server.post('/api/:dbtype', (req, res)=>{
         default:
             res.status(400).send(`URI ${dbtype} not found`);
     }
+});
+
+server.delete('/api/:dbtype/:id', (req, res)=>{
+    const {dbtype, id} = req.params;
+    switch (dbtype){
+        case 'posts':
+            postDb.remove(id)
+                .then(post =>{
+                    res.status(200).json(post);
+                })
+                .catch(err => console.error(err));
+            break;
+        case 'users':
+            userDb.remove(id)
+                .then(user =>{
+                    res.status(200).json(user);
+                })
+                .catch(err => console.error(err));
+            break;
+        case 'tags':
+            tagDb.remove(id)
+                .then(tag =>{
+                    res.status(200).json(tag);
+                })
+                .catch(err => console.error(err));
+            break;
+        default:
+            res.status(400).send(`URI ${dbtype} not found`);
+    }
 })
