@@ -12,6 +12,10 @@ const server = express();
 // Middlewares
 ///////////////
 const capitalize = (req, res, next) => {
+  if (req.body.name) {
+    req.name = req.body.name.toUpperCase();
+    console.log(req.name);
+  }
   next();
 };
 
@@ -38,9 +42,9 @@ server.get('/api/users', (req, res) => {
     });
 });
 
-server.post('/api/users', (req, res) => {
+server.post('/api/users', capitalize, (req, res) => {
   // console.log('req.body', req.body);
-  const { name } = req.body;
+  const name = req.name;
   if (!name) {
     return res.status(400).send({
       errorMessage: 'Please provide a name for the user.',
