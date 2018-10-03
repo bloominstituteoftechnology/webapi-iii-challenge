@@ -69,6 +69,21 @@ server.delete("/users/:id", (req, res) => {
     .catch(err => res.status(500).send(err));
 });
 
+server.put("/users/:id", (req, res) => {
+  const { id } = req.params;
+  const { name } = req.body;
+  const user = { name, id };
+  userdb
+    .update(id, user)
+    .then(editedUser => {
+      userdb
+        .get(id)
+        .then(foundUser => res.status(200).send(foundUser))
+        .catch(err => res.status(500).send(err));
+    })
+    .catch(err => res.status(500).send(err));
+});
+
 /* ======= POST ROUTES ======= */
 server.get("/posts", (req, res) => {
   postdb
@@ -78,6 +93,7 @@ server.get("/posts", (req, res) => {
 });
 
 server.get("/posts/:id", (req, res) => {
+  console.log(req.params);
   postdb
     .get(req.params.id)
     .then(post => res.status(200).send(post))
@@ -104,9 +120,25 @@ server.post("/posts", (req, res) => {
 
 server.delete("/posts/:id", (req, res) => {
   const { id } = req.params;
-  postdb.remove(id)
-    .then(post => res.status(200).send(`Post at id ${id} removed successfully.`))
+  postdb
+    .remove(id)
+    .then(post =>
+      res.status(200).send(`Post at id ${id} removed successfully.`)
+    )
     .catch(err => res.status(500).send(err));
+});
+
+server.put("/posts/:id", (req, res) => {
+  const { id } = req.params;
+  const { text, userId } = req.body;
+  const post = { text, userId };
+  postdb.update(id, post).then(updatedPost =>
+    postdb
+      .get(id)
+      .then(foundPost => res.status(200).send(foundPost))
+      .catch(err => res.status(500).send(err))
+  )
+  .catch(err => res.status(500).send(err));
 });
 
 // route handler listner
