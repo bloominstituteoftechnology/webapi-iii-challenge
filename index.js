@@ -13,10 +13,28 @@ server.listen(port, () => {
   console.log(`================Running on port ${port}==============`);
 });
 
+
+
+
 server.get('/', (req, res) => {
+  res.send('<h3>Welcome to INSTANT-GRAM!</h3>');
+});
+
+server.get('/users', (req, res) => {
   db.get()
     .then(users => {
       res.json(users)
     })
     .catch(err => res.send(err))
+});
+
+server.post('/users', (req, res) => {
+  const { name } = req.body;
+  const newUser = { name };
+
+  db.insert(newUser)
+    .then(user => {
+      res.status(201).json(user);
+    })
+    .catch(err => console.log(err));
 });
