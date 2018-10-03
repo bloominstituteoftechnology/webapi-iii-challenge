@@ -62,18 +62,18 @@ server.route('/users')
         .catch(err => res.status(500).json({ error: "The user could not be removed." }));
     })
 
+  server.route('/users/:id/posts')
+  .get((req, res) => {
+    const { id } = req.params;
+    userDb.getUserPosts(id)
+      .then(userPosts => {
+        if (!userPosts.length) return res.status(404).json({ message: "The user with the specified ID does not exist." });
+        return res.status(200).json(userPosts);
+      })
+      .catch(err => res.status(500).json({ error: "The user posts could not be retrieved." }));
+  })
 // POSTS ROUTE HANDLERS
 server.route('/posts')
-  .post((req, res) => {
-    const { text } = req.body;
-    const newPost = {};
-    newPost.name = name;
-    console.log(newPost);
-      if (!name) return res.status(400).json({ errorMessage: "Please provide a user name." });
-      userDb.insert(newPost)
-        .then(user => res.status(201).json(user))
-        .catch(err => res.status(500).json({ error: "There was an error while saving the user to the database" }));
-  })
   .get((req, res) => {
     postDb.get()
     .then(data => res.status(200).json(data))
