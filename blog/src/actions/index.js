@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 export const FETCHING = 'FETCHING';
-export const FETCHED = 'FETCHED';
+export const FETCHED_USERS = 'FETCHED_USERS';
+export const FETCHED_POSTS = 'FETCHED_POSTS';
 export const POSTING = 'POSTING';
 export const POSTED = 'POSTED';
 export const DELETING = 'DELETING';
@@ -19,7 +20,7 @@ export const fetchUsers = () => {
         dispatch({type: FETCHING})
 
         fetchAllUsers.then(res => {
-            dispatch({type: FETCHED, payload: res.data})
+            dispatch({type: FETCHED_USERS, payload: res.data})
         }).catch(err => {
             console.log(err);
             dispatch({type: ERROR})
@@ -34,7 +35,7 @@ export const fetchPosts = () => {
         dispatch({type: FETCHING})
 
         fetchAll.then(res => {
-            dispatch({type: FETCHED, payload: res.data})
+            dispatch({type: FETCHED_POSTS, payload: res.data})
         }).catch(err => {
             console.log(err);
             dispatch({type: ERROR})

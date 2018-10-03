@@ -8,8 +8,8 @@ class PostForm extends React.Component {
         super(props);
 
         this.state = {
-            title: '',
-            contents: '',
+            text: '',
+            userID: '',
         }
     }
 
@@ -23,15 +23,18 @@ class PostForm extends React.Component {
     handleSubmit = (event) => {
         event.preventDefault();
         let newPost = {
-            title: this.state.title,
-            contents: this.state.contents
+            text: this.state.text,
+            userID: this.state.userID
         };
+
+
+        console.log(newPost);
 
         this.props.addPost(newPost);
 
         this.setState({
-            title: '',
-            contents: ''
+            text: '',
+            userID: ''
         })
         
         setTimeout(() => {
@@ -43,8 +46,8 @@ class PostForm extends React.Component {
         return(
             <div>
                 <form onSubmit={this.handleSubmit}>
-                    <input onChange={this.handleInput} name = 'title' type = 'text' placeholder='title' value={this.state.title} ></input>
-                    <input onChange={this.handleInput} name='contents' type = 'text' placeholder='contents' value={this.state.contents}></input>
+                    <input onChange={this.handleInput} name = 'text' type = 'text' placeholder='text' value={this.state.text} ></input>
+                    <input onChange={this.handleInput} name='userID' type = 'text' placeholder='userID' value={this.state.userID}></input>
                     <button type = 'submit'>Submit Post</button>
                 </form>
 

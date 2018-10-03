@@ -7,7 +7,9 @@ import PostsList from './components/PostsList';
 import PostForm from './components/PostForm';
 import PostDetails from './components/PostDetails';
 import PostEdit from './components/PostEdit';
+import UsersList from './components/UsersList';
 import {Switch, Route, Link, withRouter} from 'react-router-dom';
+
 
 class App extends Component {
 
@@ -20,20 +22,28 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+      
       <Switch>
         <Route exact path = '/' render={(props) => {
           
           return (
-            <div>
-            <PostForm />
-            <PostsList />
+            <div className = 'component-container'>
+
+            <div className = 'post-components'>
+            <PostForm></PostForm>
+            <PostsList></PostsList>
+            </div>
+            <div className = 'user-components'>
+            <UsersList></UsersList>
+            </div>
+
             </div>
           )
         }
         
         } />
 
-        <Route exact path = '/posts/:id' render = {(props) =>
+        <Route exact path = '/api/posts/:id' render = {(props) =>
            <PostDetails/>
         
         } />
