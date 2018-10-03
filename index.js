@@ -1,5 +1,6 @@
 const express = require('express');
 const logger = require('morgan');
+const cors = require('cors');
 
 const port = 9000;
 const userDb = require('./data/helpers/userDb');
@@ -10,13 +11,12 @@ const server = express();
 ///////////////
 // Middlewares
 ///////////////
-// const capitalize = (req, res, next) => {
-//   console.log(req);
-//   // req.user = req.params.user.toUpperCase();
-//   next();
-// };
+const capitalize = (req, res, next) => {
+  next();
+};
 
 server.use(logger('combined'));
+server.use(express.json());
 
 ///////////////
 // Routes
@@ -27,8 +27,8 @@ server.get('/users', (req, res) => {
   userDb
     .get()
     .then((users) => {
-      console.log('** users **', users);
-      res.json(users);
+      console.log('** users **\n', users);
+      res.status(200).json(users);
     })
     .catch((err) => {
       console.log(err);
