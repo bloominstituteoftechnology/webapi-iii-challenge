@@ -14,12 +14,8 @@ const upperCaser = (req, res, next) => {
   next();
 }
 
+// USERS ROUTE HANDLERS
 server.route('/users')
-  .get((req, res) => {
-    userDb.get()
-    .then(data => res.status(200).json(data))
-    .catch(err => res.status(500).json({ error: "The request for users could not be retrieved." }));
-  })
   .post(upperCaser, (req, res) => {
     const { name } = req;
     const newUser = {};
@@ -30,6 +26,22 @@ server.route('/users')
         .then(user => res.status(201).json(user))
         .catch(err => res.status(500).json({ error: "There was an error while saving the post to the database" }));
   })
+  .get((req, res) => {
+    userDb.get()
+    .then(data => res.status(200).json(data))
+    .catch(err => res.status(500).json({ error: "The request for users could not be retrieved." }));
+  })
+
+  server.route('/users/:id')
+    .delete((req,res) => {
+      const { id } = req.params;
+      userDb.remove(id)
+        .then(removedUser => {
+          if (!removedUser) return res.status(404).json({ message: "The user with the specified ID does not exist." });
+          return res.status(202).json(removedUser)
+        })
+        .catch(err => res.status(500).json({ error: "The user could not be removed." }));
+    })
 
 // POSTS ROUTE HANDLERS
 server.route('/posts')
