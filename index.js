@@ -1,8 +1,8 @@
 const express = require('express');
-//const logger = require('morgan');
+const logger = require('morgan');
 const cors = require('cors');
 const port = 9000;
-//const helmet = require('helmet');
+const helmet = require('helmet');
 
 const server = express();
 
@@ -11,8 +11,15 @@ const posts = require('./data/helpers/postDb.js');
 
 server.use(express.json());
 server.use(cors());
+server.use(helmet());
+server.use(logger("combined"));
 
-
+const allCAPS = (req, res, next) => {
+  if (req.body.name) {
+    req.body.name = req.body.name.toUpperCase();
+  }
+  next();
+}
 
 //Routes
 server.get('/', (req, res) => {
@@ -45,7 +52,9 @@ server.get('/api/users/:id', (req, res) => {
     })
 })
 
-server.post('/api/users', (req, res) => {
+
+
+server.post('/api/users', allCAPS, (req, res) => {
   console.log("req", req.body)
   if(!req.body.name) {
       res.status(400).json({ error: "Please provide a name for this user."
@@ -66,7 +75,7 @@ server.post('/api/users', (req, res) => {
   }
 });
 
-server.put('/api/users/:id', (req, res) => {
+server.put('/api/users/:id', allCAPS, (req, res) => {
   const { id } = req.params;
   if (!req.body.name) {
     res.status(400).json({ error: "Please enter a name." })
@@ -89,6 +98,24 @@ server.put('/api/users/:id', (req, res) => {
       res.status(500).json({ error: "There was an error while updating this user." })
     })  
   }
+})
+
+server.delete('/api/users/:id', (req, res) => {
+  const id = req.params.id
+  userDb.remove(id)
+    .then(response => {
+      if (response === 0){
+        res.status(404).json({ error: "There is no user with that id."})
+      }
+      if (response === 1){
+        console.log("\n=== USER DELETED ===\n", response)
+        res.status(200).json({response})
+      }
+    })
+    .catch(error => {
+      console.log(error)
+      res.status(500).json({error: "There was an error while deleting this user."})
+    })
 })
 
 
