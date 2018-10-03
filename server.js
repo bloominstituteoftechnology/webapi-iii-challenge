@@ -63,7 +63,7 @@ server.get('/api/users/:id', (req, res) => {
 });
 
 // add new user
-//    todo: return message when user with same name already exists
+//    todo: return message when name already exists
 server.post('/api/users', cruiseControl, (req, res) => {
 	if (!req.body.name) {
 		console.log(`\n=== USER NAME NOT PROVIDED ===\n\n`);
@@ -138,6 +138,27 @@ server.put('/api/users/:id', cruiseControl, (req, res) => {
 		.catch(err => {
 			console.log('\n=== UH OH ===\n\n', err);
 			res.status(500).json({ error: 'User could not be modified.' });
+		});
+});
+
+// get posts by user id
+//    todo: return message when user does not exist
+server.get('/api/users/:id/posts', (req, res) => {
+	userDb
+		.getUserPosts(req.params.id)
+		.then(posts => {
+			if (!posts[0]) {
+				console.log('\n=== NO POSTS BY THAT USER ===\n');
+				return res
+					.status(404)
+					.json({ message: 'User with specified ID has no posts.' });
+			}
+			console.log('\n=== RETURNED USER POSTS: ===\n\n', posts, '\n');
+			res.status(200).json(posts);
+		})
+		.catch(err => {
+			console.log('\n=== UH OH ===\n\n', err);
+			res.status(500).json({ error: 'User posts could not be retrieved.' });
 		});
 });
 
