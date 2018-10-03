@@ -11,7 +11,7 @@ const server = express();
 server.use(express.json());
 server.use(cors());
 server.use(helmet());
-server.use(logger("default", "dev"));
+server.use(logger("combined"));
 
 // listen to port 8000 and give a startup message from the server
 server.listen(8000, () => console.log("API listening on port 8000"));
