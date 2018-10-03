@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { Route, Switch, withRouter } from "react-router-dom";
-import PostList from "../PostComponents/PostList";
+import UserList from "../UserComponents/UserList";
+import User from "../UserComponents/User";
 import "./index.css";
 
 class App extends Component {
@@ -32,15 +33,18 @@ class App extends Component {
       <div className="App">
         <h1>Node Blog</h1>
         <div>
-          {this.state.users.map(user => {
-            return (
-              <Route
-                exact
-                path="/"
-                render={props => <PostList posts={this.state.posts} />}
-              />
-            );
-          })}
+          <Route
+            exact
+            path="/"
+            render={props => <UserList users={this.state.users} />}
+          />
+
+          <Route
+            path="/users/:id"
+            render={props => (
+              <User {...props} refetchUsers={this.refetchUsers} />
+            )}
+          />
         </div>
       </div>
     );

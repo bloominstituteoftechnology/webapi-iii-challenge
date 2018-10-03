@@ -22,8 +22,8 @@ export default class User extends Component {
       .get(`http://localhost:8000/api/users/${this.id}`)
       .then(response => {
         this.setState({
-          user: response.data[0],
-          name: response.data[0].name
+          user: response.data,
+          name: response.data.name
         });
       })
       .catch(error => console.log(error));
