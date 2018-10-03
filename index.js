@@ -4,6 +4,10 @@ const cors = require("cors");
 const helmet = require("helmet");
 const logger = require("morgan");
 
+// add data helpers
+// users data
+const users = require("./data/helpers/userDb");
+
 // instantiate server
 const server = express();
 
