@@ -16,6 +16,10 @@ function upperCase(req, res, next){
 server.use(express.json())
 server.use(upperCase)
 
+
+// ******************
+// ****User Methods**
+// ******************
 server.get('/users', (req, res, next) => {
   userDb.get()
     .then(users => {
@@ -73,11 +77,69 @@ server.delete('/users', (req, res, next) => {
 })
 
 
+// ******************
+// ****Post Methods**
+// ******************
 
-  // get
-  // post
-  // put
-  // delete
+server.get('/posts', (req, res, next) => {
+  postDb.get()
+    .then(users => {
+      res.status(200).json(users)
+    })
+    .catch(err => {
+      res.status(500).json(err)
+    })
+
+})
+
+server.get('/posts/:id', (req, res, next) => {
+  postDb.getPostTags(req.params.id)
+    .then(posts => {
+      res.status(200).json(posts)
+    })
+    .catch(err => {
+      res.status(500).json(err)
+    })
+})
+
+server.post('/posts', (req, res, next) => {
+  const { text, userId } = req.body;
+  const newPost = { text, userId };
+  postDb.insert(newPost)
+    .then(
+      res.status(200).json(newPost)
+    )
+    .catch(err => {
+      console.error(err);
+    })
+})
+
+
+server.put('/posts', (req, res, next) => {
+  const { text, userId } = req.body;
+  const updatedPost = { text };
+  postDb.update(userId, updatedPost)
+    .then(
+      res.status(200).json(updatedPost)
+    )
+    .catch(err => {
+      console.error(err);
+    })
+})
+
+
+server.delete('/posts', (req, res, next) => {
+  const { id } = req.body;
+  postDb.remove(id)
+    .then(
+      res.status(200).json(`Post #${id} has been banished`)
+    )
+    .catch(err => {
+      console.error(err);
+    })
+})
+
+
 
 const port = 9000
 
