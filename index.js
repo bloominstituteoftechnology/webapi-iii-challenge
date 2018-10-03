@@ -95,6 +95,34 @@ server.delete('/api/users/:id', (req, res) => {
     });
 });
 
+server.put('/api/users/:id', capitalize, (req, res) => {
+  const { id } = req.params;
+  const name = req.name;
+  if (!name) {
+    return res.status(400).send({
+      errorMessage: 'Please provide a name for the user.',
+    });
+  }
+  const newUser = { name };
+  console.log('newUser', newUser);
+  userDb
+    .update(id, newUser)
+    .then((user) => {
+      console.log('user', user);
+      if (!user) {
+        return res.status(404).send({
+          message: 'The user with the specified ID does not exist.',
+        });
+      }
+      res.status(200).json(newUser);
+    })
+    .catch((err) => {
+      res.status(500).json({
+        error: 'The user information could not be modified.',
+      });
+    });
+});
+
 // ####### Posts #######
 
 ///////////////
