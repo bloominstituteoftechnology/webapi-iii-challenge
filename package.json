@@ -1,0 +1,31 @@
+{
+  "name": "node-blog",
+  "version": "1.0.0",
+  "description": "## Topics",
+  "main": "index.js",
+  "dependencies": {
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "helmet": "^3.13.0",
+    "knex": "^0.15.2",
+    "logger": "0.0.1",
+    "morgan": "^1.9.1",
+    "sqlite3": "^4.0.2",
+    "yarn": "^1.10.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.4"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js",
+    "start": "nodemon index.js"
+  },
+  "repository": "git+https://github.com/iAmAdamReid/Node-Blog.git",
+  "author": "iAmAdamReid <adam@adamreid.me>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/iAmAdamReid/Node-Blog/issues"
+  },
+  "homepage": "https://github.com/iAmAdamReid/Node-Blog#readme"
+}
