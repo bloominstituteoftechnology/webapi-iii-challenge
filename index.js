@@ -9,7 +9,10 @@ const logger = require("morgan");
 
 const server = express();
 
-server.add(express.json());
-server.add(cors());
-server.add(helmet());
-server.add(morgan("default", "dev"));
+server.use(express.json());
+server.use(cors());
+server.use(helmet());
+server.use(morgan("default", "dev"));
+
+
+server.listen(8000, () => console.log("===API port 8000==="));
