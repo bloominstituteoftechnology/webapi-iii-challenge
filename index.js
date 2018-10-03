@@ -1,5 +1,7 @@
 const express = require('express');
 const cors = require('cors');
+const helmet = require('helmet');
+const morgan = require('morgan');
 const { postDb, tagDb, userDb } = require('./data/helpers');
 
 const server = express();
@@ -7,6 +9,8 @@ const port = 5000;
 
 server.use(express.json());
 server.use(cors());
+server.use(helmet());
+server.use(morgan('tiny'));
 
 server.get('/api/users/', (req, res) => {
 	userDb.get()
