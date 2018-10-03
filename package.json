@@ -1,0 +1,20 @@
+{
+  "name": "Node-Blog",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/mparedes003/Node-Blog.git",
+  "author": "mparedes003 <michelle.g.paredes@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon index.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "helmet": "^3.13.0",
+    "morgan": "^1.9.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.4"
+  }
+}
