@@ -1,25 +1,32 @@
-// import node modules
+// Import node modules
 const express = require('express');
 const cors = require('cors');
 const logger = require('morgan');
 const helmet = require('helmet');
 
-// users data
+// Users data
 const users = require('./data/helpers/userDb.js');
 
 // Name port
 const port = 8250;
 
-//instanciate your server
+//Instanciate your server
 const server = express();// creates the server
 
-// add GLOBAL MIDDLEWARE
+// Add GLOBAL MIDDLEWARE
 server.use(express.json());// formatting our req.body obj
 server.use(cors());// this neeeded to connect from react
 server.use(logger ('combined'));// combined or tiny
 server.use(helmet());
 
+// MIDDLEWARE
 
+// Make user name UPPERCASE
+const allCaps = (req, res, next) => {
+  req.body.name = req.body.name.toUpperCase();
+
+  next();
+}
 
 //ROUTES
 
@@ -39,7 +46,7 @@ server.get('/api/users', (req, res) => {
 });
 
 //Add POST ROUTE to add a user
-server.post('/api/users', (req, res) => {
+server.post('/api/users', allCaps, (req, res) => {
   if(!req.body.name) {
    return res.status(400).send({ errorMessage: "Please provide name for user." });
   }
@@ -70,7 +77,7 @@ server.delete("/api/users/:id", async (req, res) => {
 });
 
 //Add PUT ROUTE to update a user's information...which right now is name
-server.put('/api/users/:id', async (req, res) => {
+server.put('/api/users/:id', allCaps, async (req, res) => {
   if (!req.body.name) {
     return res.status(400).send({ errorMessage: "Please provide name for the user." });
    } try {
@@ -90,7 +97,7 @@ server.put('/api/users/:id', async (req, res) => {
  }
 });
 
-// call server.listen w/ a port of 8250
+// Call server.listen w/ a port of 8250
 server.listen(port, () =>
   console.log(`\n=== API running on port ${port} ===\n`)
 );
