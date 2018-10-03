@@ -111,8 +111,31 @@ server.use(express.json());
     });
 
 //Update/Put Post
+    server.put('/post/:id', (req, res) => {
+        const id = req.params.id; 
+        if(!id) {
+            res.status(404).json({message: "Could not find specified user"});
+        } else if(!req.body.text) {
+            res.status(400).json({errorMessage: "Please provide updated text for existing post."})
+        }
+        postDb.update(id, req.body)
+            .then(() => {
+                res.status(200).json({message: "Update successful"})
+            })
+            .catch(() => res.status(500).json({error: "The post could not be updated."}))
+    })
 
 //Delete/Delete Post
-
+    server.delete('/post/:id', (req, res) => {
+        const id = req.params.id; 
+        if(!id) {
+            res.status(404).json({message: "Could not find specified post"});
+        }
+        postDb.remove(id)
+            .then(removedPost => {
+                res.status(200).json(removedPost);
+            })
+            .catch(() => res.status(500).json({error: "The post could not be removed."}))
+    })
 
 server.listen(port, () => console.log(`Listening to API on port ${port}`));
