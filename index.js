@@ -39,8 +39,9 @@ server.get("/users", (req, res) => {
 });
 
 server.get("/users/:id", (req, res) => {
+  const {id} = req.params;
   userdb
-    .get(req.params.id)
+    .get(id)
     .then(user => res.status(200).send(user))
     .catch(err => res.status(500).send(err));
 });
@@ -93,9 +94,9 @@ server.get("/posts", (req, res) => {
 });
 
 server.get("/posts/:id", (req, res) => {
-  console.log(req.params);
+  const { id } = req.params;
   postdb
-    .get(req.params.id)
+    .get(id)
     .then(post => res.status(200).send(post))
     .catch(err => res.status(500).send(err));
 });
@@ -131,14 +132,18 @@ server.delete("/posts/:id", (req, res) => {
 server.put("/posts/:id", (req, res) => {
   const { id } = req.params;
   const { text, userId } = req.body;
-  const post = { text, userId };
-  postdb.update(id, post).then(updatedPost =>
-    postdb
-      .get(id)
-      .then(foundPost => res.status(200).send(foundPost))
-      .catch(err => res.status(500).send(err))
-  )
-  .catch(err => res.status(500).send(err));
+  const post = { text, userId, id };
+  console.log(id);
+  console.log(post);
+  postdb
+    .update(id, post)
+    .then(updatedPost =>
+      postdb
+        .get(id)
+        .then(foundPost => res.status(200).send(foundPost))
+        .catch(err => res.status(500).send(err))
+    )
+    .catch(err => res.status(500).send(err));
 });
 
 // route handler listner
