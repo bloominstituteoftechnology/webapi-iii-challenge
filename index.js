@@ -49,6 +49,19 @@ server.use(express.json());
     });
 
 //Update/Put User
+    server.put('/user/:id', (req, res) => {
+        const id = req.params.id; 
+        if(!id) {
+            res.status(404).json({message: "Could not find specified user"});
+        } else if(!req.body.name) {
+            res.status(400).json({errorMessage: "Please provide updated name for existing user."})
+        }
+        userDb.update(id, req.body)
+            .then(() => {
+                res.status(200).json({message: "Update successful"})
+            })
+            .catch(() => res.status(500).json({error: "The user could not be updated."}))
+    })
 
 //Delete/Delete User
     server.delete('/user/:id', (req, res) => {
