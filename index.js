@@ -1,16 +1,44 @@
 const express = require('express');
+const logger = require('morgan');
 
 const port = 9000;
+const userDb = require('./data/helpers/userDb');
+const postDb = require('./data/helpers/postDb');
 
 const server = express();
 
 ///////////////
 // Middlewares
 ///////////////
+// const capitalize = (req, res, next) => {
+//   console.log(req);
+//   // req.user = req.params.user.toUpperCase();
+//   next();
+// };
+
+server.use(logger('combined'));
 
 ///////////////
 // Routes
 ///////////////
+
+// ####### Users #######
+server.get('/users', (req, res) => {
+  userDb
+    .get()
+    .then((users) => {
+      console.log('** users **', users);
+      res.json(users);
+    })
+    .catch((err) => {
+      console.log(err);
+      res
+        .status(500)
+        .json({ error: 'The users information could not be retrieved.' });
+    });
+});
+
+// ####### Posts #######
 
 ///////////////
 // Listen
