@@ -3,3 +3,6 @@ const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
 const logger = require("morgan");
+
+// instantiate server
+const server = express();
