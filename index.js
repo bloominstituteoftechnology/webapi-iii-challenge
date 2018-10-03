@@ -19,6 +19,16 @@ server.get('/', (request, response) => {
     response.status(200).send(`It's working!`);
 })
 
+server.get('/users', (request, response) => {
+
+// Unique Error Message
+const error500 = { errorMessage: "Unable to retrieve users." };
+
+userDb.get()
+.then(users => response.status(200).send(users))
+.catch(() => response.status(500).send(error500))
+})
+
 
 // #####=- Server Port Address and Listen Method -=#####
 port = 9999;
