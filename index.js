@@ -81,7 +81,6 @@ server.post('/users',yell, (req, res) => {
 
 // ******************** DELETE USER **********************
 
-// Delete User
 server.delete('/users/:id', (req, res) => {
   userdb.remove(req.params.id)
     .then(users => {
@@ -94,6 +93,31 @@ server.delete('/users/:id', (req, res) => {
       res.status(500).json({message: ' Internal Server Error'})
     });
 })
+
+// #################### PUT #######################
+
+// ******************** UPDATE USER **********************
+server.put('/users/:id', yell, (req, res) => {
+  const { name } = req.body;
+  const { id } = req.params;
+  !name ? res.status(400).json({message: "Bad Request Error"}) 
+  :
+  null
+  const body = { name }
+  userdb.update(id, body)
+    .then(users => {
+      users === 0 ?
+      res.status(400).json({message:'Bad Request Error'})
+      :
+      res.status(200).json(users)
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(500).json({message: ' Internal Server Error'})
+    });
+})
+
+
 
 // watch for traffic in a particular computer port
 const port = 9000;
