@@ -66,6 +66,7 @@ server.get('/api/users/:id', (req, res) => {
 //    todo: return message when user with same name already exists
 server.post('/api/users', cruiseControl, (req, res) => {
 	if (!req.body.name) {
+		console.log(`\n=== USER NAME NOT PROVIDED ===\n\n`);
 		return res.status(400).json({
 			errorMessage: 'Please provide name for the user.'
 		});
@@ -95,7 +96,7 @@ server.delete('/api/users/:id', (req, res) => {
 				console.log(`\n=== NO USER BY THAT ID ===\n\n`);
 				return res
 					.status(404)
-					.json({ message: 'The user with the specified ID does not exist.' });
+					.json({ message: 'User with the specified ID does not exist.' });
 			}
 			console.log(
 				`\n=== DELETED USER ===\n\n User with id ${
@@ -106,7 +107,37 @@ server.delete('/api/users/:id', (req, res) => {
 		})
 		.catch(err => {
 			console.log('\n=== UH OH ===\n\n', err);
-			res.status(500).json({ error: 'The user could not be removed' });
+			res.status(500).json({ error: 'User could not be deleted' });
+		});
+});
+
+// update user by id
+server.put('/api/users/:id', (req, res) => {
+	if (!req.body.name) {
+		console.log(`\n=== USER NAME NOT PROVIDED ===\n\n`);
+		return res.status(400).json({
+			errorMessage: 'Please provide name for the user.'
+		});
+	}
+	userDb
+		.update(req.params.id, req.body)
+		.then(updatedUser => {
+			if (!updatedUser) {
+				console.log('\n=== NO USER BY THAT ID ===\n\n');
+				return res
+					.status(404)
+					.json({ message: 'User with the specified ID does not exist.' });
+			}
+			console.log(
+				`\n=== UPDATED USER ===\n\n User with id ${
+					req.params.id
+				} has been updated\n`
+			);
+			res.status(200).json({ message: 'User was successfully updated.' });
+		})
+		.catch(err => {
+			console.log('\n=== UH OH ===\n\n', err);
+			res.status(500).json({ error: 'User could not be modified.' });
 		});
 });
 
