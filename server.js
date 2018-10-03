@@ -46,7 +46,7 @@ server.get('/api/users/:id', (req, res) => {
 		if (!user){
 			res.status(404).json({ msg: "The user with the specified ID does not exist." })
 		} else {
-			res.status(200).json({user})
+			res.status(200).json(user)
 		}
 	})
 	.catch(error => {
@@ -64,7 +64,7 @@ server.get('/api/users/:id/posts', (req, res) => {
 		if (userPosts.length === 0){
 			res.status(404).json({msg: 'No posts at ID location'})
 		} else {
-			res.status(200).json({userPosts})
+			res.status(200).json(userPosts)
 		}
 	})
 	.catch(error => {
@@ -178,6 +178,24 @@ server.put('/api/posts/:id', (req, res) => {
 			res.status(500).json({msg: 'there was an error while deleting user'})
 		})
 	}
+})
+
+server.delete('/api/post/:id', (req, res) => {
+	const id = req.params.id
+	posts
+	.remove(id)
+	.then(response => {
+		if (response === 0){
+			res.status(404).json({msg: 'The post with ID does not exist'})
+		}
+		if (response === 1){
+			res.status(200).json(response)
+		}
+	})
+	.catch(error => {
+		console.log(error)
+		res.status(500).json({msg: 'there was an error while deleting user'})
+	})
 })
 
 server.listen(port, () => console.log(`server running on port ${port}`));

@@ -39,24 +39,24 @@ class UserList extends React.Component {
 	}
 
 	resetUsers = () => {
-  	axios
-      .get("http://localhost:5555/api/users")
-      .then(response => {
-        this.setState({users: response.data });
-      })
-      .catch(err => {
-        console.log(err)
-      })
-  }
-
+		axios
+			.get("http://localhost:5555/api/users")
+			.then(response => {
+				this.setState({users: response.data})
+			})
+			.catch(err => {
+				console.log(err)
+			})
+	}
 
 	render(){
+
 		return (
 			<div>
 				<TitleUser>User List</TitleUser>
 				<ContainerUser>
 					{this.state.users.map(user => (
-						<User user={user} key={user.id}/>
+						<User user={user} key={user.id} resetUsers={this.resetUsers}/>
 					))}
 				</ContainerUser>
 				<CreateUser resetUsers={this.resetUsers}/>

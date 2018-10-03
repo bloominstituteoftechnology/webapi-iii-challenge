@@ -24,6 +24,10 @@ const FormContainer = styled.div`
 	max-width: 480px;
 	width: 100%;
 	margin: 30px auto;
+`;
+
+const RedSpan = styled.span`
+	color: red;
 `
 
 class CreateUser extends React.Component {
@@ -31,7 +35,7 @@ class CreateUser extends React.Component {
 		super(props);
 		this.state = {
 			createName: '',
-			CreateUserError: [],
+			error: '',
 		};
 	}
 
@@ -48,12 +52,12 @@ class CreateUser extends React.Component {
   		.then(response => {
   			this.setState({
 		  		createName: '',
-					CreateUserError: [],
+					error: '',
   			})
   			this.props.resetUsers()
   		})
   		.catch(error =>
-  			this.setState({postError: error.response.data})
+  			this.setState({error: error.response.data.msg})
   		);
   }
 
@@ -72,6 +76,7 @@ class CreateUser extends React.Component {
 						/>
 					</form>
 					<button onClick={this.createUser}>Submit new User</button>
+					<p><RedSpan>{this.state.error}</RedSpan></p>
 				</FormDiv>
 			</FormContainer>
 		)
