@@ -91,8 +91,25 @@ server.use(express.json());
     });
 
 //Create/Post Post
-
+    server.post('/posts', (req, res) => {
+        if(!req.body.text) {
+            res.status(400).json({errorMessage: "Please provide text for new post."})
+        } 
+        postDb.insert(req.body)
+            .then(postId => {
+                console.log(postId);
+                res.status(201).json(postId); 
+            })
+            .catch(() => res.status(500).json({error: "There was an error while saving the user to the database"}))
+    });
 //Read/Get Post
+    server.get('/posts', (req, res) => {
+        postDb.get()
+            .then(posts => {
+                res.status(200).json(posts);
+            })
+            .catch(() => res.status(500).json({error: "Could not retrieve users"}));
+    });
 
 //Update/Put Post
 
