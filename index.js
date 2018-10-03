@@ -82,5 +82,12 @@ server.get("/posts/:id", (req, res) => {
     .catch(err => res.status(500).send(err));
 });
 
+// DELETE a specific post by id
+server.delete("/posts/:id", (req, res) => {
+  const { id } = req.params;
+  postdb.remove(id)
+    .then(post => res.status(200).send(`Post # ${id} successfully removed.`))
+    .catch(err => res.status(500).send(err));
+});
 
 ///////
