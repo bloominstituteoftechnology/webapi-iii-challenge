@@ -41,11 +41,28 @@ server.post('/users', (req, res) => {
 
 server.delete('/users/:id', (req, res) => {
   const { id } = req.params;
-  
+
   db.remove(id)
     .then(removedUser => {
       res.status(200).json(removedUser)
     })
     .catch(err => console.log(err));
   res.send(req.params);
+});
+
+server.put('/users/:id', (req, res) => {
+  const { id } = req.params;
+  const { name } = req.body;
+
+  const newUser = { name };
+  db.update(id, newUser)
+    .then(user => {
+      if (!id) {
+        return res.status(404).send({ message: `The post with the specified ID does not exist.` })
+      } else if (!name) {
+        return res.status(400).send({ errorMessage: "Please provide a name." })
+      }
+      res.status(200).json(user);
+    })
+    .catch(err => console.log(err));
 });
