@@ -173,6 +173,15 @@ server.get("/api/posts/tags/:id", (req, res) => {
         return errorHelper(500, "Internal Server Error", res);
     });
 });
+server.get('api/tags', (req, res)=>{
+    users.get()
+    .then(foundTags=>{
+        res.json({foundTags});
+    })
+    .catch(err =>{
+        return errorHelper(500, "Internal Server Error", res );
+    });
+});
 
 
 
