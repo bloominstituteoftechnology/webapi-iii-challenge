@@ -10,6 +10,8 @@
     "start": "nodemon index.js"
   },
   "dependencies": {
+    "audit": "0.0.6",
+    "axios": "^0.18.0",
     "express": "^4.16.3",
     "helmet": "^3.13.0",
     "knex": "^0.15.2",
