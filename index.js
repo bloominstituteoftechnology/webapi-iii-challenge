@@ -71,5 +71,31 @@ server.post("/api/users", async (req, res) => {
   }
 });
 
+// update user at id
+server.put("/api/users/:id", async (req, res) => {
+  // test to see if name is missing
+  if (!req.body.name) {
+    res
+      .status(400)
+      .json({ errorMessage: "please supply a name for this user" });
+  }
+  try {
+    await users.update(req.params.id, req.body);
+    try {
+      const user = await users.get(req.params.id);
+      if (user === undefined) {
+        res.status(404).json({ message: `unable to find user at ${id}` });
+      }
+      res.status(200).json(user);
+    } catch (error) {
+      res.status(500).json({ message: "unable to retrieve user" });
+    }
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "error while saving the edited user to the database" });
+  }
+});
+
 // listen to port 8000 and give a startup message from the server
 server.listen(8000, () => console.log("API listening on port 8000"));
