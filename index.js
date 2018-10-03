@@ -2,15 +2,23 @@
 const express = require('express'); // CommonJS modules > module.exports = someCode;
 const userdb = require('./data/helpers/userDb');
 const postdb = require('./data/helpers/postDb.js');
+const tagdb = require('./data/helpers/tagDB.js');
+const logger = require('morgan');
 const cors = require('cors');
+const helmet = require('helmet');
 
 const server = express(); // creates the server
 
-server.use(cors()); // this neeeded to connect from react
+// Middle Ware
+const yell = (req, res, next) => {
+  req.body.name = req.body.name.toUpperCase();
+  next();
+}
 
-server.use(express.json()); // formatting our req.body obj.
-
-
+server.use(express.json());
+server.use(logger('combined'));
+server.use(cors());
+server.use(helmet());
 
 server.get('/', (req, res) => {
   res.send('Is this working?')
@@ -25,7 +33,7 @@ server.get('/users', (req, res) => {
     res.status(200).json(users)
   }).catch(err => {
     console.log(err)
-    res.status(500).json({message: 'Internal Server Error when getting users'})
+    res.status(500).json({message: 'Internal Server Error'})
   });
 })
 
@@ -36,11 +44,40 @@ server.get('/posts', (req, res) => {
     res.status(200).json(posts)
   }).catch(err => {
     console.log(err)
-    res.status(500).json({message: 'Internal Server Error when getting posts'})
+    res.status(500).json({message: 'Internal Server Error'})
   });
 })
 
+// ******************** GET USER POSTS **********************
+server.get('/users/:id', (req, res) => {
+  userdb.getUserPosts(req.params.id)
+    .then(userId => {
+      userId === 0 || userId.length === 0 ?
+      res.status(400).json({message:'Bad Request Error'})
+      :
+      res.status(200).json(userId)
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(500).json({message: 'Internal Server Error'})
+    });
+})
 
+// ******************** GET ADD USER **********************
+
+server.post('/users',yell, (req, res) => {
+  const { name } = req.body;
+  !name ?
+  res.status(400).json({message: 'Bad Request Error'}) : null
+  userdb.insert({name})
+  .then(userId => {
+    res.status(200).json(userId)
+  })
+  .catch(err => {
+    console.log(err)
+    res.status(500).json({message: 'Internal Server Error'});
+  });
+});
 
 // watch for traffic in a particular computer port
 const port = 9000;
