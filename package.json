@@ -1,4 +1,13 @@
 {
+  "name": "Node-Blog",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/akusiak23/Node-Blog.git",
+  "author": "Arkadiusz Kusiak <akusiak23@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon index.js"
+  },
   "dependencies": {
     "cors": "^2.8.4",
     "express": "^4.16.3",
@@ -9,14 +18,5 @@
   },
   "devDependencies": {
     "nodemon": "^1.18.4"
-  },
-  "name": "Node-Blog",
-  "version": "1.0.0",
-  "main": "index.js",
-  "repository": "https://github.com/akusiak23/Node-Blog.git",
-  "author": "Arkadiusz Kusiak <akusiak23@gmail.com>",
-  "license": "MIT",
-  "scripts": {
-    "dev": "nodemon index.js"
   }
 }
