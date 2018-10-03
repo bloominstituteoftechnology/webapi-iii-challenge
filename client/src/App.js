@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import UserList from './components/UserList';
 import LinkedUser from './components/LinkedUser';
-import { Route } from "react-router-dom";
+import { Route, Redirect } from "react-router-dom";
 
 class App extends Component {
   render() {
     return (
       <div>
+        <Route path='/'>
+          <Redirect to="/users" />
+        </Route>
 
         <Route
           exact
