@@ -10,7 +10,6 @@ const UserList = props => {
 
   return (
     <div className="main-container">
-      <h2>Users:</h2>
       <div className="user-previews-container">
         {users.map(user => {
           return (

@@ -18,6 +18,13 @@
   color: white;
 }
 
+.App h1 {
+  font-size: 4rem;
+  background: #eee;
+  height: 300px;
+  line-height: 300px;
+}
+
 .App-link {
   color: #61dafb;
 }
@@ -29,4 +36,54 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.main-container {
+  display: flex;
+  flex-direction: column;
+  border: 2px solid #333;
+  width: 400px;
+  margin: 10px auto;
+  background: #eee;
+  border-radius: 7px;
+}
+.main-container h2 {
+  color: #666;
+  font-size: 2rem;
+  border: 2px solid #333;
+  width: 200px;
+  padding: 20px;
+  border-radius: 5px;
+  margin: 10px auto;
+  background: #fff;
+}
+.user-previews-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-preview-container {
+  border: 2px solid #333;
+  margin: 30px;
+  font-size: 2rem;
+  background: #666;
+}
+
+.user-preview-container h1 {
+  color: red !important;
+}
+
+a {
+  text-decoration: none;
+  color: #fff;
+}
+
+.back-lnk {
+  background: #666;
+  width: 120px;
+  height: 40px;
+  margin: 20px auto;
+  font-size: 1.2rem;
+  line-height: 37px;
+  font-weight: 700;
 }

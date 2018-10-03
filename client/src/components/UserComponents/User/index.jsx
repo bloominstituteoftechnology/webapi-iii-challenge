@@ -37,6 +37,9 @@ export default class User extends Component {
     return (
       <div className="main-container user">
         <h2>{this.state.name}</h2>
+        <a className="back-lnk" href="/">
+          Back
+        </a>
       </div>
     );
   }

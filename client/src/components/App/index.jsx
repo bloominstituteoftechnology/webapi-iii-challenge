@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { Route, Switch, withRouter } from "react-router-dom";
+import { Route, withRouter } from "react-router-dom";
 import UserList from "../UserComponents/UserList";
 import User from "../UserComponents/User";
 import "./index.css";
