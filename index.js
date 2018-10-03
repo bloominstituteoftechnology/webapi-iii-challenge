@@ -37,5 +37,30 @@ server.get('/users/:id', (req, res) => {
     .catch(err => res.status(500).send(err));
 });
 
+// POST request to create new user
+server.post("/users", (req, res) => {
+  const newUser = req.body;
+  userdb
+    .insert(newUser)
+    .then(user => {
+      userdb
+        .get(user.id)
+        .then(userExists => res.status(200).send(userExists))
+        .catch(err => res.status(500).send(err));
+    })
+    .catch(err => res.status(500).send(err));
+});
+
+// DELETE request to delete a specific user
+server.delete("/users/:id", (req, res) => {
+  const { id } = req.params;
+  userdb
+    .remove(id)
+    .then(user =>
+      res.status(200).send(`User # ${id} successfuly deleted.`)
+    )
+    .catch(err => res.status(500).send(err));
+});
+
 ///////
 
