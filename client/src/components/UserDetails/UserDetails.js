@@ -36,6 +36,16 @@ class UserDetails extends Component {
       })
   }
 
+  deletePost = id => {
+    const userId = parseInt(this.props.match.params.id)  
+    axios.delete(`http://localhost:7000/users/posts/${id}/${userId}`)
+      .then(res => {
+          this.setState({
+              posts:res.data
+          })
+      })
+  }
+
   render() {
     const user = this.props.users.find(user => {
       return user.id === parseInt(this.props.match.params.id);
@@ -50,7 +60,7 @@ class UserDetails extends Component {
           <input onChange={this.handleInput} value={newPostInput}/>
           <button onClick={this.sumbitPost}>Sumbit</button>
         </div>
-        <PostList posts={posts} {...this.props} />
+        <PostList posts={posts} deletePost={this.deletePost} {...this.props} />
       </div>
     );
   }

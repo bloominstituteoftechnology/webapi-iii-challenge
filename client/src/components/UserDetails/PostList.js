@@ -5,7 +5,7 @@ const PostList = props => {
     const {posts} = props
     return (
         <div>
-            {posts.map(post => <Post post={post}/>)}
+            {posts.map(post => <Post post={post} {...props}/>)}
         </div>
     )
 }
