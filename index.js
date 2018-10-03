@@ -32,5 +32,21 @@ server.get("/api/users", async (req, res) => {
   }
 });
 
+// add a get route to get a single user based upon id
+server.get("/api/users/:id", async (req, res) => {
+  try {
+    const user = await users.get(req.params.id);
+    // test if user is undefined
+    if (user === undefined) {
+      res
+        .status(404)
+        .json({ message: `unable to find user at ${req.params.id}` });
+    }
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ error: "unable to retrieve user" });
+  }
+});
+
 // listen to port 8000 and give a startup message from the server
 server.listen(8000, () => console.log("API listening on port 8000"));
