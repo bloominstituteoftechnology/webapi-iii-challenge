@@ -23,7 +23,7 @@ server.use(express.json());
 ///////////////
 
 // ####### Users #######
-server.get('/users', (req, res) => {
+server.get('/api/users', (req, res) => {
   userDb
     .get()
     .then((users) => {
@@ -37,6 +37,40 @@ server.get('/users', (req, res) => {
         .json({ error: 'The users information could not be retrieved.' });
     });
 });
+
+server.post('/api/users', (req, res) => {
+  // console.log('req.body', req.body);
+  const { name } = req.body;
+  if (!name) {
+    return res.status(400).send({
+      errorMessage: 'Please provide a name for the user.',
+    });
+  }
+  const newUser = { name };
+  userDb.insert(newUser).then((userId) => {
+    // console.log(userId);
+    const { id } = userId;
+    userDb
+      .get(id)
+      .then((user) => {
+        // console.log(user);
+        if (!user) {
+          return res
+            .status(422)
+            .send({ Error: `User does not exist by id ${userId}` });
+        }
+        res.status(201).json(user);
+      })
+      .catch((err) => {
+        console.log(err);
+        res
+          .status(500)
+          .json({ error: 'The users information could not be saved.' });
+      });
+  });
+});
+
+server.delete('/api/posts/:id', (req, res) => {});
 
 // ####### Posts #######
 
