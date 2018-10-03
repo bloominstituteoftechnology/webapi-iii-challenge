@@ -22,6 +22,8 @@ server.use(logger);
 
 server.use(cors());
 
+server.use(express.json());
+
 
 /////USER ROUTES////////
 server.post('/users', (req, res) => { 
