@@ -48,6 +48,7 @@ const DeleteSpan = styled.span`
 const Blackb = styled.div`
 	border: solid black 1px;
 	margin: 10px 20%;
+	background-color: lightgrey;
 `
 
 const EditBTN = styled.button`
