@@ -6,10 +6,16 @@ const server = express();
 server.use(cors());
 server.use(express.json());
 
+const toCaps = (request, response, next) => {
+    console.log(request.params);
+    request.name = request.params.name.toUpperCase();
+    next();
+};
+
 const port = 8000;
 server.listen(port, () =>
     console.log(`Server is listening to Port ${port}`)
-)
+);
 
 // USER API
 server.get('/api/users', (request, response) => {
@@ -46,7 +52,7 @@ server.get('/api/users/:id', (request, response) => {
         });
 });
 
-server.post('/api/users', (request, response) => {
+server.post('/api/users', toCaps, (request, response) => {
     const { name } = request.body;
     const newUser = { name };
 
@@ -66,16 +72,16 @@ server.post('/api/users', (request, response) => {
                     } else return response
                             .status(201)
                             .json(user);
-                });
+            });
         })
         .catch(() => { 
             return response
                 .status(500)
                 .json({ Error: "There was an error while saving the user" })
         });
-})
+});
 
-server.put('/api/users/:id', (request, response) => {
+server.put('/api/users/:id', toCaps, (request, response) => {
     const id = request.params.id;
     const { name } = request.body;
     const updatedUser = { name };
@@ -99,7 +105,7 @@ server.put('/api/users/:id', (request, response) => {
                 .status(500)
                 .json({ Error: "The user info could not be modified"})
         });
-})
+});
 
 server.delete('/api/users/:id', (request, response) => {
     const id = request.params.id;
