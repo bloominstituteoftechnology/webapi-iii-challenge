@@ -33,6 +33,18 @@ server.route('/users')
   })
 
   server.route('/users/:id')
+    .put(upperCaser, (req, res) => {
+      const { id } = req.params;
+      const { name } = req;
+      const editedUser = { name }
+      userDb.update(id, editedUser)
+        .then(updatedUser => {
+          if (!updatedUser) return res.status(404).json({ message: "The user with the specified ID does not exist." });
+          if (!name) return res.status(400).json({ errorMessage: "Please provide a name for the user." });
+          return res.status(200).json(updatedUser);
+        })
+        .catch(err => res.status(500).json({ error: "The user information could not be modified." }));
+    })
     .delete((req,res) => {
       const { id } = req.params;
       userDb.remove(id)
