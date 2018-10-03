@@ -8,16 +8,24 @@ server.use(express.json());
 // server.use(cors());
 
 const upperCaseName = (req, res, next) =>{
-    let capNext = true;
-    for(let i=0; i<req.name.length; i++){
-        if(capNext){
-            req.name[i].toUpperCase();
-            capNext = false;
+    if(req.body.name){
+        let capNext = true;
+        let upperCasedName = '';
+        for(let i=0; i<req.body.name.length; i++){
+            if(capNext){
+                upperCasedName = upperCasedName.concat(String(req.body.name[i]).toUpperCase());
+                capNext = false;
+            }else{
+                if(req.body.name[i]===' '){
+                    capNext = true;
+                }
+                upperCasedName = upperCasedName.concat(req.body.name[i]);
+            }
         }
-        if(req.name[i]===' '){
-            capNext = true;
-        }
+        console.log(`changing '${req.body.name}' to '${upperCasedName}'`);
+        req.body.name = upperCasedName;
     }
+    next();
 }
 
 const port = 8000;
