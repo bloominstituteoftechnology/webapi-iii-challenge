@@ -30,7 +30,8 @@ class UserDetails extends Component {
       axios.post('http://localhost:7000/users/posts',{text, userId})
       .then(res => {          
           this.setState({
-              posts:res.data
+              posts:res.data,
+              newPostInput: ''
           })  
       })
   }
