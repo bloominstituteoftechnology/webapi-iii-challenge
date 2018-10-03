@@ -69,6 +69,7 @@ server.post("/api/users/:id", (req, res) => {
 
 server.get('/api/users/posts/:userId', (req, res)=>{
     const {userId} = req.params;
+    users
     .getUserPosts(userId)
         .then(usersPosts => {
             if (usersPosts === 0) {
