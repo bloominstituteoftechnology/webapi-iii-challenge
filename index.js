@@ -11,6 +11,15 @@ const users = require("./data/helpers/userDb");
 // instantiate server
 const server = express();
 
+// create custom middleware
+const upperCase = (req, res, next) => {
+  console.log("middleware running");
+  if (req.body.name) {
+    req.body.name = req.body.name.toUpperCase();
+  }
+  next();
+};
+
 // add global middleware
 server.use(express.json());
 server.use(cors());
@@ -49,7 +58,7 @@ server.get("/api/users/:id", async (req, res) => {
 });
 
 // add a post route to create a user
-server.post("/api/users", async (req, res) => {
+server.post("/api/users", upperCase, async (req, res) => {
   // test if the user has supplied a name
   if (!req.body.name) {
     res
@@ -72,7 +81,7 @@ server.post("/api/users", async (req, res) => {
 });
 
 // update user at id
-server.put("/api/users/:id", async (req, res) => {
+server.put("/api/users/:id", upperCase, async (req, res) => {
   // test to see if name is missing
   if (!req.body.name) {
     res
