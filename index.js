@@ -7,7 +7,7 @@ server.use(express.json());
 const Uppercase = (req, res, next) => {
   if(!req.body.name) {
     next();
-  } else {
+  }  else {
     let newName = req.body.name.toUpperCase();
     req.name = newName;
     next();
@@ -16,13 +16,20 @@ const Uppercase = (req, res, next) => {
 
 server.get('/', (req, res) => {
   Userdb.get()
-    .then(response => res.status(200).json(response))
+    .then(response => {
+      response.forEach(res => {
+        res.name = res.name.toUpperCase();
+      })
+      res.status(200).json(response)
+    })
     .catch(err => res.status(400).json({error: "Could not retrieve users."}))
 })
 
 server.post('/', Uppercase, (req, res) => {
   if(!req.body.name) {
     res.status(400).json({ error: "Need a user." })
+  } else if(req.body.name.length > 129) {
+    res.status(400).json({ error: "Too many characters in name. Needs to be less than 129."})
   } else {
     let { name } = req.body;
     const newUser = { name: req.name }
@@ -58,6 +65,8 @@ server.delete('/:id', (req, res) => {
 server.put('/:id', Uppercase, (req, res) => {
   if(!req.body.name) {
     res.status(400).json({ error: "Need a new user to update."})
+  } else if(req.body.name.length > 129) {
+    res.status(400).json({ error: "Too many characters in name. Needs to be less than 129."})
   } else {
     const { id } = req.params;
     const { name } = req.body;
