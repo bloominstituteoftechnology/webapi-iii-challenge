@@ -63,8 +63,8 @@ server.get('/api/users/:id', (req, res) => {
 });
 
 // add new user
+//    todo: return message when user with same name already exists
 server.post('/api/users', cruiseControl, (req, res) => {
-	console.log(req);
 	if (!req.body.name) {
 		return res.status(400).json({
 			errorMessage: 'Please provide name for the user.'
@@ -83,6 +83,30 @@ server.post('/api/users', cruiseControl, (req, res) => {
 			res.status(500).json({
 				error: 'There was an error while saving the user to the database'
 			});
+		});
+});
+
+// delete user by id
+server.delete('/api/users/:id', (req, res) => {
+	userDb
+		.remove(req.params.id)
+		.then(removedUser => {
+			if (!removedUser) {
+				console.log(`\n=== NO USER BY THAT ID ===\n\n`);
+				return res
+					.status(404)
+					.json({ message: 'The user with the specified ID does not exist.' });
+			}
+			console.log(
+				`\n=== DELETED USER ===\n\n User with id ${
+					req.params.id
+				} removed from db('users')\n`
+			);
+			res.status(200).json({ message: 'User was successfully deleted.' });
+		})
+		.catch(err => {
+			console.log('\n=== UH OH ===\n\n', err);
+			res.status(500).json({ error: 'The user could not be removed' });
 		});
 });
 
