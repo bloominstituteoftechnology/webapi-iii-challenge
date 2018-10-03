@@ -24,6 +24,17 @@ class UserDetails extends Component {
       })
   }
 
+  sumbitPost = () => {
+      const text = this.state.newPostInput
+      const userId = parseInt(this.props.match.params.id)
+      axios.post('http://localhost:7000/users/posts',{text, userId})
+      .then(res => {          
+          this.setState({
+              posts:res.data
+          })  
+      })
+  }
+
   render() {
     const user = this.props.users.find(user => {
       return user.id === parseInt(this.props.match.params.id);
@@ -36,6 +47,7 @@ class UserDetails extends Component {
         <div>
           <h3>New Post:</h3>
           <input onChange={this.handleInput} value={newPostInput}/>
+          <button onClick={this.sumbitPost}>Sumbit</button>
         </div>
         <PostList posts={posts} {...this.props} />
       </div>
