@@ -5,9 +5,11 @@
   "repository": "https://github.com/LambdaSchool/Node-Blog.git",
   "license": "MIT",
   "scripts": {
-    "start": "nodeman index.js"
+    "start": "nodemon index.js"
   },
   "dependencies": {
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.4",
     "express": "^4.16.3",
     "knex": "^0.15.2",
     "sqlite3": "^4.0.2"
