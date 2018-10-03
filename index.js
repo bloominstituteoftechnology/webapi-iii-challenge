@@ -64,3 +64,23 @@ server.delete("/users/:id", (req, res) => {
 
 ///////
 
+/// Post Routes ////
+
+// GET all posts from server
+server.get("/posts", (req, res) => {
+  postdb
+    .get()
+    .then(posts => res.status(200).send(posts))
+    .catch(err => res.status(500).send(err));
+});
+
+// GET a specific post by id
+server.get("/posts/:id", (req, res) => {
+  postdb
+    .get(req.params.id)
+    .then(post => res.status(200).send(post))
+    .catch(err => res.status(500).send(err));
+});
+
+
+///////
