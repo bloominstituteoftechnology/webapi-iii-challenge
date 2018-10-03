@@ -97,5 +97,20 @@ server.put("/api/users/:id", async (req, res) => {
   }
 });
 
+// delete a user with a specific id
+server.delete("/api/users/:id", async (req, res) => {
+  try {
+    const user = await users.remove(req.params.id);
+    if (user === 0) {
+      return res.status(404).json({ message: `unable to find user at ${id}` });
+    }
+    res.status(200).json(user);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "error while deleting the user from the database" });
+  }
+});
+
 // listen to port 8000 and give a startup message from the server
 server.listen(8000, () => console.log("API listening on port 8000"));
