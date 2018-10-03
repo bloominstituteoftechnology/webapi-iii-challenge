@@ -11,22 +11,23 @@ const server = express();
 
 // MIDDLEWARES
 
-const allCaps = (req, res, next) => {
-  console.log(req.params);
+// const allCaps = (req, res, next) => {
+//   console.log(req.params);
 
-  req.user = req.params.user.toUpperCase();
+//   req.user = req.params.user.toUpperCase();
 
-  next();
-};
+//   next();
+// };
 
-server.use(logger("tiny"), cors(), helmet());
+server.use(logger("tiny"), cors(), helmet(), express.json());
 
 // ROUTES
-server.get("/user/:id", allCaps, (req, res) => {
-  res.send(`${req.user}`);
-});
+// server.get("/users/:id", allCaps, (req, res) => {
+//   res.send(`${req.user}`);
+// });
 
-server.get("/users", (req, res) => {
+//Get all users
+server.get("/api/users", (req, res) => {
   userDb
     .get()
     .then(users => {
@@ -38,6 +39,65 @@ server.get("/users", (req, res) => {
       })
     );
 });
+
+//Get posts of a specific user
+server.get("/api/users/:id", (req, res) => {
+  userDb
+    .getUserPosts(req.params.id)
+    .then(user => {
+      if (user.length > 0) {
+        res.json(user);
+      } else
+        res.status(404).json({
+          message: "The user with the specified ID does not exist."
+        });
+    })
+    .catch(err =>
+      res
+        .status(500)
+        .json({ error: "The user information could not be retrieved." })
+    );
+});
+
+//Add a new User
+server.post("/api/users", (req, res) => {
+  const newUser = req.body;
+  console.log({ newUser });
+  userDb
+    .insert(newUser)
+    .then(user => {
+      res.status(201).json(user);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({
+        error: "There was an error while saving the user to the database."
+      });
+    });
+});
+
+//delete a user
+server.delete("/api/users/:id", (req, res) => {
+  const { id } = req.params;
+  userDb
+    .remove(id)
+    .then(user => {
+      if (user.length < 1) {
+        res.status(404).json({
+          message: "The user with the specified ID does not exist."
+        });
+      } else {
+        res.status(200).json(user);
+      }
+    })
+    .catch(err =>
+      res.status(500).json({
+        error: "The user could not be removed."
+      })
+    );
+});
+
+//Update a user
 
 // call server.listen w/ a port of your choosing
 server.listen(port, () => {
