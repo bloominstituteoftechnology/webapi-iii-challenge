@@ -120,6 +120,21 @@ server.post("/posts", (req, res) => {
 
 });
 
+// PUT to edit an existing post
+server.put("/posts/:id", (req, res) => {
+  const { id } = req.params;
+  const { text, userId } = req.body;
+  const post = { text, userId };
+
+  postdb.update(id, post).then(updatedPost =>
+    postdb
+      .get(id)
+      .then(editedPostConfirmed => res.status(200).send(editedPostConfirmed))
+      .catch(err => res.status(500).send(err))
+  )
+  .catch(err => res.status(500).send(err));
+});
+
 // DELETE a specific post by id
 server.delete("/posts/:id", (req, res) => {
   const { id } = req.params;
