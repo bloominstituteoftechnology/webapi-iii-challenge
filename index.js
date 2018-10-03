@@ -77,6 +77,24 @@ server.post('/users',yell, (req, res) => {
   });
 });
 
+// #################### DELETE #######################
+
+// ******************** DELETE USER **********************
+
+// Delete User
+server.delete('/users/:id', (req, res) => {
+  userdb.remove(req.params.id)
+    .then(users => {
+      users === 0 ?
+      res.status(400).json({message:'Bad Request Error'})
+      :
+      res.status(200).json(users)
+    })
+    .catch(() => {
+      res.status(500).json({message: ' Internal Server Error'})
+    });
+})
+
 // watch for traffic in a particular computer port
 const port = 9000;
 server.listen(port, () =>
