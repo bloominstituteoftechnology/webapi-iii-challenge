@@ -22,5 +22,15 @@ server.get("/", (req, res) => {
   res.json({ hello: "hello World" });
 });
 
+// add a get route for the users
+server.get("/api/users", async (req, res) => {
+  try {
+    const allUsers = await users.get();
+    res.status(200).json(allUsers);
+  } catch (error) {
+    res.status(500).json({ error: "unable to retrieve users" });
+  }
+});
+
 // listen to port 8000 and give a startup message from the server
 server.listen(8000, () => console.log("API listening on port 8000"));
