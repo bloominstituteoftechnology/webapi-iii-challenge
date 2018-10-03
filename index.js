@@ -53,6 +53,20 @@ server.post('/api/users', (req, res) => {
 
   }});
 
+//Add DELETE ROUTE to delete a user
+server.delete("/api/users/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await users.remove(id);
+    if (user === 0) {
+      return res.status(404).json({ message: "The user with the specified ID does not exist." });
+    }
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ error: "The user could not be removed" });
+  }
+});
+
 // call server.listen w/ a port of 8250
 server.listen(port, () =>
   console.log(`\n=== API running on port ${port} ===\n`)
