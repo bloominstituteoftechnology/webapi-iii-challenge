@@ -13,9 +13,8 @@ const tagDb = require('./data/helpers/tagDb');
 const server = express();
 
 //called middleware
-const upperCaseUser = (req, res, next) => {
-    const user = req.params.user;
-    req.user = user.toUpperCase();
+const upperCaseName = (req, res, next) => {
+    req.body.name = req.body.name.toUpperCase();
     next();
 }
 
@@ -25,7 +24,7 @@ server.use(express.json());
 // server.use(helmet());
 
 //Create/Post User
-    server.post('/users', (req, res) => {
+    server.post('/users', upperCaseName, (req, res) => {
         if(!req.body.name) {
             res.status(400).json({errorMessage: "Please provide name for new user."})
         } else if (req.body.name.length > 128) {
@@ -49,7 +48,7 @@ server.use(express.json());
     });
 
 //Update/Put User
-    server.put('/user/:id', (req, res) => {
+    server.put('/user/:id', upperCaseName, (req, res) => {
         const id = req.params.id; 
         if(!id) {
             res.status(404).json({message: "Could not find specified user"});
