@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
-
-import User from "../UserComponents/User";
+import { Route, Switch, withRouter } from "react-router-dom";
+import PostList from "../PostComponents/PostList";
 import "./index.css";
 
 class App extends Component {
@@ -34,9 +34,11 @@ class App extends Component {
         <div>
           {this.state.users.map(user => {
             return (
-              <h4>
-                <User user={user.name} />
-              </h4>
+              <Route
+                exact
+                path="/"
+                render={props => <PostList posts={this.state.posts} />}
+              />
             );
           })}
         </div>
@@ -45,4 +47,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default withRouter(App);
