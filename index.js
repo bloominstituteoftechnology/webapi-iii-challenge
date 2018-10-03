@@ -1,4 +1,4 @@
-const db = require('./data/db.js');
+const db = require('./data/dbConfig.js');
 const express = require('express');
 const cors = require('cors');
 
@@ -13,7 +13,7 @@ server.listen(port, () =>
 
 // USER API
 server.get('/api/users', (request, response) => {
-    db.find()
+    db.findUser()
         .then(users => {
             response.status(200).json(users);
         })
@@ -23,7 +23,7 @@ server.get('/api/users', (request, response) => {
 server.get('/api/users/:id', (request, response) => {
     const id = request.params.id;
 
-    db.findById(id)
+    db.findUserById(id)
         .then(user => {
             response.status(200).json(user);
         })
@@ -34,10 +34,10 @@ server.post('/api/users', (request, response) => {
     const { name } = request.body;
     const newUser = { name };
 
-    db.insert(newUser)
+    db.insertUser(newUser)
         .then(userID => {
             const { id } = userID;
-            db.findById(id)
+            db.findUserById(id)
                 .then(user => {
                     if (!user) {
                         return response
@@ -59,7 +59,7 @@ server.put('/api/users/:id', (request, response) => {
     const { title, contents } = request.body;
     const updatedUser = { title, contents };
 
-    db.update(id, updatedUser)
+    db.updateUser(id, updatedUser)
         .then(user => {
             response.status(200).json(user);
         })
@@ -69,7 +69,7 @@ server.put('/api/users/:id', (request, response) => {
 server.delete('/api/users/:id', (request, response) => {
     const id = request.params.id;
 
-    db.remove(id)
+    db.removeUser(id)
         .then(removedUser => {
             response.status(200).json(removedUser);
         })
@@ -78,7 +78,7 @@ server.delete('/api/users/:id', (request, response) => {
 
 // POST API
 server.get('/api/posts', (request, response) => {
-    db.find()
+    db.findPost()
         .then(posts => {
             response.status(200).json(posts);
         })
@@ -88,7 +88,7 @@ server.get('/api/posts', (request, response) => {
 server.get('/api/posts/:id', (request, response) => {
     const id = request.params.id;
 
-    db.findById(id)
+    db.findPostById(id)
         .then(post => {
             response.status(200).json(post);
         })
@@ -97,13 +97,13 @@ server.get('/api/posts/:id', (request, response) => {
 
 // THIS NEEDS TO BE UPDATED WITH SCHEMA
 // server.post('/api/posts', (request, response) => {
-//     const { title, contents } = request.body;
-//     const newPost = { title, contents };
+//     const { userID, text } = request.body;
+//     const newPost = { userID, text };
 
-//     db.insert(newPost)
+//     db.insertPost(newPost)
 //         .then(postID => {
 //             const { id } = postID;
-//             db.findById(id)
+//             db.findPostById(id)
 //                 .then(post => {
 //                     if (!post) {
 //                         return response
@@ -125,7 +125,7 @@ server.put('/api/posts/:id', (request, response) => {
     const { title, contents } = request.body;
     const updatedPost = { title, contents };
 
-    db.update(id, updatedPost)
+    db.updatePost(id, updatedPost)
         .then(post => {
             response.status(200).json(post);
         })
@@ -135,7 +135,7 @@ server.put('/api/posts/:id', (request, response) => {
 server.delete('/api/posts/:id', (request, response) => {
     const id = request.params.id;
 
-    db.remove(id)
+    db.removePost(id)
         .then(removedPost => {
             response.status(200).json(removedPost);
         })
