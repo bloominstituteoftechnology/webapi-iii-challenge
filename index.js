@@ -15,9 +15,15 @@ server.listen(port, () =>
 server.get('/api/users', (request, response) => {
     db.findUser()
         .then(users => {
-            response.status(200).json(users);
+            return response
+                .status(200)
+                .json(users);
         })
-        .catch(error => response.send(error));
+        .catch(() => {
+            return response
+                .status(500)
+                .json({ Error: "Could not find list of users."})
+        });
 });
 
 server.get('/api/users/:id', (request, response) => {
@@ -25,9 +31,19 @@ server.get('/api/users/:id', (request, response) => {
 
     db.findUserById(id)
         .then(user => {
-            response.status(200).json(user);
+            if(!user) {
+                return response
+                    .status(404)
+                    .json({ Error: "Could not find user."})
+            } else return response
+                    .status(200)
+                    .json(user);
         })
-        .catch(error => response.send(error))
+        .catch(() => {
+            return response
+                .status(500)
+                .json({ Error: "User info could not be retrieved."})
+        });
 });
 
 server.post('/api/users', (request, response) => {
@@ -39,23 +55,24 @@ server.post('/api/users', (request, response) => {
             const { id } = userID;
             db.findUserById(id)
                 .then(user => {
-                    if (!user) {
+                    if (!newUser.name) {
                         return response
-                            .status(422)
-                            .send({ Error: `User does not exist at ID ${id}` });
-                    } else if (!newUser.name) {
-                        return response
-                            .status(422)
-                            .send({ Error: `Please enter a name for the user` });
+                            .status(400)
+                            .send({ Error: "Please enter a name for the user" });
                     } else if (newUser.name.length >= 128) {
                         return response
-                            .status(422)
-                            .send({ Error: `User name must be 128 or less characters` });
-                    }
-                    response.status(201).json(user);
+                            .status(400)
+                            .send({ Error: "User name must be 128 or less characters" });
+                    } else return response
+                            .status(201)
+                            .json(user);
                 });
         })
-        .catch(error => response.send(error));
+        .catch(() => { 
+            return response
+                .status(500)
+                .json({ Error: "There was an error while saving the user" })
+        });
 })
 
 server.put('/api/users/:id', (request, response) => {
@@ -65,9 +82,23 @@ server.put('/api/users/:id', (request, response) => {
 
     db.updateUser(id, updatedUser)
         .then(user => {
-            response.status(200).json(user);
+            if(!id) {
+                return response
+                    .status(404)
+                    .send({ Error: `User with the following ID does not exist: ${id}` });
+            } else if(!updatedUser.name) {
+                return response
+                    .status(400)
+                    .send({ Error: "Please enter a name for the user" });
+            } else return response
+                    .status(200)
+                    .json(user);
         })
-        .catch(error => response.send(error));
+        .catch(() => {
+            return response
+                .status(500)
+                .json({ Error: "The user info could not be modified"})
+        });
 })
 
 server.delete('/api/users/:id', (request, response) => {
@@ -75,29 +106,39 @@ server.delete('/api/users/:id', (request, response) => {
 
     db.removeUser(id)
         .then(removedUser => {
-            response.status(200).json(removedUser);
+            if(!id) {
+                return response
+                    .status(404)
+                    .json({ Error: `There is no user with the following ID: ${id}` })
+            } else return response
+                    .status(200)
+                    .json(removedUser);
         })
-        .catch(error => response.send(error));
+        .catch(() => { 
+            return response
+                .status(500)
+                .json({ Error: "The user could not be removed"})
+    });
 });
 
 // POST API
-server.get('/api/posts', (request, response) => {
-    db.findPost()
-        .then(posts => {
-            response.status(200).json(posts);
-        })
-        .catch(error => response.send(error));
-});
+// server.get('/api/posts', (request, response) => {
+//     db.findPost()
+//         .then(posts => {
+//             response.status(200).json(posts);
+//         })
+//         .catch(error => response.send(error));
+// });
 
-server.get('/api/posts/:id', (request, response) => {
-    const id = request.params.id;
+// server.get('/api/posts/:id', (request, response) => {
+//     const id = request.params.id;
 
-    db.findPostById(id)
-        .then(post => {
-            response.status(200).json(post);
-        })
-        .catch(error => response.send(error))
-});
+//     db.findPostById(id)
+//         .then(post => {
+//             response.status(200).json(post);
+//         })
+//         .catch(error => response.send(error))
+// });
 
 // THIS NEEDS TO BE UPDATED WITH SCHEMA
 // server.post('/api/posts', (request, response) => {
@@ -124,24 +165,24 @@ server.get('/api/posts/:id', (request, response) => {
 //         .catch(error => response.send(error));
 // })
 
-server.put('/api/posts/:id', (request, response) => {
-    const id = request.params.id;
-    const { userID, text } = request.body;
-    const updatedPost = { userID, text };
+// server.put('/api/posts/:id', (request, response) => {
+//     const id = request.params.id;
+//     const { userID, text } = request.body;
+//     const updatedPost = { userID, text };
 
-    db.updatePost(id, updatedPost)
-        .then(post => {
-            response.status(200).json(post);
-        })
-        .catch(error => response.send(error));
-})
+//     db.updatePost(id, updatedPost)
+//         .then(post => {
+//             response.status(200).json(post);
+//         })
+//         .catch(error => response.send(error));
+// })
 
-server.delete('/api/posts/:id', (request, response) => {
-    const id = request.params.id;
+// server.delete('/api/posts/:id', (request, response) => {
+//     const id = request.params.id;
 
-    db.removePost(id)
-        .then(removedPost => {
-            response.status(200).json(removedPost);
-        })
-        .catch(error => response.send(error));
-});
+//     db.removePost(id)
+//         .then(removedPost => {
+//             response.status(200).json(removedPost);
+//         })
+//         .catch(error => response.send(error));
+// });
