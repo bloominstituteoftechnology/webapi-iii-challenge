@@ -48,5 +48,28 @@ server.get("/api/users/:id", async (req, res) => {
   }
 });
 
+// add a post route to create a user
+server.post("/api/users", async (req, res) => {
+  // test if the user has supplied a name
+  if (!req.body.name) {
+    res
+      .status(400)
+      .json({ errorMessage: "please supply a name for this user" });
+  }
+  try {
+    const { id } = await users.insert(req.body);
+    try {
+      const newUser = await users.get(id);
+      res.status(201).json(newUser);
+    } catch (error) {
+      res.status(404).json({ message: `unable to find user at ${id}` });
+    }
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "error while saving the user to the database" });
+  }
+});
+
 // listen to port 8000 and give a startup message from the server
 server.listen(8000, () => console.log("API listening on port 8000"));
