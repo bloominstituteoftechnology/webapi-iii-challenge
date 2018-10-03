@@ -13,5 +13,10 @@ server.use(cors());
 server.use(helmet());
 server.use(logger("combined"));
 
+// add a home route
+server.get("/", (req, res) => {
+  res.json({ hello: "hello World" });
+});
+
 // listen to port 8000 and give a startup message from the server
 server.listen(8000, () => console.log("API listening on port 8000"));
