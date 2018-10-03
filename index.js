@@ -1,0 +1,15 @@
+// all required imports
+const express = require("express");
+const cors = require("cors");
+const helmet = require("helmet");
+const logger = require("morgan");
+
+
+// next we got to get the server going and add middleware
+
+const server = express();
+
+server.add(express.json());
+server.add(cors());
+server.add(helmet());
+server.add(morgan("default", "dev"));
