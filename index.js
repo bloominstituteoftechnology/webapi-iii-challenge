@@ -29,13 +29,29 @@ server.get('/', (req, res) => {
 // Add GET ROUTE to access the users
 server.get('/api/users', (req, res) => {
   users.get()
-    .then( users => {
-      console.log('\n** users **', users);
-      res.status(200).json(users);
+    .then( allUsers => {
+      console.log('\n** all users **', allUsers);
+      res.status(200).json(allUsers);
     })
-    .catch(err => res.status(500).send({ error: "The users information could not be retrieved." }));
-
+    .catch(err => res.status(500).send({ error: "All users information could not be retrieved." }));
 });
+
+//Add POST ROUTE to add a user
+server.post('/api/users', (req, res) => {
+  if(!req.body.name) {
+   return res.status(400).send({ errorMessage: "Please provide name for user." });
+  }
+  if(req.body.name) {
+    const { name } = req.body;
+  const newUser = { name };
+  users.insert(newUser)
+        .then(newUser => {
+        console.log(newUser);
+        res.status(201).json(newUser);
+      })
+    .catch(err => res.status(500).send({ error: "There was an error while saving the user to the database" }));
+
+  }});
 
 // call server.listen w/ a port of 8250
 server.listen(port, () =>
