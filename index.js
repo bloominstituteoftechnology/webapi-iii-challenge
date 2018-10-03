@@ -51,6 +51,23 @@ server.post("/users", (req, res) => {
     .catch(err => res.status(500).send(err));
 });
 
+// PUT to edit an existing user
+server.put("/users/:id", (req, res) => {
+  const { id } = req.params;
+  const { name } = req.body;
+  const user = { name, id };
+  
+  userdb
+    .update(id, user)
+    .then(editedUser => {
+      userdb
+        .get(id)
+        .then(existingUserConfirmed => res.status(200).send(existingUserConfirmed))
+        .catch(err => res.status(500).send(err));
+    })
+    .catch(err => res.status(500).send(err));
+});
+
 // DELETE request to delete a specific user
 server.delete("/users/:id", (req, res) => {
   const { id } = req.params;
@@ -84,7 +101,7 @@ server.get("/posts/:id", (req, res) => {
 
 // POST a new post 
 server.post("/posts", (req, res) => {
-  
+
   const { text, userId } = req.body;
   const newPost = { text, userId };
   
