@@ -9,22 +9,16 @@ const userDb = require("./data/helpers/userDb.js");
 
 const server = express();
 
-// MIDDLEWARES
+//=============== MIDDLEWARE =============== //
 
 const allCaps = (req, res, next) => {
-  console.log(req.body);
-
   Object.assign(req.body, { name: req.body.name.toUpperCase() });
-
   next();
 };
 
 server.use(logger("tiny"), cors(), helmet(), express.json());
 
-// ROUTES
-// server.get("/api/users/:id", allCaps, (req, res) => {
-//   res.send(`${req.user}`);
-// });
+//=============== USER ENDPOINTS =============== //
 
 //Get all users
 server.get("/api/users", (req, res) => {
@@ -96,6 +90,28 @@ server.delete("/api/users/:id", (req, res) => {
 });
 
 //Update a user
+server.put("/api/users/:id", (req, res) => {
+  const { id } = req.params;
+  const newUser = req.body;
+  userDb
+    .update(id, newUser)
+    .then(user => {
+      if (user.length < 1) {
+        res.status(404).json({
+          message: "The user with the specified ID does not exist."
+        });
+      } else {
+        res.status(200).json(user);
+      }
+    })
+    .catch(err =>
+      res.status(500).json({
+        error: "The user information could not be modified.."
+      })
+    );
+});
+
+//=============== POST ENDPOINTS =============== //
 
 // call server.listen w/ a port of your choosing
 server.listen(port, () => {
