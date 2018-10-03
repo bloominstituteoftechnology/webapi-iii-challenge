@@ -63,6 +63,19 @@ server.delete("/users/posts/:id/:userId", (req,res) => {
 
 })    
 
+//------------------------------------------------------------UPDATE ROUTE HANDLERS 
+server.put("/users/posts/:id/:userId", (req,res) => {
+    const {id,userId} = req.params
+    const {text} = req.body
+    postDb.update(id, {text, userId})
+    .then(() => {
+        userDb.getUserPosts(userId)
+        .then(newUserPosts => {
+            res.json(newUserPosts)
+        })
+    })
+
+})    
 //--------------------------------------------------------------------------------------
 
 server.listen(port, err =>{
