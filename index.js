@@ -43,7 +43,11 @@ server.post('/api/users', (request, response) => {
                         return response
                             .status(422)
                             .send({ Error: `User does not exist at ID ${id}` });
-                    } else if (newUser.name.length <= 128) {
+                    } else if (!newUser.name) {
+                        return response
+                            .status(422)
+                            .send({ Error: `Please enter a name for the user` });
+                    } else if (newUser.name.length >= 128) {
                         return response
                             .status(422)
                             .send({ Error: `User name must be 128 or less characters` });
@@ -56,8 +60,8 @@ server.post('/api/users', (request, response) => {
 
 server.put('/api/users/:id', (request, response) => {
     const id = request.params.id;
-    const { title, contents } = request.body;
-    const updatedUser = { title, contents };
+    const { name } = request.body;
+    const updatedUser = { name };
 
     db.updateUser(id, updatedUser)
         .then(user => {
@@ -109,10 +113,10 @@ server.get('/api/posts/:id', (request, response) => {
 //                         return response
 //                             .status(422)
 //                             .send({ Error: `Post does not exist at ID ${id}` });
-//                     } else if (!newPost.title || !newPost.contents) {
+//                     } else if (!newPost.userID || !newPost.text) {
 //                         return response
 //                             .status(422)
-//                             .send({ Error: `Post missing title or contents` });
+//                             .send({ Error: `Post missing userID or text` });
 //                     }
 //                     response.status(201).json(post);
 //                 });
@@ -122,8 +126,8 @@ server.get('/api/posts/:id', (request, response) => {
 
 server.put('/api/posts/:id', (request, response) => {
     const id = request.params.id;
-    const { title, contents } = request.body;
-    const updatedPost = { title, contents };
+    const { userID, text } = request.body;
+    const updatedPost = { userID, text };
 
     db.updatePost(id, updatedPost)
         .then(post => {
