@@ -29,7 +29,7 @@ server.get("/", (req, res) => {
   res.send("Hello World");
 });
 
-server.get("/users", upperCase, (req, res) => {
+server.get("/users", (req, res) => {
   userDB
     .get()
     .then(users => {
@@ -39,7 +39,7 @@ server.get("/users", upperCase, (req, res) => {
 });
 
 //get one users posts
-server.get("/users/:id", upperCase, (req, res) => {
+server.get("/users/:id", (req, res) => {
   userDB
     .getUserPosts(req.params.id)
     .then(userposts => {
@@ -49,7 +49,7 @@ server.get("/users/:id", upperCase, (req, res) => {
 });
 
 //add user
-server.post("/users", (req, res) => {
+server.post("/users", upperCase, (req, res) => {
   const { id, name } = req.body;
   const newUser = { id: id, name: name };
   userDB
@@ -75,7 +75,7 @@ server.delete("/users/:id", (req, res) => {
 });
 
 //edit user
-server.put("/users/:id", (req, res) => {
+server.put("/users/:id", upperCase, (req, res) => {
   userDB
     .update(req.params.id, req.body)
     .then(posts =>
