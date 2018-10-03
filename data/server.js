@@ -3,13 +3,17 @@ const cors = require("cors");
 const posts = require("./data/helpers/postDb");
 const users = require("./data/helpers/userDb");
 const tags = require(".data/helpers/tagDb");
-const port = 3333;
 const server = express();
 server.use(express.json());
-server.use(cors({}));
+server.use(cors({ origin: 'http://localhost:3000'}));
+const port = 3333;
+server.listen(port, () =>
+  console.log(`\n=== API running on port ${port}===\n`)
+);
+
 
 const errorHelper = (status, message, res) => {
-  res.status(status.json({ error: message }));
+  res.status(status).json({ error: message });
 };
 
 const nameCheck = (req, res, next) => {
@@ -17,6 +21,8 @@ const nameCheck = (req, res, next) => {
   if (!name) {
     errorHelper(404, "Name must be added", res);
     next();
+  }else{
+      next();
   }
 };
 
@@ -42,28 +48,20 @@ server.post("/api/users", nameCheck, (req, res) => {
     });
 });
 
-server.get("/api/users", (req, res) => {
-  users
-    .get()
-    .then(getUsers => {
-      res.json(getUsers);
-    })
-    .catch(err => {
-      return errorHelper(500, "Internal Server Error", res);
-    });
-});
-server.post("/api/users/:id", (req, res) => {
-  const { id } = req.body;
+server.get("/api/users/:id", (req, res) => {
+    const {id}=req.params;
   users
     .get(id)
     .then(user => {
-      if (user === 0) {
-        return errorHelper(404, "No user by that Id in the DB", res);
-      }
-      res.json(user);
+        if (user === 0) {
+          
+      return errorHelper(404, "No User by that ID", res);
+        }
+        res.json(user);
     })
-    .catch(err => {
-      return errorHelper(500, "Internal Server Error", res);
+    .catch (err =>{
+        return errorHelper(500, "Internal Server Error", res );
+    
     });
 });
 
@@ -73,7 +71,7 @@ server.get("/api/users/posts/:userId", (req, res) => {
     .getUserPosts(userId)
     .then(usersPosts => {
       if (usersPosts === 0) {
-        return errorHelper(404, "No user by that Id in the DB", res);
+        return errorHelper(404, "No post", res);
       }
       res.json(usersPosts);
     })
@@ -124,25 +122,15 @@ server.get("/api/posts", (req, res) => {
       return errorHelper(500, "Internal Server Error", res);
     });
 });
-server.get("/api/users/:id", (req, res) => {
+server.get("/api/posts/:id", (req, res) => {
   const { id } = req.params;
   posts
     .get(id)
     .then(post => {
       if (post === 0) {
-        return errorHelper(404, "No user by that Id in the DB", res);
+        return errorHelper(404, "No post by that Id in the DB", res);
       }
       res.json(post);
-    })
-    .catch(err => {
-      return errorHelper(500, "Internal Server Error", res);
-    });
-});
-server.get("/api/posts", (req, res) => {
-  posts
-    .get()
-    .then(getPosts => {
-      res.json(getPosts);
     })
     .catch(err => {
       return errorHelper(500, "Internal Server Error", res);
@@ -152,7 +140,7 @@ server.post("/api/posts", (req, res) => {
   const { userId, text } = req.body;
   posts
     .insert({ userId, text })
-    .then(respons => {
+    .then(response => {
       res.json(response);
     })
     .catch(err => {
@@ -185,4 +173,4 @@ server.get('api/tags', (req, res)=>{
 
 
 
-server.listen(port, () => console.log(`Server listening on ${port}`));
+
