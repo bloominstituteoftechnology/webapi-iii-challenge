@@ -70,7 +70,26 @@ server.post('/api/users', (req, res) => {
   });
 });
 
-server.delete('/api/posts/:id', (req, res) => {});
+server.delete('/api/users/:id', (req, res) => {
+  const { id } = req.params;
+  userDb
+    .remove(id)
+    .then((remove) => {
+      console.log(remove);
+      if (!remove) {
+        return res.status(404).send({
+          message: 'The user with the specified ID does not exist.',
+        });
+      }
+      res.status(200).send({ message: `User with ID ${id} was removed.` });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({
+        error: 'The user could not be removed',
+      });
+    });
+});
 
 // ####### Posts #######
 
