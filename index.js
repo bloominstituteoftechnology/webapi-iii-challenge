@@ -88,5 +88,16 @@ server.route('/posts')
     .catch(err => res.status(500).json({ error: "The request for posts could not be retrieved." }));
   })
 
+server.route('/posts/:id')
+  .delete((req, res) => {
+    const { id } = req.params;
+    postDb.remove(id)
+      .then(removedPost => {
+        if (!removedPost) return res.status(404).json({ message: "The post with the specified ID does not exist." });
+        return res.status(202).json(removedPost)
+      })
+      .catch(err => res.status(500).json({ error: "The post could not be removed." }));
+  })
+
 // PORT LISTENERS
 server.listen(port, () => console.log(`===${port} is online!===`))
