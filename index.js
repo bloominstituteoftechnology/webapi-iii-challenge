@@ -7,6 +7,19 @@ server.use(express.json());
 // const cors = require('cors');
 // server.use(cors());
 
+const upperCaseName = (req, res, next) =>{
+    let capNext = true;
+    for(let i=0; i<req.name.length; i++){
+        if(capNext){
+            req.name[i].toUpperCase();
+            capNext = false;
+        }
+        if(req.name[i]===' '){
+            capNext = true;
+        }
+    }
+}
+
 const port = 8000;
 server.listen(port, ()=>{
     console.log(`API running on port ${port}`);
@@ -76,7 +89,7 @@ server.get('/api/:dbtype/:id', (req, res)=>{
     }
 });
 
-server.post('/api/:dbtype', (req, res)=>{
+server.post('/api/:dbtype', upperCaseName, (req, res)=>{
     const {dbtype} = req.params;
     const item = req.body;
     switch (dbtype){
@@ -135,7 +148,7 @@ server.delete('/api/:dbtype/:id', (req, res)=>{
     }
 });
 
-server.put('/api/:dbtype/:id', (req, res)=>{
+server.put('/api/:dbtype/:id', upperCaseName, (req, res)=>{
     const {dbtype, id} = req.params;
     const item = req.body;
     switch (dbtype){
@@ -163,4 +176,4 @@ server.put('/api/:dbtype/:id', (req, res)=>{
         default:
             res.status(400).send(`URI ${dbtype} not found`);
     }
-})
+});
