@@ -8,13 +8,12 @@ const server = express();
 
 
 function upperCase(req, res, next){
-  console.log('Upper:', req.body);
-  console.log('working globally');
+  req.body.name = req.body.name.toUpperCase()
+  console.log(req.body);
   next();
 }
 
 server.use(express.json())
-server.use(upperCase)
 
 
 // ******************
@@ -41,7 +40,7 @@ server.get('/users/:id', (req, res, next) => {
     })
 })
 
-server.post('/users', (req, res, next) => {
+server.post('/users', upperCase, (req, res, next) => {
   const { name } = req.body;
   const newUser = { name };
   userDb.insert(newUser)
@@ -53,7 +52,7 @@ server.post('/users', (req, res, next) => {
     })
 })
 
-server.put('/users', (req, res, next) => {
+server.put('/users', upperCase, (req, res, next) => {
   const { name, id } = req.body;
   const updatedUser = { name };
   userDb.update(id, updatedUser)
@@ -103,8 +102,8 @@ server.get('/posts/:id', (req, res, next) => {
 })
 
 server.post('/posts', (req, res, next) => {
-  const { text, userId } = req.body;
-  const newPost = { text, userId };
+  const { text, postId } = req.body;
+  const newPost = { text, postId };
   postDb.insert(newPost)
     .then(
       res.status(200).json(newPost)
@@ -116,9 +115,9 @@ server.post('/posts', (req, res, next) => {
 
 
 server.put('/posts', (req, res, next) => {
-  const { text, userId } = req.body;
+  const { text, postId } = req.body;
   const updatedPost = { text };
-  postDb.update(userId, updatedPost)
+  postDb.update(postId, updatedPost)
     .then(
       res.status(200).json(updatedPost)
     )
@@ -141,6 +140,9 @@ server.delete('/posts', (req, res, next) => {
 
 
 
+
+
+// ****************** Init Port & Listen
 const port = 9000
 
 server.listen(port, () => console.log(`\n ** ** ** Listening on on port ${port} ** ** **  ` ))
