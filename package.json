@@ -1,0 +1,28 @@
+{
+  "name": "node-blog",
+  "version": "1.0.0",
+  "description": "## Topics",
+  "main": "knexfile.js",
+  "dependencies": {
+    "express": "^4.16.3",
+    "knex": "^0.15.2",
+    "nodemon": "^1.18.4",
+    "server.js": "^1.0.0",
+    "sqlite3": "^4.0.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EricaThompson/Node-Blog.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EricaThompson/Node-Blog/issues"
+  },
+  "homepage": "https://github.com/EricaThompson/Node-Blog#readme"
+}
