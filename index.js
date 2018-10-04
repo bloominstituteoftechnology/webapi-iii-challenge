@@ -13,12 +13,18 @@ const server = express();
 
 server.use(express.json());
 
+// server.use(function (req, res, next) {
+//   console.log('Time:', Date.now())
+//   next()
+// })
+
 // MIDDLEWARES
 
 const yell = (req, res, next) => {
-  req.name = req.params.name.toUpperCase();
+  req.body.name = req.body.name.toUpperCase();
   next();
 };
+// server.use(yell);
 
 // CRUD operations & endpoints
 
@@ -42,7 +48,7 @@ server.get("/users/:id", (req, res) => {
     .catch(error => res.status(500).send({ error: "You messed up" }));
 });
 
-server.post("/users", (req, res) => {
+server.post("/users", yell, (req, res) => {
   const { name } = req.body;
   const newUser = { name };
   if (!name) {
@@ -59,7 +65,7 @@ server.post("/users", (req, res) => {
     );
 });
 
-server.delete("/users", (req, res) => {
+server.delete("/users/:id", (req, res) => {
   const { id } = req.params;
   db.remove(id)
     .then(deleteUser => {
@@ -77,11 +83,19 @@ server.delete("/users", (req, res) => {
     });
 });
 
-server.put("/users/:id", (req, res) => {
+server.put("/users/:id", yell, (req, res) => {
   const { id } = req.params;
-  db.update(id)
+  const { name } = req.body;
+  const updatedUser = { id, name };
+  db.update(id, updatedUser)
     .then(user => {
-      res.status(200).json(user);
+      if (user) {
+        res.status(200).json(user);
+      } else {
+        res
+          .status(404)
+          .json({ error: `The user with id: ${id}, does not exist.` });
+      }
     })
     .catch(error => {
       res.json({ error: "Cannot change user" });
