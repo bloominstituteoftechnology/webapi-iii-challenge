@@ -18,7 +18,7 @@ const upperCase = (req, res, next) => {
 }
 
 
-//routes
+//user routes
 
 server.get("/users", (req, res) => {
     userDb.get().then(users => {
@@ -66,7 +66,57 @@ server.delete('/users/:id', (req, res) => {
         return res.status(404).send("User not found, were they already deleted?")
     }
     userDb.remove(id).then(removed => {
-        red.status(202).json(removed)
+        res.status(202).json(removed)
     }).catch(err => res.send(err))
 })
 
+//post routes
+
+server.get("/posts", (req, res) => {
+    postDb.get().then(posts => {
+        res.send(posts);
+    }).catch(err => send.json('There was a problem receiving user and post information'))
+})
+
+server.get('/posts/:id', (req, res) => {
+    const { id } = req.params;
+    userDb.getUserPosts(id).then(user => {
+        res.status(202).send(user)
+    }).catch(err => res.send(err))
+})
+
+server.post('/posts/:id', (req, res) => {
+    // console.log(req.body)
+    const { text } = req.body;
+    const newPost = { text }
+    postDb.insert(newPost)
+    .then(post => {
+        const { id } = post;
+        postDb.get(id).then(post => {
+            res.status(201).json(post)
+        })
+    }).catch(err => res.send(err))
+})
+
+server.put('/posts/:id', (req, res) => {
+    const { text } = req.body;
+    const { id } = req.body;
+    const updated = { text }
+    if (!text) {
+        return res.status(400).json(`{ error: "Please enter a post" }`)
+    }
+    postDb.update(id, updated)
+        .then(post => {
+            res.status(200).json(post);
+        }).catch(err => res.send(err))
+})
+
+server.delete('/posts/:id', (req, res) => {
+    const { id } = req.body;
+    if(!id) {
+        return res.status(404).send("Post not found, was it already deleted?")
+    }
+    postDb.remove(id).then(removed => {
+        res.status(202).json(removed)
+    }).catch(err => res.send(err))
+})
