@@ -8,7 +8,7 @@ const port = 9000;
 //define databases
 const userDb = require('./data/helpers/userDb');
 const postDb = require('./data/helpers/postDb');
-const tagDb = require('./data/helpers/tagDb');
+// const tagDb = require('./data/helpers/tagDb');
 
 //build server
 const server = express();
@@ -139,5 +139,11 @@ server.use(logger('short'));
             })
             .catch(() => res.status(500).json({error: "The post could not be removed."}))
     })
+
+//catch if user is incorrect 
+server.use(function(req, res) {
+    res.status(404).send("Golden egg! One-thousand points, Gryffindor! Also, 404.");
+});
+    
 
 server.listen(port, () => console.log(`Listening to API on port ${port}`));
