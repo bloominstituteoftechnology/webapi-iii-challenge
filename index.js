@@ -141,7 +141,8 @@ server.delete('/api/users/:id', (request, response) => {
 
 // POST API
 server.get('/api/posts', (request, response) => {
-    postDb.findPost()
+    postDb
+        .get()
         .then(posts => {
             return response
                 .status(200)
@@ -157,7 +158,8 @@ server.get('/api/posts', (request, response) => {
 server.get('/api/posts/:id', (request, response) => {
     const id = request.params.id;
 
-    postDb.findPostById(id)
+    postDb
+        .get(id)
         .then(post => {
             if (!post) {
                 return response
@@ -174,49 +176,75 @@ server.get('/api/posts/:id', (request, response) => {
         });
 });
 
-// server.post('/api/posts', (request, response) => {
-//     const postID = request.postID;
-//     const text = request.text;
-//     const newPost = { postID, text };
 
-//     if (!newPost.postID || !newPost.text) {
-//         return response
-//             .status(400)
-//             .send({ Error: "Missing postID or text for the post" });
-//     } else if (newPost.postID !== request.postID) {
-//         return response
-//             .status(400)
-//             .send({ Error: "This postID does not match the user ID" });
-//     }
+// const name = request.name;
+// const newUser = { name };
 
-//     postDb.insertPost(newPost)
-//         .then(postID => {
-//             const { postID } = postID;
-//             postDb.findPostById(postID)
-//                 .then(post => {
-//                     return response
-//                         .status(201)
-//                         .json(post);
-//                 });
-//         })
-//         .catch(() => {
-//             return response
-//                 .status(500)
-//                 .json({ Error: "There was an error while saving the user" })
-//         });
-// });
+// if (!newUser.name) {
+//     return response
+//         .status(400)
+//         .send({ Error: "Please enter a name for the user" });
+// } else if (newUser.name.length > 128) {
+//     return response
+//         .status(400)
+//         .send({ Error: "User name must be 128 or less characters" });
+// }
+
+// userDb
+//     .insert(newUser)
+//     .then(userID => {
+//         const { id } = userID;
+//         userDb
+//             .get(id)
+//             .then(user => {
+//                 return response
+//                     .status(201)
+//                     .json(user);
+//             });
+//     })
+
+server.post('/api/posts', (request, response) => {
+    const userID = request.body.userID;
+    const text = request.body.text;
+
+    const newPost = { userID, text };
+    console.log(request.body);
+
+    if (!newPost.userID || !newPost.text) {
+        return response
+            .status(400)
+            .send({ Error: "Missing userID or text for the post" });
+    }
+
+    postDb
+        .insert(newPost)
+        .then(post => {
+            postDb
+                .get(post.id)
+                .then(posted => {
+                    return response
+                        .status(201)
+                        .json(posted);
+                });
+        })
+        .catch(() => {
+            return response
+                .status(500)
+                .json({ Error: "There was an error while saving the user" })
+        });
+});
 
 // server.put('/api/posts/:id', (request, response) => {
 //     const id = request.params.id;
-//     const postID = request.postID;
+//     const userID = request.userID;
 //     const text = request.text;
-//     const updatedPost = { postID, text };
+//     const updatedPost = { userID, text };
 
 //     if (!id) {
 //         return response
 //             .status(404)
 //             .send({ Error: `Post with the following ID does not exist: ${id}` });
-//     } else if (!updatedPost.postID || !updatedPost.text) {
+//     } else if (!updatedPost.userID || !updatedPost.text) {
 //         return response
 //             .status(400)
 //             .send({ Error: "Please enter a name for the user" });
@@ -244,7 +272,8 @@ server.delete('/api/posts/:id', (request, response) => {
             .json({ Error: `There is no post with the following ID: ${id}` })
     }
 
-    postDb.removePost(id)
+    postDb
+        .remove(id)
         .then(removedUser => {
             return response
                 .status(200)
