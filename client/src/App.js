@@ -4,7 +4,7 @@ import { Link, Route } from 'react-router-dom';
 
 // Components
 import UserList from './components/UserList';
-import UserDetails from './components/UserDetails';
+import UserPosts from './components/UserPosts';
 import CreateUser from './components/CreateUser';
 
 // Styles
@@ -87,7 +87,7 @@ export default class App extends Component {
 
 				<Route exact path = '/' render = { () => <UserList users = { users } handleUserClick = { this.handleUserClick } />} />
 
-				<Route path = '/users/:id' render = { props => <UserDetails id = { props.match.params.id } /> } />
+				<Route path = '/users/:id' render = { props => <UserPosts id = { props.match.params.id } /> } />
 
 				<Route path = '/create' render = { props => <CreateUser history = { props.history } handleNewUsers = { this.handleNewUsers } /> } />
 			</AppDiv>
