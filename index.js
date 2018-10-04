@@ -14,6 +14,12 @@ server.use(express.json(), cors(), morgan('combined'), helmet());
 
 ///// ===============- SERVER CRUD ENDPOINTS -===============
 
+// ##### Error Messages #####
+const missingNameError = { errorMessage: "Please provide a name for the user." }
+const invalidTypeError = { errorMessage: "Post title and contents must be a string." }
+const postNotFound = { errorMessage: "The post with the specified ID does not exist." }
+const single500 = { errorMessage: "The post information could not be retrieved" }
+
 //// ==========- USER DATABASE CRUD ENDPOINTS -==========
 
 /// #####=- Root Server READ Endpoint -=#####
@@ -50,9 +56,23 @@ server.get('/users/:userId', (request, response) => {
 /// #####=- CREATE Individual User Endpoint -=#####
 server.post('/users',  (request, response) => {
 
+    // Unique Error Message
+    const error500 = { errorMessage: "Unable to create user." };
+
+    // Request Validation
+    const user = request.body;
+    
+    if ( !user ) {
+        response.status(400).send(missingNameError);
+    }
+
     // Database Promise Method
-    userDb.insert()
-    .then()
+    userDb.insert({'name': user})
+    .then( userId => {
+        userDb.get(userId)
+        .then(user => response.status(200).send(user))
+        .catch(() => response.status(500).send(error500))
+    })
     .catch()
 })
 
