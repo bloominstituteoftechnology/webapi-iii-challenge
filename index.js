@@ -96,7 +96,7 @@ server.delete("/api/users/:id", (req, res) => {
 });
 
 //Update a user
-server.put("/api/users/:id", (req, res) => {
+server.put("/api/users/:id", allCaps, (req, res) => {
   const { id } = req.params;
   const newUser = req.body;
   userDb
