@@ -25,10 +25,27 @@ const AppDiv = styled.div`
 		justify-content: center;
 		align-items: center;
 		flex-direction: column;
-		margin-bottom: 20px;
+		margin: 20px 0;
 
 		h1 {
 			font-size: 2rem;
+		}
+
+		.links {
+			margin-top: 10px;
+
+			a {
+				border: 1px solid black;
+				border-radius: 5px;
+				padding: 5px 10px;
+				text-decoration: none;
+				color: #444;
+
+				&:hover {
+					background-color: #444;
+					color: white;
+				}
+			}
 		}
 	}
 `;
@@ -57,7 +74,8 @@ export default class App extends Component {
 			<AppDiv>
 				<header>
 					<h1>Node Blog</h1>
-					<div>
+
+					<div className = 'links'>
 						<Link to = '/'>Home</Link>
 					</div>
 				</header>
