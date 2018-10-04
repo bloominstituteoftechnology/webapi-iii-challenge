@@ -130,6 +130,27 @@ server.delete("/api/posts/:id", async (req, res) => {
   }
 });
 
+//Add PUT ROUTE HANDLER to update the information in a post...which right now is text
+server.put('/api/posts/:id', async (req, res) => {
+  if (!req.body.text || !req.body.userId) {
+    return res.status(400).send({ errorMessage: "Please provide text and userId for the post." });
+   } try {
+    await posts.update(req.params.id, req.body);
+    try {
+    const post = await posts.get(req.params.id);
+    if (post.length === 0) {
+      return res.status(404).send({ message: "The post with the specified ID does not exist." });
+    } else {
+      return res.status(200).json(post);
+    }
+   } catch (error) {
+      return res.status(500).send({ error: "The post information could not be modified." });
+   }
+  } catch (error) {
+    return res.status(500).send({ error: "The post information could not be modified." });
+ }
+});
+
 // Call server.listen w/ a port of 8250
 server.listen(port, () =>
   console.log(`\n=== API running on port ${port} ===\n`)
