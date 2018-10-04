@@ -59,7 +59,7 @@ server.post("/api/users", allCaps, (req, res) => {
   const newUser = req.body;
   if (newUser.name.length > 128) {
     return res.status(411).json({
-      message: " The user name must be under 129 characters."
+      message: " The username must be under 129 characters."
     });
   }
   userDb
