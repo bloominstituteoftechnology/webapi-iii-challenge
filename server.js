@@ -13,7 +13,6 @@ const tags = require('./data/helpers/tagDb.js');
 server.use(express.json());
 server.use(helmet());
 server.use(morgan('tiny'))
-
 server.use(cors())
 
 
@@ -146,20 +145,45 @@ server.delete('/api/users/:id', (req, res) => {
 server.post('/api/users/:id/posts/', (req, res) => {
 	const userId = parseInt(req.params.id)
 	const {text} = req.body;
+	users
+	.get(userId)
+	.then(response =>  {
+		if (response === undefined){
+			//console.log('no user there')
+		res.status(400).json({msg: "Must be id of valid user"})
+		} else {
+			if (!req.body.text) {
+				res.status(400).json({msg: "Please provide content for post"})
+			} else {
+				posts
+				.insert({userId, text})
+				.then(response => {
+					res.status(201).json(response);
+				})
+				.catch(error => {
+					console.log(error)
+					res.status(500).json({msg: "There was an error while saving the post" })
+				})
+			}
+		}
+	})
+})
 
-	if (!req.body.text) {
-		res.status(400).json({msg: "Please provide content for post"})
-	} else {
-		posts
-		.insert({userId, text})
-		.then(response => {
-			res.status(201).json(response);
-		})
-		.catch(error => {
-			console.log(error)
-			res.status(500).json({msg: "There was an error while saving the post" })
-		})
-	}
+server.get('/api/users/:id', (req, res) => {
+	const id = req.params.id
+	users
+	.get(id)
+	.then(user => {
+		if (!user){
+			res.status(404).json({ msg: "The user with the specified ID does not exist." })
+		} else {
+			res.status(200).json(user)
+		}
+	})
+	.catch(error => {
+		console.log(error)
+		res.status(500).json({ msg: "The user information could not be retrieved." })
+	})
 })
 
 server.put('/api/posts/:id', (req, res) => {
