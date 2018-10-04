@@ -27,47 +27,33 @@ server.get('/users', (req, res) => {
 	.catch(err => res.status(500).send(err));
 });
 
-// server.get('/users/:id', (req, res) => {
-//     udb.findById(req.params.id)
-// 	.then(users => {
-// 	    console.log(`\n ** users ** \n`, users);
-// 	    res.json(users);
-// 	})
-// 	.catch(err => res.status(500).send(err));
-// });
-
-// server.post('/users',lettering, (req, res) => {
-//     console.log(req.body);
-//     const {name} = req.body;
-//     udb.insert({name})
-//     	.then(response => {
-// 	    const {id} = response;
-// 	    // res.status(201).json(response);
-// 	    udb.get(id)
-// 	    	.then(userId => {
-// 	    	    if (name.length >= 128 || !name) {
-// 	    	    	return res.status(400).json({
-// 	    	    	    errorMessage: 'Name must be under 128 characters.'
-// 	    	    	});
-// 	    	    }
-// 	    	       res.status(201).json(userId);
-// 	    	});
-// 	})
-// 	.catch(err => console.error(err));
-// });
-
-
-server.post('/users', (req, res) => {
-    const { name } = req.body;
-    udb
-	.insert({ name })
-	.then(response => {
-	    res.json(response);
+server.get('/users/:id', (req, res) => {
+    udb.get(req.params.id)
+	.then(users => {
+	    console.log(`\n ** users ** \n`, users);
+	    res.json(users);
 	})
-	.catch(err => {
-	    console.log(res.body);
-	    return errorHelper(500, 'Database boof', res);
-	});
+	.catch(err => res.status(500).send(err));
+});
+
+server.post('/users',lettering, (req, res) => {
+    console.log(req.body);
+    const {name} = req.body;
+    udb.insert({name})
+    	.then(response => {
+	    const {id} = response;
+	    // res.status(201).json(response);
+	    udb.get(id)
+	    	.then(userId => {
+	    	    if (name.length >= 128 || !name) {
+	    	    	return res.status(400).json({
+	    	    	    errorMessage: 'Name must be under 128 characters.'
+	    	    	});
+	    	    }
+	    	       res.status(201).json(userId);
+	    	});
+	})
+	.catch(err => console.error(err));
 });
 
 server.delete('/users/:id', (req, res) => {
@@ -90,6 +76,34 @@ server.put('/users/:id', (req, res) => {
 	})
 	.catch(err => console.log(err));
 });
+
+
+//===============POSTS===============
+
+server.get('/posts', (req, res) => {
+    console.log(req.body);
+    pdb.get()
+	.then(serverPosts => {
+	    res.json(serverPosts);
+	})
+	.catch(err => res.status(500).send(err));
+});
+
+server.get('/posts/:id', (req, res) => {
+    pdb.get(req.params.id)
+	.then(posts => {
+	    console.log(`\n ** posts ** \n`, posts);
+	    res.json(posts);
+	})
+	.catch(err => res.status(500).send(err));
+});
+
+
+
+
+
+
+//===============LISTENING===============
 
 const port = 8003;
 server.listen(port, () => {
