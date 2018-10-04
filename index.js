@@ -3,22 +3,25 @@ const logger = require('morgan');
 const moment = require('moment');
 
 const userDb = require('./data/helpers/userDb.js');
-const postDb = require('./data/helpers/postDb.js');
+const postRoutes = require('./posts/postRoutes.js');
 
 const server = express();
 const port = 9000;
 
 const nameToUpperCase = (req, res, next) => {
     let name;
-    if (req.body.name) name = req.body.name;
+    if (req.body.name) name = req.body.name.toUpperCase();
     if (!req.body.name) name = 'NO NAME';
+    if (name.length > 128) name = name.slice(0, 128);
     req.name = name;
-    console.log('\x1b[35m', `\n[nameToUpperCase] [${moment().format()}] \"${req.method} ${req.originalUrl} ${req.protocol}\" - \"Set user\'s name ${req.body.name} to ${name}\"`);
+    console.log('\x1b[35m', `\n[nameToUpperCase] [${moment().format()}] \"${req.method} ${req.originalUrl} ${req.protocol}} \" - \"Set user\'s name ${req.body.name} to ${name}\"`);
     console.log('\x1b[0m', '');
     next();
 }
 
 server.use(logger('combined'), express.json());
+
+server.use('/api/posts', postRoutes);
 
 server.get('/api/users', (req, res) => {
     userDb.get()
@@ -62,7 +65,6 @@ server.put('/api/users/:id', nameToUpperCase, (req, res) => {
 
 server.delete('/api/users/:id', (req, res) => {
     const { id } = req.params;
-    console.log(id);
     userDb.remove(id)
         .then(rmvdUser => {
             if(!rmvdUser) return res.status(404).send({error: `The user with the ID of ${id} does not exist.`});
