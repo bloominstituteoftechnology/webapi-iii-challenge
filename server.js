@@ -48,7 +48,7 @@ server.get('/api/users/:id', (req, res) => {
 					.status(404)
 					.json({ message: 'User with specified ID does not exist.' });
 			}
-			console.log('\n=== RETURNED USER: ===\n\n', user[0], '\n');
+			console.log('\n=== RETURNED USER: ===\n\n', user, '\n');
 			res.status(200).json(user);
 		})
 		.catch(err => {
