@@ -184,5 +184,48 @@ server.post("/api/posts", async (req, res) => {
   }
 });
 
+// edit a post given a post id
+server.put("/api/posts/:id", async (req, res) => {
+  if (!req.body.text || !req.body.userId) {
+    res.status(400).json({ message: "enter some text and a useeId" });
+  }
+  if (req.body.text.length > 128) {
+    res.status(400).json({ message: "text must be less than 128 characters" });
+  }
+  try {
+    await posts.update(req.params.id, req.body);
+    try {
+      const post = await posts.get(req.params.id);
+      if (post === undefined) {
+        res.status(404).json({ message: "post does not exist" });
+      }
+      res.status(200).json(post);
+    } catch (error) {
+      res.status(500).json({ message: "post could not be retrieved" });
+    }
+  } catch (error) {
+    res.status(500).json({
+      message: "error occurred while saving the edited post to the database"
+    });
+  }
+});
+
+// delete a post given post id
+server.delete("/api/posts/:id", async (req, res) => {
+  try {
+    const post = await posts.remove(req.params.id);
+    if (post === 0) {
+      res.status(404).json({ message: "post does not exist" });
+    }
+    res.status(200).json(post);
+  } catch (error) {
+    res
+      .status(500)
+      .json({
+        message: "error occurred while deleting the post from the database"
+      });
+  }
+});
+
 // listen to port 8000 and give a startup message from the server
 server.listen(8000, () => console.log("API listening on port 8000"));
