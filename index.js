@@ -106,7 +106,18 @@ server.get("/posts/:id", (req, res) => {
 });
 
 // GET all posts by a specific user
-
+server.get("users/:id/posts", (req, res) => {
+  const {id} = req.params;
+  userdb.getUserPosts(id)
+    .then(posts => {
+      if(posts.length < 1) {
+        res.status(200).send(`No posts found for User #${id}.`)
+        return;
+      }
+      res.status(200).send(posts);
+    })
+    .catch(err => res.status(500).send(err));
+});
 
 // POST a new post 
 server.post("/posts", (req, res) => {
