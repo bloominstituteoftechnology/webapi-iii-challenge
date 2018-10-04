@@ -60,7 +60,7 @@ server.get('/', (request, response) => {
 });
 
 /// #####=- READ All Users Endpoint -=#####
-server.get('/users', (request, response) => {
+server.get('/api/users', (request, response) => {
 
     // Database Promise Method
     userDb.get()
@@ -69,7 +69,7 @@ server.get('/users', (request, response) => {
 });
 
 /// #####=- READ Individual User Endpoint -=#####
-server.get('/users/:userId', (request, response) => {
+server.get('/api/users/:userId', (request, response) => {
 
     const userId = request.params.userId;
 
@@ -85,7 +85,7 @@ server.get('/users/:userId', (request, response) => {
 });
 
 /// #####=- CREATE Individual User Endpoint -=#####
-server.post('/users', toUpperCase,  (request, response) => {
+server.post('/api/users', toUpperCase,  (request, response) => {
 
     // Request Validation
     const name = request.name;
@@ -110,7 +110,7 @@ server.post('/users', toUpperCase,  (request, response) => {
 });
 
 /// #####=- UPDATE Individual User Endpoint -=#####
-server.put('/users/:userId', toUpperCase, (request, response) => {
+server.put('/api/users/:userId', toUpperCase, (request, response) => {
 
     // Request Validation
     const userId = request.params.userId;
@@ -141,7 +141,7 @@ server.put('/users/:userId', toUpperCase, (request, response) => {
 });
 
 /// #####=- DELETE Individual User Endpoint -=#####
-server.delete('/users/:userId', (request, response) => {
+server.delete('/api/users/:userId', (request, response) => {
 
     const userId = request.params.userId;
 
@@ -165,7 +165,7 @@ server.delete('/users/:userId', (request, response) => {
 })
 
 /// #####=- READ All Posts of Individual User Endpoint -=#####
-server.get('/users/:userId/posts', (request, response) => {
+server.get('/api/users/:userId/posts', (request, response) => {
 
     const userId = request.params.userId;
 
@@ -183,7 +183,7 @@ server.get('/users/:userId/posts', (request, response) => {
 //// ==========- POST DATABASE CRUD ENDPOINTS -==========
 
 /// #####=- READ All Posts Endpoint -=#####
-server.get('/posts', (request, response) => {
+server.get('/api/posts', (request, response) => {
 
     // Database Promise Method
     postDb.get()
@@ -192,7 +192,7 @@ server.get('/posts', (request, response) => {
 });
 
 /// #####=- READ Individual Post Endpoint -=#####
-server.get('/posts/:postId', (request, response) => {
+server.get('/api/posts/:postId', (request, response) => {
 
     const postId = request.params.postId;
 
@@ -208,7 +208,7 @@ server.get('/posts/:postId', (request, response) => {
 });
 
 /// #####=- CREATE Individual Post Endpoint -=#####
-server.post('/users/:userId/posts', (request, response) => {
+server.post('/api/users/:userId/posts', (request, response) => {
 
     // Request Validation
     const userId = request.params.userId;
@@ -242,7 +242,7 @@ server.post('/users/:userId/posts', (request, response) => {
 });
 
 /// #####=- UPDATE Individual Post Endpoint -=#####
-server.put('/posts/:postId', (request, response) => {
+server.put('/api/posts/:postId', (request, response) => {
 
     // Request Validation
     const postId = request.params.postId;
@@ -284,7 +284,7 @@ server.put('/posts/:postId', (request, response) => {
 });
 
 /// #####=- DELETE Individual Post Endpoint -=#####
-server.delete('/posts/:postId', (request, response) => {
+server.delete('/api/posts/:postId', (request, response) => {
 
     const postId = request.params.postId;
 
