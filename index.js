@@ -12,6 +12,13 @@ const server = express();
 
 server.use(express.json(), cors(), morgan('combined'), helmet());
 
+// Custom Middleware
+
+const toUpperCase = (request, response, next) => {
+    request.name = request.body.name.toUpperCase();
+    next();
+}
+
 ///// ===============- SERVER CRUD ENDPOINTS -===============
 
 // ##### Error Messages #####
@@ -72,10 +79,10 @@ server.get('/users/:userId', (request, response) => {
 })
 
 /// #####=- CREATE Individual User Endpoint -=#####
-server.post('/users',  (request, response) => {
+server.post('/users', toUpperCase,  (request, response) => {
 
     // Request Validation
-    const { name } = request.body;
+    const name = request.name;
     
     if ( !name ) {
         response.status(400).send(missingUserName);
@@ -97,12 +104,12 @@ server.post('/users',  (request, response) => {
 })
 
 /// #####=- UPDATE Individual User Endpoint -=#####
-server.put('/users/:userId',  (request, response) => {
+server.put('/users/:userId', toUpperCase, (request, response) => {
 
     // Request Validation
     const userId = request.params.userId;
 
-    const { name } = request.body;
+    const name = request.name;
 
     if ( !name ) {
         response.status(400).send(missingUserName);
