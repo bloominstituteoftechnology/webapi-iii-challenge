@@ -3,6 +3,7 @@ const cors = require('cors');
 const server = express(); // instantiate server
 const logger = require('morgan');
 const db = require('./data/helpers/userDb');
+const postDb = require('./data/helpers/postDb');
 const port = 5201;
 
 
@@ -10,6 +11,11 @@ const capitalize = (req, res, next) => {
   const newUserName = req.body.name.toUpperCase();
   req.name = newUserName;
   next();
+};
+
+const textRecognize = (req, res, next) => {
+  const newText = req.body.text;
+  req.text = newText
 };
 
 
@@ -94,7 +100,7 @@ server.put('/users/:id', capitalize, (req, res) => {
   db.update(id, newUser)
     .then(user => {      
       console.log(user, 'i am user inside put') // --> logs a 1 or 0      
-      db.get(user.id) // get needs an id
+      db.get(user.id) // .get() needs an id
         .then(userName => res.status(200).json(userName))
         .catch(err => console.log(err));
     })
@@ -117,15 +123,73 @@ server.put('/users/:id', capitalize, (req, res) => {
 
 /*                           POSTS                          */
 
-server.get('/users/:id', (req, res) => {
-  const { id } = req.params;  
 
-  db.getUserPosts(id)
-    .then(posts => {
-      if (posts.length === 0) {
+
+/*
+          I gather each and every post
+
+  - allPosts returns an array of objects
+    > inside each array there is a:
+      1. text
+      2. userId
+*/
+
+server.get('/users/posts/', (req, res) => {    
+
+  postDb.get()
+    .then(allPosts => {      
+      if (allPosts.length === 0) {
         return res.status(404).send({ errorMessage: `User has no posts available.` })
       }
-      res.status(200).json(posts);
+      console.log('=========I am all posts=========', allPosts);
+      res.status(200).json(allPosts);
+    })
+    .catch(err => console.log(err));
+});
+
+
+
+
+
+
+
+
+/*
+          I gather the speciic post (by Id)
+  
+  - eachPost returns a object
+    > Inside the object is a :
+      1. text
+      2. postedBy (whoever made the post)
+      3. tags (an array of tags)
+*/
+
+server.get('/users/posts/:id', (req, res) => {
+  const { id } = req.params;
+
+  postDb.get(id)
+    .then(eachPost => {      
+      if (eachPost === 0) {
+        return res.status(404).json({ missingError: `No posts by this Id` });
+      }
+      console.log('eachPost ===============', eachPost);
+      res.status(200).json(eachPost);
+    })
+    .catch(err => console.log(err));
+});
+
+
+
+
+
+server.post('/users/posts', (req, res) => {
+  const { userId, text }  = req.body; 
+  // acts as the post itself that we can pass in
+
+  postDb.insert({userId, text})
+    .then(response => {
+      console.log('============ RESPONSE ============', response);
+      res.json(response);
     })
     .catch(err => console.log(err));
 });
