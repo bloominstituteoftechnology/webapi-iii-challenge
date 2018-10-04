@@ -17,8 +17,7 @@ server.use(express.json());
 server.use(cors());
 
 const upperCase = (req, res, next) => {
-    //console.log(req.params);
-    req.text = req.params.text.toUpperCase();
+    req.body.name = req.body.name.toUpperCase();
     next();
 };
 
@@ -32,10 +31,8 @@ server.get('/blogs', (req, res) => {
             .catch(err=>res.send(err));
 });
 
-server.get('/blogs/:id', // upperCase, 
-            (req, res) => {
+server.get('/blogs/:id', (req, res) => {
     req.id = req.params.id;
-    // res.send(`${req.id}`);
     userDb.get(req.id)
             .then(query =>{
                 res.json(query);
@@ -43,10 +40,7 @@ server.get('/blogs/:id', // upperCase,
             .catch(err=>res.send(err));
 });
 
-server.post('/blogs', (req, res) =>{
-    // const {name} = req.body;
-
-    // console.log(user);
+server.post('/blogs', upperCase, (req, res) =>{
     userDb.insert(req.body)
             .then(id =>{
                 res.json(id);
@@ -55,7 +49,6 @@ server.post('/blogs', (req, res) =>{
 });
 
 server.delete('/blogs/:id', (req, res)=>{
-    console.log(req.params);
     const id = req.params.id;
     userDb.remove(id)
             .then(responseId=>{
@@ -64,9 +57,8 @@ server.delete('/blogs/:id', (req, res)=>{
             .catch(err=>res.send(err));
 });
 
-server.put('/blogs/:id', (req, res)=>{
+server.put('/blogs/:id', upperCase, (req, res)=>{
     const id = req.params.id;
-    console.log(id);
     userDb.update(id, req.body)
             .then(ifUpdated =>{
                 if (ifUpdated === 1){
