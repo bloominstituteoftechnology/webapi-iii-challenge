@@ -1,0 +1,26 @@
+{
+  "name": "Node-Blog",
+  "version": "1",
+  "description": "node blog",
+  "main": "index.js",
+  "repository": "https://github.com/alejandrok93/Node-Blog.git",
+  "author": "alejandrok93",
+  "license": "MIT",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "cors": "^2.8.4",
+    "create-react-app": "^2.0.3",
+    "express": "^4.16.3",
+    "helmet": "^3.13.0",
+    "knex": "^0.15.2",
+    "morgan": "^1.9.1",
+    "sqlite3": "^4.0.2",
+    "yarn": "^1.10.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.4"
+  }
+}
