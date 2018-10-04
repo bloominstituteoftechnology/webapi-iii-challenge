@@ -80,9 +80,19 @@ server.route('/posts')
     const newPost = { userId, text };
     if (!userId) return res.status(400).json({ errorMessage: "Please provide a user id." });
     if (!text) return res.status(400).json({ errorMessage: "Please provide some text." });
-    postDb.insert(newPost)
-      .then(newPost => res.status(201).json(newPost))
-      .catch(err => res.status(500).json({ error: "There was an error while saving the post to the database" }));
+    userDb.get(userId)
+      .then(user => {
+        if (!user) {
+          return res.status(404).json({ message: "The user with the specified ID does not exist." });
+        }
+        else {
+          postDb.insert(newPost)
+            .then(newPost => res.status(201).json(newPost))
+            .catch(err => res.status(500).json({ error: "There was an error while saving the post to the database" }));
+        }
+      })
+      .catch(err => res.status(500).json({ error: "There was an error while finding the user in the database" }));
+    
   })
   .get((req, res) => {
     postDb.get()
