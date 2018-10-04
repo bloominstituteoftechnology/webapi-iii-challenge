@@ -5,19 +5,22 @@ const users = require("./data/helpers/userDb");
 const tags = require("./data/helpers/tagDb");
 const server = express();
 server.use(express.json());
-server.use(cors({ origin: 'http://localhost:3333'}));
+server.use(cors({ origin: "http://localhost:3000" }));
 const port = 3333;
 server.listen(port, () =>
   console.log(`\n=== API running on port ${port}===\n`)
 );
 
 const serverLogger = (req, res, next) => {
-     console.log(`\n\n\nIncoming Request:\n\nurl: ${req.url}\n\nmethod: ${req.method}\n\nbody:`);
-     console.log(req.body);
-     next();
-  
-} 
-server.use(serverLogger)
+  console.log(
+    `\n\n\nIncoming Request:\n\nurl: ${req.url}\n\nmethod: ${
+      req.method
+    }\n\nbody:`
+  );
+  console.log(req.body);
+  next();
+};
+server.use(serverLogger);
 const errorHelper = (status, message, res) => {
   res.status(status).json({ error: message });
 };
@@ -26,22 +29,25 @@ const upperCaseTags = (req, res, next) => {
   // "/api/users/" this has string length of 11
   // if the URL we get has length greater than 11
   // we know that it has a valid parameter at the end
-  if ((req.method == "PUT" && req.url.includes("/api/users/") && req.url.length > 11)
-    || (req.method == "POST" && req.url == "/api/users/" && req.body.name))
+  if (
+    (req.method == "PUT" &&
+      req.url.includes("/api/users/") &&
+      req.url.length > 11) ||
+    (req.method == "POST" && req.url == "/api/users/" && req.body.name)
+  )
     req.body.name = req.body.name.toUpperCase();
   next();
-}
+};
 server.use(upperCaseTags);
-
 
 server.get("/api/users", (req, res) => {
   users
     .get()
     .then(getUsers => {
-      res.json({getUsers});
+      res.json({ getUsers });
     })
     .catch(err => {
-      console.log(err)
+      console.log(err);
       return errorHelper(500, "Internal Server Error", res);
     });
 });
@@ -58,19 +64,17 @@ server.post("/api/users", (req, res) => {
 });
 
 server.get("/api/users/:id", (req, res) => {
-    const {id}=req.params;
+  const { id } = req.params;
   users
     .get(id)
     .then(user => {
-        if (user === 0) {
-          
-      return errorHelper(404, "No User by that ID", res);
-        }
-        res.json(user);
+      if (user === 0) {
+        return errorHelper(404, "No User by that ID", res);
+      }
+      res.json(user);
     })
-    .catch (err =>{
-        return errorHelper(500, "Internal Server Error", res );
-    
+    .catch(err => {
+      return errorHelper(500, "Internal Server Error", res);
     });
 });
 
@@ -116,7 +120,7 @@ server.put("/api/users/:id", (req, res) => {
       }
     })
     .catch(err => {
-      console.log(err)
+      console.log(err);
       return errorHelper(500, "Internal Server Error", res);
     });
 });
@@ -166,19 +170,16 @@ server.get("/api/posts/tags/:id", (req, res) => {
       res.json(postTags);
     })
     .catch(err => {
-        return errorHelper(500, "Internal Server Error", res);
+      return errorHelper(500, "Internal Server Error", res);
     });
 });
-server.get('/api/tags', (req, res)=>{
-    users.get()
-    .then(gotTags=>{
-        res.json({gotTags});
+server.get("/api/tags", (req, res) => {
+  users
+    .get()
+    .then(gotTags => {
+      res.json({ gotTags });
     })
-    .catch(err =>{
-        return errorHelper(500, "Internal Server Error", res );
+    .catch(err => {
+      return errorHelper(500, "Internal Server Error", res);
     });
 });
-
-
-
-
