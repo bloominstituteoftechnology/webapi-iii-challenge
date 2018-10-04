@@ -114,9 +114,36 @@ server.get('/api/posts', (req, res) => {
     .catch(err => res.status(500).send({ error: "All posts information could not be retrieved." }));
 });
 
+//Add POST ROUTE HANDLER to add a post
+server.post('/api/posts', (req, res) => {
+  // Check that text and userId is present. If not return error message.
+  if(!req.body.text || !req.body.userId) {
+    return res.status(400).send({ errorMessage: "Please provide text and a userId for this post." });
+   }
+  // Next, check if the user exists in db. If not return error message.
+  users
+    .get(req.body.userId)
+    .then(response => {
+      // console.log(response)
+      // return 
+      if(response === undefined) {
+        return res.status(400).send({message: "userId does not exist"});
+      } 
+    })
 
+  // When both tests pass, submit request
+  const { text, userId } = req.body;
+  const newPost = { text, userId };
+  posts
+    .insert(newPost)
+    .then(newPost => {
+        // console.log(newPost);
+        res.status(201).json(newPost);
+      })
+    .catch(err => res.status(500).send({ error: "There was an error while saving the post to the database" }));
+});
 
-  //Add DELETE ROUTE HANDLER to delete a post
+//Add DELETE ROUTE HANDLER to delete a post
 server.delete("/api/posts/:id", async (req, res) => {
   try {
     const { id } = req.params;
