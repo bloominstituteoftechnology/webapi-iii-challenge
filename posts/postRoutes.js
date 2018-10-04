@@ -22,6 +22,14 @@ router.post('/', (req, res) => {
     })
     .catch(() => res.status(400).json ({ error: "Please provide text and username for this post."}))
 
-})
+});
+
+router.get('/', (req, res) => {
+    postDb.get()
+    .then(posts => {
+        res.status(200).json(posts);
+    })
+    .catch(() => res.status(500).json({ error: "The posts could not be retrieved."}));
+});
 
 module.exports = router;
