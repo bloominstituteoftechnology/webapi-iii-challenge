@@ -1,4 +1,5 @@
-const db = require('./data/dbConfig.js');
+const userDb = require('./data/helpers/userDb.js');
+const postDb = require('./data/helpers/postDb.js');
 const express = require('express');
 const cors = require('cors');
 
@@ -18,7 +19,8 @@ server.listen(port, () =>
 
 // USER API
 server.get('/api/users', (request, response) => {
-    db.findUser()
+    userDb
+        .get()
         .then(users => {
             return response
                 .status(200)
@@ -34,7 +36,8 @@ server.get('/api/users', (request, response) => {
 server.get('/api/users/:id', (request, response) => {
     const id = request.params.id;
 
-    db.findUserById(id)
+    userDb
+        .get(id)
         .then(user => {
             if (!user) {
                 return response
@@ -59,16 +62,18 @@ server.post('/api/users', toCaps, (request, response) => {
         return response
             .status(400)
             .send({ Error: "Please enter a name for the user" });
-    } else if (newUser.name.length >= 128) {
+    } else if (newUser.name.length > 128) {
         return response
             .status(400)
             .send({ Error: "User name must be 128 or less characters" });
     }
 
-    db.insertUser(newUser)
+    userDb
+        .insert(newUser)
         .then(userID => {
             const { id } = userID;
-            db.findUserById(id)
+            userDb
+                .get(id)
                 .then(user => {
                     return response
                         .status(201)
@@ -97,7 +102,8 @@ server.put('/api/users/:id', toCaps, (request, response) => {
             .send({ Error: "Please enter a name for the user" });
     }
 
-    db.updateUser(id, updatedUser)
+    userDb
+        .update(id, updatedUser)
         .then(user => {
             return response
                 .status(200)
@@ -119,7 +125,8 @@ server.delete('/api/users/:id', (request, response) => {
             .json({ Error: `There is no user with the following ID: ${id}` })
     }
 
-    db.removeUser(id)
+    userDb
+        .remove(id)
         .then(removedUser => {
             return response
                 .status(200)
@@ -134,7 +141,7 @@ server.delete('/api/users/:id', (request, response) => {
 
 // POST API
 server.get('/api/posts', (request, response) => {
-    db.findPost()
+    postDb.findPost()
         .then(posts => {
             return response
                 .status(200)
@@ -150,7 +157,7 @@ server.get('/api/posts', (request, response) => {
 server.get('/api/posts/:id', (request, response) => {
     const id = request.params.id;
 
-    db.findPostById(id)
+    postDb.findPostById(id)
         .then(post => {
             if (!post) {
                 return response
@@ -182,10 +189,10 @@ server.get('/api/posts/:id', (request, response) => {
 //             .send({ Error: "This postID does not match the user ID" });
 //     }
 
-//     db.insertPost(newPost)
+//     postDb.insertPost(newPost)
 //         .then(postID => {
 //             const { postID } = postID;
-//             db.findPostById(postID)
+//             postDb.findPostById(postID)
 //                 .then(post => {
 //                     return response
 //                         .status(201)
@@ -215,7 +222,7 @@ server.get('/api/posts/:id', (request, response) => {
 //             .send({ Error: "Please enter a name for the user" });
 //     }
 
-//     db.updatePost(id, updatedPost)
+//     postDb.updatePost(id, updatedPost)
 //         .then(post => {
 //             return response
 //                 .status(200)
@@ -237,7 +244,7 @@ server.delete('/api/posts/:id', (request, response) => {
             .json({ Error: `There is no post with the following ID: ${id}` })
     }
 
-    db.removePost(id)
+    postDb.removePost(id)
         .then(removedUser => {
             return response
                 .status(200)
@@ -246,6 +253,6 @@ server.delete('/api/posts/:id', (request, response) => {
         .catch(() => {
             return response
                 .status(500)
-                .json({ Error: "The user could not be removed" })
+                .json({ Error: "The post could not be removed" })
         });
 });
