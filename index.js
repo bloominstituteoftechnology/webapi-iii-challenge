@@ -58,7 +58,7 @@ server.post("/users", userUpperCaser, (req, res) => {
 });
 
 // PUT to edit an existing user
-server.put("/users/:id", (req, res) => {
+server.put("/users/:id", userUpperCaser, (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
   const user = { name, id };
@@ -104,6 +104,9 @@ server.get("/posts/:id", (req, res) => {
     .then(post => res.status(200).send(post))
     .catch(err => res.status(500).send(err));
 });
+
+// GET all posts by a specific user
+
 
 // POST a new post 
 server.post("/posts", (req, res) => {
