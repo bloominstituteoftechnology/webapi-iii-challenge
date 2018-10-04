@@ -2632,3 +2632,7 @@ yallist@^2.1.2:
 yallist@^3.0.0, yallist@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/yallist/-/yallist-3.0.2.tgz#8452b4bb7e83c7c188d8041c1a837c773d6d8bb9"
+
+yarn@^1.10.1:
+  version "1.10.1"
+  resolved "https://registry.yarnpkg.com/yarn/-/yarn-1.10.1.tgz#b792ba28f050ae94cd7e719dbca80639d70da76f"
