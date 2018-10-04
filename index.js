@@ -21,6 +21,7 @@ const toUpperCase = (request, response, next) => {
     next();
 }
 
+
 ///// ===============- SERVER CRUD ENDPOINTS -===============
 
 // ##### Error Messages #####
@@ -253,7 +254,7 @@ server.put('/posts/:postId', (request, response) => {
     if ( !text || !userId ) {
         response.status(400).send(missingPostData);
     }
-    
+
     if ( text ) {
         user.text = text;
     }
@@ -281,6 +282,30 @@ server.put('/posts/:postId', (request, response) => {
     })
     .catch(() => response.status(500).send(unableToUpdatePost500))
 });
+
+/// #####=- DELETE Individual Post Endpoint -=#####
+server.delete('/posts/:postId', (request, response) => {
+
+    const postId = request.params.postId;
+
+    // Database Promise Method
+    postDb.get(postId)
+    .then(post => {
+        if (!post) {
+            response.status(400).send(userNotFound)
+        }
+
+        postDb.remove(postId)
+        .then( didDelete => {
+            if(!didDelete) {
+                response.status(400).send(noPostsDeleted)
+            }
+            response.status(200).send(post) 
+        })
+        .catch(() => response.status(500).send(unableToDeletePost500))
+    })
+    .catch(() => response.status(500).send(unableToFindSinglePost500))
+})
 
 // #####=- Server Port Address and Listen Method -=#####
 port = 9999;
