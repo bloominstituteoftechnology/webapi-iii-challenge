@@ -96,3 +96,5 @@ router.put('api/posts/:id', (req, res) => {
             return errorHelper(500, 'Database error', res);
         });
 });
+
+module.exports = router;
