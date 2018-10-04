@@ -37,11 +37,15 @@ const UserDiv = styled.div`
 `;
 
 const User = props => {
-	const { user, handleUserClick } = props;
+	const { user, handleUserPosts, history } = props;
 	return(
-		<UserDiv onClick = { () => handleUserClick(user.id) }>
-			<p>ID: { user.id }</p>
-			<p>Name: { user.name }</p>
+		<UserDiv>
+			<p>{ user.name }</p>
+
+			<div>
+				<button onClick = { () => history.push(`/edit/${ user.id }`) }>Edit User</button>
+				<button onClick = { e => handleUserPosts(e, user.id) }>User Posts</button>
+			</div>
 		</UserDiv>
 	);
 }

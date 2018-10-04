@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import axios from 'axios';
 
 // Components
@@ -12,6 +12,11 @@ const UserPostsDiv = styled.div`
 	justify-content: center;
 	align-items: center;
 	flex-direction: column;
+	margin: 20px;
+
+	h2 {
+		font-size: 1.4rem;
+	}
 
 	.no-posts {
 		border: 1px solid black;
@@ -43,7 +48,7 @@ const UserPostsDiv = styled.div`
 	}
 `;
 
-export default class UserPosts extends React.Component {
+export default class UserPosts extends Component {
 	state = {
 		posts: [],
 	};
@@ -59,14 +64,16 @@ export default class UserPosts extends React.Component {
 
 	render() {
 		const { posts } = this.state;
+		const { name } = this.props;
 		return(
 			<UserPostsDiv>
+				<h2>{ name }'s Posts</h2>
 				{
 					posts.length ?
 					posts.map((post, i) => <UserPost key = { i } post = { post } />)
 					:
 					<div className = 'no-posts'>
-						<p>This user has no posts.</p>
+						<p>{ name } has no posts.</p>
 					</div>
 				}
 			</UserPostsDiv>

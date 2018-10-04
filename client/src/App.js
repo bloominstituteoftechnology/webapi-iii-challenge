@@ -6,6 +6,7 @@ import { Link, Route } from 'react-router-dom';
 import UserList from './components/UserList';
 import UserPosts from './components/UserPosts';
 import CreateUser from './components/CreateUser';
+import EditUser from './components/EditUser';
 
 // Styles
 import styled from 'styled-components';
@@ -54,7 +55,12 @@ const AppDiv = styled.div`
 
 export default class App extends Component {
 	state = {
-		users: [],
+		users: [
+			{
+				id: '',
+				name: '',
+			},
+		],
 	};
 
 	componentDidMount() {
@@ -66,7 +72,8 @@ export default class App extends Component {
 			.catch(err => console.log(err));
 	}
 
-	handleUserClick = id => {
+	handleUserPosts = (e, id) => {
+		e.preventDefault();
 		this.props.history.push(`/users/${ id }`);
 	};
 
@@ -85,11 +92,13 @@ export default class App extends Component {
 					</div>
 				</header>
 
-				<Route exact path = '/' render = { () => <UserList users = { users } handleUserClick = { this.handleUserClick } />} />
+				<Route exact path = '/' render = { props => <UserList history = { props.history } users = { users } handleUserPosts = { this.handleUserPosts } />} />
 
-				<Route path = '/users/:id' render = { props => <UserPosts id = { props.match.params.id } /> } />
+				<Route path = '/users/:id' render = { props => <UserPosts name = { users.find(user => {return user.id === Number(props.match.params.id)}).name } id = { props.match.params.id } /> } />
 
 				<Route path = '/create' render = { props => <CreateUser history = { props.history } handleNewUsers = { this.handleNewUsers } /> } />
+
+				<Route path = '/edit/:id' render = { props => <EditUser history = { props.history } handleNewUsers = { this.handleNewUsers } id = { props.match.params.id } /> } />
 			</AppDiv>
 		);
 	}

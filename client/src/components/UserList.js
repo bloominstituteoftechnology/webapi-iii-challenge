@@ -13,10 +13,10 @@ const UserListDiv = styled.div`
 `;
 
 const UserList = props => {
-	const { users, handleUserClick } = props;
+	const { users, handleUserPosts, history } = props;
 	return(
 		<UserListDiv>
-			{ users.map((user, i) => <User key = { i } user = { user } handleUserClick = { handleUserClick } />) }
+			{ users.map((user, i) => <User history = { history } key = { i } user = { user } handleUserPosts = { handleUserPosts } />) }
 		</UserListDiv>
 	);
 };
