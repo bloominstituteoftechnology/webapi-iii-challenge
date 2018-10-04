@@ -22,15 +22,20 @@ server.use(express.json());
 server.use('/api/posts', postRoutes);
 server.use('/api/users', userRoutes);
 
-const logger = (req, res, next) => {
-  console.log(`${Date.now()} ${req.method} made to ${req.url}`);
+function logger(req, res, next) {
+  console.log(
+    `[${new Date().toISOString()}] ${req.method} to ${req.url} from ${req.get(
+      'Origin'
+    )}`
+  );
+
   next();
-};
+}
 
 server.use(logger)
 
 
-server.get('/', (req, res) => {
+server.get('/', logger, (req, res) => {
   res.send('<h1><a href="https://github.com/michaelagard/Node-Blog" style="text-decoration:none; color:black"><code>Node-Blog Node.js Server</code></a></h1>');
 }); // root server endpoint fluff
 
