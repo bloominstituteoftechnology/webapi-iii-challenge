@@ -1,0 +1,32 @@
+{
+  "dependencies": {
+    "boom": "^7.2.0",
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "knex": "^0.15.2",
+    "morgan": "^1.9.0",
+    "sqlite3": "^4.0.2"
+  },
+  "name": "node-blog",
+  "description": "## Topics",
+  "version": "1.0.0",
+  "main": "knexfile.js",
+  "devDependencies": {
+    "nodemon": "^1.18.3"
+  },
+  "scripts": {
+    "start": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/llwor94/Node-Blog.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/llwor94/Node-Blog/issues"
+  },
+  "homepage": "https://github.com/llwor94/Node-Blog#readme"
+}
