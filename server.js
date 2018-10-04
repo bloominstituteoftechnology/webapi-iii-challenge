@@ -1,6 +1,9 @@
 const express = require('express');
 const port = 5555;
 const server = express();
+const helmet = require('helmet')
+const cors = require('cors')
+const morgan = require('morgan')
 
 const users = require('./data/helpers/userDb.js');
 const posts = require('./data/helpers/postDb.js');
@@ -8,8 +11,12 @@ const tags = require('./data/helpers/tagDb.js');
 
 
 server.use(express.json());
-const cors = require('cors')
+server.use(helmet());
+server.use(morgan('tiny'))
+
 server.use(cors())
+
+
 
 
 //make sure server is working
