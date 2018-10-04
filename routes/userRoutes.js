@@ -123,4 +123,21 @@ router.put('/:id', checkName, capitalize, (req, res) => {
     });
 });
 
+router.get('/:id/posts', (req, res) => {
+  const id = req.params.id;
+  userDb
+    .getUserPosts(id)
+    .then((userPosts) => {
+      if (userPosts.length === 0) {
+        res.status(404).json({ msg: 'Could not find posts by user' });
+      } else {
+        res.status(200).json(userPosts);
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).json({ error: 'Error retrieving users posts.' });
+    });
+});
+
 module.exports = router;
