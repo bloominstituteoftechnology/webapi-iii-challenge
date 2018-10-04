@@ -12,6 +12,11 @@ const postdb = require("./data/helpers/postDb");
 // init server
 const server = express();
 
+const yell = (req, res, next) => {
+  req.body.name = req.body.name.toUpperCase();
+  next();
+}
+
 // middleware usage
 server.use(
   express.json(),
@@ -35,7 +40,7 @@ server.get("/users", (req, res) => {
   userdb
     .get()
     .then(users => res.status(200).json(users))
-    .catch(err => console.log(err));
+    .catch(err => res.status(500).send(err));
 });
 
 server.get("/users/:id", (req, res) => {
@@ -59,7 +64,7 @@ server.get("/users/:id/posts", (req, res) => {
     .catch(err => res.status(500).send(err));
 });
 
-server.post("/users", (req, res) => {
+server.post("/users", yell, (req, res) => {
   const { name } = req.body;
   const newUser = { name };
   userdb
@@ -67,7 +72,7 @@ server.post("/users", (req, res) => {
     .then(user => {
       userdb
         .get(user.id)
-        .then(foundUser => res.status(200).send(foundUser))
+        .then(foundUser => res.status(201).send(foundUser))
         .catch(err => res.status(500).send(err));
     })
     .catch(err => res.status(500).send(err));
@@ -114,6 +119,19 @@ server.get("/posts/:id", (req, res) => {
     .catch(err => res.status(500).send(err));
 });
 
+server.get("/posts/:id/tags", (req, res) => {
+  const {id} = req.params;
+  postdb.getPostTags(id)
+    .then(tags => {
+      if(tags.length < 1) {
+        res.status(200).send(`No tags associated with posts.`);
+        return;
+      }
+      res.status(200).send(tags);
+    })
+    .catch(err => res.status(500).send(err));
+})
+
 server.post("/posts", (req, res) => {
   const { text, userId } = req.body;
   const newPost = { text, userId };
@@ -123,7 +141,7 @@ server.post("/posts", (req, res) => {
     .then(post => {
       postdb
         .get(post.id)
-        .then(foundPost => res.status(200).send(foundPost))
+        .then(foundPost => res.status(201).send(foundPost))
         .catch(err => res.status(500).send(err));
     })
     .catch(err => {
