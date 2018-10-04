@@ -161,6 +161,36 @@ server.post('/api/users/:id/posts/', (req, res) => {
 	}
 })
 
+
+server.get('/api/posts', (req, res) => {
+	postDb
+	.get()
+	.then(posts => {
+		res.status(200).json(posts)
+	})
+	.catch(error => {
+		console.log(error)
+		res.status(500).json({ error: "The posts information could not be retrieved." })
+	});
+})
+
+server.get('/api/posts/:id', (req, res) => {
+	const id = req.params.id
+	postDb
+	.get(id)
+	.then(posts => {
+		if (!posts[0]){
+			res.status(404).json({ message: "The post with the specified ID does not exist." })
+		} else {
+			res.status(200).json(post)
+		}
+	})
+	.catch(error => {
+		console.log(error)
+		res.status(500).json({ error: "The post information could not be retrieved." })
+	})
+})
+
 server.put('/api/posts/:id', (req, res) => {
 	const id = req.params.id
 	const {text} = req.body
