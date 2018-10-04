@@ -7,6 +7,7 @@ const helmet = require('helmet');
 // instanciate your server
 const port = 8000;
 const userDb = require('./data/helpers/userDb');
+const postDb = require('./data/helpers/postDb');
 
 const server = express();
 server.use(express.json(), cors(), helmet(), logger('combined'));
@@ -135,6 +136,88 @@ server.put('api/users/:id', validateName, upperCase, (req, res) => {
 });
 
 // ===================== POST ENDPOINTS =====================
+
+
+server.get('/api/posts', (req, res) => {
+    postDb
+        .get()
+        .then(posts => {
+            res.status(200).json(posts);
+        })
+        .catch(err => {
+            return errorHelper(500, 'Database error', res);
+        });
+});
+
+server.get('/api/posts/:id', (req, res) => {
+    const { id } = req.params;
+    postDb
+        .get(id)
+        .then(post => {
+            if (post === 0) {
+                return errorHelper(404, 'Post with that id not found', res);
+            }
+            res.status(200).json(post);
+        })
+        .catch(err => {
+            return errorHelper(500, 'Database error', res);
+        });
+});
+
+server.post('/api/posts', (req, res) => {
+    const { userId, text } = req.body;
+    postDb
+        .insert (userId, text)
+        .then(response => {
+            res.status(200).json(response);
+        })
+        .catch(err => {
+            return errorHelper(500, 'Database error', res);
+        });
+});
+
+server.delete('/api/posts/:id', (req, res) => {
+    const { id } = req.params;
+    postDb
+        .remove(id)
+        .then(deletedPost => {
+            if(deletedPost === 0) {
+                return errorHelper(404, 'Post with that id not found');
+            } else {
+                res.status(201).json({ success: 'Post deleted' });
+            }
+        })
+        .catch(err => {
+            return errorHelper(500, 'The post could not be removed', res );
+        });
+   
+});
+
+server.put('api/posts/:id', (req, res) => {
+    const { id } = req.params;
+    const updatedPost = req.body;
+    postDb
+        .update(id, updatedPost)
+        .then(response => {
+            if (response === 0) {
+                return errorHelper(404, `The post with the specified ID: ${id} does not exist.`)
+            } else {
+                postDb
+                    .find(id)
+                    .then(post => {
+                        res.json(post);
+                    })
+                    .catch(err => {
+                        return errorHelper(500, 'Database error', res);
+                    });
+            }
+        })
+        .catch(err => {
+            return errorHelper(500, 'Database error', res);
+        });
+});
+
+
 
 server.listen(port, () => {
   console.log(`\n=== API running on port: ${port} ===\n`);
