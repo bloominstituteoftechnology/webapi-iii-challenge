@@ -20,10 +20,12 @@ server.use(express.json(), cors(), morgan('combined'), helmet());
 const missingUserName = { errorMessage: "Please provide a name for the user." }
 const userNotFound = { errorMessage: "The user with the specified ID does not exist." }
 const noUsersUpdated = { errorMessage: "No users were updated." }
+const noUsersDeleted = { errorMessage: "No users were deleted." }
 const unableToFindSingleUser500 = { errorMessage: "The user information could not be retrieved." }
 const unableToFindUsers500 = { errorMessage: "Unable to retrieve users." }
 const unableToCreateUser500 = { errorMessage: "Unable to create user." }
-const unableToUpdateUser500 = { errorMessage: "Unable to updated user." }
+const unableToUpdateUser500 = { errorMessage: "Unable to update user." }
+const unableToDeleteUser500 = { errorMessage: "Unable to delete user." }
 
 
 // POST Errors
@@ -120,6 +122,30 @@ server.put('/users/:userId',  (request, response) => {
         .catch(() => response.status(500).send(unableToFindSingleUser500))
     })
     .catch(() => response.status(500).send(unableToUpdateUser500))
+})
+
+/// #####=- DELETE Individual User Endpoint -=#####
+server.delete('/users/:userId', (request, response) => {
+
+    const userId = request.params.userId;
+
+    // Database Promise Method
+    userDb.get(userId)
+    .then(user => {
+        if (!user) {
+            response.status(400).send(userNotFound)
+        }
+
+        userDb.remove(userId)
+        .then( didDelete => {
+            if(!didDelete) {
+                response.status(400).send(noUsersDeleted)
+            }
+            response.status(200).send(user)
+        })
+        .catch(() => response.status(500).send(unableToDeleteUser500))
+    })
+    .catch(() => response.status(500).send(unableToFindSingleUser500))
 })
 
 //// ==========- POST DATABASE CRUD ENDPOINTS -==========
