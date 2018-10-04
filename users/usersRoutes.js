@@ -5,15 +5,22 @@ const msg = require('../errorMessages/errorsUsers.js');
 
 // ========== Middleware for PUT and POST endpoints ==========
 
+// Router-level middleware
 router.post('/', function (req, res, next) {
   req.body.name = req.body.name.toUpperCase();
   next();
 });
 
-router.put('/:id', function (req, res, next) {
+// router.put('/:id', function (req, res, next) {
+//   req.body.name = req.body.name.toUpperCase();
+//   next();
+// });
+
+// Custom middleware on function-by-function basis
+const nameCheckMiddleware = (req, res, next) => {
   req.body.name = req.body.name.toUpperCase();
   next();
-});
+};
 
 // ========== endpoint for /api/users ==========
 
@@ -63,7 +70,7 @@ router.post('/', (req, res) => {
     .catch(() => res.status(500).json(msg.POST_ERR));
 });
 // PUT Routes
-router.put('/:id', (req, res) => {
+router.put('/:id', nameCheckMiddleware, (req, res) => {
   const { id } = req.params;
   const updatedUser = req.body;
   db
