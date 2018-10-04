@@ -12,18 +12,13 @@ router.get('/', (req, res) => {
 });
 
 
-// // get user with given id
-// router.get('/:id', (req, res) => {
-// 	const { id } = req.params;
-// 	userDb.get(id)
-// 		.then(user => {
-// 			if (!user) {
-// 				return res.status(404).json({ error: `The user with the ID ${ id } does not exist.` });
-// 			}
-// 			return res.status(200).json(user);
-// 		})
-// 		.catch(err => res.status(500).json({ error: 'The users information could not be retrieved.' }));
-// });
+// get posts with given post id
+router.get('/:id', (req, res) => {
+	const { id } = req.params;
+	postDb.get(id)
+		.then(post => res.status(200).json(post))
+		.catch(err => res.status(500).json({ error: `The post with the ID ${ id } does not exist.` }));
+});
 
 // // get all posts from user with given id
 // router.get('/:id/posts', (req, res) => {

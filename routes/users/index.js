@@ -15,7 +15,7 @@ router.get('/', (req, res) => {
 });
 
 
-// get user with given id
+// get user with given user id
 router.get('/:id', (req, res) => {
 	const { id } = req.params;
 	userDb.get(id)
@@ -28,7 +28,7 @@ router.get('/:id', (req, res) => {
 		.catch(err => res.status(500).json({ error: 'The users information could not be retrieved.' }));
 });
 
-// get all posts from user with given id
+// get all posts from user with given user id
 router.get('/:id/posts', (req, res) => {
 	const { id } = req.params;
 	userDb.getUserPosts(parseInt(id))
@@ -53,7 +53,7 @@ router.post('/', yell, (req, res) => {
 		.catch(err => res.status(500).json({ error: 'There was an error while saving the user to the database.' }));
 });
 
-// update user with given id using yell middleware and return all users
+// update user with given user id using yell middleware and return all users
 router.put('/:id', yell, (req, res) => {
 	const { id } = req.params;
 	const updatedUser = req.yelledUser;
@@ -69,7 +69,7 @@ router.put('/:id', yell, (req, res) => {
 		.catch(err => res.status(500).json({ error: 'There was an error while updating the user information in the database.' }));
 });
 
-// delete user with given id
+// delete user with given user id
 router.delete('/:id', (req, res) => {
 	const { id } = req.params;
 	userDb.remove(parseInt(id))
