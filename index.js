@@ -66,12 +66,30 @@ server.get('/blogs/:id', (req, res) => {
     postDb  .get(req.id)
             .then(query =>{
                 if (!query){
-                    return res.status(500)
+                    console.log(res);
+                    return res  .status(500)
+                                .send(`good?!`)
                                 .json({ 
-                        error: `Information about the blog post with the provided id number could not be retrieved.` })
+                                    error: `Information about the blog post with the provided id number could not be retrieved.` })
                 }
                 res.status(200)
                     .json(query);
+            })
+            .catch(err=>res.send(err));
+});
+
+server.get('/blogs/user/:userId', (req, res) => {
+    req.userId = req.params.userId;
+    userDb  .getUserPosts(req.userId)
+            .then(posts =>{
+                if (!posts){
+                    // console.log(res);
+                    return res  .status(500)
+                                .json({ 
+                                    error: `Information about the blog post with the provided user id number could not be retrieved.` })
+                }
+                res.status(200)
+                    .json(posts);
             })
             .catch(err=>res.send(err));
 });
@@ -144,7 +162,7 @@ server.put('/users/:id', upperCase, (req, res)=>{
 
 server.put('/blogs/:id', upperCase, (req, res)=>{
     const id = req.params.id;
-    postDb.update(id, req.body)
+    postDb  .update(id, req.body)
             .then(ifUpdated =>{
                 console.log(req.body.postedBy);
                 if (ifUpdated === 1){
