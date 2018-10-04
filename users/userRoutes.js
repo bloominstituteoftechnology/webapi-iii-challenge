@@ -3,12 +3,21 @@ const userDb = require('../data/helpers/userDb.js');
 
 const router = express.Router();
 
-const allCAPS = (req, res, next) => {
+const capitalize = (req, res, next) => {
   if (req.body.name) {
-    req.body.name = req.body.name.toUpperCase();
+    req.body.name = req.body.name.toLowerCase()
+      .split(' ')
+      .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+      .join(' ');
   }
   next();
 }
+
+var text = "foo bar loo zoo moo";
+text = text.toLowerCase()
+    .split(' ')
+    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+    .join(' ');
 
 router.get('/', (req, res) => {
   userDb.get()
@@ -49,7 +58,7 @@ router.get('/:id/posts', (req, res) => {
     })
 })
 
-router.post('/', allCAPS, (req, res) => {
+router.post('/', capitalize, (req, res) => {
   console.log("req", req.body)
   if(!req.body.name) {
       res.status(400).json({ error: "Please provide a name for this user."
@@ -70,7 +79,7 @@ router.post('/', allCAPS, (req, res) => {
   }
 });
 
-router.put('/:id', allCAPS, (req, res) => {
+router.put('/:id', capitalize, (req, res) => {
   const { id } = req.params;
   if (!req.body.name) {
     res.status(400).json({ error: "Please enter a name." })

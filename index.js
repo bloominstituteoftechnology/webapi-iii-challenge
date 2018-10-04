@@ -8,14 +8,10 @@ const userRoutes = require('./users/userRoutes.js')
 const postRoutes = require('./posts/postRoutes.js')
 const server = express();
 
-
-
-
 server.use(express.json());
 server.use(cors());
 server.use(helmet());
 server.use(logger("combined"));
-
 
 
 //Routes
