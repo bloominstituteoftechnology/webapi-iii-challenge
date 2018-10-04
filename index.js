@@ -51,20 +51,14 @@ server.get('/api/users/:id/posts', (req, res) => {
 		.catch(err => res.status(500).json({ error: 'The users information could not be retrieved.' }));
 });
 
-// create new user using yell middleware        
+// create new user using yell middleware and return all users
 server.post('/api/users', yell, (req, res) => {
 	const newUser = req.yelledUser;
 	userDb.insert(newUser)
 		.then(id => {
-			const newId = id.id;
-			return userDb.get(newId)
-				.then(user => {
-					if (!user) {
-						return res.status(404).json({ error: `The newly created user with the ID ${ newId } could not be retrieved.` });
-					}
-					return res.status(201).json(user);
-				})
-				.catch(err => res.status(500).json({ error: 'The newly created user\'s information could not be retrieved.' }));
+			return userDb.get()
+				.then(users => res.status(200).json(users))
+				.catch(err => res.status(500).json({ error: 'The users information could not be retrieved.' }));
 		})
 		.catch(err => res.status(500).json({ error: 'There was an error while saving the user to the database.' }));
 });

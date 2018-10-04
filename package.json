@@ -6,7 +6,7 @@
   "author": "<cornielleandres@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "nodemon"
   },
   "dependencies": {
     "cors": "^2.8.4",

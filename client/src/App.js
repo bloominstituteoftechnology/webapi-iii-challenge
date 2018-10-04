@@ -5,6 +5,7 @@ import { Link, Route } from 'react-router-dom';
 // Components
 import UserList from './components/UserList';
 import UserDetails from './components/UserDetails';
+import CreateUser from './components/CreateUser';
 
 // Styles
 import styled from 'styled-components';
@@ -39,7 +40,8 @@ const AppDiv = styled.div`
 				border-radius: 5px;
 				padding: 5px 10px;
 				text-decoration: none;
-				color: #444;
+				color: black;
+				margin: 5px;
 
 				&:hover {
 					background-color: #444;
@@ -68,6 +70,8 @@ export default class App extends Component {
 		this.props.history.push(`/users/${ id }`);
 	};
 
+	handleNewUsers = users => this.setState({ users: users });
+
 	render() {
 		const { users } = this.state;
 		return (
@@ -77,12 +81,15 @@ export default class App extends Component {
 
 					<div className = 'links'>
 						<Link to = '/'>Home</Link>
+						<Link to = '/create'>Create New User</Link>
 					</div>
 				</header>
 
 				<Route exact path = '/' render = { () => <UserList users = { users } handleUserClick = { this.handleUserClick } />} />
 
 				<Route path = '/users/:id' render = { props => <UserDetails id = { props.match.params.id } /> } />
+
+				<Route path = '/create' render = { props => <CreateUser history = { props.history } handleNewUsers = { this.handleNewUsers } /> } />
 			</AppDiv>
 		);
 	}
