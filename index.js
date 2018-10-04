@@ -27,6 +27,19 @@ server.get('/users', (req, res) => {
 	.catch(err => res.status(500).send(err));
 });
 
+// server.get('/posts/:id', (req, res) => {
+//     pdb.get(req.params.id)
+// 	.then(posts => {
+// 	    if (req.params.userId) {
+// 		res.json(posts);
+// 	    } else {
+// 		console.log('no user with that ID exists');
+// 	    }
+// 	    console.log(`\n ** posts ** \n`, posts);
+// 	})
+// 	.catch(err => res.status(500).send(err));
+// });
+
 server.get('/users/:id', (req, res) => {
     udb.get(req.params.id)
 	.then(users => {
@@ -90,13 +103,85 @@ server.get('/posts', (req, res) => {
 });
 
 server.get('/posts/:id', (req, res) => {
-    pdb.get(req.params.id)
-	.then(posts => {
-	    console.log(`\n ** posts ** \n`, posts);
-	    res.json(posts);
+    const {id} = req.params;
+    const thisId = {id};
+    console.log(thisId);
+    pdb.get(req.params)
+	.then(post => {
+	    console.log(`\n ** post ** \n`, post);
+	    res.json(post);
 	})
-	.catch(err => res.status(500).send(err));
+	.catch(err => {
+	    res.status(500).send(err);
+	});
 });
+
+server.get('/users/posts/:userId', (req, res) => {
+  const { userId } = req.params;
+  udb.getUserPosts(userId)
+    .then(usersPosts => {
+      if (usersPosts === 0) {
+        return errorHelper(404, 'That user doesnt have any posts', res);
+      }
+      res.json(usersPosts);
+    })
+    .catch(err => {
+      return errorHelper(500, 'Database error', res);
+    });
+});
+
+server.get('/posts/:id', (req, res) => {
+  const { id } = req.params;
+  pdb
+    .get(id)
+    .then(post => {
+      if (post === 0) {
+        return errorHelper(404, 'No post by that Id in the DB', res);
+      }
+      res.json(post);
+    })
+    .catch(err => {
+      return errorHelper(500, 'Database boof', res);
+    });
+});
+
+server.post('/posts', (req, res) => {
+    console.log(req.body);
+    const {userId, text} = req.body;
+    pdb.insert({userId, text})
+    	.then(myId => {
+	    const {id} = myId;
+	    // res.status(201).json(response);
+	    pdb.get(id)
+	    	.then(response => {
+	    	       res.status(201).json(response);
+	    	});
+	})
+	.catch(err => console.error(err));
+});
+
+server.delete('/posts/:id', (req, res) => {
+    const {id} = req.params;
+    pdb.remove(id)
+	.then(removedPost => {
+	    console.log(removedPost);
+	    res.status(200).json(removedPost);
+	})
+	.catch(err => res.status(404));
+});
+
+server.put('/posts/:id', (req, res) => {
+    const {id} = req.params;
+    const {name} = req.body;
+    const newPost = {name};
+    udb.update(id, newPost)
+	.then(post => {
+	    res.status(200).json(post);
+	})
+	.catch(err => console.log(err));
+});
+
+
 
 
 
