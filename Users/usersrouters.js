@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
+const usersDb = require('../data/helpers/userDb');
 
 // TODO: Stretch: Abstract out error handling
 const usersDbAccessError = {"error": "There was an error accessing the users database table."};
-const postsDbAccessError = {"error": "There was an error accessing the posts database table."};
 
-// ~~~~~ GET ~~~~~ //
+// ~~~ GET ~~~ //
 // userDB: get() -> [{obj1},...,{objN}]
 router.get('/', (req, res) => {
     usersDb.get()
@@ -50,10 +50,9 @@ router.get('/:id/posts', (req, res) => {
         });
 });
 
-// ~~~~~ POST ~~~~~ //
+// ~~~ POST ~~~ //
 // userDB: insert({obj}) -> {id: ##}
 router.post('/', (req, res) => {
-    // TODO: Check that req.body.name.length < 129 characters
     if(req.body.name) {
         const newUserObj = {"name": req.body.name};
         usersDb.insert(newUserObj)
@@ -76,10 +75,9 @@ router.post('/', (req, res) => {
     }
 });
 
-// ~~~~~ PUT ~~~~~ //
+// ~~~ PUT ~~~ //
 // userDB: update(id, {obj}) -> count of updated records
 router.put('/:id', (req, res) => {
-    // TODO: Check that req.body.name.length < 129 characters
     if(req.body.name) {
         usersDb.get(req.params.id)
             .then((user) => {
@@ -117,7 +115,7 @@ router.put('/:id', (req, res) => {
     }
 });
 
-// ~~~~~ DELETE ~~~~~ //
+// ~~~ DELETE ~~~ //
 // user: remove(id) -> # of records deleted
 router.delete('/:id', (req, res) => {
     // TODO: Delete user

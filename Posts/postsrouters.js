@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const usersDb = require('../data/helpers/userDb');
+const postsDb = require('../data/helpers/postDb');
 
 // TODO: Stretch: Abstract out error handling
 const usersDbAccessError = {"error": "There was an error accessing the users database table."};
@@ -72,39 +74,49 @@ router.post('/', (req, res) => {
 
 // ~~ PUT ~~ //
 // postDB: update(id, {obj}) -> count of updated records
-// TODO: Put in a check somewhere in here that ensures the userId supplied is a legitimate user
 router.put('/:id', (req, res) => {
     if(req.body.userId && req.body.text) {
-        postsDb.get(req.params.id)
-            .then((post) => {
-                if(post !== undefined) {
-                    const editedPost = {"userId": req.body.userId, "text": req.body.text};
-                    postsDb.update(req.params.id, editedPost)
-                        .then((updateCount) => {
-                            if(updateCount > 0) {
-                                postsDb.get(req.params.id)
-                                    .then((post) => {
-                                        res.status(200).json(post);
+        usersDb.get(req.body.userId)
+            .then((user) => {
+                if(user !== undefined) {
+                    postsDb.get(req.params.id)
+                        .then((post) => {
+                            if(post !== undefined) {
+                                const editedPost = {"userId": req.body.userId, "text": req.body.text};
+                                postsDb.update(req.params.id, editedPost)
+                                    .then((updateCount) => {
+                                        if(updateCount > 0) {
+                                            postsDb.get(req.params.id)
+                                                .then((post) => {
+                                                    res.status(200).json(post);
+                                                })
+                                                .catch((err) => {
+                                                    console.error('postDb.js/get(id) Access Error:\n', err);
+                                                    res.status(500).json(postsDbAccessError);
+                                                });
+                                        } else {
+                                            res.status(500).json({"error": "We received what appears to be valid data from you, but the DB didn't update the record for unknown reasons."});
+                                        }
                                     })
                                     .catch((err) => {
-                                        console.error('postDb.js/get(id) Access Error:\n', err);
+                                        console.error('postDb.js/update(id, {"userId": ##, "text": "value"}) Access Error:\n', err);
                                         res.status(500).json(postsDbAccessError);
                                     });
                             } else {
-                                res.status(500).json({"error": "We received what appears to be valid data from you, but the DB didn't update the record for unknown reasons."});
+                                res.status(404).json({"error": `A post with ID ${req.params.id} doesn't exist.`});
                             }
                         })
                         .catch((err) => {
-                            console.error('postDb.js/update(id, {"userId": ##, "text": "value"}) Access Error:\n', err);
+                            console.error('postDb.js/get(id) Access Error:\n', err);
                             res.status(500).json(postsDbAccessError);
                         });
                 } else {
-                    res.status(404).json({"error": `A post with ID ${req.params.id} doesn't exist.`});
+                    res.status(404).json({"error": `A user with id ${req.body.userId} doesn't exist.`});
                 }
             })
             .catch((err) => {
-                console.error('postDb.js/get(id) Access Error:\n', err);
-                res.status(500).json(postsDbAccessError);
+                console.error('userDb.js/get(id) Access Error:\n', err);
+                res.status(500).json(usersDbAccessError);
             });
     } else {
         res.status(400).json({"error": "Please provide userId and text values in your PUT"});
