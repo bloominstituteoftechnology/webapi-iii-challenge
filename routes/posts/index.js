@@ -62,17 +62,17 @@ router.put('/:postId', (req, res) => {
 		.catch(err => res.status(500).json({ error: 'There was an error while updating the post information in the database.' }));
 });
 
-// // delete user with given id
-// router.delete('/:id', (req, res) => {
-// 	const { id } = req.params;
-// 	userDb.remove(parseInt(id))
-// 		.then(del => {
-// 			if (!del) {
-// 				return res.status(404).json({ error: `The user with the ID ${ id } does not exist.` });
-// 			}
-// 			return res.status(200).json({ message: `The user with id ${ id } was successfully deleted.` });
-// 		})
-// 		.catch(err => res.status(500).json({ error: 'There was an error while deleting the user in the database.' }));
-// });
+// delete post with given post id
+router.delete('/:id', (req, res) => {
+	const { id } = req.params;
+	postDb.remove(parseInt(id))
+		.then(del => {
+			if (!del) {
+				return res.status(404).json({ error: `The post with the ID ${ id } does not exist.` });
+			}
+			return res.status(200).json({ message: `The post with the ID ${ id } was successfully deleted.` });
+		})
+		.catch(err => res.status(500).json({ error: 'There was an error while deleting the post in the database.' }));
+});
 
 module.exports = router;
