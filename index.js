@@ -6,6 +6,7 @@ const helmet = require('helmet');
 
 // Users data
 const users = require('./data/helpers/userDb.js');
+const posts = require('./data/helpers/postDb.js');
 
 // Name port
 const port = 8250;
@@ -35,7 +36,9 @@ server.get('/', (req, res) => {
   res.send('You are HOME!');
 });
 
-// Add GET ROUTE to access the users
+// ========================USERS=========================
+
+// Add GET ROUTE HANDLER to access the users
 server.get('/api/users', (req, res) => {
   users.get()
     .then( allUsers => {
@@ -45,7 +48,7 @@ server.get('/api/users', (req, res) => {
     .catch(err => res.status(500).send({ error: "All users information could not be retrieved." }));
 });
 
-//Add POST ROUTE to add a user
+//Add POST ROUTE HANDLER to add a user
 server.post('/api/users', allCaps, (req, res) => {
   if(!req.body.name) {
    return res.status(400).send({ errorMessage: "Please provide name for user." });
@@ -64,7 +67,7 @@ server.post('/api/users', allCaps, (req, res) => {
 
   });
 
-//Add DELETE ROUTE to delete a user
+//Add DELETE ROUTE HANDLER to delete a user
 server.delete("/api/users/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -78,7 +81,7 @@ server.delete("/api/users/:id", async (req, res) => {
   }
 });
 
-//Add PUT ROUTE to update a user's information...which right now is name
+//Add PUT ROUTE HANDLER to update a user's information...which right now is name
 server.put('/api/users/:id', allCaps, async (req, res) => {
   if (!req.body.name) {
     return res.status(400).send({ errorMessage: "Please provide name for the user." });
@@ -97,6 +100,18 @@ server.put('/api/users/:id', allCaps, async (req, res) => {
   } catch (error) {
     return res.status(500).send({ error: "The user information could not be modified." });
  }
+});
+
+// ========================POSTS=========================
+
+// Add GET ROUTE HANDLER to access the users
+server.get('/api/posts', (req, res) => {
+  posts.get()
+    .then( allPosts => {
+      console.log('\n** all posts **', allPosts);
+      res.status(200).json(allPosts);
+    })
+    .catch(err => res.status(500).send({ error: "All posts information could not be retrieved." }));
 });
 
 // Call server.listen w/ a port of 8250
