@@ -1,6 +1,7 @@
 exports.seed = function(knex, Promise) {
   return knex('posts')
     .del() // delete existing posts
+    .truncate()
     .then(function() {
       return knex('posts').insert([
         {
