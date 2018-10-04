@@ -12,8 +12,10 @@ const server = express();
 
 server.use(express.json(), cors(), morgan('combined'), helmet());
 
-// Custom Middleware
+// ##### Custom Middleware #####
 
+// Intended to ensure that a user's name is uppercase before 
+// the request reaches CREATE or UPDATE user endpoints.
 const toUpperCase = (request, response, next) => {
     request.name = request.body.name.toUpperCase();
     next();
@@ -38,7 +40,7 @@ const unableToFindPostsForUser500 = { errorMessage: "Unable to retrieve posts fo
 
 
 // POST Errors
-const missingPostData = { errorMessage: "Please provide an id and text parameter for the post." }
+const missingPostData = { errorMessage: "Please provide some text for the post." }
 const postNotFound = { errorMessage: "The post with the specified ID does not exist." }
 const unableToFindSinglePost500 = { errorMessage: "The post information could not be retrieved." }
 const unableToFindPosts500 = { errorMessage: "Unable to retrieve posts." }
@@ -51,7 +53,7 @@ const unableToDeletePost500 = { errorMessage: "Unable to delete post." }
 /// #####=- Root Server READ Endpoint -=#####
 server.get('/', (request, response) => {
     response.status(200).send(`It's working!`);
-})
+});
 
 /// #####=- READ All Users Endpoint -=#####
 server.get('/users', (request, response) => {
@@ -60,7 +62,7 @@ server.get('/users', (request, response) => {
     userDb.get()
     .then(users => response.status(200).send(users))
     .catch(() => response.status(500).send(unableToFindUsers500))
-})
+});
 
 /// #####=- READ Individual User Endpoint -=#####
 server.get('/users/:userId', (request, response) => {
@@ -76,7 +78,7 @@ server.get('/users/:userId', (request, response) => {
         response.status(200).send(user)
     })
     .catch(() => response.status(500).send(unableToFindSingleUser500))
-})
+});
 
 /// #####=- CREATE Individual User Endpoint -=#####
 server.post('/users', toUpperCase,  (request, response) => {
@@ -101,7 +103,7 @@ server.post('/users', toUpperCase,  (request, response) => {
         .catch(() => response.status(500).send(unableToFindSingleUser500))
     })
     .catch(() => response.status(500).send(unableToCreateUser500))
-})
+});
 
 /// #####=- UPDATE Individual User Endpoint -=#####
 server.put('/users/:userId', toUpperCase, (request, response) => {
@@ -132,7 +134,7 @@ server.put('/users/:userId', toUpperCase, (request, response) => {
         .catch(() => response.status(500).send(unableToFindSingleUser500))
     })
     .catch(() => response.status(500).send(unableToUpdateUser500))
-})
+});
 
 /// #####=- DELETE Individual User Endpoint -=#####
 server.delete('/users/:userId', (request, response) => {
@@ -177,16 +179,16 @@ server.get('/users/:userId/posts', (request, response) => {
 //// ==========- POST DATABASE CRUD ENDPOINTS -==========
 
 /// #####=- READ All Posts Endpoint -=#####
-server.get('/posts', (request, response) => {
+server.get('/users/posts', (request, response) => {
 
     // Database Promise Method
     postDb.get()
     .then(posts => response.status(200).send(posts))
     .catch(() => response.status(500).send(unableToFindPosts500))
-})
+});
 
 /// #####=- READ Individual Post Endpoint -=#####
-server.get('/posts/:postId', (request, response) => {
+server.get('/users/posts/:postId', (request, response) => {
 
     const postId = request.params.postId;
 
@@ -199,7 +201,38 @@ server.get('/posts/:postId', (request, response) => {
         response.status(200).send(post)
     })
     .catch(() => response.status(500).send(unableToFindSinglePost500))
-})
+});
+
+/// #####=- CREATE Individual Post Endpoint -=#####
+server.post('/users/:userId/posts', (request, response) => {
+
+    const { text } = request.body;
+    const userId = request.params.userId;
+    let validId = true;
+        
+    if ( !text ) {
+        response.status(400).send(missingPostData);
+    }
+
+    // Database Promise Method
+    userDb.get(userId)
+    .then(() => {})
+    .catch(() => response.status(500).send(unableToFindSingleUser500))
+
+    // Include postDb.insert in userDB.get promise later. Won't work currently for some reason.
+    postDb.insert({'userId': userId,'text': text})
+        .then( postId => {
+            postDb.get(postId.id)
+            .then(post => {
+                if (!post) {
+                    response.status(400).send(postNotFound)
+                }
+                response.status(200).send(post)
+            })
+            .catch(() => response.status(500).send(unableToFindSinglePost500))
+        })
+        .catch(() => response.status(500).send(unableToCreatePost500));
+});
 
 // #####=- Server Port Address and Listen Method -=#####
 port = 9999;
