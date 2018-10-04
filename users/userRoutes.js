@@ -2,7 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 
-const userDb = require('./data/helpers/userDb.js');
+const userDb = require('../data/helpers/userDb.js');
 
 const caps = (req, res, next) => {
     console.log(req.body);
@@ -16,7 +16,7 @@ router.get('/', (req, res) => {
         console.log('***USERS***', users);
         res.status(200).json(users);
     })
-    .catch(() => res.status(500).json({ error: "The users could not be retrieved."}));
+    .catch(() => res.status(404).json({ error: "The users could not be retrieved."}));
 });
 
 router.post('/', caps, (req, res) => {
@@ -43,10 +43,8 @@ router.get('/:id', (req, res) => {
     .then(user => {
         res.status(200).json(user)
     })
-    .catch(err => {
-        res.send(err);
+    .catch(() => res.status(500).json({ error: "The user's posts could not be retrieved."}))
     });
-});
 
 router.delete('/:id', (req, res) => {
     const id = req.params.id;
@@ -70,7 +68,7 @@ router.put('/:id', caps, (req, res) => {
         console.log('user = ', user);
         res.status(200).json(user);
     })
-    .catch(() => res.status(500).json({ error: "The post information could not be modified."}));
+    .catch(() => res.status(500).json({ error: "The user information could not be modified."}));
 });
 
 module.exports = router;

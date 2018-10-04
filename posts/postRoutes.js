@@ -2,12 +2,12 @@ const express = require('express');
 
 const router = express.Router();
 
-const postDb = require('./data/helpers/postDb.js');
+const postDb = require('../data/helpers/postDb.js');
 
 router.post('/', (req, res) => {
     console.log(req.body);
-    const { text, postedBy } = req.body;
-    const newPost = { text, postedBy };
+    const { text, userId } = req.body;
+    const newPost = { text, userId };
     postDb.insert(newPost)
     .then(postId => {
         const { id } = postId;
@@ -30,6 +30,44 @@ router.get('/', (req, res) => {
         res.status(200).json(posts);
     })
     .catch(() => res.status(500).json({ error: "The posts could not be retrieved."}));
+});
+
+router.get('/:id', (req, res) => {
+    const id = req.params.id;
+    postDb.get(id)
+    .then(post => {
+        res.status(200).json(post)
+    })
+    .catch(() => res.status(404).json({ message: "The post with the specified ID does not exist"}) )
+})
+
+router.put('/:id', (req, res) => {
+    const { id } = req.params;
+    const { text, userId } = req.body;
+    const newPost = { text, userId };
+    postDb.update(id, newPost)
+    .then(post => {
+        console.log('post = ', post);
+        if (!post) {
+            return res.status(404).json({ message: "The post with the specified ID does not exist."})
+        } else {
+        res.status(200).json(post);
+        }
+    })
+    .catch(() => res.status(500).json({ error: "The post information could not be modified."}))
+})
+
+router.delete('/:id', (req, res) => {
+    const id = req.params.id;
+    postDb.remove(id)
+    .then(removedPost => {
+        if (removedPost === 0) {
+            return res.status(404).json({ message: "The post with the specified ID does not exist. "})
+        } else {
+        res.status(200).json(removedPost);
+        }
+    })
+    .catch(() => res.status(500).json ({ error: "The post could not be removed"}));
 });
 
 module.exports = router;
