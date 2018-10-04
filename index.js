@@ -11,23 +11,27 @@ const userDb = require('./data/helpers/userDb');
 const server = express();
 server.use(express.json(), cors(), helmet(), logger('combined'));
 
+// ======================= ERROR HELPER ========================
+
+const errorHelper = (status, message, res) => {
+    res.status(status).json({ error: message });
+};
+
 // ===================== CUSTOM MIDDLEWARE =====================
 
 const upperCase = (req, res, next) => {
-    const { name } = req.body;
-    if (name) {
-        req.name = req.body.name.toUpperCase();
-    } else {
-        userDb
-            .get(req.params.id)
-            .then(res => {
-                req.name = res.name.toUpperCase();
-            })
-            .catch(err => {
-                res.status(500).json({ message: err });
-            });
-    }
+    req.body.name = req.body.name.toUpperCase();
     next();
+}
+
+const validateName = (req, res, next) => {
+    const { name } = req.body;
+    if (!name) {
+        errorHelper(404, 'Name must be included', res);
+        next();
+    } else {
+        next();
+    }
 };
 
 // ROUTES
@@ -40,11 +44,11 @@ server.get('/', (req, res) => {
 server.get('/api/users', (req, res) => {
     userDb
         .get()
-        .then(res => {
-            res.status(200).json(res);
+        .then(users => {
+            res.status(200).json(users);
         })
         .catch(err => {
-            res.status(500).json({ message: err });
+            return errorHelper(500, 'Database error', res);
         });
 });
 
@@ -52,23 +56,40 @@ server.get('/api/users/:id', upperCase, (req, res) => {
     const { id } = req.params;
     userDb
         .get(id)
-        .then(res => {
-            res.status(200).json(req.name);
+        .then(user => {
+            if (user === 0) {
+                return errorHelper(404, 'User with that id not found', res);
+            }
+            res.status(200).json(user);
         })
         .catch(err => {
-            res.status(500).json({ message: err });
+            return errorHelper(500, 'Database error', res);
         });
 });
 
-server.post('/api/users', upperCase, (req, res) => {
+server.post('/api/users', validateName, upperCase, (req, res) => {
     const { name } = req.body;
+    const newUser = { name };
     userDb
-        .insert({ name })
-        .then(res => {
-            res.status(200).json(res);
+        .insert (newUser)
+        .then(userId => {
+            const { id } = userId;
+            userDb
+                .get(id)
+                .then(user => {
+                    if (!user) {
+                    res
+                        .status(400)
+                        .json({ errorMessage: 'User with that id not found' });
+                }
+                res.status(200).json(user);
+            })
+            .catch(err => {
+                return errorHelper(500, 'Database error', res);
+            });
         })
         .catch(err => {
-            res.status(500).json({ message: err });
+            return errorHelper(500, 'Database error', res);
         });
 });
 
@@ -78,41 +99,39 @@ server.delete('/api/users/:id', (req, res) => {
         .remove(id)
         .then(deletedUser => {
             if(deletedUser === 0) {
-                return res
-                .status(404)
-                .send({ error: `The user with the specified ID: ${id} does not exist.` })
+                return errorHelper(404, 'User with that id not found');
+            } else {
+                res.status(201).json({ success: 'User deleted' });
             }
-            res.status(200).json(deletedUser);
         })
         .catch(err => {
-            console.error(err);
-            res.status(500).json({ error: `The user could not be removed`})
+            return errorHelper(500, 'The user could not be removed', res );
         });
    
 });
 
-server.put('api/users/:id', upperCase, (req, res) => {
+server.put('api/users/:id', validateName, upperCase, (req, res) => {
     const { id } = req.params;
     const { name } = req.body;
     userDb
         .update(id, { name })
-        .then(res => {
-            if (res === 0) {
-                return res
-                .status(404)
-                .send({ error: `The user with the specified ID: ${id} does not exist.`})
+        .then(response => {
+            if (response === 0) {
+                return errorHelper(404, `The user with the specified ID: ${id} does not exist.`)
             } else {
-                db
+                userDb
                     .find(id)
                     .then(user => {
                         res.json(user);
+                    })
+                    .catch(err => {
+                        return errorHelper(500, 'Database error', res);
                     });
             }
         })
         .catch(err => {
-            console.error(err);
-            res.status(500).json({ error: `The user could not be modified`})
-        })
+            return errorHelper(500, 'Database error', res);
+        });
 });
 
 // ===================== POST ENDPOINTS =====================
