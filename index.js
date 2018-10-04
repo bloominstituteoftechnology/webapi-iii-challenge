@@ -7,7 +7,6 @@ const cors = require('cors');
 //IMPORTS FROM HELPERS FOLDER
 const userDB = require('./data/helpers/userDB.js');
 const postDB = require('./data/helpers/postDB.js');
-const tagDB = require('./data/helpers/tagDB.js');
 
 //PORT
 const port = 7000;
@@ -94,17 +93,86 @@ server.get('/api/users', (req, res) => {
   server.put('/api/users/:id', (req, res) => {
       const { id } = req.params
       const { name } = req.body
-      const existingUser = { name }
+      const updatedUser = { name }
       userDB
-        .update(id, existingUser)
-        .then(updatedUser => {
-            res.status(200).json(updatedUser)
+        .update(id, updatedUser)
+        .then(isUpdated => {
+            res.status(200).json(isUpdated)
         })
         .catch(err => {
             res.status(500).json({err: `Could Not Update User ${existingUser}`})
             return; 
         })
   });
+
+  // ----- POSTS -----
+  //ROUTES - GET Endpoint
+server.get('/api/posts', (req, res) => {
+    postDB
+        .get()
+        .then(allPosts => {
+            res.status(200).json(allPosts)
+        })
+        .catch(() => {
+            res.status(500).json({err: "Could Not Retrieve Posts"})
+        })
+});
+
+server.get('/api/posts/:id', (req, res) => {
+    const {id} = req.params
+    userDB
+        .getUserPosts(id)
+        .then(userPosts => {
+            res.status(200).json(userPosts)
+        }) 
+        .catch(() => {
+                res.status(500).json({err: `Could Not Retrieve Post(s)`})
+        })
+});
+
+//ROUTES - POST Endpoint
+server.post('/api/posts', (req, res) => {
+    const {userId, text} = req.body
+    const newPost = {userId, text}
+    postDB
+        .insert(newPost)
+        .then(post => {
+            res.status(200).json(post)
+        })
+        .catch(() => {
+            res.status(500).json({err: `Could Not Add New Post`})
+        })
+})
+
+//ROUTES - DELETE Endpoint
+server.delete('/api/posts/:id', (req, res) => {
+    const {id} = req.params
+    postDB
+        .remove(id)
+        .then(removedPost => {
+            res.status(500).json(removedPost)
+        })
+        .catch(() => {
+            res.status(500).json({err: `Could Not Delete Post`})
+        })
+})
+
+//ROUTES - UPDATE Endpoint
+server.put('/api/posts/:id', (req, res) => {
+    const {id} = req.params
+    const {userId, text} = req.body
+    const updatedPost = {userId, text}
+    postDB
+        .update(id, updatedPost)
+        .then(isUpdated => {
+            res.status(200).json(isUpdated)
+        })
+        .catch(() => {
+            res.status(500).json({err: `Could Not Update Post`})
+        })
+})
+
+
 
 //LISTENER
 server.listen(port, () => {
