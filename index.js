@@ -6,7 +6,8 @@ const cors = require("cors");
 const helmet = require("helmet");
 const knex = require("knex");
 const sqlite3 = require("sqlite3");
-const db = require("./data/helpers/userDb");
+const userDb = require("./data/helpers/userDb");
+const postDb = require("./data/helpers/postDb");
 
 // Instantiate my server
 const server = express();
@@ -33,15 +34,26 @@ server.get("/", (req, res) => {
 });
 
 server.get("/users", (req, res) => {
-  db.get()
+  userDb
+    .get()
     .then(users => {
       res.status(200).json(users);
     })
     .catch(err => res.status(500).json({ error: "No Users Coming :(" }));
 });
 
+server.get("/posts", (req, res) => {
+  postDb
+    .get()
+    .then(posts => {
+      res.status(200).json(posts);
+    })
+    .catch(error => res.status(500).json({ error: "Can't retrieve posts..." }));
+});
+
 server.get("/users/:id", (req, res) => {
-  db.getUserPosts(req.params.id)
+  userDb
+    .getUserPosts(req.params.id)
     .then(user => {
       res.status(200).json(user);
     })
@@ -54,7 +66,8 @@ server.post("/users", yell, (req, res) => {
   if (!name) {
     return res.status(400).json({ error: "Please provide a name." });
   }
-  db.insert(newUser)
+  userDb
+    .insert(newUser)
     .then(user => {
       res.status(201).json(user);
     })
@@ -65,9 +78,31 @@ server.post("/users", yell, (req, res) => {
     );
 });
 
+server.post("/posts", (req, res) => {
+  const { userId, text } = req.body;
+  const newPost = { userId, text };
+  postDb
+    .insert(newPost)
+    .then(post => {
+      if (!post) {
+        return res
+          .status(422)
+          .send({ Error: "Cannot save unless post has valid content" });
+      }
+      // const { id } = postId;
+      res.status(201).json(newPost);
+    })
+    .catch(error =>
+      res.status(500).json({
+        error: "an error occurred while saving the post to the database"
+      })
+    );
+});
+
 server.delete("/users/:id", (req, res) => {
   const { id } = req.params;
-  db.remove(id)
+  userDb
+    .remove(id)
     .then(deleteUser => {
       if (deleteUser) {
         res.status(200).json({ message: "Deleted Successfully!" });
@@ -83,11 +118,31 @@ server.delete("/users/:id", (req, res) => {
     });
 });
 
-server.put("/users/:id", yell, (req, res) => {
+server.delete("/posts/:id", (req, res) => {
   const { id } = req.params;
+  postDb
+    .remove(id)
+    .then(deletePost => {
+      if (deletePost) {
+        res.status(200).json({ message: "Deleted Successfully!" });
+      } else {
+        res
+          .status(404)
+          .json({ error: `The post with specified Id: ${id}, does not exist` });
+      }
+    })
+    .catch(error => {
+      console.log(error);
+      res.status(500).json({ error: "Cannot remove post" });
+    });
+});
+
+server.put("/users/:id", yell, (req, res) => {
+  const { id } = req.params.id;
   const { name } = req.body;
   const updatedUser = { id, name };
-  db.update(id, updatedUser)
+  userDb
+    .update(id, updatedUser)
     .then(user => {
       if (user) {
         res.status(200).json(user);
@@ -99,6 +154,26 @@ server.put("/users/:id", yell, (req, res) => {
     })
     .catch(error => {
       res.json({ error: "Cannot change user" });
+    });
+});
+
+server.put("/posts/:id", (req, res) => {
+  const { id } = req.params;
+  const { text, userId } = req.body;
+  const updatedPost = { userId, text };
+  userDb
+    .update(id, updatedPost)
+    .then(post => {
+      if (post) {
+        res.status(200).json(post);
+      } else {
+        res
+          .status(404)
+          .json({ error: `The post with id: ${id}, does not exist.` });
+      }
+    })
+    .catch(error => {
+      res.json({ error: "Cannot change post" });
     });
 });
 
