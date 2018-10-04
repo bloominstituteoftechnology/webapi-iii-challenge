@@ -1,7 +1,7 @@
 const express = require('express');
 const applyGlobalMiddleware = require('./config/middleware/global.js');
 
-const { usersRoutes } = require('./routes');
+const { usersRoutes, postsRoutes } = require('./routes');
 
 const server = express();
 const port = 5000;
@@ -10,6 +10,7 @@ const port = 5000;
 applyGlobalMiddleware(server);
 
 server.use('/api/users', usersRoutes);
+server.use('/api/posts', postsRoutes);
 
 server.listen(port, () => {
 	console.log(`\n=== Listening on port ${ port } ===`);
