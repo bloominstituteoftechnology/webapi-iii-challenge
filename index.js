@@ -104,7 +104,7 @@ server.put('/api/users/:id', allCaps, async (req, res) => {
 
 // ========================POSTS=========================
 
-// Add GET ROUTE HANDLER to access the users
+// Add GET ROUTE HANDLER to access the posts
 server.get('/api/posts', (req, res) => {
   posts.get()
     .then( allPosts => {
@@ -112,6 +112,22 @@ server.get('/api/posts', (req, res) => {
       res.status(200).json(allPosts);
     })
     .catch(err => res.status(500).send({ error: "All posts information could not be retrieved." }));
+});
+
+
+
+  //Add DELETE ROUTE HANDLER to delete a post
+server.delete("/api/posts/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const post = await posts.remove(id);
+    if (post === 0) {
+      return res.status(404).json({ message: "The post with the specified ID does not exist." });
+    }
+    res.status(200).json(post);
+  } catch (error) {
+    res.status(500).json({ error: "The post could not be removed" });
+  }
 });
 
 // Call server.listen w/ a port of 8250
