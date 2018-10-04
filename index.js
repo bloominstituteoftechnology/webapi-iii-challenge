@@ -106,7 +106,7 @@ server.get("/posts/:id", (req, res) => {
 });
 
 // GET all posts by a specific user
-server.get("users/:id/posts", (req, res) => {
+server.get("/users/:id/posts", (req, res) => {
   const {id} = req.params;
   userdb.getUserPosts(id)
     .then(posts => {
