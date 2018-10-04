@@ -2,6 +2,7 @@
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
+const logger = require('morgan');
 const port = 9000;
 
 //define databases
@@ -21,7 +22,8 @@ const upperCaseName = (req, res, next) => {
 //global middleware
 server.use(cors());
 server.use(express.json());
-// server.use(helmet());
+server.use(helmet());
+server.use(logger('short'));
 
 //Create/Post User
     server.post('/users', upperCaseName, (req, res) => {
