@@ -19,6 +19,7 @@ server.use(express.json(), cors(), morgan('combined'), helmet());
 // USER Errors
 const missingUserName = { errorMessage: "Please provide a name for the user." }
 const userNotFound = { errorMessage: "The user with the specified ID does not exist." }
+const postsNotFoundForUser = { errorMessage: "No posts for the user with the specified ID exist." }
 const noUsersUpdated = { errorMessage: "No users were updated." }
 const noUsersDeleted = { errorMessage: "No users were deleted." }
 const unableToFindSingleUser500 = { errorMessage: "The user information could not be retrieved." }
@@ -26,6 +27,7 @@ const unableToFindUsers500 = { errorMessage: "Unable to retrieve users." }
 const unableToCreateUser500 = { errorMessage: "Unable to create user." }
 const unableToUpdateUser500 = { errorMessage: "Unable to update user." }
 const unableToDeleteUser500 = { errorMessage: "Unable to delete user." }
+const unableToFindPostsForUser500 = { errorMessage: "Unable to retrieve posts for the specified user." }
 
 
 // POST Errors
@@ -33,7 +35,8 @@ const missingPostData = { errorMessage: "Please provide an id and text parameter
 const postNotFound = { errorMessage: "The post with the specified ID does not exist." }
 const unableToFindSinglePost500 = { errorMessage: "The post information could not be retrieved." }
 const unableToFindPosts500 = { errorMessage: "Unable to retrieve posts." }
-const unableToCreatePost500 = { errorMessage: "Unable to create user." }
+const unableToCreatePost500 = { errorMessage: "Unable to create post." }
+const unableToDeletePost500 = { errorMessage: "Unable to delete post." }
 
 
 //// ==========- USER DATABASE CRUD ENDPOINTS -==========
@@ -141,11 +144,27 @@ server.delete('/users/:userId', (request, response) => {
             if(!didDelete) {
                 response.status(400).send(noUsersDeleted)
             }
-            response.status(200).send(user)
+            response.status(200).send(user) 
         })
         .catch(() => response.status(500).send(unableToDeleteUser500))
     })
     .catch(() => response.status(500).send(unableToFindSingleUser500))
+})
+
+/// #####=- READ All Posts of Individual User Endpoint -=#####
+server.get('/users/:userId/posts', (request, response) => {
+
+    const userId = request.params.userId;
+
+    // Database Promise Method
+    userDb.getUserPosts(userId)
+    .then(posts => {
+        if (!posts.length) {
+            response.status(400).send(postsNotFoundForUser)
+        }
+        response.status(200).send(posts)
+    })
+    .catch(() => response.status(500).send(unableToFindPostsForUser500))
 })
 
 //// ==========- POST DATABASE CRUD ENDPOINTS -==========
