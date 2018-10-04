@@ -82,7 +82,7 @@ server.get("/users/:id/posts", (req, res) => {
   userDb
     .getUserPosts(id)
     .then(userPosts => {
-      res.json(userPosts);
+      res.status(200).json(userPosts);
     })
     .catch(err => console.error(err));
 });
@@ -94,7 +94,7 @@ server.get("/posts", (req, res) => {
   postDb
     .get()
     .then(userPost => {
-      res.json(userPost);
+      res.status(200).json(userPost);
     })
     .catch(err => console.error(err));
 });
@@ -105,7 +105,7 @@ server.get("/posts/:id", (req, res) => {
   postDb
     .get(id)
     .then(userPost => {
-      res.json(userPost);
+      res.status(200).json(userPost);
     })
     .catch(err => console.error(err));
 });
@@ -117,7 +117,7 @@ server.post("/posts", (req, res) => {
   postDb
     .insert(newPost)
     .then(post => {
-      res.json(post);
+      res.status(200).json(post);
     })
     .catch(err => console.error(err));
 });
@@ -128,7 +128,7 @@ server.delete("/posts/:id", (req, res) => {
   postDb
     .remove(id)
     .then(post => {
-      res.json(post);
+      res.status(200).json(post);
     })
     .catch(err => console.error(err));
 });
@@ -141,7 +141,7 @@ server.put("/posts/:id", (req, res) => {
   postDb
     .update(id, newPost)
     .then(post => {
-      res.json(post);
+      res.status(200).json(post);
     })
     .catch(err => console.error(err));
 });
