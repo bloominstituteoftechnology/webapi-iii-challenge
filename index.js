@@ -79,6 +79,15 @@ server.delete('/api/users/:id', (req, res) => {
     .catch(err => res.json({Error: 'Error removing user.'}));
 })
 
+server.get('/api/users/:id/posts', (req, res) => {
+  const id = req.params.id;
+  userDb.getUserPosts(id)
+    .then(posts => {
+      res.status(200).json(posts);
+    })
+    .catch(err => res.json({ Error: 'Error getting user\'s posts' }));
+})
+
 //Posts
 server.get('/api/posts', (req, res) => {
   postDb.get()
@@ -122,6 +131,7 @@ server.delete('/api/posts/:id', (req, res) => {
     })
     .catch(err => res.json({Error: 'Error removing post.'}));
 })
+
 
 
 //port
