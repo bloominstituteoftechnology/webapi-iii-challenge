@@ -1,11 +1,13 @@
 const express = require('express');
 const cors = require('cors');
+const logger = require('morgan');
 const usersDb = require('./data/helpers/userDb');
 const postsDb = require('./data/helpers/postDb');
 
 // ~~~~~ SERVER INITIALIZATION ~~~~~ //
 const server = express();
 server.use(cors());
+server.use(logger('combined'));
 server.use(express.json());
 
 
@@ -40,11 +42,11 @@ server.get('/api', (req, res) => {
 //     text: string  // required.
 // }
 
-const usersDbAccessError = {"error": "There was an error accessing the users database."};
-const postsDbAccessError = {"error": "There was an error accessing the posts database."};
+const usersDbAccessError = {"error": "There was an error accessing the users database table."};
+const postsDbAccessError = {"error": "There was an error accessing the posts database table."};
 
 // ~~ GET ~~ //
-// user: get() -> [{obj1},...,{objN}]
+// userDB: get() -> [{obj1},...,{objN}]
 server.get('/api/users', (req, res) => {
     usersDb.get()
         .then((usersList) => {
@@ -56,7 +58,7 @@ server.get('/api/users', (req, res) => {
         });
 });
 
-// post: get() -> [{obj1},...,{objN}]
+// postDB: get() -> [{obj1},...,{objN}]
 server.get('/api/posts', (req, res) => {
     postsDb.get()
         .then((postsList) => {
@@ -68,7 +70,7 @@ server.get('/api/posts', (req, res) => {
         });
 });
 
-// user: get(id) -> {obj}
+// userDB: get(id) -> {obj}
 server.get('/api/users/:id', (req, res) => {
     usersDb.get(req.params.id)
         .then((user) => {
@@ -84,7 +86,7 @@ server.get('/api/users/:id', (req, res) => {
         });
 });
 
-// post: get(id) -> {obj}
+// postDB: get(id) -> {obj}
 server.get('/api/posts/:id', (req, res) => {
     postsDb.get(req.params.id)
         .then((post) => {
@@ -100,7 +102,7 @@ server.get('/api/posts/:id', (req, res) => {
         });
 });
 
-// user: getUserPosts(id) -> [{obj1},...,{objN}]
+// userDB: getUserPosts(id) -> [{obj1},...,{objN}]
 server.get('/api/userposts/:id', (req, res) => {
     usersDb.getUserPosts(req.params.id)
         .then((userPosts) => {
@@ -117,7 +119,7 @@ server.get('/api/userposts/:id', (req, res) => {
 });
 
 // ~~ POST ~~ /
-// user: insert({obj}) -> {id: ##}
+// userDB: insert({obj}) -> {id: ##}
 server.post('/api/users', (req, res) => {
     if(req.body.name) {
         const newUserObj = {"name": req.body.name};
@@ -125,7 +127,7 @@ server.post('/api/users', (req, res) => {
             .then((newId) => {
                 usersDb.get(newId.id)
                     .then((newUser) => {
-                        res.status(200).json(newUser);
+                        res.status(201).json(newUser);
                     })
                     .catch((err) => {
                         console.error('userDb.js/get(id) Access Error:\n', err);
@@ -137,11 +139,11 @@ server.post('/api/users', (req, res) => {
                 res.status(500).json(usersDbAccessError);
             });
     } else {
-        res.status(400).json({"error": "Please provide a name value in your POST"});
+        res.status(400).json({"error": "Please provide a name value in your POST."});
     }
 });
 
-// post: insert({obj}) -> {id: ##}
+// postDB: insert({obj}) -> {id: ##}
 server.post('/api/posts', (req, res) => {
     if(req.body.userId && req.body.text) {
         usersDb.get(req.body.userId)
@@ -152,7 +154,7 @@ server.post('/api/posts', (req, res) => {
                         .then((newId) => {
                             postsDb.get(newId.id)
                                 .then((newPost) => {
-                                    res.status(200).json(newPost);
+                                    res.status(201).json(newPost);
                                 })
                                 .catch((err) => {
                                     console.error('postDb.js/get(id) Access Error:\n', err);
@@ -172,19 +174,88 @@ server.post('/api/posts', (req, res) => {
                 res.status(500).json(usersDbAccessError);
             });
     } else {
-        res.status(400).json({"error": "Please provide userId and text values in your POST"});
+        res.status(400).json({"error": "Please provide userId and text values in your POST."});
     }
 });
 
 // ~~ PUT ~~ //
-// user: update(id, {}) -> count of updated records
+// userDB: update(id, {obj}) -> count of updated records
 server.put('/api/users/:id', (req, res) => {
-
+    if(req.body.name) {
+        usersDb.get(req.params.id)
+            .then((user) => {
+                if(user !== undefined) {
+                    const editedUser = {"name": req.body.name};
+                    usersDb.update(req.params.id, editedUser)
+                        .then((updateCount) => {
+                            if(updateCount > 0) {
+                                usersDb.get(req.params.id)
+                                    .then((user) => {
+                                        res.status(200).json(user);
+                                    })
+                                    .catch((err) => {
+                                        console.error('userDb.js/get(id) Access Error:\n', err);
+                                        res.status(500).json(usersDbAccessError);
+                                    });
+                            } else {
+                                res.status(500).json({"error": "We received what appears to be valid data from you, but the DB didn't update the record for unknown reasons."});
+                            }
+                        })
+                        .catch((err) => {
+                            console.error('userDb.js/update(id, {"name": "value"}) Access Error:\n', err);
+                            res.status(500).json(usersDbAccessError);
+                        });
+                } else {
+                    res.status(404).json({"error": `A user with ID ${req.params.id} doesn't exist.`});
+                }
+            })
+            .catch((err) => {
+                console.error('userDb.js/get(id) Access Error:\n', err);
+                res.status(500).json(usersDbAccessError);
+            });
+    } else {
+        res.status(400).json({"error": "Please provide a name value in your PUT."});
+    }
 });
 
-// post: update(id, {}) -> count of updated records
+// postDB: update(id, {obj}) -> count of updated records
+// TODO: Need to put in a check that the userId supplied is a legitimate user
 server.put('/api/posts/:id', (req, res) => {
-
+    if(req.body.userId && req.body.text) {
+        postsDb.get(req.params.id)
+            .then((post) => {
+                if(post !== undefined) {
+                    const editedPost = {"userId": req.body.userId, "text": req.body.text};
+                    postsDb.update(req.params.id, editedPost)
+                        .then((updateCount) => {
+                            if(updateCount > 0) {
+                                postsDb.get(req.params.id)
+                                    .then((post) => {
+                                        res.status(200).json(post);
+                                    })
+                                    .catch((err) => {
+                                        console.error('postDb.js/get(id) Access Error:\n', err);
+                                        res.status(500).json(postsDbAccessError);
+                                    });
+                            } else {
+                                res.status(500).json({"error": "We received what appears to be valid data from you, but the DB didn't update the record for unknown reasons."});
+                            }
+                        })
+                        .catch((err) => {
+                            console.error('postDb.js/update(id, {"userId": ##, "text": "value"}) Access Error:\n', err);
+                            res.status(500).json(postsDbAccessError);
+                        });
+                } else {
+                    res.status(404).json({"error": `A post with ID ${req.params.id} doesn't exist.`});
+                }
+            })
+            .catch((err) => {
+                console.error('postDb.js/get(id) Access Error:\n', err);
+                res.status(500).json(postsDbAccessError);
+            });
+    } else {
+        res.status(400).json({"error": "Please provide userId and text values in your PUT"});
+    }
 });
 
 // ~~ DELETE ~~ //
