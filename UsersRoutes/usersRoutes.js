@@ -7,7 +7,7 @@ const upperCase = require('../Middleware/middleware.js').upperCase;
 router
   .route('/')
   .post(upperCase, (req, res) => {
-    const { name } = req.name;
+    const { name } = req;
     const newUser = { name };
     if (!name)
       return res
@@ -54,7 +54,7 @@ router
   })
   .put(upperCase, (req, res) => {
     const { id } = req.params;
-    const { name } = req.name;
+    const { name } = req;
     const editedUser = { name };
     userDb
       .update(id, editedUser)
