@@ -19,6 +19,15 @@ const capitalize = (req, res, next) => {
   next();
 };
 
+const checkName = (req, res, next) => {
+  if (!req.body.name || req.body.name.length > 128) {
+    return res.status(400).send({
+      errorMessage:
+        'Please provide a name for the user that is less than 128 characters.',
+    });
+  }
+};
+
 server.use(logger('combined'));
 server.use(express.json());
 
@@ -42,7 +51,7 @@ server.get('/api/users', (req, res) => {
     });
 });
 
-server.post('/api/users', capitalize, (req, res) => {
+server.post('/api/users', checkName, capitalize, (req, res) => {
   // console.log('req.body', req.body);
   const name = req.name;
   if (!name) {
@@ -95,7 +104,7 @@ server.delete('/api/users/:id', (req, res) => {
     });
 });
 
-server.put('/api/users/:id', capitalize, (req, res) => {
+server.put('/api/users/:id', checkName, capitalize, (req, res) => {
   const { id } = req.params;
   const name = req.name;
   if (!name) {
