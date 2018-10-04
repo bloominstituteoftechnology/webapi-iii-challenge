@@ -1,6 +1,6 @@
 // MIDDLEWARES
 const upperCaser = (req, res, next) => {
-  req.name = req.body.name.toUpperCase();
+  if (req.body.name) return req.name = req.body.name.toUpperCase();
   next();
 }
 
