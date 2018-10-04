@@ -147,5 +147,15 @@ server.get("/api/posts", async (req, res) => {
   }
 });
 
+// get a single post based upon post id
+server.get("/api/posts/:id", async (req, res) => {
+  try {
+    const post = await posts.get(req.params.id);
+    res.status(200).json(post);
+  } catch (error) {
+    res.status(500).json({ message: "Post could not be retrieved." });
+  }
+});
+
 // listen to port 8000 and give a startup message from the server
 server.listen(8000, () => console.log("API listening on port 8000"));
