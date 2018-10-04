@@ -8,8 +8,8 @@ const port = 5201;
 
 
 const capitalize = (req, res, next) => {
-  const newUserName = req.body.name.toUpperCase();
-  req.name = newUserName;
+  const { name } = req.body;
+  req.body.name = req.body.name.charAt(0).toUpperCase() + req.body.name.slice(1);
   next();
 };
 
@@ -54,10 +54,9 @@ server.get('/users', (req, res) => {
 
 
 
-server.post('/users', capitalize, (req, res) => {  
-  const newUser = { name: req.name };
+server.post('/users', capitalize, (req, res) => {    
 
-  db.insert(newUser)
+  db.insert(req.body)
     .then(user => {
       // res.status(201).json(user);
       db.get(user.id)
@@ -96,8 +95,7 @@ server.delete('/users/:id', (req, res) => {
 server.put('/users/:id', capitalize, (req, res) => {
   const { id } = req.params;  
 
-  const newUser = { name: req.name };
-  db.update(id, newUser)
+  db.update(id, req.body)
     .then(user => {      
       console.log(user, 'i am user inside put') // --> logs a 1 or 0      
       db.get(user.id) // .get() needs an id
@@ -139,12 +137,12 @@ server.get('/users/posts', (req, res) => {
   postDb.get()
     .then(allPosts => {      
       if (allPosts.length === 0) {
-        return res.status(404).send({ errorMessage: `User has no posts available.` })
+        return res.status(404).send({ missingError: `User has no posts available.` })
       }
       console.log('=========I am all posts=========', allPosts);
       res.status(200).json(allPosts);
     })
-    .catch(err => console.log(err));
+    .catch(err => res.status(500).json({ simpleError: 'There was an error fetching' }));
 });
 
 
@@ -169,13 +167,9 @@ server.get('/users/posts/:id', (req, res) => {
 
   postDb.get(id)
     .then(eachPost => {      
-      if (eachPost === 0) {
-        return res.status(404).json({ missingError: `No posts by this Id` });
-      }
-      console.log('eachPost ===============', eachPost);
       res.status(200).json(eachPost);
     })
-    .catch(err => console.log(err));
+    .catch(err => res.status(404).json({ fetchingError: 'This id does not exist' }));
 });
 
 
@@ -188,10 +182,12 @@ server.post('/users/posts', (req, res) => {
 
   postDb.insert({userId, text})
     .then(response => {
-      console.log('============ RESPONSE ============', response);
+      if (!req.body.text || !req.body.userId) {
+        res.status(400).json({ fillError: 'Please provide text, and/or userId' })
+      }      
       res.json(response);
     })
-    .catch(err => console.log(err));
+    .catch(err => res.status(500).json({ postError: 'There was an error posting' }));
 });
 
 
@@ -202,8 +198,12 @@ server.delete('/users/posts/:id', (req, res) => {
   const { id } = req.params;
 
   postDb.remove(id)
-    .then(removedPost => {
-      res.status(200).json(removedPost)
+    .then(response => {
+      if (response === 0) {
+        res.status(404).json({ missingError: 'err..... the id provided does not exist sowwy!' });
+      } else if (response === 1) {
+        res.status(200).json(response)
+      }      
     })
     .catch(err => console.log(err));
 });
@@ -214,11 +214,19 @@ server.put('/users/posts/:id', (req, res) => {
   const { text } = req.body;
 
   postDb.update(id, { text })
+
     .then(response => {
-      console.log('response ==================', response)
-      res.status(200).json(response);      
+
+      if (!req.body.text) {
+        res.status(400).json({ fillError: 'Please provide an edit to the text' });
+      } else if (response === 0) {
+        res.status(404).json({ missingError: 'The post with the id you gave, does not exist' });
+      } else if (response === 1) {
+        res.status(200).json(response);
+      }
+                   
     })
     .catch(err => {
-      console.log('see below:');      
+      res.status(500).json({ simpleError: 'There was an error updating' });
     });
 });
