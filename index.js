@@ -91,6 +91,13 @@ server.get('/api/:dbtype/:id', (req, res)=>{
                     res.status(200).json(tag);
                 })
                 .catch(err => console.error(err));
+        //retrieve the list of posts from a user by user ID
+        case 'user':
+            userDb.getUserPosts(id)
+                .then(posts =>{
+                    res.status(200).send(posts);
+                })
+                .catch(err => console.error(err));
             break;
         default:
             res.status(400).send(`URI ${dbtype} not found`);
