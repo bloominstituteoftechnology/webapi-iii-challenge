@@ -6,7 +6,7 @@ module.exports = {
     if (id) {
       query.where('id', Number(id)).first();
     }
-
+    
     return query;
   },
   getUserPosts: function(userId) {
