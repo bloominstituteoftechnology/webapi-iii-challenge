@@ -15,10 +15,22 @@ server.use(express.json(), cors(), morgan('combined'), helmet());
 ///// ===============- SERVER CRUD ENDPOINTS -===============
 
 // ##### Error Messages #####
-const missingNameError = { errorMessage: "Please provide a name for the user." }
-const invalidTypeError = { errorMessage: "Post title and contents must be a string." }
+
+// USER Errors
+const missingUserName = { errorMessage: "Please provide a name for the user." }
+const unableToCreateUser500 = { errorMessage: "Unable to create user." }
+const userNotFound = { errorMessage: "The user with the specified ID does not exist." }
+const unableToFindSingleUser500 = { errorMessage: "The user information could not be retrieved." }
+const unableToFindUsers500 = { errorMessage: "Unable to retrieve users." }
+
+
+// POST Errors
+const missingPostData = { errorMessage: "Please provide an id and text parameter for the post." }
+const unableToCreatePost500 = { errorMessage: "Unable to create user." }
 const postNotFound = { errorMessage: "The post with the specified ID does not exist." }
-const single500 = { errorMessage: "The post information could not be retrieved" }
+const unableToFindSinglePost500 = { errorMessage: "The post information could not be retrieved." }
+const unableToFindPosts500 = { errorMessage: "Unable to retrieve posts." }
+
 
 //// ==========- USER DATABASE CRUD ENDPOINTS -==========
 
@@ -30,13 +42,10 @@ server.get('/', (request, response) => {
 /// #####=- READ All Users Endpoint -=#####
 server.get('/users', (request, response) => {
 
-    // Unique Error Message
-    const error500 = { errorMessage: "Unable to retrieve users." };
-
     // Database Promise Method
     userDb.get()
     .then(users => response.status(200).send(users))
-    .catch(() => response.status(500).send(error500))
+    .catch(() => response.status(500).send(unableToFindUsers500))
 })
 
 /// #####=- READ Individual User Endpoint -=#####
@@ -44,13 +53,15 @@ server.get('/users/:userId', (request, response) => {
 
     const userId = request.params.userId;
 
-    // Unique Error Message
-    const error500 = { errorMessage: "Unable to retrieve user." };
-
     // Database Promise Method
     userDb.get(userId)
-    .then(user => response.status(200).send(user))
-    .catch(() => response.status(500).send(error500))
+    .then(user => {
+        if (!user) {
+            response.status(400).send(userNotFound)
+        }
+        response.status(200).send(user)
+    })
+    .catch(() => response.status(500).send(unableToFindSingleUser500))
 })
 
 /// #####=- CREATE Individual User Endpoint -=#####
@@ -60,20 +71,25 @@ server.post('/users',  (request, response) => {
     const error500 = { errorMessage: "Unable to create user." };
 
     // Request Validation
-    const user = request.body;
+    const { name } = request.body;
     
-    if ( !user ) {
-        response.status(400).send(missingNameError);
+    if ( !name ) {
+        response.status(400).send(missingUserName);
     }
 
     // Database Promise Method
-    userDb.insert({'name': user})
+    userDb.insert({'name': name})
     .then( userId => {
-        userDb.get(userId)
-        .then(user => response.status(200).send(user))
-        .catch(() => response.status(500).send(error500))
+        userDb.get(userId.id)
+        .then(user => {
+            if (!user) {
+                response.status(400).send(userNotFound)
+            }
+            response.status(200).send(user)
+        })
+        .catch(() => response.status(500).send(unableToFindSingleUser500))
     })
-    .catch()
+    .catch(() => response.status(500).send(unableToCreateUser500))
 })
 
 //// ==========- POST DATABASE CRUD ENDPOINTS -==========
@@ -81,27 +97,26 @@ server.post('/users',  (request, response) => {
 /// #####=- READ All Posts Endpoint -=#####
 server.get('/posts', (request, response) => {
 
-    // Unique Error Message
-    const error500 = { errorMessage: "Unable to retrieve posts." };
-
     // Database Promise Method
     postDb.get()
     .then(posts => response.status(200).send(posts))
-    .catch(() => response.status(500).send(error500))
+    .catch(() => response.status(500).send(unableToFindPosts500))
 })
 
 /// #####=- READ Individual Post Endpoint -=#####
-server.get('/users/:postId', (request, response) => {
+server.get('/posts/:postId', (request, response) => {
 
-    const userId = request.params.userId;
-
-    // Unique Error Message
-    const error500 = { errorMessage: "Unable to retrieve post." };
+    const postId = request.params.postId;
 
     // Database Promise Method
     postDb.get(postId)
-    .then(post => response.status(200).send(post))
-    .catch(() => response.status(500).send(error500)) 
+    .then(post => {
+        if (!post) {
+            response.status(400).send(postNotFound)
+        }
+        response.status(200).send(post)
+    })
+    .catch(() => response.status(500).send(unableToFindSinglePost500))
 })
 
 // #####=- Server Port Address and Listen Method -=#####
