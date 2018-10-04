@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 import PostForm from "../../PostComponents/PostForm";
+import PostList from "../../PostComponents/PostList";
 export default class User extends Component {
   state = {
     isEditing: false,
@@ -52,14 +53,16 @@ export default class User extends Component {
           {this.state.name}
           's <span>Posts</span>
         </h2>
-        {this.state.posts.map(post => {
+        <PostList posts={this.state.posts} />
+        {/* {this.state.posts.map(post => {
           return (
+          
             <div key={post.id} className="post-container">
               <h2>{post.text}</h2>
               <em>{`posted by ${post.postedBy}`}</em>
             </div>
           );
-        })}
+        })} */}
         <a className="back-lnk" href="/">
           Back
         </a>
