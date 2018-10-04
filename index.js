@@ -18,8 +18,12 @@ const userToUpperCase = (req, res, next) => {
 };
 server.use(userToUpperCase);
 
+// TODO: User still got inserted into DB despite throwing a 400. Fix this.
 const nameLengthCheck = (req, res, next) => {
-    if(req.body.name && req.body.name.length > 128) res.status(400).json({"error": "Please ensure your name value is less than 128 characters in length."});
+    if(req.body.name && req.body.name.length > 128) {
+        res.status(400).json({"error": "Please ensure your name value is less than 128 characters in length."});
+        end();
+    }
     next();
 };
 server.use(nameLengthCheck);

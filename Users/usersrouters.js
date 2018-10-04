@@ -6,7 +6,7 @@ const usersDb = require('../data/helpers/userDb');
 const usersDbAccessError = {"error": "There was an error accessing the users database table."};
 
 // ~~~ GET ~~~ //
-// userDB: get() -> [{obj1},...,{objN}]
+// userDB: get() -> [{"name": "val1"},...,{"name": "valN"}]
 router.get('/', (req, res) => {
     usersDb.get()
         .then((usersList) => {
@@ -18,7 +18,7 @@ router.get('/', (req, res) => {
         });
 });
 
-// userDB: get(id) -> {obj}
+// userDB: get(id) -> {"name": "val"}
 router.get('/:id', (req, res) => {
     usersDb.get(req.params.id)
         .then((user) => {
@@ -34,7 +34,7 @@ router.get('/:id', (req, res) => {
         });
 });
 
-// userDB: getUserPosts(id) -> [{obj1},...,{objN}]
+// userDB: getUserPosts(userId) -> [{"userId": userId, "text": "val1"},...,{"userId": userId, "text": "valN"}]
 router.get('/:id/posts', (req, res) => {
     usersDb.getUserPosts(req.params.id)
         .then((userPosts) => {
@@ -51,7 +51,7 @@ router.get('/:id/posts', (req, res) => {
 });
 
 // ~~~ POST ~~~ //
-// userDB: insert({obj}) -> {id: ##}
+// userDB: insert({"name": "val"}) -> {id: #}
 router.post('/', (req, res) => {
     if(req.body.name) {
         const newUserObj = {"name": req.body.name};
@@ -76,7 +76,7 @@ router.post('/', (req, res) => {
 });
 
 // ~~~ PUT ~~~ //
-// userDB: update(id, {obj}) -> count of updated records
+// userDB: update(id, {"name": "val"}) -> # of updated records
 router.put('/:id', (req, res) => {
     if(req.body.name) {
         usersDb.get(req.params.id)
@@ -116,13 +116,33 @@ router.put('/:id', (req, res) => {
 });
 
 // ~~~ DELETE ~~~ //
-// user: remove(id) -> # of records deleted
+// user: remove(id) -> # of deleted records
 router.delete('/:id', (req, res) => {
-    // TODO: Delete user
-    // const userToDelete;
-    // usersDb.get(req.params.id).then((user) => if(user !== undefined) userToDelete = user).catch((err) => error stuff);
-    // Delete user as normal
+    let userToDelete = null;
+    usersDb.get(req.params.id)
+        .then((user) => {
+            if(user !== undefined) {
+                userToDelete = {...user};
+                usersDb.remove(req.params.id)
+                    .then((deleteCount) => {
+                        if(deleteCount > 0) {
+                            res.status(200).json(userToDelete);
+                        } else {
+                            res.status(500).json({"error": "We received a valid user ID from you, but the database didn't delete it for some reason."});
+                        }
+                    })
+                    .catch((err) => {
+                        console.error('userDb.js/remove(id) Access Error:\n', err);
+                        res.status(500).json(usersDbAccessError);
+                    });
+            } else {
+                res.status(404).json({"error": `A user with ID ${req.params.id} doesn't exist`});
+            }
+        })
+        .catch((err) => {
+            console.error('userDb.js/get(id) Access Error:\n', err);
+            res.status(500).json(usersDbAccessError);
+        });
 });
-
 
 module.exports = router;
