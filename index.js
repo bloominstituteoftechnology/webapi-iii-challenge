@@ -81,7 +81,7 @@ server.get('/users/:postId', (request, response) => {
     // Database Promise Method
     postDb.get(postId)
     .then(post => response.status(200).send(post))
-    .catch(() => response.status(500).send(error500))
+    .catch(() => response.status(500).send(error500)) 
 })
 
 // #####=- Server Port Address and Listen Method -=#####
