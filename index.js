@@ -46,6 +46,19 @@ server.get("/users/:id", (req, res) => {
     .catch(err => res.status(500).send(err));
 });
 
+server.get("/users/:id/posts", (req, res) => {
+  const {id} = req.params;
+  userdb.getUserPosts(id)
+    .then(posts => {
+      if(posts.length < 1) {
+        res.status(200).send(`User at id: ${id} does not have any posts.`)
+        return;
+      }
+      res.status(200).send(posts);
+    })
+    .catch(err => res.status(500).send(err));
+});
+
 server.post("/users", (req, res) => {
   const { name } = req.body;
   const newUser = { name };
