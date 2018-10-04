@@ -26,7 +26,8 @@ server.use(logger('combined'), cors(), helmet());
 server.get('/blogs', (req, res) => {
     userDb.get()
             .then(query =>{
-                res.json(query);
+                res.status(200)
+                    .json(query);
             })
             .catch(err=>res.send(err));
 });
@@ -35,7 +36,13 @@ server.get('/blogs/:id', (req, res) => {
     req.id = req.params.id;
     userDb.get(req.id)
             .then(query =>{
-                res.json(query);
+                if (!query){
+                    return res.status(500)
+                                .json({ 
+                        error: `Information about the user with the provided id number could not be retrieved.` })
+                }
+                res.status(200)
+                    .json(query);
             })
             .catch(err=>res.send(err));
 });
@@ -43,7 +50,8 @@ server.get('/blogs/:id', (req, res) => {
 server.post('/blogs', upperCase, (req, res) =>{
     userDb.insert(req.body)
             .then(id =>{
-                res.json(id);
+                res.status(201)
+                    .json(id);
             })
             .catch(err=>res.send(err));
 });
@@ -52,7 +60,13 @@ server.delete('/blogs/:id', (req, res)=>{
     const id = req.params.id;
     userDb.remove(id)
             .then(responseId=>{
-                res.send(`ID: ${responseId} has been deleted`);
+                if (responseId===0){
+                    return res.status(500)
+                                .json({ 
+                        error: `User with the provided id number cannot be found.` })
+                }
+                res.status(204)
+                    .send(`ID: ${responseId} has been deleted`);
             })
             .catch(err=>res.send(err));
 });
@@ -62,9 +76,11 @@ server.put('/blogs/:id', upperCase, (req, res)=>{
     userDb.update(id, req.body)
             .then(ifUpdated =>{
                 if (ifUpdated === 1){
-                    res.send("The user record has been updated")
+                    res.statu(200)
+                        .send("The user record has been updated")
                 } else {
-                    res.send("Error took place during updating")
+                    res.status(422)
+                        .send("Error took place during updating")
                 }
             })
             .catch(err=>res.send(err));
@@ -72,6 +88,6 @@ server.put('/blogs/:id', upperCase, (req, res)=>{
 
 // call server.listen w/ a port of your choosing
 server.listen(port, () => {
-  console.log(`Stuff is going on in ${port}`);
+  console.log(`Listening to server updates on port ${port}`);
 });
 // hit your port+/ to see "hello wold!"
