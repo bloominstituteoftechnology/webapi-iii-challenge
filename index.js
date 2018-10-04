@@ -1,7 +1,6 @@
 const express = require('express');
 const server = express();
 server.use(express.json());
-const postRoutes = require('./routes/postRoutes.js');
 const configureMiddleware = require('./config/middleware.js');
 
 // const cors = require('cors');
