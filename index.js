@@ -6,6 +6,7 @@ const helmet = require("helmet");
 const port = 9000;
 
 const userDb = require("./data/helpers/userDb.js");
+const postDb = require("./data/helpers/postDb.js");
 
 const server = express();
 
@@ -112,6 +113,43 @@ server.put("/api/users/:id", (req, res) => {
 });
 
 //=============== POST ENDPOINTS =============== //
+
+//Get all posts
+server.get("/api/posts", (req, res) => {
+  postDb
+    .get()
+    .then(post => {
+      res.json(post);
+    })
+    .catch(err =>
+      res.status(500).json({
+        error: "The post information could not be retrieved."
+      })
+    );
+});
+
+//Add a new post
+server.post("/api/posts/", (req, res) => {
+  const { text, userId } = req.body;
+  const newPost = { text, userId };
+  if (!text || !userId) {
+    return res.status(400).json({ error: "Please provide text to your post." });
+  }
+  postDb
+    .insert(newPost)
+    .then(post => {
+      res.status(201).json(post);
+    })
+    .catch(err => {
+      res.status(500).json({
+        error: "There was an error saving your post."
+      });
+    });
+});
+
+//Delete a post
+
+//Update a post
 
 // call server.listen w/ a port of your choosing
 server.listen(port, () => {
