@@ -1,5 +1,6 @@
 const express = require('express');
 const postDb = require('../data/helpers/postDb.js');
+const userDb = require('../data/helpers/userDb.js');
 
 const router = express.Router();
 
@@ -14,7 +15,7 @@ router.get('/', (req, res) => {
 
 router.get('/:id', (req, res) => {
     const { id } = req.params;
-    postDb.get(id)
+    userDb.getUserPosts(id)
         .then(post => {
             if(!post) return res.status(422).send({error: `Post does not exist by that id ${id}`});
             res.send(post);
@@ -22,46 +23,51 @@ router.get('/:id', (req, res) => {
         .catch(err => res.status(500).send({error: `The post information coud not be retrieved. | ${err}`}));
 });
 
-// server.post('/api/users/', nameToUpperCase, (req, res) => {
-//     const name  = req.name;
-//     if ( !name ) return res.status(400).send({error: 'Please provide a name for the user.'});
+router.post('/', (req, res) => {
+    const { userId, text }  = req.body;
+    if ( !userId || !text ) return res.status(400).send({error: 'Please provide a userId and text to the post.'});
 
-//     const newUser = { name };
-//     userDb.insert(newUser)
-//         .then(userId => {
-//             const { id } = userId;
-//             userDb.get(id)
-//                 .then(user => {
-//                     if(!user) return res.status(422).send({error: `User does not exist by that id ${userId}`});
+    const newPost = { userId, text };
+    userDb.get(userId)
+        .then(user => {
+            if(!user) return res.status(422).send({error: 'User does not exist'})    
+        });
 
-//                     res.status(201).send(user);
-//                 });
-//         })
-//         .catch(err => res.status(500).send({error: `There was an error while saving the user to the database. | ${err}`}));
-// });
+    postDb.insert(newPost)
+        .then(postId => {
+            const { id } = userId;
+            postDb.get(postId.id)
+                .then(post => {
+                    if(!post) return res.status(422).send({error: `Post does not exist by that userId ${userId}`});
 
-// server.put('/api/users/:id', nameToUpperCase, (req, res) => {
-//     const { id } = req.params;
-//     const  name  = req.name;
-//     if ( !name ) return res.status(400).send({error: 'Please provide a name for the user.'});
+                    res.status(201).json(post);
+                });
+        })
+        .catch(err => res.status(500).send({error: `There was an error while saving the post to the database. | ${err}`}));
+});
 
-//     const newUser = { name };
-//     userDb.update(id, newUser)
-//         .then(user => {
-//             if(!user) return res.status(422).send({error: `User does not exist by that id ${userId}`});
-//             res.status(200).json(user);
-//         })
-//         .catch(err => res.status(500).send({error: `The user could not be modified. | ${err}`}));
-// });
+router.put('/:id', (req, res) => {
+    const { id } = req.params;
+    const { userId, text }  = req.body;
+    if ( !userId || !text ) return res.status(400).send({error: 'Please provide a userId and text to the post.'});
 
-// server.delete('/api/users/:id', (req, res) => {
-//     const { id } = req.params;
-//     userDb.remove(id)
-//         .then(rmvdUser => {
-//             if(!rmvdUser) return res.status(404).send({error: `The user with the ID of ${id} does not exist.`});
-//             res.status(200).json(rmvdUser);
-//         })
-//         .catch(err => res.status(500).send({error: `The user could not be removed. | ${err}`}))
-// })
+    const newPost = { userId, text };
+    postDb.update(id, newPost)
+        .then(post => {
+            if(!post) return res.status(422).send({error: `Post does not exist by that id ${id}`});
+            res.status(200).json(post);
+        })
+        .catch(err => res.status(500).send({error: `The post could not be modified. | ${err}`}));
+});
+
+router.delete('/:id', (req, res) => {
+    const { id } = req.params;
+    postDb.remove(id)
+        .then(rmvdPost => {
+            if(!rmvdPost) return res.status(404).send({error: `The post with the ID of ${id} does not exist.`});
+            res.status(200).json(rmvdPost);
+        })
+        .catch(err => res.status(500).send({error: `The post could not be removed. | ${err}`}))
+})
 
 module.exports = router;
