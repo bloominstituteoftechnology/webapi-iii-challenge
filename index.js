@@ -176,39 +176,10 @@ server.get('/api/posts/:id', (request, response) => {
         });
 });
 
-
-// const name = request.name;
-// const newUser = { name };
-
-// if (!newUser.name) {
-//     return response
-//         .status(400)
-//         .send({ Error: "Please enter a name for the user" });
-// } else if (newUser.name.length > 128) {
-//     return response
-//         .status(400)
-//         .send({ Error: "User name must be 128 or less characters" });
-// }
-
-// userDb
-//     .insert(newUser)
-//     .then(userID => {
-//         const { id } = userID;
-//         userDb
-//             .get(id)
-//             .then(user => {
-//                 return response
-//                     .status(201)
-//                     .json(user);
-//             });
-//     })
-
 server.post('/api/posts', (request, response) => {
     const userID = request.body.userID;
     const text = request.body.text;
-
     const newPost = { userID, text };
-    console.log(request.body);
 
     if (!newPost.userID || !newPost.text) {
         return response
@@ -234,34 +205,34 @@ server.post('/api/posts', (request, response) => {
         });
 });
 
-// server.put('/api/posts/:id', (request, response) => {
-//     const id = request.params.id;
-//     const userID = request.userID;
-//     const text = request.text;
-//     const updatedPost = { userID, text };
+server.put('/api/posts/:id', (request, response) => {
+    const id = request.params.id;
+    const text = request.body.text;
+    const updatedPost = { text };
 
-//     if (!id) {
-//         return response
-//             .status(404)
-//             .send({ Error: `Post with the following ID does not exist: ${id}` });
-//     } else if (!updatedPost.userID || !updatedPost.text) {
-//         return response
-//             .status(400)
-//             .send({ Error: "Please enter a name for the user" });
-//     }
+    if (!id) {
+        return response
+            .status(404)
+            .send({ Error: `Post with the following ID does not exist: ${id}` });
+    } else if (!updatedPost.text) {
+        return response
+            .status(400)
+            .send({ Error: "Please enter text for the post" });
+    }
 
-//     postDb.updatePost(id, updatedPost)
-//         .then(post => {
-//             return response
-//                 .status(200)
-//                 .json(post);
-//         })
-//         .catch(() => {
-//             return response
-//                 .status(500)
-//                 .json({ Error: "The user info could not be modified" })
-//         });
-// });
+    postDb
+        .update(id, updatedPost)
+        .then(post => {
+            return response
+                .status(200)
+                .json(post);
+        })
+        .catch(() => {
+            return response
+                .status(500)
+                .json({ Error: "The post info could not be modified" })
+        });
+});
 
 server.delete('/api/posts/:id', (request, response) => {
     const id = request.params.id;
