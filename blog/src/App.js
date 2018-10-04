@@ -8,6 +8,7 @@ import PostForm from './components/PostForm';
 import PostDetails from './components/PostDetails';
 import PostEdit from './components/PostEdit';
 import UsersList from './components/UsersList';
+import UserDetails from './components/UserDetails';
 import {Switch, Route, Link, withRouter} from 'react-router-dom';
 
 
@@ -40,18 +41,21 @@ class App extends Component {
             </div>
           )
         }
-        
         } />
 
-        <Route exact path = '/posts/:id' render = {(props) =>
-           <PostDetails/>
-        
+        <Route exact path = '/posts/:id' render = {(props) => {
+          return <PostDetails />
+        }
         } />
 
-        <Route exact path = '/posts/edit/:id' render = {(props) => 
-
-           <PostEdit  />
+        <Route exact path = '/posts/edit/:id' render = {(props) => {
+          return  <PostEdit  />
+        }
         } />
+
+        <Route exact path = '/users/:id' render = {(props) => {
+          return <UserDetails />
+        }} />
 
         </Switch>
         

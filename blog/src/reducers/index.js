@@ -1,4 +1,8 @@
-import {FETCHING, FETCHED_POSTS, FETCHED_USERS, POSTING, POSTED_POST, POSTED_USER, FETCHING_SINGLE, FETCHED_SINGLE, EDITING, EDITED, DELETING, DELETED, ERROR} from '../actions/index';
+import {FETCHING_USERS, FETCHED_USERS, FETCHING_SINGLE_USER, FETCHED_SINGLE_USER, POSTING_USER, POSTED_USER, FETCHING_USER_POSTS, FETCHED_USER_POSTS} from '../actions/index';
+
+import {FETCHING_POSTS, FETCHED_POSTS, POSTING_POST, POSTED_POST, FETCHING_SINGLE_POST, FETCHED_SINGLE_POST} from '../actions/index';
+
+import {DELETING, DELETED, EDITING, EDITED, ERROR} from '../actions/index';
 
 const initialState = {
     fetching: false,
@@ -16,12 +20,13 @@ const initialState = {
     users: [],
     currentPost: {},
     currentUser: {},
+    userPosts: [],
 }
 
 export const rootReducer = (state = initialState, action) => {
     switch(action.type){
         // action reducers go here
-        case FETCHING:
+        case FETCHING_POSTS:
             return Object.assign({}, state, {
                 fetching: true
             })
@@ -42,7 +47,7 @@ export const rootReducer = (state = initialState, action) => {
                 currentUser: {}
             })
 
-        case POSTING:
+        case POSTING_POST:
             return Object.assign({}, state, {
                 posting: true
             })
@@ -53,12 +58,12 @@ export const rootReducer = (state = initialState, action) => {
                 posted: true
             })
         
-        case FETCHING_SINGLE:
+        case FETCHING_SINGLE_POST:
             return Object.assign({}, state, {
                 fetching_single: true
             })
 
-        case FETCHED_SINGLE:
+        case FETCHED_SINGLE_POST:
             return Object.assign({}, state, {
                 fetching_single: false,
                 fetched_single: true,
@@ -91,6 +96,30 @@ export const rootReducer = (state = initialState, action) => {
             return Object.assign({}, state, {
                 posting: false,
                 posted: true
+            })
+
+        case FETCHING_USER_POSTS:  
+            return Object.assign({}, state, {
+                fetching: true
+            })
+        
+        case FETCHED_USER_POSTS:
+            return Object.assign({}, state, {
+                fetching: false,
+                fetched: true,
+                userPosts: action.payload,
+            })
+
+        case FETCHING_SINGLE_USER:
+            return Object.assign({}, state, {
+                fetching: true
+            })
+
+        case FETCHED_SINGLE_USER:
+            return Object.assign({}, state, {
+                fetching: false,
+                fetched: true,
+                currentUser: action.payload
             })
 
         default:
