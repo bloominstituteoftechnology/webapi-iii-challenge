@@ -65,7 +65,7 @@ server.post("/api/users", allCaps, (req, res) => {
   userDb
     .insert(newUser)
     .then(user => {
-      res.status(201).json({ message: `User was added successfully!` });
+      res.status(201).json({ user, message: `User was added successfully!` });
     })
     .catch(err => {
       res.status(500).json({
@@ -85,7 +85,9 @@ server.delete("/api/users/:id", (req, res) => {
           message: "The user with the specified ID does not exist."
         });
       } else {
-        res.status(200).json({ message: "The user was deleted successfully!" });
+        res
+          .status(200)
+          .json({ user, message: "The user was deleted successfully!" });
       }
     })
     .catch(err =>
@@ -107,7 +109,9 @@ server.put("/api/users/:id", allCaps, (req, res) => {
           message: "The user with the specified ID does not exist."
         });
       } else {
-        res.status(200).json({ message: "The user was successfully updated!" });
+        res
+          .status(200)
+          .json({ user, message: "The user was successfully updated!" });
       }
     })
     .catch(err =>
