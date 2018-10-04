@@ -110,13 +110,13 @@ export default class App extends Component {
 
 				<Route exact path = '/' render = { props => <UserList history = { props.history } users = { users } handleUserPosts = { this.handleUserPosts } handleDeleteUser = { this.handleDeleteUser } />} />
 
-				<Route path = '/users/:id' render = { props => <UserPosts name = { users.find(user => {return user.id === Number(props.match.params.id)}).name } id = { props.match.params.id } /> } />
+				<Route path = '/users/:id' render = { props => <UserPosts history = { props.history } name = { users.find(user => {return user.id === Number(props.match.params.id)}).name } id = { props.match.params.id } /> } />
 
 				<Route exact path = '/create' render = { props => <CreateUser history = { props.history } handleNewUsers = { this.handleNewUsers } /> } />
 
 				<Route path = '/edit/:id' render = { props => <EditUser history = { props.history } handleNewUsers = { this.handleNewUsers } id = { props.match.params.id } /> } />
 
-				<Route path = '/create/:id' render = { props => <CreatePost id = { props.match.params.id } /> } />
+				<Route path = '/create/:id' render = { props => <CreatePost history = { props.history } id = { props.match.params.id } /> } />
 			</AppDiv>
 		);
 	}

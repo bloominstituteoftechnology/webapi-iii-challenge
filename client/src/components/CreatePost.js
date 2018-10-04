@@ -12,7 +12,10 @@ export default class CreatePost extends Component {
 		e.preventDefault();
 		const newPost = { text: this.state.text };
 
-		// axios.put();
+		const URL = 'http://localhost:5000';
+		axios.post(`${ URL }/api/posts/${ this.props.id }`, newPost)
+			.then(posts => this.props.history.push(`/users/${ this.props.id }`))
+			.catch(err => console.log(err));
 	};
 
 	render() {

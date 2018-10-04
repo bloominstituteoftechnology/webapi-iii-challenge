@@ -64,10 +64,13 @@ export default class UserPosts extends Component {
 
 	render() {
 		const { posts } = this.state;
-		const { name } = this.props;
+		const { name, history, id } = this.props;
 		return(
 			<UserPostsDiv>
 				<h2>{ name }'s Posts</h2>
+
+				<button onClick = { () => history.push(`/create/${ id }`) }>New Post</button>
+
 				{
 					posts.length ?
 					posts.map((post, i) => <UserPost key = { i } post = { post } />)

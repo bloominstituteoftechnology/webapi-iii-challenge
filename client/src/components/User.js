@@ -46,7 +46,6 @@ const User = props => {
 				<button onClick = { () => history.push(`/edit/${ user.id }`) }>Edit User</button>
 				<button onClick = { e => handleUserPosts(e, user.id) }>User Posts</button>
 				<button onClick = { e => handleDeleteUser(e, user.id) }>Delete User</button>
-				<button onClick = { () => history.push(`/create/${ user.id }`) }>New Post</button>
 			</div>
 		</UserDiv>
 	);
