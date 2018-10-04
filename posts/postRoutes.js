@@ -30,20 +30,19 @@ router.post('/', (req, res) => {
     const newPost = { userId, text };
     userDb.get(userId)
         .then(user => {
-            if(!user) return res.status(422).send({error: 'User does not exist'})    
+            if(!user) return res.status(422).send({error: 'User does not exist'})
+            postDb.insert(newPost)
+                .then(postId => {
+                    const { id } = userId;
+                    postDb.get(postId.id)
+                        .then(post => {
+                            if(!post) return res.status(422).send({error: `Post does not exist by that userId ${userId}`});
+
+                            res.status(201).json(post);
+                        });
+                })
+                .catch(err => res.status(500).send({error: `There was an error while saving the post to the database. | ${err}`}));
         });
-
-    postDb.insert(newPost)
-        .then(postId => {
-            const { id } = userId;
-            postDb.get(postId.id)
-                .then(post => {
-                    if(!post) return res.status(422).send({error: `Post does not exist by that userId ${userId}`});
-
-                    res.status(201).json(post);
-                });
-        })
-        .catch(err => res.status(500).send({error: `There was an error while saving the post to the database. | ${err}`}));
 });
 
 router.put('/:id', (req, res) => {
