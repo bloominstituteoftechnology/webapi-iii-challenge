@@ -119,10 +119,67 @@ server.put('/users/:id', capitalize, (req, res) => {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*                           POSTS                          */
 
 
 
+
+
+
+
+
+
+
+// ===================================== GET ==================================
 /*
           I gather each and every post
 
@@ -152,6 +209,24 @@ server.get('/users/posts', (req, res) => {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ===================================== GET ==================================
+
+
+
 /*
           I gather the speciic post (by Id)
   
@@ -176,6 +251,26 @@ server.get('/users/posts/:id', (req, res) => {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ===================================== POST ==================================
+
 server.post('/users/posts', (req, res) => {
   const { userId, text }  = req.body; 
   // acts as the post itself that we can pass in
@@ -194,6 +289,26 @@ server.post('/users/posts', (req, res) => {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ===================================== DELETE ==================================
+
+
 server.delete('/users/posts/:id', (req, res) => {
   const { id } = req.params;
 
@@ -208,6 +323,27 @@ server.delete('/users/posts/:id', (req, res) => {
     .catch(err => console.log(err));
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ===================================== PUT ==================================
 
 server.put('/users/posts/:id', (req, res) => {
   const { id } = req.params;
