@@ -133,67 +133,119 @@ server.delete('/api/users/:id', (request, response) => {
 });
 
 // POST API
-// server.get('/api/posts', (request, response) => {
-//     db.findPost()
-//         .then(posts => {
-//             response.status(200).json(posts);
-//         })
-//         .catch(error => response.send(error));
-// });
+server.get('/api/posts', (request, response) => {
+    db.findPost()
+        .then(posts => {
+            return response
+                .status(200)
+                .json(posts);
+        })
+        .catch(() => {
+            return response
+                .status(500)
+                .json({ Error: "Could not find list of posts." })
+        });
+});
 
-// server.get('/api/posts/:id', (request, response) => {
-//     const id = request.params.id;
+server.get('/api/posts/:id', (request, response) => {
+    const id = request.params.id;
 
-//     db.findPostById(id)
-//         .then(post => {
-//             response.status(200).json(post);
-//         })
-//         .catch(error => response.send(error))
-// });
+    db.findPostById(id)
+        .then(post => {
+            if (!post) {
+                return response
+                    .status(404)
+                    .json({ Error: "Could not find post." })
+            } else return response
+                .status(200)
+                .json(post);
+        })
+        .catch(() => {
+            return response
+                .status(500)
+                .json({ Error: "Post info could not be retrieved." })
+        });
+});
 
-// THIS NEEDS TO BE UPDATED WITH SCHEMA
 // server.post('/api/posts', (request, response) => {
-//     const { userID, text } = request.body;
-//     const newPost = { userID, text };
+//     const postID = request.postID;
+//     const text = request.text;
+//     const newPost = { postID, text };
+
+//     if (!newPost.postID || !newPost.text) {
+//         return response
+//             .status(400)
+//             .send({ Error: "Missing postID or text for the post" });
+//     } else if (newPost.postID !== request.postID) {
+//         return response
+//             .status(400)
+//             .send({ Error: "This postID does not match the user ID" });
+//     }
 
 //     db.insertPost(newPost)
 //         .then(postID => {
-//             const { id } = postID;
-//             db.findPostById(id)
+//             const { postID } = postID;
+//             db.findPostById(postID)
 //                 .then(post => {
-//                     if (!post) {
-//                         return response
-//                             .status(422)
-//                             .send({ Error: `Post does not exist at ID ${id}` });
-//                     } else if (!newPost.userID || !newPost.text) {
-//                         return response
-//                             .status(422)
-//                             .send({ Error: `Post missing userID or text` });
-//                     }
-//                     response.status(201).json(post);
+//                     return response
+//                         .status(201)
+//                         .json(post);
 //                 });
 //         })
-//         .catch(error => response.send(error));
-// })
+//         .catch(() => {
+//             return response
+//                 .status(500)
+//                 .json({ Error: "There was an error while saving the user" })
+//         });
+// });
 
 // server.put('/api/posts/:id', (request, response) => {
 //     const id = request.params.id;
-//     const { userID, text } = request.body;
-//     const updatedPost = { userID, text };
+//     const postID = request.postID;
+//     const text = request.text;
+//     const updatedPost = { postID, text };
+
+//     if (!id) {
+//         return response
+//             .status(404)
+//             .send({ Error: `Post with the following ID does not exist: ${id}` });
+//     } else if (!updatedPost.postID || !updatedPost.text) {
+//         return response
+//             .status(400)
+//             .send({ Error: "Please enter a name for the user" });
+//     }
 
 //     db.updatePost(id, updatedPost)
 //         .then(post => {
-//             response.status(200).json(post);
+//             return response
+//                 .status(200)
+//                 .json(post);
 //         })
-//         .catch(error => response.send(error));
-// })
-
-// server.delete('/api/posts/:id', (request, response) => {
-//     const id = request.params.id;
-
-//     db.removePost(id)
-//         .then(removedPost => {
-//             response.status(200).json(removedPost);
-//         })
-//         .catch(error => response.send(error));
+//         .catch(() => {
+//             return response
+//                 .status(500)
+//                 .json({ Error: "The user info could not be modified" })
+//         });
 // });
+
+server.delete('/api/posts/:id', (request, response) => {
+    const id = request.params.id;
+
+    if (!id) {
+        return response
+            .status(404)
+            .json({ Error: `There is no post with the following ID: ${id}` })
+    }
+
+    db.removePost(id)
+        .then(removedUser => {
+            return response
+                .status(200)
+                .json(removedUser);
+        })
+        .catch(() => {
+            return response
+                .status(500)
+                .json({ Error: "The user could not be removed" })
+        });
+});
