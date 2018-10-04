@@ -23,6 +23,10 @@ module.exports = {
 
     return query;
   },
+  getPostsForUser: function(userid){
+    return db('posts ')
+    .where('userId', userid);
+  },
   getPostTags: function(postId) {
     return db('tags as t')
       .join('posttags as pt', 't.id', 'pt.tagId')
