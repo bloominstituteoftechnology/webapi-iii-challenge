@@ -7,6 +7,7 @@ const logger = require("morgan");
 // add data helpers
 // users data
 const users = require("./data/helpers/userDb");
+const posts = require("./data/helpers/postDb");
 
 // instantiate server
 const server = express();
@@ -54,6 +55,23 @@ server.get("/api/users/:id", async (req, res) => {
     res.status(200).json(user);
   } catch (error) {
     res.status(500).json({ error: "unable to retrieve user" });
+  }
+});
+
+// get a users posts based upon user id (DAY 2)
+server.get("/api/users/:id/posts", async (req, res) => {
+  try {
+    const posts = await users.getUserPosts(req.params.id);
+    res.status(200).json(posts);
+  } catch (error) {
+    res
+      .status(500)
+      .json({
+        message: `user at id of ${
+          req.params.id
+        }'s posts could not be retrieved.`,
+        error: error.message
+      });
   }
 });
 
@@ -120,6 +138,8 @@ server.delete("/api/users/:id", async (req, res) => {
       .json({ error: "error while deleting the user from the database" });
   }
 });
+
+// day 2 posts
 
 // listen to port 8000 and give a startup message from the server
 server.listen(8000, () => console.log("API listening on port 8000"));
