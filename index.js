@@ -7,8 +7,7 @@ server.use(cors());
 server.use(express.json());
 
 const toCaps = (request, response, next) => {
-    console.log(request.params);
-    request.name = request.params.name.toUpperCase();
+    request.name = request.body.name.toUpperCase();
     next();
 };
 
@@ -28,7 +27,7 @@ server.get('/api/users', (request, response) => {
         .catch(() => {
             return response
                 .status(500)
-                .json({ Error: "Could not find list of users."})
+                .json({ Error: "Could not find list of users." })
         });
 });
 
@@ -37,44 +36,46 @@ server.get('/api/users/:id', (request, response) => {
 
     db.findUserById(id)
         .then(user => {
-            if(!user) {
+            if (!user) {
                 return response
                     .status(404)
-                    .json({ Error: "Could not find user."})
+                    .json({ Error: "Could not find user." })
             } else return response
-                    .status(200)
-                    .json(user);
+                .status(200)
+                .json(user);
         })
         .catch(() => {
             return response
                 .status(500)
-                .json({ Error: "User info could not be retrieved."})
+                .json({ Error: "User info could not be retrieved." })
         });
 });
 
 server.post('/api/users', toCaps, (request, response) => {
-    const { name } = request.body;
+    const name = request.name;
     const newUser = { name };
+
+    if (!newUser.name) {
+        return response
+            .status(400)
+            .send({ Error: "Please enter a name for the user" });
+    } else if (newUser.name.length >= 128) {
+        return response
+            .status(400)
+            .send({ Error: "User name must be 128 or less characters" });
+    }
 
     db.insertUser(newUser)
         .then(userID => {
             const { id } = userID;
             db.findUserById(id)
                 .then(user => {
-                    if (!newUser.name) {
-                        return response
-                            .status(400)
-                            .send({ Error: "Please enter a name for the user" });
-                    } else if (newUser.name.length >= 128) {
-                        return response
-                            .status(400)
-                            .send({ Error: "User name must be 128 or less characters" });
-                    } else return response
-                            .status(201)
-                            .json(user);
-            });
+                    return response
+                        .status(201)
+                        .json(user);
+                });
         })
-        .catch(() => { 
+        .catch(() => {
             return response
                 .status(500)
                 .json({ Error: "There was an error while saving the user" })
@@ -83,48 +84,52 @@ server.post('/api/users', toCaps, (request, response) => {
 
 server.put('/api/users/:id', toCaps, (request, response) => {
     const id = request.params.id;
-    const { name } = request.body;
+    const name = request.name;
     const updatedUser = { name };
+
+    if (!id) {
+        return response
+            .status(404)
+            .send({ Error: `User with the following ID does not exist: ${id}` });
+    } else if (!updatedUser.name) {
+        return response
+            .status(400)
+            .send({ Error: "Please enter a name for the user" });
+    }
 
     db.updateUser(id, updatedUser)
         .then(user => {
-            if(!id) {
-                return response
-                    .status(404)
-                    .send({ Error: `User with the following ID does not exist: ${id}` });
-            } else if(!updatedUser.name) {
-                return response
-                    .status(400)
-                    .send({ Error: "Please enter a name for the user" });
-            } else return response
-                    .status(200)
-                    .json(user);
+            return response
+                .status(200)
+                .json(user);
         })
         .catch(() => {
             return response
                 .status(500)
-                .json({ Error: "The user info could not be modified"})
+                .json({ Error: "The user info could not be modified" })
         });
 });
 
 server.delete('/api/users/:id', (request, response) => {
     const id = request.params.id;
 
+    if (!id) {
+        return response
+            .status(404)
+            .json({ Error: `There is no user with the following ID: ${id}` })
+    }
+
     db.removeUser(id)
         .then(removedUser => {
-            if(!id) {
-                return response
-                    .status(404)
-                    .json({ Error: `There is no user with the following ID: ${id}` })
-            } else return response
-                    .status(200)
-                    .json(removedUser);
+            return response
+                .status(200)
+                .json(removedUser);
         })
-        .catch(() => { 
+        .catch(() => {
             return response
                 .status(500)
-                .json({ Error: "The user could not be removed"})
-    });
+                .json({ Error: "The user could not be removed" })
+        });
 });
 
 // POST API
