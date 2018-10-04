@@ -42,9 +42,12 @@ const unableToFindPostsForUser500 = { errorMessage: "Unable to retrieve posts fo
 // POST Errors
 const missingPostData = { errorMessage: "Please provide some text for the post." }
 const postNotFound = { errorMessage: "The post with the specified ID does not exist." }
+const noPostsUpdated = { errorMessage: "No posts were updated." }
+const noPostsDeleted = { errorMessage: "No posts were deleted." }
 const unableToFindSinglePost500 = { errorMessage: "The post information could not be retrieved." }
 const unableToFindPosts500 = { errorMessage: "Unable to retrieve posts." }
 const unableToCreatePost500 = { errorMessage: "Unable to create post." }
+const unableToUpdatePost500 = { errorMessage: "Unable to update post." }
 const unableToDeletePost500 = { errorMessage: "Unable to delete post." }
 
 
@@ -179,7 +182,7 @@ server.get('/users/:userId/posts', (request, response) => {
 //// ==========- POST DATABASE CRUD ENDPOINTS -==========
 
 /// #####=- READ All Posts Endpoint -=#####
-server.get('/users/posts', (request, response) => {
+server.get('/posts', (request, response) => {
 
     // Database Promise Method
     postDb.get()
@@ -188,7 +191,7 @@ server.get('/users/posts', (request, response) => {
 });
 
 /// #####=- READ Individual Post Endpoint -=#####
-server.get('/users/posts/:postId', (request, response) => {
+server.get('/posts/:postId', (request, response) => {
 
     const postId = request.params.postId;
 
@@ -206,9 +209,12 @@ server.get('/users/posts/:postId', (request, response) => {
 /// #####=- CREATE Individual Post Endpoint -=#####
 server.post('/users/:userId/posts', (request, response) => {
 
-    const { text } = request.body;
+    // Request Validation
     const userId = request.params.userId;
-    let validId = true;
+
+    // Destructuring Request Body For Validation
+    const { text } = request.body;
+
         
     if ( !text ) {
         response.status(400).send(missingPostData);
@@ -232,6 +238,48 @@ server.post('/users/:userId/posts', (request, response) => {
             .catch(() => response.status(500).send(unableToFindSinglePost500))
         })
         .catch(() => response.status(500).send(unableToCreatePost500));
+});
+
+/// #####=- UPDATE Individual Post Endpoint -=#####
+server.put('/posts/:postId', (request, response) => {
+
+    // Request Validation
+    const postId = request.params.postId;
+
+    // Destructuring Request Body For Validation
+    const { userId, text } = request.body;
+    const user = {};
+
+    if ( !text || !userId ) {
+        response.status(400).send(missingPostData);
+    }
+    
+    if ( text ) {
+        user.text = text;
+    }
+
+    if ( userId ) {
+        user.userId = userId;
+    }
+
+    // Database Promise Method
+    postDb.update(postId, {...user})
+    .then( didUpdate => {
+
+        if (!didUpdate) {
+            response.status(400).send(noPostsUpdated)
+        }
+
+        postDb.get(postId)
+            .then(post => {
+                if (!post) {
+                    response.status(400).send(postNotFound)
+                }
+                response.status(200).send(post)
+            })
+            .catch(() => response.status(500).send(unableToFindSinglePost500))
+    })
+    .catch(() => response.status(500).send(unableToUpdatePost500))
 });
 
 // #####=- Server Port Address and Listen Method -=#####
