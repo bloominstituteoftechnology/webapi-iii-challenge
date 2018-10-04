@@ -32,7 +32,7 @@ userRouter.get("/:id/posts", (req, res) => {
   userdb.getUserPosts(id)
     .then(posts => {
       if(posts.length < 1) {
-        res.status(200).send(`User at id: ${id} does not have any posts.`)
+        res.status(200).send([`User at id: ${id} does not have any posts.`])
         return;
       }
       res.status(200).send(posts);
