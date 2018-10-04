@@ -10,7 +10,19 @@ const userDb = require('./data/helpers/userDb');
 const server = express();
 
 //middlewares
+const userNameCheck = (req, res, next) => {
+  const name = req.name;
+  if((!name) || (name.length > 128)) {
+    return res.status(404).json({ Error: 'User is required and can not be longer than 128 characters.'})
+  } else {
+    next();
+  }
+}
 
+const upperCase = (req, res, next) => {
+  req.name = req.body.name.toUpperCase();
+  next();
+}
 
 //server code
 server.use(express.json());
@@ -31,22 +43,24 @@ server.get('/api/users', (req, res) => {
     .catch(err => res.json({Error: 'Error getting users.'}));
 })
 
-server.post('/api/users', (req, res) => {
- //console.log(req.body); 
-  const { name } = req.body;
-  const newUser = { name }
+server.post('/api/users', upperCase, userNameCheck, (req, res) => {
+  console.log(req.name);
+  const name  = req.name;
+  console.log(name)
+  const newUser = { name };
   userDb.insert(newUser)
-    .then(user => {
+    .then(userId => {
       console.log('\n--- New user added ---\n, user');
-      res.status(201).json(user);
+      userDb.get(userId.id)
+        .then(user => {res.json(user)})
     })
     .catch(err => res.json({ Error: 'Error adding a new user.'}));
 })
 
-server.put('/api/users/:id', (req, res) => {
+server.put('/api/users/:id', upperCase, userNameCheck, (req, res) => {
   const { id } = req.params;
-  const { name } = req.body;
-  const editUser = { name }
+  const name = req.name;
+  const editUser = { name };
   userDb.update(id, editUser)
     .then(user => {
       console.log('\n--- User edited ---\n, user');
