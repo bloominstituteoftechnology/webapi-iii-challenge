@@ -161,5 +161,21 @@ server.put('/api/posts/:id', (req, res)=> {
     })
 });
 
+//DELETE an existing post
+server.delete('/api/posts/:id', (req, res)=> {
+    console.log(req.params);
+    const {id} = req.params;
+    postDb.remove(id)
+        .then(post=> {
+            if (!post) {
+                res.status(404).json({error: "This post does not exist"});
+            }
+            res.status(200).json({post});
+        })
+        .catch(err=> {
+            res.status(500).json({error: "This information could not be deleted from the database"});
+        })
+});
+
 //Listener
 server.listen(port, ()=> console.log(`API running on port ${port}`));
