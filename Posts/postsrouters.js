@@ -130,6 +130,31 @@ router.delete('/:id', (req, res) => {
     // const postToDelete;
     // postsDb.get(req.params.id).then((post) => if(post !== undefined) postToDelete = post).catch((err) => error stuff);
     // Delete post as normal
+    let postToDelete = null;
+    postsDb.get(req.params.id)
+        .then((post) => {
+            if(post !== undefined) {
+                postToDelete = {...post};
+                postsDb.remove(req.params.id)
+                    .then((deleteCount) => {
+                        if(deleteCount > 0) {
+                            res.status(200).json(postToDelete);
+                        } else {
+                            res.status(500).json({"error": "We received a valid post ID from you, but the database didn't delete it for some reason."});
+                        }
+                    })
+                    .catch((err) => {
+                        console.error('postDb.js/remove(id) Access Error:\n', err);
+                        res.status(500).json(postsDbAccessError);
+                    });
+            } else {
+                res.status(404).json({"error": `A post with ID ${req.params.id} doesn't exist.`});
+            }
+        })
+        .catch((err) => {
+            console.error('postDb.js/get(id) Access Error:\n', err);
+            res.status(500).json(postsDbAccessError);
+        });
 });
 
 module.exports = router;
