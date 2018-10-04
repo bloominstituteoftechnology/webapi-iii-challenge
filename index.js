@@ -26,6 +26,7 @@ const upperCaps = (req, res, next) => {
     next();
 };
 
+// ----- USERS -----
 //ROUTES - GET Enpoint
 server.get('/api/users', (req, res) => {
     userDB
@@ -52,8 +53,8 @@ server.get('/api/users', (req, res) => {
 
   //ROUTES - POST Endpoint
   server.post('/api/users', (req, res) => {
-      const {name} = req.name;
-      const newUser = {name};
+      const { name } = req.body;
+      const newUser = { name };
     //   if (!name) {
     //       res.status(400).json({ error: 'No Name Provided' });
     //   }else{
@@ -90,10 +91,10 @@ server.get('/api/users', (req, res) => {
   });
   
   //ROUTES - UPDATE Endpoint
-  server.put('api/users/:id', (req, res) => {
-      const {id} = req.params
-      const {name} = req.name
-      const existingUser = {name}
+  server.put('/api/users/:id', (req, res) => {
+      const { id } = req.params
+      const { name } = req.body
+      const existingUser = { name }
       userDB
         .update(id, existingUser)
         .then(updatedUser => {
@@ -101,6 +102,7 @@ server.get('/api/users', (req, res) => {
         })
         .catch(err => {
             res.status(500).json({err: `Could Not Update User ${existingUser}`})
+            return; 
         })
   });
 
