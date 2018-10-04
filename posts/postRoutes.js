@@ -28,9 +28,12 @@ router.post('/', (req, res) => {
     if ( !userId || !text ) return res.status(400).send({error: 'Please provide a userId and text to the post.'});
 
     const newPost = { userId, text };
+    // Check if user exists
     userDb.get(userId)
         .then(user => {
             if(!user) return res.status(422).send({error: 'User does not exist'})
+
+            // If user exists, add the new post
             postDb.insert(newPost)
                 .then(postId => {
                     const { id } = userId;
