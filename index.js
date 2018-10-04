@@ -64,14 +64,10 @@ server.get("/api/users/:id/posts", async (req, res) => {
     const posts = await users.getUserPosts(req.params.id);
     res.status(200).json(posts);
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        message: `user at id of ${
-          req.params.id
-        }'s posts could not be retrieved.`,
-        error: error.message
-      });
+    res.status(500).json({
+      message: `user at id of ${req.params.id}'s posts could not be retrieved.`,
+      error: error.message
+    });
   }
 });
 
@@ -140,6 +136,16 @@ server.delete("/api/users/:id", async (req, res) => {
 });
 
 // day 2 posts
+
+// get all posts
+server.get("/api/posts", async (req, res) => {
+  try {
+    const allPosts = await posts.get();
+    res.status(200).json(allPosts);
+  } catch (error) {
+    res.status(500).json({ message: "posts could not be retrieved." });
+  }
+});
 
 // listen to port 8000 and give a startup message from the server
 server.listen(8000, () => console.log("API listening on port 8000"));
