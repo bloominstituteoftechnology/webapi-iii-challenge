@@ -1,0 +1,20 @@
+{
+  "name": "Node-Blog",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/ThomasKisner/Node-Blog.git",
+  "author": "Your Name <tjkisner@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "helmet": "^3.13.0",
+    "knex": "^0.15.2",
+    "morgan": "^1.9.1",
+    "nodemon": "^1.18.4",
+    "sqlite3": "^4.0.2"
+  }
+}
