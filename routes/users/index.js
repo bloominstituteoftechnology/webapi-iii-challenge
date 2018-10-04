@@ -47,7 +47,7 @@ router.post('/', yell, (req, res) => {
 	userDb.insert(newUser)
 		.then(id => {
 			return userDb.get()
-				.then(users => res.status(200).json(users))
+				.then(users => res.status(201).json(users))
 				.catch(err => res.status(500).json({ error: 'The users information could not be retrieved.' }));
 		})
 		.catch(err => res.status(500).json({ error: 'There was an error while saving the user to the database.' }));
