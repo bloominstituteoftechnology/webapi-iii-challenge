@@ -55,15 +55,19 @@ server.get('/api/users/:id/userPosts', (req, res) => {
 
 // Create a new user
 server.post('/api/users/create', (req, res) => {
-    const {name} = req.body;
+    const name = req.name;
     const newUser = {name};
     userDb
         .insert(newUser)
-        .then(newUser => {
-            res.status(200).json(newUser);
+        .then(userId => {
+            const {id} = userId;
+            res.status(200).json(user);
+            dbUsers.get(id)
+                .then(userName => res.status(200).json(userName))
+                .catch(err => console.log(err));
         })
         .catch(err => {
-            res.status(500).json({errorMessage: `An error occured trying to get a user's posts`})
+            res.status(500).json({errorMessage: `An error occured trying to create a new user`})
         })
 })
 
