@@ -10,10 +10,16 @@ const port = 7000
 const server = express();
 
 server.use(express.json())
-server.use(cors(), helmet(), morgan('combined'))
 
+
+//------------------------------------------------------MIDDLEWARE
+const upperCase = (req,res,next) => {
+    req.body.text = req.body.text[0].toUpperCase() +  req.body.text.slice(1);
+    next();
+}
+server.use(cors(), helmet(), morgan('combined'))
 //------------------------------------------------------GET ROUTE HANDLERS
-server.get('/users', (req,res) => {
+server.get('/users',(req,res) => {
     userDb.get().then(users => {
         res.json(users)
     })
@@ -39,7 +45,7 @@ server.get(`/users/posts/:userId`, (req,res) =>{
     })
 })
 //--------------------------------------------------------------POST ROUTE HANDLERS 
-server.post("/users/posts", (req,res) => {
+server.post("/users/posts", upperCase, (req,res) => {
    const {text, userId} = req.body
    postDb.insert({text, userId})
    .then(() =>{
