@@ -6,7 +6,7 @@
   "author": "mparedes003 <michelle.g.paredes@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon index.js"
+    "start": "nodemon index.js"
   },
   "dependencies": {
     "cors": "^2.8.4",

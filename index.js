@@ -50,8 +50,10 @@ server.post('/api/users', allCaps, (req, res) => {
   if(!req.body.name) {
    return res.status(400).send({ errorMessage: "Please provide name for user." });
   }
-  if(req.body.name) {
-    const { name } = req.body;
+  else if(req.body.name.length > 128) {
+    return res.status(400).send({error: " User name must be less than 128 characters"})
+  }
+  const { name } = req.body;
   const newUser = { name };
   users.insert(newUser)
         .then(newUser => {
@@ -60,7 +62,7 @@ server.post('/api/users', allCaps, (req, res) => {
       })
     .catch(err => res.status(500).send({ error: "There was an error while saving the user to the database" }));
 
-  }});
+  });
 
 //Add DELETE ROUTE to delete a user
 server.delete("/api/users/:id", async (req, res) => {
