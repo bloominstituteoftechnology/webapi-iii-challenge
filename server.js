@@ -20,9 +20,6 @@ const cruiseControl = (req, res, next) => {
 
 server.use(logger('tiny'), cors(), helmet(), express.json());
 
-// console logging
-// consoleLarge()
-
 // ROUTING
 // get users (for testing)
 server.get('/api/users', (req, res) => {
@@ -71,6 +68,14 @@ server.post('/api/users', cruiseControl, (req, res) => {
 			errorMessage: 'Please provide name for the user.'
 		});
 	}
+
+	if (req.body.name.length > 128) {
+		console.log(`\n=== USER NAME EXCEEDED 128 CHARACTER LIMIT ===\n\n`);
+		return res.status(400).json({
+			errorMessage: 'User name cannot exceed 128 characters.'
+		});
+	}
+
 	userDb
 		.insert(req.body)
 		.then(({ id }) => {
@@ -80,6 +85,12 @@ server.post('/api/users', cruiseControl, (req, res) => {
 			});
 		})
 		.catch(err => {
+			if (err.Error.SQLITE_CONSTRAINT['UNIQUE constraint failed']) {
+				console.log('\n=== ADD USER ABORTED: DUPLICATE NAME ===\n\n', err);
+				return res.status(500).json({
+					message: 'User with that name already exists.'
+				});
+			}
 			console.log('\n=== UH OH ===\n\n', err);
 			res.status(500).json({
 				error: 'There was an error while saving the user to the database'
@@ -119,6 +130,14 @@ server.put('/api/users/:id', cruiseControl, (req, res) => {
 			errorMessage: 'Please provide name for the user.'
 		});
 	}
+
+	if (req.body.name.length > 128) {
+		console.log(`\n=== USER NAME EXCEEDED 128 CHARACTER LIMIT ===\n\n`);
+		return res.status(400).json({
+			errorMessage: 'User name cannot exceed 128 characters.'
+		});
+	}
+
 	userDb
 		.update(req.params.id, req.body)
 		.then(updatedUser => {
