@@ -134,7 +134,7 @@ server.put('/users/:id', capitalize, (req, res) => {
       2. userId
 */
 
-server.get('/users/posts/', (req, res) => {    
+server.get('/users/posts', (req, res) => {    
 
   postDb.get()
     .then(allPosts => {      
@@ -190,6 +190,16 @@ server.post('/users/posts', (req, res) => {
     .then(response => {
       console.log('============ RESPONSE ============', response);
       res.json(response);
+    })
+    .catch(err => console.log(err));
+});
+
+server.delete('/users/posts/:id', (req, res) => {
+  const { id } = req.params;
+
+  postDb.remove(id)
+    .then(removedPost => {
+      res.status(200).json(removedPost)
     })
     .catch(err => console.log(err));
 });
