@@ -79,6 +79,7 @@ server.route('/posts')
     const { userId, text } = req.body;
     const newPost = { userId, text };
     if (!userId) return res.status(400).json({ errorMessage: "Please provide a user id." });
+    if (!text) return res.status(400).json({ errorMessage: "Please provide some text." });
     postDb.insert(newPost)
       .then(newPost => res.status(201).json(newPost))
       .catch(err => res.status(500).json({ error: "There was an error while saving the post to the database" }));
