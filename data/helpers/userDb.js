@@ -20,6 +20,10 @@ module.exports = {
       .insert(user)
       .then(ids => ({ id: ids[0] }));
   },
+  find: function (id) {
+    return db('users')
+      .where('id', id);
+  },
   update: function(id, user) {
     return db('users')
       .where('id', id)
