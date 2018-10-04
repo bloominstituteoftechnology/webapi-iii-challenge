@@ -194,6 +194,10 @@ server.post('/users/posts', (req, res) => {
     .catch(err => console.log(err));
 });
 
+
+
+
+
 server.delete('/users/posts/:id', (req, res) => {
   const { id } = req.params;
 
@@ -202,4 +206,19 @@ server.delete('/users/posts/:id', (req, res) => {
       res.status(200).json(removedPost)
     })
     .catch(err => console.log(err));
+});
+
+
+server.put('/users/posts/:id', (req, res) => {
+  const { id } = req.params;
+  const { text } = req.body;
+
+  postDb.update(id, { text })
+    .then(response => {
+      console.log('response ==================', response)
+      res.status(200).json(response);      
+    })
+    .catch(err => {
+      console.log('see below:');      
+    });
 });
