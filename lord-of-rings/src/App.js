@@ -1,25 +1,48 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { Route } from 'react-router-dom';
+import axios from 'axios';
+import Header from './Components/Header';
+import Characters from './Components/Characters';
+import Posts from './Components/Posts';
 
 class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+      users: [],
+      posts: []
+    }
+  }
+
+  componentDidMount() {
+    axios.get('http://localhost:9000/users')
+      .then(res => {
+        this.setState({
+          users: res.data
+        })
+      })
+      .catch(err => console.log(err));
+
+    axios.get('http://localhost:9000/posts')
+      .then(res => {
+        this.setState({
+          posts: res.data
+        })
+      })
+      .catch(err => console.log(err));
+  }
+  
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+      <div>
+        <Header />
+        <Route path='/characters' render={props => (
+          <Characters {...props} characters={this.state.users} />
+        )}/>
+        <Route path='/posts' render={props => (
+          <Posts {...props} posts={this.state.posts} />
+        )}/>
       </div>
     );
   }
