@@ -78,12 +78,15 @@ server.get('/api/users/:id', (req, res) => {
 // Get all posts from userID
 server.get('/api/users/:id/posts', (req, res) => {
     const {id} = req.params;
+    console.log(id);
     userdb.getUserPosts(parseInt(id))
-    .then(posts => {
-        if(!posts.length){
-            return res.status(404).json({message: `The user with ID ${id} does not exist.`})
+    .then(userPosts => {
+        console.log(userPosts);
+        if(userPosts.length === 0){
+            return res.status(404).json({message: `The user with ID ${id} has no posts.`})
+        } else {
+        return res.status(200).json(userPosts);
         }
-        return res.status(200).json(posts);
     })
     .catch(err => {
         console.log(err);
@@ -134,7 +137,7 @@ server.delete('/api/users/:id', makeNumber, (req, res) => {
     })
     .catch(err => {
         console.log(err);
-        res.status(500).json({message: `Error deleting user with ID ${id}`})
+        return res.status(500).json({message: `Error deleting user with ID ${id}`})
     })
 })
 
@@ -142,7 +145,7 @@ server.delete('/api/users/:id', makeNumber, (req, res) => {
 
 server.put('/api/users/:id', (req, res) => {
     const {id} = req.params;
-    const newName = req.body.name;
+    const newName = req.body;
 
     userdb.update(parseInt(id), newName)
     .then(user => {
@@ -173,107 +176,111 @@ server.put('/api/users/:id', (req, res) => {
 /*** POSTS METHODS ***/
 /*****************************************/
 
-// Posts GET
+// Get all posts
 
 server.get('/api/posts', (req, res) => {
-    postdb.get().then(posts => {
-        res.status(200).json(posts);
-    }).catch(err => {
-        res.status(500).json({message: "Error getting posts data."})
+    postdb.get()
+    .then(posts => {
+        return res.status(200).json(posts)
+    })
+    .catch(err => {
+        console.log(err);
+        return res.status(500).json({message: "Error getting posts data."})
     })
 })
 
+// Get single post
+
 server.get('/api/posts/:id', (req, res) => {
-    const id = req.params.id;
-    console.log(id);
+    const {id} = req.params;
     postdb.get(id)
     .then(post => {
-        // if(!post){
-        //     res.status(404).json({message: "The post with the specified ID does not exist."})
-        // }
-
-        console.log(post);
-        res.status(200).json(post)
+        if(!post){
+            return res.status(404).json({message: `Post with ID ${id} does not exist.`})
+        }
+        return res.status(200).json(post)
     })
     .catch(err => {
         console.log(err);   
-        res.status(500).json({message: "Failed to retrieve post."});
+        return res.status(500).json({message: "Failed to retrieve post."});
     })
 })
 
-
-// TODO: Posts POST method
+// Add new post
 server.post('/api/posts', (req, res) => {
     let newPost = {
         text: req.body.text,
         userID: req.body.userID
     }
 
-    console.log(newPost, "NEW POST")
-
-    if(!text || !userID){
-        res.status(400).json({message: "You must input text and a userID."})
+    if(!newPost.text || !newPost.userID){
+        return res.status(400).json({message: "You must input text and a userID."})
     }
 
     postdb.insert(newPost)
-    .then(post => {
-        res.status(200).json(post);
+    .then(id => {
+        const newPostID = id.id;
+        return postdb.get(newPostID)
+        .then(post => {
+            if(!post){
+                return res.status(404).json({message: `The post could not be found.`})
+            }
+            return res.status(201).json(`New post with ID ${newPostID} added successfully.`);
+        })
+        .catch(err => {
+            console.log(err);
+            return res.status(500).json({message: "Error adding new post."})
     })
     .catch(err => {
         console.log(err);
-        res.status(500).json({message: "Error adding new user."})
-    } )
+        return res.status(500).json({message: "Error adding new post."})
+    })
+    })
 })
 
-
-// TODO: Server DELETE method
+// Delete post
 server.delete('/api/posts/:id', (req, res) => {
     let id = req.params.id;
-    console.log(id);
-    
-    postdb.remove(id)
-    .then(users => {
-        res.status(200).json({users, message: "Deleted."})
+
+    postdb.remove(parseInt(id))
+    .then(reply => {
+        if(!reply){
+            return res.status(404).json({message: `The post with ID ${id} does not exist.`})
+        }
+        return res.status(200).json({message: `Post with ID ${id} deleted successfully.`})
     })
     .catch(err => {
         console.log(err);
-        res.status(500).json({message: "There was an error removing this post."})
+        return res.status(500).json({message: "There was an error removing this post."})
     })
 })
 
-
-// TODO: Server PUT method
-
+// Edit post
 
 server.put('/api/posts/:id', (req, res) => {
-    const id = req.params.id;
-    const text = req.body;
-    if(!text){
-        res.status(400).json({message: "Please provide text."})
-    }
+    const {id} = req.params;
+    const newText = req.body;
 
-    const body = text;
-
-    userdb.update(id, body)
-    .then(users => {
-        res.status(200).json({users})
+    postdb.update(parseInt(id), newText)
+    .then(post => {
+        if(!post){
+            return res.status(404).json({message: `The post with ID ${id} does not exist.`})
+        }
+        res.status(200).json({message: `Post with ID ${id} updated successfully.`})
     })
     .catch(err => {
         console.log(err);
-        res.json({message: `Error updating post ${id}`})
+        return res.status(500).json({message: 'Error updating post.'})
     })
 })
+
 
 
 /*****************************************/
 /*** TAG METHODS ***/
 /*****************************************/
 
-// TODO: Server POST method
-
-// TODO: Server DELETE method
-
-// TODO: Server PUT method
+// TODO
 
 // write a function that will receive three or four arguments.
 // add it to the middleware queue.
