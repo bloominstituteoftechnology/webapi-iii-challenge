@@ -43,7 +43,7 @@ class App extends Component {
         
         } />
 
-        <Route exact path = '/api/posts/:id' render = {(props) =>
+        <Route exact path = '/posts/:id' render = {(props) =>
            <PostDetails/>
         
         } />

@@ -11,7 +11,8 @@ class PostDetails extends React.Component {
     handleDelete = (event) => {
         event.preventDefault();
 
-        this.props.deletePost(this.props.currentPost.id);
+        console.log(this.props.match.params.id);
+        this.props.deletePost(this.props.match.params.id);
     
         setTimeout(() => {
             this.props.history.replace('/');
@@ -23,9 +24,8 @@ class PostDetails extends React.Component {
     render(){
         return(
             <div>
-                This is the note details view
-                <h1>{this.props.currentPost.title}</h1>
-                <p>{this.props.currentPost.contents}</p>
+                <h1>{this.props.currentPost.postedBy}</h1>
+                <p>{this.props.currentPost.text}</p>
                 <button onClick={this.handleDelete}>DELETE</button>
                 <Link to = {`/posts/edit/${this.props.currentPost.id}`}><button>EDIT</button></Link>
             </div>
