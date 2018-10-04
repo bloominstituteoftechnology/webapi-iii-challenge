@@ -15,6 +15,9 @@ const AppDiv = styled.div`
 	justify-content: center;
 	align-items: center;
 	flex-direction: column;
+	animation-name: fade-in-anim;
+	animation-duration: 2s;
+	animation-fill-mode: forwards;
 
 	header {
 		display: flex;

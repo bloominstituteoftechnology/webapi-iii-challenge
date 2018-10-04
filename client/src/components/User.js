@@ -12,6 +12,9 @@ const UserDiv = styled.div`
 	justify-content: center;
 	align-items: center;
 	flex-direction: column;
+	animation-name: grow-anim;
+	animation-duration: 1s;
+	animation-fill-mode: forwards;
 
 	&:hover {
 		background-color: #444;

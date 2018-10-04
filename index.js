@@ -51,7 +51,7 @@ server.get('/api/users/:id/posts', (req, res) => {
 		.catch(err => res.status(500).json({ error: 'The users information could not be retrieved.' }));
 });
 
-// create new user using yell middleware
+// create new user using yell middleware        
 server.post('/api/users', yell, (req, res) => {
 	const newUser = req.yelledUser;
 	userDb.insert(newUser)
