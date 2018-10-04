@@ -163,6 +163,11 @@ server.post("/api/posts", async (req, res) => {
     res.status(400).json({ message: "enter some text and a userId" });
     return;
   }
+
+  if (!users.get(req.body.userId)) {
+    res.status(400).json({ message: "userId does not exist" });
+    return;
+  }
   if (req.body.text.length > 128) {
     res
       .status(400)
@@ -219,11 +224,9 @@ server.delete("/api/posts/:id", async (req, res) => {
     }
     res.status(200).json(post);
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        message: "error occurred while deleting the post from the database"
-      });
+    res.status(500).json({
+      message: "error occurred while deleting the post from the database"
+    });
   }
 });
 
