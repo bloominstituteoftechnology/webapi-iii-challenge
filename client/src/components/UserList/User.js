@@ -1,12 +1,26 @@
 import React from "react";
+import styled from 'react-emotion'
 
 const User = props => {
   const { id, name } = props.user;
   return (
-    <div onClick = {() => props.history.push(`/users/${id}`)}>
-      <h3>{name}</h3>
-    </div>
+    <StyledUserWrapper onClick = {() => props.history.push(`/users/${id}`)}>
+      <StyledUserNames>{name}</StyledUserNames>
+    </StyledUserWrapper>
   );
 };
 
 export default User
+
+const StyledUserWrapper = styled('div')`
+  
+`
+
+const StyledUserNames = styled('h3')`
+display: inline-block;
+transition: font-size .2s;
+:hover{
+  font-size: 24px;
+}
+
+`
