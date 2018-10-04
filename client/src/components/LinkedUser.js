@@ -132,6 +132,10 @@ class LinkedUser extends React.Component {
 			.catch(err => console.log(err));
 	}
 
+	handleChange = event => {
+    this.setState({[event.target.name]: event.target.value})
+  }
+
 	render(){
 		console.log(this.props)
 		console.log(this.state.usersPosts)
