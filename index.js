@@ -98,6 +98,8 @@ server.put('/api/users/:id', (req, res)=> {
 });
 
 //Posts Routes
+
+//GET all posts
 server.get('/api/posts', (req, res)=> {
     postDb.get()
         .then(posts=> {
@@ -107,6 +109,38 @@ server.get('/api/posts', (req, res)=> {
             res.status(500).json({error: "Information could not be retrieved"});
         })
 });
+
+//GET a specific post by its id
+server.get('/api/posts/:id', (req, res)=> {
+    postDb.get(req.params.id)
+        .then(post=> {
+            console.log(post);
+            res.status(200).json({post});
+        })
+        .catch(err=> {
+            res.status(500).json({error: "This post could not be retrieved"});
+        })
+});
+
+//POST a new post
+server.post('/api/posts', (req, res)=> {
+    console.log(req.body);
+    const {text, userId} = req.body;
+    const newPost = {text, userId};
+    postDb.insert(newPost)
+        .then(newPost=> {
+            if (!req.body) {
+                res.status(400).json({error: "Please add text to this post"});
+            }
+            res.status(201).json({newPost});
+        })
+        .catch(err=> {
+            res.status(500).json({error: "This post could not be added to the database"});
+        })
+});
+
+//UPDATE an existing post
+
 
 //Listener
 server.listen(port, ()=> console.log(`API running on port ${port}`));
