@@ -47,6 +47,11 @@ table {
 	border-spacing: 0;
 }
 
+/* CSS */
+body {
+	background-color: #aaa;
+}
+
 
 /* Animations */
 @keyframes fade-in-anim {

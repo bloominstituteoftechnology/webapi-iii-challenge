@@ -5,8 +5,13 @@ import styled from 'styled-components';
 
 const UserDiv = styled.div`
 	border: 1px solid black;
-	width: 60%;
-	margin-bottom: 20px;
+	border-radius: 5px;
+	background-color: #ddd;
+	width: 200px;
+	height: 200px;
+	margin: 20px;
+	box-shadow: 0 8px 16px 0 rgba(0,0,0,1);
+    transition: 0.3s;
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
@@ -19,10 +24,15 @@ const UserDiv = styled.div`
 	&:hover {
 		background-color: #444;
 		cursor: pointer;
+		box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 
 		p {
 			color: white;
 		}
+	}
+
+	p {
+		text-align:center;
 	}
 `;
 
