@@ -1,11 +1,6 @@
-// import React from "react";
-
-// const User = props => <div>{props.user}</div>;
-
-// export default User;
-
 import React, { Component } from "react";
 import axios from "axios";
+import PostForm from "../../PostComponents/PostForm";
 export default class User extends Component {
   state = {
     isEditing: false,
