@@ -157,5 +157,32 @@ server.get("/api/posts/:id", async (req, res) => {
   }
 });
 
+// create a post give a userId so that it knows what user to link the post to
+server.post("/api/posts", async (req, res) => {
+  if (!req.body.text || !req.body.userId) {
+    res.status(400).json({ message: "enter some text and a userId" });
+    return;
+  }
+  if (req.body.text.length > 128) {
+    res
+      .status(400)
+      .json({ message: "The text must be less than 128 characters" });
+    return;
+  }
+  try {
+    const { id } = await posts.insert(req.body);
+    try {
+      const newPost = await posts.get(id);
+      res.status(201).json(newPost);
+    } catch (error) {
+      res.status(404).json({ message: "post does not exist" });
+    }
+  } catch (error) {
+    res.status(500).json({
+      message: "an error occurred while saving the post to the database"
+    });
+  }
+});
+
 // listen to port 8000 and give a startup message from the server
 server.listen(8000, () => console.log("API listening on port 8000"));
