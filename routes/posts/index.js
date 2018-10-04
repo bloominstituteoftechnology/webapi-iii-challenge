@@ -20,18 +20,18 @@ router.get('/:id', (req, res) => {
 		.catch(err => res.status(500).json({ error: `The post with the ID ${ id } does not exist.` }));
 });
 
-// // get all posts from user with given id
-// router.get('/:id/posts', (req, res) => {
-// 	const { id } = req.params;
-// 	userDb.getUserPosts(parseInt(id))
-// 		.then(posts => {
-// 			if (!posts.length) {
-// 				return res.status(404).json({ error: `The user with the ID ${ id } does not exist.` });
-// 			}
-// 			return res.status(200).json(posts);
-// 		})
-// 		.catch(err => res.status(500).json({ error: 'The users information could not be retrieved.' }));
-// });
+// get all post tags from post with given post id
+router.get('/:id/tags', (req, res) => {
+	const { id } = req.params;
+	postDb.getPostTags(parseInt(id))
+		.then(tags => {
+			if (!tags.length) {
+				return res.status(404).json({ error: `Either the post with ID ${ id } does not exist or it does not have any tags.` });
+			}
+			return res.status(200).json(tags);
+		})
+		.catch(err => res.status(500).json({ error: 'The post tags information could not be retrieved.' }));
+});
 
 // // create new user using yell middleware and return all users
 // router.post('/', yell, (req, res) => {
