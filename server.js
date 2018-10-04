@@ -4,7 +4,7 @@ const logger = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
 
-// DATABASES
+// DATABASE HELPERS
 const userDb = require('./data/helpers/userDb');
 const postDb = require('./data/helpers/postDb');
 const tagDb = require('./data/helpers/tagDb');
@@ -20,11 +20,11 @@ const cruiseControl = (req, res, next) => {
 
 server.use(logger('tiny'), cors(), helmet(), express.json());
 
-// ROUTING
-// get users (for testing)
+// ENDPOINTS
+// get users
 server.get('/api/users', (req, res) => {
 	userDb
-		.getUsers()
+		.get()
 		.then(users => {
 			console.log('\n=== RETURNED USERS: ===\n\n', users, '\n');
 			res.status(200).json(users);
@@ -40,7 +40,7 @@ server.get('/api/users', (req, res) => {
 // get user by id
 server.get('/api/users/:id', (req, res) => {
 	userDb
-		.getUser(req.params.id)
+		.get(req.params.id)
 		.then(user => {
 			if (!user) {
 				console.log('\n=== NO USER BY THAT ID ===\n');
@@ -85,12 +85,12 @@ server.post('/api/users', cruiseControl, (req, res) => {
 			});
 		})
 		.catch(err => {
-			if (err.Error.SQLITE_CONSTRAINT['UNIQUE constraint failed']) {
-				console.log('\n=== ADD USER ABORTED: DUPLICATE NAME ===\n\n', err);
-				return res.status(500).json({
-					message: 'User with that name already exists.'
-				});
-			}
+			// if (err.Error.SQLITE_CONSTRAINT['UNIQUE constraint failed']) {
+			// 	console.log('\n=== ADD USER ABORTED: DUPLICATE NAME ===\n\n', err);
+			// 	return res.status(500).json({
+			// 		message: 'User with that name already exists.'
+			// 	});
+			// }
 			console.log('\n=== UH OH ===\n\n', err);
 			res.status(500).json({
 				error: 'There was an error while saving the user to the database'
