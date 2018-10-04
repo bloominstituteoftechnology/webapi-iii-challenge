@@ -4,7 +4,8 @@ export const FETCHING = 'FETCHING';
 export const FETCHED_USERS = 'FETCHED_USERS';
 export const FETCHED_POSTS = 'FETCHED_POSTS';
 export const POSTING = 'POSTING';
-export const POSTED = 'POSTED';
+export const POSTED_POST = 'POSTED_POST';
+export const POSTED_USER = 'POSTED_USER';
 export const DELETING = 'DELETING';
 export const DELETED = 'DELETED';
 export const EDITING = 'EDITING';
@@ -51,7 +52,7 @@ export const addPost = (post) => {
 
         postRequest.then(res => {
             console.log(res);
-            dispatch({type: POSTED})
+            dispatch({type: POSTED_POST})
         }).catch(err => {
             console.log(err);
             dispatch({type: ERROR})
@@ -103,7 +104,21 @@ export const editPost = (id, newPost) => {
             console.log(err);
             dispatch({type: ERROR})
         })
-
-        fetchPosts();
     }
+}
+
+export const addUser = (newUser) => {
+    const addUserRequest = axios.post(`http://localhost:8000/api/users`, newUser);
+
+    return dispatch => {
+        dispatch({type: POSTING})
+
+    addUserRequest.then(res => {
+        console.log(res.data);
+        dispatch({type: POSTED_USER})
+    }).catch(err => {
+        console.log(err);
+        dispatch({type: ERROR})
+    })
+}
 }

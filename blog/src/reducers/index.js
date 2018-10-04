@@ -1,4 +1,4 @@
-import {FETCHING, FETCHED_POSTS, FETCHED_USERS, POSTING, POSTED, FETCHING_SINGLE, FETCHED_SINGLE, EDITING, EDITED, DELETING, DELETED, ERROR} from '../actions/index';
+import {FETCHING, FETCHED_POSTS, FETCHED_USERS, POSTING, POSTED_POST, POSTED_USER, FETCHING_SINGLE, FETCHED_SINGLE, EDITING, EDITED, DELETING, DELETED, ERROR} from '../actions/index';
 
 const initialState = {
     fetching: false,
@@ -47,7 +47,7 @@ export const rootReducer = (state = initialState, action) => {
                 posting: true
             })
 
-        case POSTED:
+        case POSTED_POST:
             return Object.assign({}, state, {
                 posting: false, 
                 posted: true
@@ -85,6 +85,12 @@ export const rootReducer = (state = initialState, action) => {
             return Object.assign({}, state, {
                 editing: false,
                 edited: true,       
+            })
+
+        case POSTED_USER:
+            return Object.assign({}, state, {
+                posting: false,
+                posted: true
             })
 
         default:

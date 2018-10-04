@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {fetchUsers} from '../actions/index';
 import {withRouter, Link} from 'react-router-dom';
 import User from './User';
+import UserForm from './UserForm';
 
 class UsersList extends React.Component {
 
@@ -17,6 +18,7 @@ class UsersList extends React.Component {
     render() {
         return (
             <div>
+                <UserForm />
                 {this.props.users.map(user => {
                     return <Link to={`/users/${user.id}`} key={user.id}><User {...user} /></Link>
                 })}
