@@ -24,7 +24,7 @@ const errorHandle = (err, req, res, next) => {
       httpCode: 400
     },
     u20: {
-      title: "Wrong delete id",
+      title: "Wrong id",
       description: "The id you have entered is not connected to any posts.",
       httpCode: 400
     }
