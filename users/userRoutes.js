@@ -2,6 +2,8 @@ const express = require('express');
 
 const router = express.Router();
 
+const userDb = require('./data/helpers/userDb.js');
+
 const caps = (req, res, next) => {
     console.log(req.body);
    req.body.name = req.body.name.toUpperCase();

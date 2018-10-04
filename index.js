@@ -1,4 +1,5 @@
 const userRoutes = require('./users/userRoutes.js');
+const postRoutes = require('./posts/postRoutes.js');
 
 const express = require('express');
 
@@ -7,24 +8,17 @@ const server = express();
 const logger = require('morgan');
 const cors = require('cors');
 
-const userDb = require('./data/helpers/userDb.js');
-const postDb = require('./data/helpers/postDb.js');
+
+
 
 server.use(logger('combined'));
 server.use(cors());
 server.use(express.json());
 
 server.use('/users', userRoutes);
+server.use('/posts', postRoutes);
 
-server.post('/posts', (req, res) => {
-    console.log(req.body);
-    const { text, postedBy } = req.body;
-    const newPost = { text, postedBy };
-    postDb.insert(newPost)
-    .then()
-    .catch()
 
-})
 
 server.get('/', (req, res) => {
     res.send('Howdy Pardner!');
