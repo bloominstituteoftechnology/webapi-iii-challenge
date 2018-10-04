@@ -2,6 +2,7 @@
 const express = require("express");
 const logger = require("morgan");
 const helmet = require("helmet");
+const cors = require("cors");
 
 //import db objects
 const userDb = require("./data/helpers/userDb.js");
@@ -22,6 +23,7 @@ const makeUpperCase = (req, res, next) => {
 
 //use middleware
 server.use(express.json());
+server.use(cors());
 server.use("/api/posts", postsRoutes);
 
 server.get("/", (req, res) => {
