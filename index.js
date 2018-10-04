@@ -14,6 +14,12 @@ server.use(logger('combined'));
 server.use(cors());
 server.use(express.json());
 
+// Custom Middleware
+const userUpperCaser = (req, res, next) => {
+  req.body.name = req.body.name.toUpperCase();
+  next();
+}
+
 /// User Routes ///
 
 // GET request to root
@@ -38,7 +44,7 @@ server.get('/users/:id', (req, res) => {
 });
 
 // POST request to create new user
-server.post("/users", (req, res) => {
+server.post("/users", userUpperCaser, (req, res) => {
   const newUser = req.body;
   userdb
     .insert(newUser)
