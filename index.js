@@ -22,6 +22,11 @@ const errorHandle = (err, req, res, next) => {
       title: "Require Name",
       description: "Name is too long, needs to be less than 128 characters.",
       httpCode: 400
+    },
+    u20: {
+      title: "Wrong delete id",
+      description: "The id you have entered is not connected to any posts.",
+      httpCode: 400
     }
   }
 

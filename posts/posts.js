@@ -2,6 +2,13 @@ const express = require('express');
 const postRoute = express.Router();
 
 const postDb = require('../data/helpers/postDb');
+const validate = (req, res, next) => {
+  if(!req.body.id) {
+    next("u20");
+  } else {
+    next();
+  }
+}
 
 postRoute.get('/', (req, res) => {
   postDb.get()
@@ -26,8 +33,17 @@ postRoute.post('/', (req, res) => {
   .catch(err => res.status(400).json({error: 'User does not exist.'}));
 });
 
-postRoute.delete('/', (req, res) => {
-  console.log('posts')
+postRoute.delete('/', validate, (req, res) => {
+  const { id } = req.body
+  postDb.remove(id)
+    .then(response => {
+      if(response) {
+        res.status(200).json({ message: "Post delete success."})
+      } else {
+        res.status(400).json({ error: "Post does not exist." })
+      }
+    })
+    .catch(err => console.log(err));
 });
 
 module.exports = postRoute;
