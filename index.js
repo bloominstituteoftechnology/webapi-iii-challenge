@@ -39,7 +39,7 @@ server.get('/api/users/posts/:id', (req, res) => {
 
 server.post('/api/users', formatUserName, (req, res) => {
   if (!req.body.name) { return res.json({ message: `need name` }) }
-  if (req.body.name.length > 128) { return res.json({ message: `go shorter on name` }) }
+  if (req.body.name.length > 128 && req.body.name.length < 8) { return res.json({ message: `username needs to be between 8 and 128 characters` }) }
   userDB.insert(req.body)
     .then(({ id }) => res.json({ message: `Good job, returned ID ${id}` }))
     .catch(err => console.log(err));
@@ -47,7 +47,7 @@ server.post('/api/users', formatUserName, (req, res) => {
 
 server.put('/api/users/:id', formatUserName, (req, res) => {
   if (!req.body.name) { return res.json({ message: `need name` }) }
-  if (req.body.name.length > 128) { return res.json({ message: `go shorter on name` }) }
+  if (req.body.name.length > 128 && req.body.name.length < 8) { return res.json({ message: `username needs to be between 8 and 128 characters` }) }
   userDB.update(req.params.id, req.body)
     .then(count => {
       if (!count) { return res.json({ message: `no user by that id` }) }
