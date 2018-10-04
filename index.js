@@ -14,11 +14,22 @@ const port = 9000;
 //Middlewares
 server.use(morgan('combined'));
 
-//User Database Routes
+const yell = (req, res, next)=> {
+    console.log(req.body.name);
+    const loudName = req.body.name.toUpperCase();
+    req.body.name = loudName;
+    next();
+};
+
+//User Routes
+
+
 server.get('/', (req, res)=> {
     res.send('Welcome to Node Blog :)')
 });
 
+
+//GET all users
 server.get('/api/users', (req, res)=> {
     userDb.get()
         .then(users=> {
@@ -30,6 +41,8 @@ server.get('/api/users', (req, res)=> {
         })
 });
 
+
+// GET a user by specific id
 server.get('/api/users/:id', (req, res)=> {
     console.log(req.params.id);
     userDb.get(req.params.id)
@@ -42,7 +55,8 @@ server.get('/api/users/:id', (req, res)=> {
         })
 });
 
-server.post('/api/users', (req, res)=> {
+//POST a new user to the database
+server.post('/api/users', yell, (req, res)=> {
     console.log(req.body);
     const {name} = req.body;
     const newUser = {name};
@@ -62,6 +76,8 @@ server.post('/api/users', (req, res)=> {
         })
 });
 
+
+//DELETE a user
 server.delete('/api/users/:id', (req, res)=> {
     console.log(req.params);
     const {id} = req.params;
@@ -77,7 +93,8 @@ server.delete('/api/users/:id', (req, res)=> {
         })
 });
 
-server.put('/api/users/:id', (req, res)=> {
+//PUT an update of a specific user on the database
+server.put('/api/users/:id', yell, (req, res)=> {
     console.log(req.params, req.body);
     const {id} = req.params;
     const {name} = req.body;
@@ -174,6 +191,20 @@ server.delete('/api/posts/:id', (req, res)=> {
         })
         .catch(err=> {
             res.status(500).json({error: "This information could not be deleted from the database"});
+        })
+});
+
+//Posts by UserID
+
+//GET Posts by UserID
+server.get('/api/users/:id/posts', (req, res)=> {
+    const {userId} = req.body.userId;
+    userDb.getUserPosts(userId)
+        .then(posts=> {
+            res.status(200).json({posts});
+        })
+        .catch(err=> {
+            res.status(500).json({error: "This information could not be retrieved"});
         })
 });
 
