@@ -77,6 +77,21 @@ export default class App extends Component {
 		this.props.history.push(`/users/${ id }`);
 	};
 
+	handleDeleteUser = (e, id) => {
+		e.preventDefault();
+		const URL = 'http://localhost:5000';
+		axios.delete(`${ URL }/api/users/${ id }`)
+			.then(del => {
+				axios.get(`${ URL }/api/users`)
+					.then(users => this.setState({
+						users: users.data,
+					}))
+					.catch(err => console.log(err));
+			})
+			.catch(err => console.log(err));
+		
+	};
+
 	handleNewUsers = users => this.setState({ users: users });
 
 	render() {
@@ -92,7 +107,7 @@ export default class App extends Component {
 					</div>
 				</header>
 
-				<Route exact path = '/' render = { props => <UserList history = { props.history } users = { users } handleUserPosts = { this.handleUserPosts } />} />
+				<Route exact path = '/' render = { props => <UserList history = { props.history } users = { users } handleUserPosts = { this.handleUserPosts } handleDeleteUser = { this.handleDeleteUser } />} />
 
 				<Route path = '/users/:id' render = { props => <UserPosts name = { users.find(user => {return user.id === Number(props.match.params.id)}).name } id = { props.match.params.id } /> } />
 

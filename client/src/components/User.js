@@ -37,7 +37,7 @@ const UserDiv = styled.div`
 `;
 
 const User = props => {
-	const { user, handleUserPosts, history } = props;
+	const { user, handleUserPosts, handleDeleteUser, history } = props;
 	return(
 		<UserDiv>
 			<p>{ user.name }</p>
@@ -45,6 +45,7 @@ const User = props => {
 			<div>
 				<button onClick = { () => history.push(`/edit/${ user.id }`) }>Edit User</button>
 				<button onClick = { e => handleUserPosts(e, user.id) }>User Posts</button>
+				<button onClick = { e => handleDeleteUser(e, user.id) }>Delete User</button>
 			</div>
 		</UserDiv>
 	);
