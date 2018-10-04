@@ -215,7 +215,7 @@ server.put('/api/posts/:id', (req, res) => {
 	}
 })
 
-server.delete('/api/post/:id', (req, res) => {
+server.delete('/api/posts/:id', (req, res) => {
 	const id = req.params.id
 	postDb
 	.remove(id)
