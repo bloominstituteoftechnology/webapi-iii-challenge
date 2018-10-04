@@ -60,7 +60,14 @@ server.post('/users', capitalize, (req, res) => {
     .then(user => {
       // res.status(201).json(user);
       db.get(user.id)
-        .then(userName => res.status(200).json(userName))
+        .then(userName => {
+          if (!req.body.name) {
+            res.status(404).json({ missingError: 'Provide a name' });
+          } else if (req.body.name.length > 128) {
+            res.status(400).json({ lengthError: 'Please shorten name, max length exceeded (128 char.)' });
+          }
+          res.status(200).json(userName);
+        })
         .catch(err => console.log(err));
     })
     .catch(err => console.log(err));
@@ -279,7 +286,9 @@ server.post('/users/posts', (req, res) => {
     .then(response => {
       if (!req.body.text || !req.body.userId) {
         res.status(400).json({ fillError: 'Please provide text, and/or userId' })
-      }      
+      } else if (typeof req.body.userId !== 'number') {
+        res.status(400).json({ typeError: 'invalid type, please enter a number, no quotation marks' })
+      }
       res.json(response);
     })
     .catch(err => res.status(500).json({ postError: 'There was an error posting' }));
