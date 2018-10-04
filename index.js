@@ -5,9 +5,10 @@ const logger = require("morgan");
 //pull in cors
 const cors = require("cors");
 //set port number
-const port = 9000;
+
 //import userDB
 const userDb = require("./data/helpers/userDb.js");
+const postDb = require("./data/helpers/postDb.js");
 
 //instantiate server
 const server = express();
@@ -15,10 +16,8 @@ const server = express();
 server.use(express.json());
 /////////////////////MIDDLEWARES/////////////////////////////
 const uppercase = (req, res, next) => {
-  console.log(req.params);
-//   console.log(req);
-
-
+  console.log(req.body.name.toUpperCase());
+  req.body.name = req.body.name.toUpperCase();
   next();
 };
 
@@ -28,7 +27,8 @@ server.get("/", (req, res) => {
   res.send(`Please work`);
 });
 
-server.get("/users", uppercase, (req, res) => {
+//GET ALL USERS
+server.get("/users", (req, res) => {
   userDb
     .get()
     .then(users => {
@@ -39,7 +39,82 @@ server.get("/users", uppercase, (req, res) => {
     });
 });
 
-server.post("/users", (req, res) => {
+//GET POST BY USERID
+server.get("/users/:id", (req, res) => {
+  const { id } = req.params;
+  userDb
+  .getUserPosts(id)
+    .then(posts => {
+      if (!posts) {
+        res.status(404).send({ message: "no posts exist for this id" });
+      } else {
+        res.json(posts);
+      }
+    })
+    .catch(err => {
+      console.log(err);
+    });
+});
+
+//GET ALL POSTS
+server.get("/posts", (req, res) => {
+  postDb
+    .get()
+    .then(posts => {
+      if (!posts) {
+        res.status(404).send({ message: "no posts exist for this id" });
+      } else {
+        res.json(posts);
+      }
+    })
+    .catch(err => {
+      console.log(err);
+    });
+});
+
+
+
+//GET ALL POST BY ID
+server.get("/posts/:id", (req, res) => {
+  const { id } = req.params;
+  postDb
+    .get(id)
+    .then(posts => {
+      if (!posts) {
+        res.status(404).send({ message: "no posts exist for this id" });
+      } else {
+        res.json(posts);
+      }
+    })
+    .catch(err => {
+      console.log(err);
+    });
+});
+
+//DELETE ALL POSTS WITH THE SAME ID
+server.delete("/posts/:id", (req, res) => {
+  const { id } = req.params;
+  postDb
+    .remove(id)
+    .then(posts => {
+      console.log(posts);
+      if (!posts) {
+        res.status(404).send({ message: "no posts exist for this id" });
+      } else {
+        res
+          .status(200)
+          .send({ message: "You have deleted the posts for this id" });
+      }
+    })
+    .catch(err =>
+      res.status(500).send({
+        error: "There was an error while deleting the posts from the database"
+      })
+    );
+});
+
+//ADDING USERS
+server.post("/users", uppercase, (req, res) => {
   let { name } = req.body;
   const newPerson = { name };
   userDb
@@ -62,11 +137,63 @@ server.post("/users", (req, res) => {
     });
 });
 
-server.get("/users/:id", uppercase, (req, res) => {
+//ADD A POST
+server.post("/posts", (req, res) => {
+  const { text, userId } = req.body;
+  const newPost = { text, userId };
+  postDb
+    .insert(newPost)
+    .then(post => {
+      console.log(post);
+      console.log(post.id);
+      console.log(post.body);
+      console.log(req.body);
+      if (!post.id) {
+        res
+          .status(404)
+          .send({ errorMessage: "User with that ID could not be found" });
+      } else {
+        res.status(201).send({ message: `You added ${req.body.text}` });
+      }
+    })
+    .catch(err => {
+      console.log(err);
+    });
+});
+
+const port = 7040;
+//EDIT AN EXISTING POST
+server.put("/posts/:id", (req, res)=>{ 
+ const {id} = req.params;
+  const {text} = req.body;
+  const updatedPost = {text}
+
+  postDb
+  .update(id, updatedPost)
+  .then(posts => {
+    console.log("Posts is: " + posts);
+    if(!posts){
+      res.status(400).send({message: "No user exists that id"})
+    } else {
+      res.status(200).send({message: "The post has been updated"})
+    }
+  })
+  .catch(err => {
+    console.log(`Bohoo you got an ${err}`);
+  });
+});
+
+//GET USER WITH PARTICULAR ID
+server.get("/users/:id", (req, res) => {
   const { id } = req.params;
   userDb
     .get(id)
     .then(user => {
+      if (!user) {
+        res
+          .status(404)
+          .send({ errorMessage: "There is no user with that name" });
+      }
       res.status(201).send(user);
     })
     .catch(err => {
@@ -74,6 +201,7 @@ server.get("/users/:id", uppercase, (req, res) => {
     });
 });
 
+//DELETE USER WITH PARTICULAR ID
 server.delete("/users/:id", (req, res) => {
   const { id } = req.params;
   console.log("id: " + id);
@@ -87,12 +215,10 @@ server.delete("/users/:id", (req, res) => {
           .status(404)
           .send({ Error: "The name with the specified ID does not exist." });
       } else {
-        res
-          .status(200)
-          .send({
-            message:
-              "you have done the impossible: deleted something off the internet"
-          });
+        res.status(200).send({
+          message:
+            "you have done the impossible: deleted something off the internet"
+        });
       }
     })
     .catch(err => {
@@ -100,7 +226,8 @@ server.delete("/users/:id", (req, res) => {
     });
 });
 
-server.put("/users/:id", (req, res) => {
+//CHANGE USER INFO FOR PARTICULAR ID
+server.put("/users/:id", uppercase, (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
   const nameChanged = { name };
@@ -119,11 +246,9 @@ server.put("/users/:id", (req, res) => {
     })
     .catch(err => {
       if (!name) {
-        res
-          .status(400)
-          .send({
-            errorMessage: "please provide a name for value to be updated to"
-          });
+        res.status(400).send({
+          errorMessage: "please provide a name for value to be updated to"
+        });
       } else res.status(500).send({ error: "The post could not be removed" });
     });
 });
