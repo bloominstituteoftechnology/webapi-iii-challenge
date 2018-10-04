@@ -34,7 +34,7 @@ router.get('/:id/posts', (req, res) => {
 	userDb.getUserPosts(parseInt(id))
 		.then(posts => {
 			if (!posts.length) {
-				return res.status(404).json({ error: `The user with the ID ${ id } does not exist.` });
+				return res.status(404).json({ error: `Either the user with the ID ${ id } does not exist or that user has not made any posts.` });
 			}
 			return res.status(200).json(posts);
 		})

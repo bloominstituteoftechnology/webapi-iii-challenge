@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { postDb } = require('../../data/helpers');
+const { postDb, userDb } = require('../../data/helpers');
 
 const router = express.Router();
 
@@ -33,17 +33,19 @@ router.get('/:id/tags', (req, res) => {
 		.catch(err => res.status(500).json({ error: 'The post tags information could not be retrieved.' }));
 });
 
-// // create new user using yell middleware and return all users
-// router.post('/', yell, (req, res) => {
-// 	const newUser = req.yelledUser;
-// 	userDb.insert(newUser)
-// 		.then(id => {
-// 			return userDb.get()
-// 				.then(users => res.status(200).json(users))
-// 				.catch(err => res.status(500).json({ error: 'The users information could not be retrieved.' }));
-// 		})
-// 		.catch(err => res.status(500).json({ error: 'There was an error while saving the user to the database.' }));
-// });
+// create new post from user with given user id and return all posts from that user
+router.post('/:userId/', (req, res) => {
+	const { text } = req.body;
+	const { userId } = req.params;
+	const newPost = { text: text, userId: userId };
+	postDb.insert(newPost)
+		.then(id => {
+			return userDb.getUserPosts(parseInt(userId))
+				.then(posts => res.status(200).json(posts))
+				.catch(err => res.status(500).json({ error: 'The users information could not be retrieved.' }));
+		})
+		.catch(err => res.status(500).json({ error: 'There was an error while saving the post to the database.' }));
+});
 
 // // update user with given id using yell middleware and return all users
 // router.put('/:id', yell, (req, res) => {
