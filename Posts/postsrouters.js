@@ -126,10 +126,6 @@ router.put('/:id', (req, res) => {
 // ~~ DELETE ~~ //
 // post: remove(id) -> # of records deleted
 router.delete('/:id', (req, res) => {
-    // TODO: Delete post
-    // const postToDelete;
-    // postsDb.get(req.params.id).then((post) => if(post !== undefined) postToDelete = post).catch((err) => error stuff);
-    // Delete post as normal
     let postToDelete = null;
     postsDb.get(req.params.id)
         .then((post) => {

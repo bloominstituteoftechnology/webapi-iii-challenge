@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const logger = require('morgan');
+const headers = require('helmet');
 const usersRoutes = require('./Users/usersrouters');
 const postsRoutes = require('./Posts/postsrouters');
 
@@ -8,6 +9,7 @@ const postsRoutes = require('./Posts/postsrouters');
 const server = express();
 server.use(cors());
 server.use(logger('combined'));
+server.use(headers());
 server.use(express.json());
 
 
@@ -22,7 +24,7 @@ server.use(userToUpperCase);
 const nameLengthCheck = (req, res, next) => {
     if(req.body.name && req.body.name.length > 128) {
         res.status(400).json({"error": "Please ensure your name value is less than 128 characters in length."});
-        end();
+        return;
     }
     next();
 };
