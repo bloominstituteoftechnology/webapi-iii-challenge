@@ -60,6 +60,14 @@ export default class UserPosts extends Component {
 			.catch(err => console.log(err));
 	};
 
+	handleDeletePost = (e, postId) => {
+		e.preventDefault();
+		const URL = 'http://localhost:5000';
+		axios.delete(`${ URL }/api/posts/${ postId }`)
+			.then(del => this.props.history.push(`/`))
+			.catch(err => console.log(err));
+	};
+
 	render() {
 		const { posts } = this.state;
 		const { name, history, id } = this.props;
@@ -71,7 +79,7 @@ export default class UserPosts extends Component {
 
 				{
 					posts.length ?
-					posts.map((post, i) => <UserPost history = { history } key = { i } post = { post } />)
+					posts.map((post, i) => <UserPost handleDeletePost = { this.handleDeletePost } history = { history } key = { i } post = { post } />)
 					:
 					<div className = 'no-posts'>
 						<p>{ name } has no posts.</p>

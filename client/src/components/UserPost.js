@@ -32,12 +32,13 @@ const UserPostDiv = styled.div`
 `;
 
 const UserPost = props => {
-	const { post, history } = props;
+	const { post, history, handleDeletePost } = props;
 	return(
 		<UserPostDiv>
 			<p>{ post.text }</p>
 
 			<button onClick = { () => history.push(`/editpost/${ post.id }`) }>Edit Post</button>
+			<button onClick = { e => handleDeletePost(e, post.id) }>Delete Post</button>
 		</UserPostDiv>
 	);
 };
