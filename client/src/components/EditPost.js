@@ -1,6 +1,37 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
+// Styles
+import styled from 'styled-components';
+
+const StyledForm = styled.form`
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+
+	textarea {
+		margin: 10px;
+		border-radius: 5px;
+		padding: 5px;
+	}
+
+	button {
+		padding: 5px;
+		border-radius: 5px;
+		width: fit-content;
+
+		&:hover {
+			background-color: #444;
+			color: white;
+			cursor: pointer;
+		}
+	}
+
+`;
+
 export default class EditPost extends Component {
 	state = {
 		post: {
@@ -33,15 +64,15 @@ export default class EditPost extends Component {
 	render() {
 		const { post } = this.state;
 		return(
-			<form onSubmit = { this.handleSubmit }>
+			<StyledForm className = 'fade-in-anim' onSubmit = { this.handleSubmit }>
 				Edit Post:
-				<input
+				<textarea
 					value = { post.text }
 					onChange = { this.handleInputChange }
 				/>
 
 				<button type = 'submit'>Submit</button>
-			</form>
+			</StyledForm>
 		);
 	}
 };

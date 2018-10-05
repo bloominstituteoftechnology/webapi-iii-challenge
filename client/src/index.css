@@ -64,3 +64,9 @@ body {
 	50% {transform: scale(1.2)}
 	100% {transform: scale(1)}
 }
+
+.fade-in-anim {
+	animation-name: fade-in-anim;
+	animation-duration: 2s;
+	animation-fill-mode: forwards;
+}

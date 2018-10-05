@@ -1,6 +1,36 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
+// Styles
+import styled from 'styled-components';
+
+const StyledForm = styled.form`
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+
+	textarea {
+		margin: 10px;
+		border-radius: 5px;
+		padding: 5px;
+	}
+
+	button {
+		padding: 5px;
+		border-radius: 5px;
+		width: fit-content;
+
+		&:hover {
+			background-color: #444;
+			color: white;
+			cursor: pointer;
+		}
+	}
+`;
+
 export default class CreatePost extends Component {
 	state = {
 		text: '',
@@ -20,7 +50,7 @@ export default class CreatePost extends Component {
 
 	render() {
 		return(
-			<form onSubmit = { this.handleSubmit }>
+			<StyledForm className = 'fade-in-anim' onSubmit = { this.handleSubmit }>
 				New Post:
 				<textarea
 					placeholder = 'Enter new post...'
@@ -29,7 +59,7 @@ export default class CreatePost extends Component {
 				/>
 
 				<button type = 'submit'>Submit</button>
-			</form>
+			</StyledForm>
 		);
 	}
 };

@@ -29,7 +29,6 @@ const StyledForm = styled.form`
 			cursor: pointer;
 		}
 	}
-
 `;
 
 export default class CreateUser extends Component {
@@ -52,7 +51,7 @@ export default class CreateUser extends Component {
 	render() {
 		const { name } = this.state;
 		return(
-			<StyledForm onSubmit = { this.handleSubmit }>
+			<StyledForm className = 'fade-in-anim' onSubmit = { this.handleSubmit }>
 				New User Name:
 				<input
 					placeholder = 'Enter new name...'

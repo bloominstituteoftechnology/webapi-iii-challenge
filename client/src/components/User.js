@@ -23,7 +23,6 @@ const UserDiv = styled.div`
 
 	&:hover {
 		background-color: #444;
-		cursor: pointer;
 		box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 
 		p {
@@ -34,6 +33,52 @@ const UserDiv = styled.div`
 	p {
 		text-align:center;
 	}
+
+	.buttons {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		align-items: center;
+		flex-direction: row;
+
+		button {
+			&:hover {
+				background-color: black;
+				cursor: pointer;
+			}
+		}
+
+		* {
+			margin: 5px;
+			padding: 5px 10px;
+			border-radius: 5px;
+			color: white;
+		}
+
+		.edit-btn {
+			background-color: blue;
+
+			&:hover {
+				color: cyan;
+			}
+		}
+
+		.posts-btn {
+			background-color: green;
+
+			&:hover {
+				color: lime;
+			}
+		}
+
+		.delete-btn {
+			background-color: red;
+
+			&:hover {
+				color: red;
+			}
+		}
+	}
 `;
 
 const User = props => {
@@ -42,10 +87,10 @@ const User = props => {
 		<UserDiv>
 			<p>{ user.name }</p>
 
-			<div>
-				<button onClick = { () => history.push(`/edit/${ user.id }`) }>Edit User</button>
-				<button onClick = { e => handleUserPosts(e, user.id) }>User Posts</button>
-				<button onClick = { e => handleDeleteUser(e, user.id) }>Delete User</button>
+			<div className = 'buttons'>
+				<button className = 'edit-btn' onClick = { () => history.push(`/edit/${ user.id }`) }>Edit User</button>
+				<button className = 'posts-btn' onClick = { e => handleUserPosts(e, user.id) }>User Posts</button>
+				<button className = 'delete-btn' onClick = { e => handleDeleteUser(e, user.id) }>Delete User</button>
 			</div>
 		</UserDiv>
 	);

@@ -18,6 +18,19 @@ const UserPostsDiv = styled.div`
 		font-size: 1.4rem;
 	}
 
+	.new-post-btn {
+		padding: 5px 10px;
+		border-radius: 5px;
+		background-color: #444;
+		color: white;
+
+		&:hover {
+			background-color: black;
+			color: white;
+			cursor: pointer;
+		}
+	}
+
 	.no-posts {
 		border: 1px solid black;
 		border-radius: 5px;
@@ -75,7 +88,7 @@ export default class UserPosts extends Component {
 			<UserPostsDiv>
 				<h2>{ name }'s Posts</h2>
 
-				<button onClick = { () => history.push(`/createpost/${ id }`) }>New Post</button>
+				<button className = 'new-post-btn' onClick = { () => history.push(`/createpost/${ id }`) }>New Post</button>
 
 				{
 					posts.length ?

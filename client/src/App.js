@@ -19,9 +19,6 @@ const AppDiv = styled.div`
 	justify-content: center;
 	align-items: center;
 	flex-direction: column;
-	animation-name: fade-in-anim;
-	animation-duration: 2s;
-	animation-fill-mode: forwards;
 
 	header {
 		display: flex;
@@ -99,7 +96,7 @@ export default class App extends Component {
 	render() {
 		const { users } = this.state;
 		return (
-			<AppDiv>
+			<AppDiv className = 'fade-in-anim'>
 				<header>
 					<h1>Node Blog</h1>
 
