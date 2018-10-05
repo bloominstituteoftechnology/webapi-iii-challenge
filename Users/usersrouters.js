@@ -37,7 +37,7 @@ router.get('/:id', (req, res) => {
 
 // userDB: getUserPosts(userId) -> [{"userId": userId, "text": "val1"},...,{"userId": userId, "text": "valN"}]
 router.get('/:id/posts', (req, res) => {
-    usersDb.get(req.params.id)
+    usersDb.getUserPosts(req.params.id)
         .then((userPosts) => {
             if(userPosts.length > 0) {
                 res.status(200).json(userPosts);
