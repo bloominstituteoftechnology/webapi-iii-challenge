@@ -32,10 +32,12 @@ const UserPostDiv = styled.div`
 `;
 
 const UserPost = props => {
-	const { text } = props.post;
+	const { post, history } = props;
 	return(
 		<UserPostDiv>
-			<p>{ text }</p>
+			<p>{ post.text }</p>
+
+			<button onClick = { () => history.push(`/editpost/${ post.id }`) }>Edit Post</button>
 		</UserPostDiv>
 	);
 };

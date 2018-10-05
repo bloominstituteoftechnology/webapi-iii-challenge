@@ -8,6 +8,7 @@ import UserPosts from './components/UserPosts';
 import CreateUser from './components/CreateUser';
 import EditUser from './components/EditUser';
 import CreatePost from './components/CreatePost';
+import EditPost from './components/EditPost';
 
 // Styles
 import styled from 'styled-components';
@@ -116,7 +117,9 @@ export default class App extends Component {
 
 				<Route path = '/edit/:id' render = { props => <EditUser history = { props.history } handleNewUsers = { this.handleNewUsers } id = { props.match.params.id } /> } />
 
-				<Route path = '/create/:id' render = { props => <CreatePost history = { props.history } id = { props.match.params.id } /> } />
+				<Route path = '/createpost/:id' render = { props => <CreatePost history = { props.history } id = { props.match.params.id } /> } />
+
+				<Route path = '/editpost/:id' render = { props => <EditPost history = { props.history } id = { props.match.params.id } /> } />
 			</AppDiv>
 		);
 	}

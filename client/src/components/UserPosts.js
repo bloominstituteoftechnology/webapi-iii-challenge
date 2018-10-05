@@ -56,9 +56,7 @@ export default class UserPosts extends Component {
 	componentDidMount() {
 		const URL = 'http://localhost:5000';
 		axios.get(`${ URL }/api/users/${ this.props.id }/posts`)
-			.then(posts => this.setState({
-				posts: posts.data,
-			}))
+			.then(posts => this.setState({ posts: posts.data }))
 			.catch(err => console.log(err));
 	};
 
@@ -69,11 +67,11 @@ export default class UserPosts extends Component {
 			<UserPostsDiv>
 				<h2>{ name }'s Posts</h2>
 
-				<button onClick = { () => history.push(`/create/${ id }`) }>New Post</button>
+				<button onClick = { () => history.push(`/createpost/${ id }`) }>New Post</button>
 
 				{
 					posts.length ?
-					posts.map((post, i) => <UserPost key = { i } post = { post } />)
+					posts.map((post, i) => <UserPost history = { history } key = { i } post = { post } />)
 					:
 					<div className = 'no-posts'>
 						<p>{ name } has no posts.</p>
