@@ -41,7 +41,7 @@ postsRoute.delete('/', validate, (req, res) => {
         res.status(500).json({ error: "Server error." })
       }
     })
-    .catch(err => console.log(err));
+    .catch(err => res.status(500).json({ error: "Delete error." }));
 });
 
 postsRoute.put('/',validate, (req, res) => {
@@ -55,7 +55,7 @@ postsRoute.put('/',validate, (req, res) => {
         res.status(500).json({ error: "Server error." })
       }
     })
-    .catch(err => console.log(err));
+    .catch(err => res.status(500).json({ error: "Put error." }));
   
 });
 
