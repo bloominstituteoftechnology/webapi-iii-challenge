@@ -42,8 +42,8 @@ postRouter.post("/", (req, res) => {
     .insert(newPost)
     .then(post => {
       postdb
-        .get(post.id)
-        .then(foundPost => res.status(201).send(foundPost))
+        .get()
+        .then(posts => res.status(201).send(posts))
         .catch(err => res.status(500).send(err));
     })
     .catch(err => {

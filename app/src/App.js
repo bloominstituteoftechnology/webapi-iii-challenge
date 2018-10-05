@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import './App.css';
 import UsersList from './components/UsersList';
+import { Route } from 'react-router-dom'
+import LinkUserPostList from './components/LinkUserPostList';
 
 class App extends Component {
   state = {
@@ -23,7 +25,8 @@ class App extends Component {
   render() {
     return (
       <div className="App" style={{margin: '20px'}}>
-        <UsersList users={this.state.users} />
+        <Route exact path = "/" render={(props) => <UsersList {...props} users={this.state.users} /> } />
+        <Route exact path="/users/:id/posts" render={(props) => <LinkUserPostList {...props} /> }/>
       </div>
     );
   }

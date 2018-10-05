@@ -1,25 +1,28 @@
-import React from 'react';
-import axios from 'axios';
-import UserPostList from './UserPostList';
-
+import React from "react";
+import axios from "axios";
+import { Link } from 'react-router-dom';
 class User extends React.Component {
   state = {
     userPosts: [],
-    userPostsError: null
-  }
+    userPostsError: null,
+  };
   componentDidMount() {
     axios
       .get(`http://localhost:9000/users/${this.props.user.id}/posts`)
-      .then(userPosts => this.setState({userPosts: userPosts.data}))
-      .catch(err => this.setState({userPostsError: err}));
+      .then(userPosts => this.setState({ userPosts: userPosts.data }))
+      .catch(err => this.setState({ userPostsError: err }));
   }
   render() {
     return (
       <div>
-        <h4>{this.props.user.name}</h4>
-        <UserPostList userPosts={this.state.userPosts} />
+        <Link to={{
+          pathname: `/users/${this.props.user.id}/posts`,
+          state: {
+            userPosts: this.state.userPosts
+          }
+        }}><h4>{this.props.user.name}</h4></Link>
       </div>
-    )
+    );
   }
 }
 
