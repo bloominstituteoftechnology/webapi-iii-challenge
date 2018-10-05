@@ -1,6 +1,7 @@
 const express = require('express');
-const router = express.Router();
 const usersDb = require('../data/helpers/userDb');
+const errorHandler = require('../ErrorHandler/errorhandler');
+const router = express.Router();
 
 // TODO: Stretch: Abstract out error handling
 const usersDbAccessError = {"error": "There was an error accessing the users database table."};
@@ -36,7 +37,7 @@ router.get('/:id', (req, res) => {
 
 // userDB: getUserPosts(userId) -> [{"userId": userId, "text": "val1"},...,{"userId": userId, "text": "valN"}]
 router.get('/:id/posts', (req, res) => {
-    usersDb.getUserPosts(req.params.id)
+    usersDb.get(req.params.id)
         .then((userPosts) => {
             if(userPosts.length > 0) {
                 res.status(200).json(userPosts);
@@ -144,5 +145,7 @@ router.delete('/:id', (req, res) => {
             res.status(500).json(usersDbAccessError);
         });
 });
+
+router.use(errorHandler);
 
 module.exports = router;
