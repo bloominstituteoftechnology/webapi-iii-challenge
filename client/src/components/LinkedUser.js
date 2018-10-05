@@ -122,7 +122,7 @@ class LinkedUser extends React.Component {
   deletePost = (id) => {
 		axios
 			.delete(
-				`http://localhost:5555/api/post/${id}`
+				`http://localhost:5555/api/posts/${id}`
 			)
 			.then(response => {
 				console.log(response)
