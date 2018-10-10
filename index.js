@@ -5,7 +5,14 @@ const server = express();
 // database
 const userDb = require('./data/helpers/userDb');
 
+// middleware
 server.use(express.json());
+
+// custom middleware user's name is Uppercased
+const upperCase = (req, res, next) => {
+  req.name = req.body.name.toUpperCase();
+  next();
+};
 
 server.get('/', (req, res) => {
   res.send('Welcome!');
