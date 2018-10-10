@@ -10,7 +10,7 @@ server.use(express.json());
 
 // custom middleware user's name is Uppercased
 const upperCase = (req, res, next) => {
-  req.name = req.body.name.toUpperCase();
+  req.body.name = req.body.name.toUpperCase();
   next();
 };
 
@@ -40,6 +40,26 @@ server.get('/api/users/:userId', (req, res) => {
     .catch(err => {
       res.status(500).json({ error: "The user information could not be retrieved.", err });
     });
+});
+
+server.post('/api/users', upperCase, (req, res) => {
+  const { name } = req.body;
+  const newUser = { name };
+  userDb
+    .insert(newUser)
+    .then(userId => {
+      const { id } = userId;
+      userDb.get(id)
+        .then(user => {
+          if (!user) {
+            res.status(400).json({ errorMessage: "Please provide name for the user." });
+          }
+          res.status(201).json(user);
+        });
+    })
+    .catch(err => {
+      res.status(500).json({ error: "There was an error while saving the user to the database", err });
+    })
 });
 
 const port = 5000;
