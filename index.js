@@ -12,14 +12,18 @@ server.use(cors());
 server.use(helmet());
 server.use(morgan("tiny"));
 
+const capital = (req, res, next) => {
+  req.newUser = { ...req.body };
+  req.newUser.name = req.newUser.name.toUpperCase();
+  next();
+};
+
 server.get("/api/users/", (req, res) => {
   userDb
     .get()
     .then(users => res.status(200).send(users))
     .cathc(err =>
-      res
-        .status(500)
-        .json({ error: "The users information could not be found." })
+      res.status(500).json({ error: "User's information could not be found." })
     );
 });
 
@@ -36,9 +40,43 @@ server.get("/api/users/:id", (req, res) => {
       return res.status(200).send(user);
     })
     .catch(err =>
-      res
-        .status(500)
-        .json({ error: "Users information could not be retrieved." })
+      res.status(500).json({ error: "User's information could not be found." })
+    );
+});
+
+// server.get('/api/users/:id/posts', (req, res) => {
+// 	const { id } = req.params.id;
+// 	userDb.getUserPosts(parseInt(id))
+// 		.then(posts => res.status(200).json(posts))
+// 		.catch(err => res.status(500).json({ error: 'User's information could not be found.' }));
+// });
+
+server.post("/api/users", capital, (req, res) => {
+  const newUser = req.newUser;
+  userDb
+    .insert(newUser)
+    .then(id => {
+      const newId = id.id;
+      userDb
+        .get(newId)
+        .then(user => {
+          if (!user) {
+            return res.status(404).json({
+              message: `New user, ID ${newId}, could not be retrieved.`
+            });
+          }
+          return res.status(201).send(user);
+        })
+        .catch(err =>
+          res.status(500).json({
+            error: "New user information could not be retrieved."
+          })
+        );
+    })
+    .catch(err =>
+      res.status(500).json({
+        error: "An error has occured while saving user to the database."
+      })
     );
 });
 
