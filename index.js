@@ -4,10 +4,12 @@ const userDb = require('./data/helpers/userdb.js');
 const port = 3005;
 
 server.get('/api/users',(req,res)=>{
-  usserbDb.get()
+  userDb.get()
   .then(users=>{
-    console.log(success,posts);
+    console.log('success',users);
+     res.status(200).json(users);
   })
+  .catch(err =>res.send(err))
 })
 
 
