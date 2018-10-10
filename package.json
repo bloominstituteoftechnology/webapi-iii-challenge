@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/micah-shrak/Node-Blog#readme",
   "dependencies": {
+    "cors": "^2.8.4",
     "express": "^4.16.3"
   }
 }
