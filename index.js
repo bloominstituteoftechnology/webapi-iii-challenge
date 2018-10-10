@@ -39,7 +39,7 @@ server.get('/api/users/:userId', (req, res) => {
     })
     .catch(err => {
       res.status(500).json({ error: "The user information could not be retrieved.", err });
-    });
+    })
 });
 
 server.post('/api/users', upperCase, (req, res) => {
@@ -73,6 +73,25 @@ server.delete('/api/users/:userId', (req, res) => {
     })
     .catch(err => {
       res.status(500).json({ error: "The user could not be removed", err });
+    })
+});
+
+server.put('/api/users/:userId', upperCase, (req, res) => {
+  const userId = req.params.userId;
+  const { name } = req.body;
+  const newUser = { name };
+  if (!userId) {
+    res.status(404).json({ message: "The user with the specified ID does not exist." });
+  }
+  else if (!name) {
+    res.status(400).json({ errorMessage: "Please provide name for the user." });
+  }
+  userDb.update(userId, newUser)
+    .then(user => {
+      res.status(200).json(user);
+    })
+    .catch(err => {
+      res.status(500).json({ error: "The user information could not be modified.", err });
     });
 })
 
