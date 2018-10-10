@@ -1,0 +1,22 @@
+{
+  "name": "node-blog",
+  "version": "1.0.0",
+  "description": "## Topics",
+  "main": "knexfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/micah-shrak/Node-Blog.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/micah-shrak/Node-Blog/issues"
+  },
+  "homepage": "https://github.com/micah-shrak/Node-Blog#readme",
+  "dependencies": {
+    "express": "^4.16.3"
+  }
+}
