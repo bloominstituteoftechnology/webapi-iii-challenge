@@ -13,15 +13,15 @@ server.use(helmet());
 server.use(morgan("tiny"));
 
 const capital = (req, res, next) => {
-  req.newUser = { ...req.body };
-  req.newUser.name = req.newUser.name.toUpperCase();
+  req.capitalUser = { ...req.body };
+  req.capitalUser.name = req.capitalUser.name.toUpperCase();
   next();
 };
 
 server.get("/api/users/", (req, res) => {
   userDb
     .get()
-    .then(users => res.status(200).send(users))
+    .then(users => res.status(200).json(users))
     .cathc(err =>
       res.status(500).json({ error: "User's information could not be found." })
     );
@@ -35,37 +35,47 @@ server.get("/api/users/:id", (req, res) => {
       if (!user) {
         return res
           .status(404)
-          .json({ message: `User ID ${id} does not exist. ` });
+          .json({ error: `User ID ${id} does not exist. ` });
       }
-      return res.status(200).send(user);
+      return res.status(200).json(user);
     })
     .catch(err =>
       res.status(500).json({ error: "User's information could not be found." })
     );
 });
 
-// server.get('/api/users/:id/posts', (req, res) => {
-// 	const { id } = req.params.id;
-// 	userDb.getUserPosts(parseInt(id))
-// 		.then(posts => res.status(200).json(posts))
-// 		.catch(err => res.status(500).json({ error: 'User's information could not be found.' }));
-// });
+server.get("/api/users/:id/posts", (req, res) => {
+  const { id } = req.params.id;
+  userDb
+    .getUserPosts(parseInt(id))
+    .then(posts => {
+      if (!posts.length) {
+        return res
+          .status(404)
+          .json({ error: `User, ID ${id}, does not exist.` });
+      }
+      res.status(200).json(posts);
+    })
+    .catch(err =>
+      res.status(500).json({ error: `User's information could not be found.` })
+    );
+});
 
 server.post("/api/users", capital, (req, res) => {
-  const newUser = req.newUser;
+  const newUser = req.capitalUser;
   userDb
     .insert(newUser)
     .then(id => {
       const newId = id.id;
-      userDb
+      return userDb
         .get(newId)
         .then(user => {
           if (!user) {
             return res.status(404).json({
-              message: `New user, ID ${newId}, could not be retrieved.`
+              error: `New user, ID ${newId}, could not be retrieved.`
             });
           }
-          return res.status(201).send(user);
+          return res.status(201).json(user);
         })
         .catch(err =>
           res.status(500).json({
