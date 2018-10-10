@@ -1,5 +1,13 @@
-server.use(logger);
+const express = require('express');
+const port = 8000;
 
-server.get('/name/:name') yell, greeter, (req, res) => {
-    res.send(req.name);
-});
+// SETUP
+const server = express();
+server.use(express.json());
+
+// ROUTE HANDLERS
+server.use('/users', );
+server.use('/posts', );
+
+// PORT LISTENERS
+server.listen(port, () => console.log(`===${port} is online!===`))
