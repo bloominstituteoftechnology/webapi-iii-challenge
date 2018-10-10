@@ -10,3 +10,4 @@ module.exports = {
     seeds: { directory: './data/seeds' },
   },
 };
+start
