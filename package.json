@@ -4,5 +4,8 @@
   "main": "index.js",
   "repository": "https://github.com/Xarfo/Node-Blog.git",
   "author": "<abdulfatah.a.ahmad@gmx.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "nodemon": "^1.18.4"
+  }
 }
