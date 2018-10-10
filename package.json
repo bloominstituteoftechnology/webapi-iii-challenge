@@ -6,8 +6,8 @@
   "author": "lyang9 <lyang9@buffalo.edu>",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon index.js"
-  }
+    "start": "nodemon index.js"
+  },
   "dependencies": {
     "express": "^4.16.3"
   },
