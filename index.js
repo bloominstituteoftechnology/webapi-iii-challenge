@@ -1,11 +1,14 @@
 // node dependencies
 const express = require('express');
 const server = express();
+const helmet = require('helmet');
 
 // database
 const userDb = require('./data/helpers/userDb');
+const postDb = require('./data/helpers/postDb');
 
 // middleware
+server.use(helmet());
 server.use(express.json());
 
 // custom middleware user's name is Uppercased
@@ -93,7 +96,22 @@ server.put('/api/users/:userId', upperCase, (req, res) => {
     .catch(err => {
       res.status(500).json({ error: "The user information could not be modified.", err });
     });
-})
+});
+
+
+server.get('/api/users/:userId/posts', (req, res) => {
+  const postId = req.params.postId;
+  postDb.get(postId)
+    .then(post => {
+      if (!post) {
+        res.status(404).json({ message: "The post with the specified ID does not exist." });
+      }
+      res.status(200).json(user);
+    })
+    .catch(err => {
+      res.status(500).json({ error: "The post information could not be retrieved.", err });
+    })
+});
 
 const port = 5000;
 server.listen(port, () =>
