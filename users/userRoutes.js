@@ -11,3 +11,9 @@ userDb.insert(newUser)
     .then(user =. res.status(201).json(user))
     .catch(err => res.status(500).json({error: "There was an error while saving the user to teh database"}))
 })
+.get((req,res) => {
+    userDb.get()
+    .then(data => res.status(200).json(data))
+    .catch(err => res.status(500).json({error: "The request for users could not be retrieved"}));
+
+})
