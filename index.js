@@ -10,7 +10,7 @@ server.use(express.json());//use json data
 
 
 //middleware for get request
-const middleware = (req,res,next) =>{
+const upperCase = (req,res,next) =>{
   console.log(req.body);
 
  req.body.name = req.body.name.toUpperCase();
@@ -47,7 +47,7 @@ server.get('/api/users',(req,res)=>{
 });
 
 
-server.post('/api/users',middleware,(req,res)=>{
+server.post('/api/users',upperCase,(req,res)=>{
 
   const{name} =req.body
   const newUser = {name}
