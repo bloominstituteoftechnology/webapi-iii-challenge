@@ -5,10 +5,11 @@ const usersDb = require('./data/helpers/userDb.js');
 const port = 7000;
 
 const server = express();
-server.use(logger);
+//server.use(logger);
+server.use(express.json());
 
 const upper = (req, res, next) => {
-    const newName = req.params.name.toUpperCase();
+    const newName = req.body.name.toUpperCase();
     req.name = newName;
     next();
 }
@@ -35,15 +36,14 @@ server.get('/api/users/:id', (req, res) => {
     .catch(err => res.send(err));
 })
 
-server.post('/api/users', upper, (req, res) => {
-    const newUser = req.body.name;
+server.post('/api/users', (req, res) => {
+    const { name } = req.body;
+    const newUser = { name };
     usersDb.insert(newUser)
-    .then(id => {
-        usersDb.get(id).then(user => {
+    .then(user => {
             res.status(201).json(user);
-        })
     })
-    .catch(err => res.send(err));
+    .catch(err => res.send(err.message));
 })
 
 
