@@ -17,3 +17,13 @@ userDb.insert(newUser)
     .catch(err => res.status(500).json({error: "The request for users could not be retrieved"}));
 
 })
+router.route('/id:')
+.get((req,res) => {
+    const { id } = req.params;
+    userDb.get(id)
+    .then(user =>) {
+        if (!user) return res.status(404).json({message: "The user with the specified ID does not exist"});
+        return res.status(200).json(user);
+    })
+    .catch(err => res.status(500).json({error: "Information cannot be retreived."}));
+})
