@@ -41,5 +41,16 @@ router.route('/id:')
 })
 
 .delete((req,res) => {
+    const { id } = req.params;
+    userDb.remove(id)
+    .then(removedUser => {
+        if (!removedUser) return res.status(404).json({message: "The user with the specified ID does not exist"})
+        return res.status(202).json(removedUser);
+    })
+    .catch(err => res.status(500).json({error: "The user could not be removed."}));
+})
+
+router.route('/:id/posts')
+.get((req,res) => {
     
 })
