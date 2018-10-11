@@ -68,6 +68,16 @@ server.delete('/api/users/:id', (req, res) => {
 })
 
 
+server.get('/api/users/:id/posts', (req, res) => {
+    const id = req.params.id;
+    usersDb.getUserPosts(id)
+    .then(userPosts => {
+        res.status(200).json(userPosts);
+    })
+    .catch(err => res.send(err.message));
+})
+
+
 
 
 
