@@ -27,3 +27,19 @@ router.route('/id:')
     })
     .catch(err => res.status(500).json({error: "Information cannot be retreived."}));
 })
+.put(upperCaser, (req,res) => {
+    const { id } = req.params;
+    const { name } = req;
+    const editeduser = { name };
+   userDb.update(id,editUser)
+   .then(updatedUser => {
+       if(!updatedUser) return res.status(404).json({message: "The user with specified ID does not exist"});
+    if(!name) return res.status(200).json(updtatedUser);
+    })
+.catch(err => res.status(500).json({error: "the user information could not be modified."})));
+
+})
+
+.delete((req,res) => {
+    
+})
