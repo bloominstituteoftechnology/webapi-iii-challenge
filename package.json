@@ -1,0 +1,19 @@
+{
+  "name": "chris-reilly-project",
+  "version": "1.0.0",
+  "description": "Chris Reilly Project",
+  "main": "index.js",
+  "repository": "https://github.com/duckets615/Node-Blog.git",
+  "author": "duckets615 <33557104+duckets615@users.noreply.github.com>",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.4",
+    "d": "^1.0.0",
+    "express": "^4.16.3",
+    "helmet": "^3.13.0",
+    "knex": "^0.15.2",
+    "morgan": "^1.9.1",
+    "nodeman": "^1.1.2",
+    "sqlite3": "^4.0.2"
+  }
+}
