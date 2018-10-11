@@ -2,20 +2,34 @@ console.log("Hello from  index.js!");
 
 const express = require('express');
 const server = express();
-// const helmet = require('helmet');
+const helmet = require('helmet');
+const cors = require('cors');
+const logger = require('morgan');
+
 const userDb = require('./data/helpers/userDb.js');
-// const cors = require('cors');
 
 server.use(express.json());
-// server.use(cors());
+server.use(logger('combined'));
+server.use(cors());
+server.use(helmet());
+//Middleware
+
+const timeStamp = (req, res, next) => {
+    console.log(`${Date.now()} ${req.method} made to ${req.url}`)
+    next();
+}; //documentation timestamp to url with what method GET, PUT, etc
+
+const upperCase = (req, res, next) => {
+    const newName = req.params.name.toUpperCase();
+    req.name = newName;
+    next();
+};
+
+//Routes
 
 server.get('/', (req, res) => {
     res.send('Hello from your server!!!');
 });
-
-//Middleware
-
-//Routes
 
 //GET all users
 // server.get('/users', (req, res) => {
@@ -43,8 +57,13 @@ server.get('/', (req, res) => {
 
 // //Post new user
 server.post('/users', (req, res) => {
-    userDb.insert(req.body).then(id => {
-        res.status(201).json(id);
+    const { name } = req.body;
+    const newUser = { name };
+    userDb.insert(newUser).then(userId => {
+        const { id } = userId;
+        userDb.findById(id).then(user => {
+            res.status(201).json(id);
+        })
     })
     .catach(error => {
         if(!name) {
@@ -57,10 +76,39 @@ server.post('/users', (req, res) => {
     })
 })
 
+//Delete
+// server.delete('/users/:id', (req, res) => {
+//     const { id } = req.params;
+//     userDb.remove(id).then(deletedUser => {
+//         if(!deletedUser) {
+//             return res.status(404).send({ Error: "The user with the specified ID does not exist." });
+//         } else {
+//             res.status(200).json({ message: "You successfully deleted the user." });
+//         }
+//     })
+//     .catch(error => res.status(500).send({ error: "The user failed to delete." }));
+//  });
 
+//Update
+// server.put('/users/:id', (req, res) => {
+//     const { id } = req.params;
+//     const { name } = req.body;
+//     const newUser = { name };
+//     userDb.update(id, newUser).then(user => {
+//         console.log(user);
+//         if(!name) {
+//             res.status(400).send({ errorMessage: "Please provide a name for the user." })
+//         } else if (!user) {
+//             res.status(404).send({ message: "The user with the specified ID does not exist." })
+//         } else {
+//             res.status(200).json(req.body);
+//         }})
+//         .catch(error => res.status(500).send({ error: "User information could not be modified."}))
+//     });
+ 
 
 const port = 9000;
-server.listen(port, () => console.log(`API running fire circles on this port ${port}`));
+server.listen(port, () => console.log(`API running crazy fire circles on this port ${port}`));
 
 // const { name } = req.body;
     // const newUser = { name };
