@@ -5,12 +5,12 @@ const usersDb = require('./data/helpers/userDb.js');
 const port = 7000;
 
 const server = express();
-//server.use(logger);
+server.use(logger('combined'));
 server.use(express.json());
 
 const upper = (req, res, next) => {
-    const newName = req.body.name.toUpperCase();
-    req.name = newName;
+    const { newName } = req.body.name.toUpperCase();
+    req.body.name = { newName };
     next();
 }
 
@@ -36,7 +36,7 @@ server.get('/api/users/:id', (req, res) => {
     .catch(err => res.send(err));
 })
 
-server.post('/api/users', (req, res) => {
+server.post('/api/users', upper, (req, res) => {
     const { name } = req.body;
     const newUser = { name };
     usersDb.insert(newUser)
@@ -45,6 +45,16 @@ server.post('/api/users', (req, res) => {
     })
     .catch(err => res.send(err.message));
 })
+
+server.delete('/api/users/:id', (req, res) => {
+    const id = req.params.id;
+    usersDb.remove(id)
+    .then(removedUser =>{
+    res.send(`${removedUser} user has been removed from database`)
+    })
+    .catch(err => res.send(err.message));
+})
+
 
 
 
