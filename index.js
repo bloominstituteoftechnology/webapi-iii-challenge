@@ -36,7 +36,7 @@ server.get('/api/users/:id', (req, res) => {
     .catch(err => res.send(err));
 })
 
-server.post('/api/users', upper, (req, res) => {
+server.post('/api/users', (req, res) => {
     const { name } = req.body;
     const newUser = { name };
     usersDb.insert(newUser)
@@ -44,6 +44,18 @@ server.post('/api/users', upper, (req, res) => {
             res.status(201).json(user);
     })
     .catch(err => res.send(err.message));
+})
+
+server.put('/api/users/:id', (req, res) => {
+    const id = req.params.id;
+    const { name } = req.body;
+    const editedUser = { name };
+    usersDb.update(id, editedUser)
+    .then(user => {
+        res.status(200).json(user)
+    })
+    .catch(err => res.send(err.message));
+
 })
 
 server.delete('/api/users/:id', (req, res) => {
