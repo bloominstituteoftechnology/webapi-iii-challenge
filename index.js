@@ -10,8 +10,7 @@ server.use(logger('combined'));
 server.use(express.json());
 
 const upper = (req, res, next) => {
-    const { newName } = req.body.name.toUpperCase();
-    req.body.name = { newName };
+    req.body.name = req.body.name.toUpperCase();
     next();
 }
 
@@ -37,7 +36,7 @@ server.get('/api/users/:id', (req, res) => {
     .catch(err => res.send(err));
 })
 
-server.post('/api/users', (req, res) => {
+server.post('/api/users', upper,  (req, res) => {
     const { name } = req.body;
     const newUser = { name };
     usersDb.insert(newUser)
