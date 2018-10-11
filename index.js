@@ -99,14 +99,25 @@ server.put('/api/users/:userId', upperCase, (req, res) => {
 });
 
 
-server.get('/api/users/:userId/posts', (req, res) => {
+
+server.get('/api/posts', (req, res) => {
+  postDb.get()
+    .then(posts => {
+      res.status(200).json(posts);
+    })
+    .catch(err => {
+      res.status(500).json({ error: "The posts information could not be retrieved.", err });
+    })
+});
+
+server.get('/api/posts/:postId', (req, res) => {
   const postId = req.params.postId;
   postDb.get(postId)
     .then(post => {
       if (!post) {
         res.status(404).json({ message: "The post with the specified ID does not exist." });
       }
-      res.status(200).json(user);
+      res.status(200).json(post);
     })
     .catch(err => {
       res.status(500).json({ error: "The post information could not be retrieved.", err });
