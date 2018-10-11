@@ -58,6 +58,16 @@ server.get('/user-posts/:id', (req, res) => {
 });
 
 
+server.delete('/users/:id', (req, res) => {
+    userHelper.remove(req.params.id)
+      .then(user => {
+        if (!user) {return res.status(400).json({ message: 'User with provided id does not exist.' });}
+        return res.status(200).json(user);
+      })
+      .catch(err => res.status(500).json({ message: 'User could not be removed.'}));
+});
+
+
 
 
 
