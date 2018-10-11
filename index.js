@@ -105,20 +105,26 @@ server.post('/api/posts', (req, res) => {
     .catch(err => res.send(err.message));
 })
 
+server.put('/api/posts/:id', (req, res) => {
+    const id = req.params.id
+    const { text, userId } = req.body;
+    const editedPost = { text, userId };
+    postsDb.update(id, editedPost)
+    .then(post => {
+        res.status(200).json(post)
+    })
+    .catch(err => res.send(err.message));
 
+})
 
-
-
-
-
-
-
-
-
-
-
-
-
+server.delete('/api/posts/:id', (req, res) => {
+    const id = req.params.id;
+    postsDb.remove(id)
+    .then(removedPost =>{
+    res.send(`${removedPost} post has been removed from database`)
+    })
+    .catch(err => res.send(err.message));
+})
 
 
 
