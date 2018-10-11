@@ -129,11 +129,41 @@ server.get('/api/posts/:postId', (req, res) => {
     });
 });
 
-//post
+//post --- not working
+server.post('/api/posts/', (req,res) => {
+    const {text, userId} = req.body;
+    const newPost = {userId, text};
+
+    if (!text || !userId) {
+        return res.status(400).json({msg: 'please provide all required fields'});
+    }
+    postDb
+    .insert(newPost)
+    .then(post => {
+        res.status(201).json(post);
+    })
+    .catch(err => {
+        res.status(500).json({error: "Error saving post"});
+    });
+});
 
 //put
 
 //delete
+server.delete('/api/posts/:id', (req, res) => {
+    const id = req.params.postId;
+    postDb
+    .get(id)
+    .then(user => {
+        postDb.remove(id)
+        .then(response => {
+            res.status(200).json(user);
+        })
+    })
+    .catch(err =>{
+        res.status(500).json({error:err});
+    });
+});
 
 
 server.listen(port, () => {
