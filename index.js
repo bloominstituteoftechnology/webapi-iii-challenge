@@ -1,12 +1,22 @@
 const express = require('express');
-const cors = require('cors');
-
 const server = express();
+const helmet = require('helmet');
+const cors = require('cors');
+const logger = require('morgan');
+const postDb = require('./data/helpers/postDb');
+const userDb = require('./data/helpers/userDb');
+const port = 7000;
+
+//const server = express();
 
 
-const port = 9000;
+server.use(express.json(), logger('combined'), cors(), helmet());
 
+//Routes
+
+server.get('/users', (req, res) => {
+    res.send('users');
+});
 //server.listen() method creates a listner on the specified port
-//server.listen(port, () => console.log(`API is running on ${port}`));
+server.listen(port, () => console.log(`API is running on ${port}`));
 
-server.use(express.json());
