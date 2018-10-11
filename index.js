@@ -12,12 +12,14 @@ server.use(cors());
 server.use(helmet());
 server.use(morgan("tiny"));
 
+// Capital middleware
 const capital = (req, res, next) => {
   req.capitalUser = { ...req.body };
   req.capitalUser.name = req.capitalUser.name.toUpperCase();
   next();
 };
 
+// Retrieve all exisiting users
 server.get("/api/users/", (req, res) => {
   userDb
     .get()
@@ -27,6 +29,7 @@ server.get("/api/users/", (req, res) => {
     );
 });
 
+// Retrieve user by specific ID
 server.get("/api/users/:id", (req, res) => {
   const { id } = req.params;
   userDb
@@ -44,6 +47,7 @@ server.get("/api/users/:id", (req, res) => {
     );
 });
 
+// Retrieves all user posts given their ID
 server.get("/api/users/:id/posts", (req, res) => {
   const { id } = req.params.id;
   userDb
@@ -61,6 +65,7 @@ server.get("/api/users/:id/posts", (req, res) => {
     );
 });
 
+// Generate new user by capital middleware
 server.post("/api/users", capital, (req, res) => {
   const newUser = req.capitalUser;
   userDb
@@ -88,6 +93,7 @@ server.post("/api/users", capital, (req, res) => {
     );
 });
 
+// Update user information with capital middleware
 server.put("/api/users/:id", capital, (req, res) => {
   const { id } = req.params;
   const updatedUser = req.capitalUser;
@@ -123,6 +129,7 @@ server.put("/api/users/:id", capital, (req, res) => {
     );
 });
 
+// Delete user from database given their ID
 server.delete("/api/users/:id", (req, res) => {
   const { id } = req.params;
   userDb
@@ -138,11 +145,9 @@ server.delete("/api/users/:id", (req, res) => {
         .json({ message: `User, ID ${id}, was successfully deleted.` });
     })
     .catch(err =>
-      res
-        .status(500)
-        .json({
-          error: "An error has occured while deleting the user in the database."
-        })
+      res.status(500).json({
+        error: "An error has occured while deleting the user in the database."
+      })
     );
 });
 
