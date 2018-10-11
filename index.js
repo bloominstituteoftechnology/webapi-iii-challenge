@@ -69,7 +69,7 @@ server.delete('/api/users/:userId', (req, res) => {
   }
   userDb.remove(userId)
     .then(removedUser => {
-      res.status(200).json(removedUser);
+      res.status(200).json({ message: "The user was deleted"});
     })
     .catch(err => {
       res.status(500).json({ error: "The user could not be removed", err });
