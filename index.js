@@ -2,6 +2,7 @@ const express = require('express');
 const logger = require('morgan');
 const cors = require('cors');
 const usersDb = require('./data/helpers/userDb.js');
+const postsDb =require('./data/helpers/postDb.js');
 const port = 7000;
 
 const server = express();
@@ -76,6 +77,34 @@ server.get('/api/users/:id/posts', (req, res) => {
     })
     .catch(err => res.send(err.message));
 })
+
+server.get('/api/posts', (req, res) => {
+    postsDb.get()
+    .then(posts => {
+        res.status(200).json(posts);
+    })
+    .catch(err => res.send(err.message));
+})
+
+server.get('/api/posts/:id', (req, res) => {
+    const id = req.params.id;
+    postsDb.get(id)
+    .then(post => {
+        res.status(200).json(post);
+    })
+    .catch(err => res.send(err.message));
+})
+
+server.post('/api/posts', (req, res) => {
+    const { text, userId } = req.body;
+    const newPost = { text, userId};
+    postsDb.insert(newPost)
+    .then(post => {
+        res.status(201).json(post);
+    })
+    .catch(err => res.send(err.message));
+})
+
 
 
 
