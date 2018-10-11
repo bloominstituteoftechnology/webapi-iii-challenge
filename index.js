@@ -1,5 +1,4 @@
 const express = require('express');
-const server = express();
 const helmet = require('helmet');
 const cors = require('cors');
 const logger = require('morgan');
@@ -7,29 +6,28 @@ const postDb = require('./data/helpers/postDb');
 const userDb = require('./data/helpers/userDb');
 const port = 7000;
 
-//const server = express();
+const server = express();
 
-//Global middleware
+//Third party middleware
 //express.json returns json objects of the response
+//All global middlewares that will be used across enpoints must also be plugged into the server
+
 server.use(express.json(), logger('combined'), cors(), helmet());
 
 //Custom middleware
 
-const capitalNames = (req, res, next) => {
-    req.body.name = req.body.name.toUpperCase();
+const capitalizeNames = (req, res, next) => {
+    console.log(req.body.name);
+    req.params.name = req.params.name.toUpperCase();
     next();
 }
 
 //Routes
 
-// server.get('/users', (req, res) => {
-//     res.json('users');
-// });
-
 server.get('/users', (req, res) => {
     userDb.get()
         .then(users => res.json(users))
-        .catch(err => res.status(500).json({ error: "The user info could not be found" }));
+            .catch(err => res.status(500).json({ error: "User not found"}));
 });
 
 
