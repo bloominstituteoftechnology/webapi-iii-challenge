@@ -93,7 +93,7 @@ server.put('/api/users/:userId', upperCase, (req, res) => {
   }
   userDb.update(userId, newUser)
     .then(user => {
-      res.status(200).json(user);
+      res.status(200).json({ message: "The user has been updated"});
     })
     .catch(err => {
       res.status(500).json({ error: "The user information could not be modified.", err });
