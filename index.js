@@ -2,13 +2,15 @@
 const express = require('express');
 const server = express();
 const helmet = require('helmet');
+const cors = require('cors');
+const logger = require('morgan');
 
 // database
 const userDb = require('./data/helpers/userDb');
 const postDb = require('./data/helpers/postDb');
 
 // middleware
-server.use(helmet());
+server.use(logger('tiny'), helmet(), cors());
 server.use(express.json());
 
 // custom middleware user's name is Uppercased
@@ -123,6 +125,27 @@ server.get('/api/posts/:postId', (req, res) => {
       res.status(500).json({ error: "The post information could not be retrieved.", err });
     })
 });
+
+server.post('/api/posts', (req, res) => {
+  const { text, userId } = req.body;
+  const newPost = { text, userId };
+  postDb
+    .insert(newPost)
+    .then(postId => {
+      const { id } = postId;
+      postDb.get(id)
+        .then(post => {
+          if (!post) {
+            res.status(400).json({ errorMessage: "Please provide text and userId for the post." });
+          }
+          res.status(201).json(post);
+        });
+    })
+    .catch(err => {
+      res.status(500).json({ error: "There was an error while saving the post to the database", err });
+    })
+});
+
 
 const port = 5000;
 server.listen(port, () =>
