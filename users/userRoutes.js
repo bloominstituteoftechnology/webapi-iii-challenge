@@ -10,7 +10,6 @@ const upperCase = (req, res, next) => {
     next();
 };
 
-
 // GET all users
 router.get('/', (req, res) => {
     userDb.get().then(users => {
