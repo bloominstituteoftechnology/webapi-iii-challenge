@@ -5,29 +5,28 @@ const helmet = require("helmet");
 const logger = require("morgan");
 
 
-// next we got to get the server going and add middleware
-
-const server = express();
-
-server.use(express.json());
-server.use(cors());
-server.use(helmet());
-server.use(logger("default", "dev"));
-
-
-const port = 8000;
-server.listen(8000, () => console.log("===API port 8000==="));
-/////////////////////////////////////////////////////////////
+//Server Helpers
 const userDb = require('./data/helpers/userDb.js');
 const postDb = require('./data/helpers/postDb.js');
- // instanciate your server
+
+
+// Server init
 const server = express();
+server.use(logger("default", "dev"));
+server.use(cors());
+server.use(helmet());
 server.use(express.json());
+const port = 8000;
+
+
+//middleware
 server.use(cors());
  const upperCase = (req, res, next) => {
     req.text = req.params.text.toUpperCase();
     next();
 };
+
+//
  server.use(logger('combined'), cors(), helmet());
  server.get('/blogs', (req, res) => {
     userDb.get()
@@ -37,6 +36,9 @@ server.use(cors());
             })
             .catch(err=>res.send(err));
 });
+
+
+//get blog by id
  server.get('/blogs/:id',
             (req, res) => {
     req.id = req.params.id;
@@ -52,6 +54,8 @@ res.status(200)
             })
             .catch(err=>res.send(err));
 });
+
+//
  server.post('/blogs', (req, res) =>{
     userDb.insert(req.body)
             .then(id =>{
@@ -60,6 +64,9 @@ res.status(200)
             })
             .catch(err=>res.send(err));
 });
+
+
+// DELETE  request for spec user
  server.delete('/blogs/:id', (req, res)=>{
     console.log(req.params);
     const id = req.params.id;
@@ -75,6 +82,8 @@ res.status(204)
             })
             .catch(err=>res.send(err));
 });
+
+//PUT code to edit existing user;
  server.put('/blogs/:id', upperCase, (req, res)=>{
     const id = req.params.id;
     console.log(id);
@@ -90,6 +99,8 @@ res.status(204)
             })
             .catch(err=>res.send(err));
 })
+
+// server listen
 server.listen(port, () => {
   console.log(`Checkout whats going on in ${port}`);
 });
