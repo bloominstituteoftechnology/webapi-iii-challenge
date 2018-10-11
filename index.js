@@ -7,42 +7,27 @@ const cors = require('cors');
 server.use(cors());// connect to react
 server.use(express.json());//use json data
 //get all users
-server.get('/api/users',(req,res)=>{
-  userDb.get()
-  .then(users=>{
-    console.log('success',users);
-     res.status(200).json(users);
-  })
-  .catch(err =>res.send(err))
-});
+
 
 //middleware for get request
 const middleware = (req,res,next) =>{
-  console.log(req.params.name);
-  const newId = req.params.id;
-  req.id= newId;
+  console.log(req.body);
+
+ req.body.name = req.body.name.toUpperCase();
+
+  console.log(req.body.name);
+
   next();
 }
-
-
-server.get('/api/users/:id',(req,res)=>{
-  userDb.get(req.params.id)
-  .then(users=>{
-    console.log('success',users);
-     res.status(200).json(users);
-  })
-  .catch(err =>res.send(err))
-});
-
 
 
 
 
 //get all post for user
-server.get('/api/users/:id/posts',middleware,(req,res)=>{
+server.get('/api/users/:id/posts',(req,res)=>{
   userDb.getUserPosts(req.params.id)
   .then(user =>{
-    console.log('sucess', user);
+    console.log('Success', user);
     res.status(200).json(user)
   })
   .catch(err =>{
@@ -50,7 +35,20 @@ server.get('/api/users/:id/posts',middleware,(req,res)=>{
   } )
 });
 
-server.post('/api/users',(req,res)=>{
+server.get('/api/users',(req,res)=>{
+  userDb.get()
+  .then(user =>{
+    console.log('Success', user);
+    res.status(200).json(user)
+  })
+  .catch(err =>{
+    res.send(err)
+  } )
+});
+
+
+server.post('/api/users',middleware,(req,res)=>{
+
   const{name} =req.body
   const newUser = {name}
   console.log(newUser);
