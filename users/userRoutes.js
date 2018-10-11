@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const upperCaser = require('../middlewares/middlewares.js').upperCaser;
+const userDb = require('../data/helpers/userDb.js');
 
 router.route('/')
 .post(upperCaser, (req,res) => {
@@ -52,5 +53,13 @@ router.route('/id:')
 
 router.route('/:id/posts')
 .get((req,res) => {
-    
+    const { id } = req.params;
+    userDb.getUserPosts(id)
+    .then(userPosts => {
+        if (!userPosts.length) return res.status(404).json({message: "The user with specified Id is not found"})
+        return res.status(202).json(userPosts);
+    })
+    .catch(err => res.status(500).json({error: "the user posts could not be retrieved."}));
 })
+
+module.exports = router;
