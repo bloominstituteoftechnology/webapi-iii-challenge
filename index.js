@@ -11,3 +11,9 @@ const port = 3333;
 server.use(express.json());
 
 server.listen(port, () => {console.log(`Server Active on Port ${port}`)});
+
+server.get('/users', (req, res) => {
+  userDb.get()
+  .then(users => res.status(200).send(users))
+  .catch(e => res.status(500).json({ e: "The user info could not be found"}));
+})
