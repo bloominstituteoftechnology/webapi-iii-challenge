@@ -16,6 +16,8 @@ server.use(logger('combined'));
 server.use(helmet());
 
 
+
+
 server.get('/', (req, res) => {
     res.send('Good Morning :). I\'m glad this is working!')
 });
@@ -34,6 +36,27 @@ server.get('/users', (req, res) => {
     .then (users => res.status(200).json(users))
     .catch(err => res.status(500).json({ message: 'The users information could not be retrieved.' }));
 });
+
+
+server.get('/users/:id', (req, res) => {
+    userHelper.get(req.params.id)
+      .then(user => {
+        if (!user) {return res.status(400).json({ message: 'User with provided id does not exist.' });}
+        return res.status(200).json(user);
+      })
+      .catch(err => res.status(500).json({ message: 'User\'s information could not be retrieved.'}));
+});
+
+
+server.get('/user-posts/:id', (req, res) => {
+    userHelper.getUserPosts(req.params.id)
+      .then(user => {
+        if (!user) {return res.status(400).json({ message: 'User with provided id does not exist.' });}
+        return res.status(200).json(user);
+      })
+      .catch(err => res.status(500).json({ message: 'User\'s posts could not be retrieved.'}));
+});
+
 
 
 
