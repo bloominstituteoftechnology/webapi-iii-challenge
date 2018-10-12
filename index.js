@@ -150,24 +150,37 @@ server.post('/api/posts/', (req,res) => {
 //put
 
 //delete
-server.delete('/api/posts/:id', (req, res) => {
-    const id = req.params.postId;
-    postDb
-    .get(id)
-    .then(id => {
-        console.log(id);
-        postDb
-    .remove(id)
-    .then(post => {
-        res.status(200).json(post);
-    })
-    .catch(err =>{
-        res.status(500).json({error:err});
-    });
-    })
-    
-});
+// server.delete('/api/posts/:postId', (req, res) => {
+//     const postId = req.params.postId;
 
+//     postDb
+//     .get(postId)
+//     .then(post => {
+//         postDb
+//         .remove(postId)
+//         .then(post => {
+//             res.status(200).json({message: "post deleted"})
+//         })
+//         .catch(err => {
+//             res.status(500).json(err)
+//         }); 
+//     })
+//     .catch(err => {
+//         res.status(404).json({message: 'post not found'});
+//     }); 
+// });
+
+server.delete('/api/posts/:postId', (req, res) => {
+    const postId = req.params.postId;
+    postDb
+    .remove(postId)
+    .then(post => {
+        res.status(200).json({message: "post deleted"})
+    })
+    .catch(err => {
+        res.status(500).json(err)
+    });  
+});
 
 server.listen(port, () => {
     console.log(`Its happening on port ${port}`);
