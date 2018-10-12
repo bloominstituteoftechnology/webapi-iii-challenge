@@ -129,6 +129,24 @@ server.get('/api/posts/:postId', (req, res) => {
     });
 });
 
+//get posts by user id
+server.get('/api/users/:userId/posts/', (req, res) => {
+    const userId = req.params.userId;
+    userDb
+    .getUserPosts(userId)
+    .then(post => {
+        if(!post) {
+            res.status(404).json({message: 'no posts not found for this user'});
+        } else {
+            res.status(200).send(post);
+        }
+    })
+    .catch(err => {
+        res.status(500).json({error: 'posts could not be populated'})
+    });
+});
+
+
 //post --- not working
 server.post('/api/posts/', (req,res) => {
     const {text, userId} = req.body;
