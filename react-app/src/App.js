@@ -15,10 +15,12 @@ class App extends Component {
   getRequest = () => {
     axios
       .get("http://localhost:3400/users")
-        .then(res => 
+        .then(res => {
+          console.log(res);
           this.setState({
             ...this.state, users: res.data
-          }))
+          })
+        })
         .catch(err => console.log(err))
   }
   render() {
