@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-
+import { Route, Link } from 'react-router-dom';
 import axios from 'axios'
 import './App.css';
+import UserList from './components/UserList';
 
 class App extends Component {
   state = {
@@ -30,6 +31,17 @@ class App extends Component {
         <header className="App-header">
           Greetings!
         </header>
+
+        <Link to="users" >View All Users</Link>
+
+
+        <Route 
+        path="/users"
+        render={ (props) => 
+        
+        <UserList {...props}
+        users={this.state.users}/> }
+        />
       </div>
     );
   }
