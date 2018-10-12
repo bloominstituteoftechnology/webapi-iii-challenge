@@ -18,14 +18,16 @@ server.use(express.json(), logger('combined'), cors(), helmet());
 //Custom middleware
 
 const capitalizeName = (req, res, next) => {
-    
-    req.body.name = req.body.name.toUpperCase();
     console.log(req.body);
+    req.body.name = req.body.name.toUpperCase();
     next();
 }
 
+// Root Request/Route Handler
 
-
+server.get('/', (req, res) => {
+	res.send('Test for client rendering?');
+});
 
 //Users Request/Route Handlers
 
@@ -40,7 +42,7 @@ server.get('/users', (req, res, next) => {
    
    })
    
-   server.get('/users/:id', capitalizeName, (req, res, next) => {
+   server.get('/users/:id', (req, res, next) => {
     userDb.getUserPosts(req.params.id)
       .then(posts => {
         res.status(200).json(posts)
