@@ -6,13 +6,14 @@ const morgan = require('morgan');
 const postDb = require('./data/helpers/postDb');
 const userDb = require('./data/helpers/userDb');
 
-// Middleware
+// middleware
 
 // express.json() teaches express to parse json info from req.body! 
 server.use(express.json(), cors(), morgan("tiny"), helmet());
 
 const upperCaseName = (req, res, next) => {
     req.body.name = req.body.name.toUpperCase();
+    // immutable way
     // req.newBody = { ...req.body }
     // req.newBody.name = req.newBody.name.toUpperCase();
     next();
@@ -28,7 +29,7 @@ server.get('/users', (req, res) => {
         .catch(err => 
             res
             .status(500)
-            .json({ error: "The user info could not be found" }
+            .json({ error: "The users info could not be found" }
         ));
 })
 
@@ -94,18 +95,32 @@ server.post('/users', upperCaseName, (req, res) => {
 })
 
 // ======= Update user =======
-// server.put('/users/:id', upperCaseName, (req, res) => {
-//     const { id } = req.params;
-//     const { name } = req.body.name;
-//     const newUser = name;
-//     userDb.update(id, newUser)
-//         .then(user => {
-//             if(!user) {
-//                 return res.status(404).json({ error: `User does not exist by that id ${id}` })
-//             }
-//         })
-//         .catch(err => console.log(err));
-// })
+server.put('/users/:id', (req, res) => {
+    const { id } = req.params;
+    const { name } = req.body;
+    const newUser = { name };
+    userDb
+        .update(id, newUser)
+            .then(user => {
+                (!user) ?
+                res
+                .statu(404)
+                .json({ error: `User ID ${id} does not exhist` }) :
+                userDb 
+                    .get(id)
+                    .then(user => {
+                        (!user) ?
+                        res
+                        .status(404)
+                        .json({ error: `ID ${id} could not be retrieved` }) :
+                        res
+                        .status(200)
+                        .json(user)
+                    })
+                res.status(200).json(user);
+            })
+            .catch(err => console.log(err));
+});
 
 // ======= Delete user =======
 server.delete('/users/:id', (req, res) => {
