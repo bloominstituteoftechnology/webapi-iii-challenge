@@ -154,15 +154,18 @@ server.delete('/api/posts/:id', (req, res) => {
     const id = req.params.postId;
     postDb
     .get(id)
-    .then(user => {
-        postDb.remove(id)
-        .then(response => {
-            res.status(200).json(user);
-        })
+    .then(id => {
+        console.log(id);
+        postDb
+    .remove(id)
+    .then(post => {
+        res.status(200).json(post);
     })
     .catch(err =>{
         res.status(500).json({error:err});
     });
+    })
+    
 });
 
 
