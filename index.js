@@ -19,6 +19,7 @@ server.get('/', (req, res) => {
     res.send('Blog');
 })
 
+// USERS - CRUD
 server.get('/api/users', (req, res) => {
     userDb.get().then(users => {
         console.log('\n*** user **', users);
@@ -50,6 +51,39 @@ server.post('/api/users/', (req,res) => {
         res.status.json({ newUser, message: 'User added'});
     })
 })
+
+server.delete('/api/users/:userId', (req, res) => {
+    const userId = req.params.userId;
+    if (!userId) {
+      res.status(404).json({ message: "The user with this ID does not exist." });
+    }
+    userDb.remove(userId)
+      .then(removedUser => {
+        res.status(200).json(removedUser);
+      })
+      .catch(err => {
+        res.status(500).json({ error: "This user could not be deleted."});
+      });
+  })
+
+server.put('/api/users/:userId', (req,res) => {
+    const userId = req.params.userId;
+    const { name } = req.body;
+    const newUser = { name };
+    console.log(newUser);
+    if (!req.body || !req.body.name) {
+        res.status(400).json({ error: "Please provide name for this user." })
+    }
+    userDb.update(userId, newUser)
+    .then( user => {
+        console.log(newUser);
+        res.status(200).json(user);
+    })
+    .catch(err => res.status(500).json({ error: "The user information could not be modified." }));
+})
+
+// POSTS - CRUD
+
 
 const port = 9000;
 server.listen(port, () => console.log(`Party in port ${port}`))
