@@ -39,6 +39,17 @@ server.get('/api/users/:userId', (req, res) => {
     .catch(err => res.status(500).json({ error: "This user information could not be retrieved. "}))
 })
 
+server.post('/api/users/', (req,res) => {
+    if (!req.body || !req.body.name) {
+        res.status(400).json({ error: "Please provide the name of the user"})
+    }
+    const { name } = req.body;
+    const newUser = { name };
+    userDb.insert(newUser)
+    .then(insertedUser => {
+        res.status.json({ newUser, message: 'User added'});
+    })
+})
 
 const port = 9000;
 server.listen(port, () => console.log(`Party in port ${port}`))
