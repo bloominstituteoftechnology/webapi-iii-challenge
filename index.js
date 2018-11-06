@@ -14,6 +14,14 @@ server.use(logger(`combined`));
 server.use(cors());
 server.use(helmet());
 
+// custom middleware
+const upperCaseIt = (req, res, next) => {
+    // set new name , modify name to uppercase
+    req.body.name = req.body.name.toUpperCase();
+    // move in to next piece of middleware
+    next();
+  };
+
 // routes
 server.get('/', (req, res) => {
     res.send('Blog');
@@ -40,7 +48,7 @@ server.get('/api/users/:userId', (req, res) => {
     .catch(err => res.status(500).json({ error: "This user information could not be retrieved. "}))
 })
 
-server.post('/api/users/', (req,res) => {
+server.post('/api/users/', upperCaseIt, (req,res) => {
     if (!req.body || !req.body.name) {
         res.status(400).json({ error: "Please provide the name of the user"})
     }
