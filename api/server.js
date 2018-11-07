@@ -24,6 +24,14 @@ server.get('/api/posts/', (req, res) => {
 });
 // test success
 
+// get all user posts
+server.get(`/api/posts/user/`, (req, res) => {
+	const userId = req.query.userId;
+	userDB.getUserPosts(userId).then((user) => {
+		user.length <= 0 ? res.status(404).json({ message: 'That user was not found' }) : res.status(200).json(user);
+	});
+});
+
 // get post by id
 server.get('/api/posts/:id', (req, res) => {
 	const { id } = req.params;
