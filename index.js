@@ -44,10 +44,20 @@ server.post('/users/', async (req, res) => {
 
 server.delete('/users/:id', async (req, res) => {
     try {
-        console.log('req.params', req.params);
         const { id } = req.params;
         const deleteCount = await dbUser.remove(id);
-        res.status(200).json(`Messages deleted: ${deleteCount}`);
+        res.status(200).json(`Users deleted: ${deleteCount}`);
+    } catch(err) {
+        res.status(500).json({ message: err });
+    }
+});
+
+server.put('/users/:id', async (req, res) => {
+    try {
+        const userData = req.body;
+        const { id } = req.params;
+        const updateCount = await dbUser.update(id, userData);
+        res.status(200).json(`Users updated: ${updateCount}`);
     } catch(err) {
         res.status(500).json({ message: err });
     }
