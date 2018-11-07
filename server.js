@@ -20,6 +20,17 @@ server.get('/api/users', (req, res) => {
          })
 })
 
+server.get('/api/users/:id', (req, res) => {
+    const { id } = req.params;
+    users.get(id)
+         .then(user => {
+             res.status(200).json(user)
+         })
+         .catch(err => {
+             res.status(500).json({ message: 'error no ID matched'})
+         })
+})
+
 
 
 server.listen(port, () => console.log(`Server listen to port ${port}`))
