@@ -76,4 +76,25 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
+router.put('/:id', capitalizeName, async (req, res) => {
+  if (req.body.name && req.body.name.length < 129) {
+    try {
+      const count = await userDb.update(req.params.id, req.body);
+      if (count > 0) {
+        const user = await userDb.get(req.params.id);
+        res.status(200).json(user);
+      } else {
+        res.status(404).json({ message: 'The user with the specified ID does not exist.' });
+      }
+    } catch (err) {
+      res.status(500).json({ error: "The user's name could not be modified." });
+    }
+  } else {
+    res.status(400).json({
+      errorMessage:
+        'Please provide a name (character length must be below 128 characters) for the user.'
+    });
+  }
+});
+
 module.exports = router;
