@@ -24,6 +24,16 @@ server.get('/api/users/:id', (req, res) => {
             res.status(500).json({ error: 'Error loading posts.', err });
         })
 
-})
+});
+
+server.post('/api/users', (req, res) => {
+    db.insert(req.body)
+        .then(userId => {
+            res.status(201).json({ userId });
+        })
+        .catch(err => {
+            res.status(500).json({ error: 'Error creating user.', err });
+        })
+});
 
 server.listen(9000, () => console.log('The server is listening at port 9000'));
