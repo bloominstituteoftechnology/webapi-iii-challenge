@@ -95,9 +95,59 @@ server.put('/api/users/:id', nameCheckMiddleware, (req, res) => {
     }) 
 })
 
+// ==================POSTS ENDPOINTS=========================
+server.get('/api/posts', (req, res) => {
+    posts
+    .get()
+    .then(posts => {
+        res.jsom(posts)
+    })
+    .catch(err => {
+        return errorMessage(500, "Not Found", res)
+    })
+})
 
+server.get('/api/posts/:id', (req, res) => {
+    const { id } = req.params;
+    posts
+    .get(id)
+    .then(post => {
+        if (post === 0 ) {
+            return errorMessage(404, 'No post by that id', res)
+        } 
+        res.json(post)
+    })
+    .catch(err => {
+        return errorMessage(500, 'Not Found', res)
+    })
+})
 
+server.post('/api/posts/:id', (req, res) => {
+    const { userId, text } = req.body;
+    posts
+    .insert({userId, text})
+    .then(response => {
+        res.json(response)
+    })
+    .catch(err => {
+        return errorMessage(500, 'Not found', res)
+    })
+})
 
+server.get('/api/posts/tags/:id', (req, res) => {
+    const { id } = req.params;
+    posts
+    .getPostTags(id)
+    .then(postTags  => {
+        if (postTags === 0) {
+            return errorMessage(404, 'Post not found', res)
+        }
+        res.json(postTags)
+    })
+    .catch(err => {
+        return errorMessage(500, 'Not Found', res)
+    })
+})
 
 
 
