@@ -22,10 +22,8 @@ const allCaps = (req, res, next) => {
 
 server.use(morgan("dev"), cors(), helmet(), express.json());
    
-  // ROUTES
-// server.get("/api/users/:id", allCaps, (req, res) => {
-//   res.send(`${req.user}`);
-// });
+ 
+//=============== USER ENDPOINTS =============== //
 
 //Get all users
 server.get("/api/users", (req, res) => {
@@ -97,6 +95,28 @@ server.get("/api/users", (req, res) => {
   });
   
   //Update a user
+  server.put("/api/users/:id", (req, res) => {
+    const { id } = req.params;
+    const newUser = req.body;
+    userDb
+      .update(id, newUser)
+      .then(user => {
+        if (user.length < 1) {
+          res.status(404).json({
+            message: "The user with the specified ID does not exist."
+          });
+        } else {
+          res.status(200).json(user);
+        }
+      })
+      .catch(err =>
+        res.status(500).json({
+          error: "The user information could not be modified.."
+        })
+      );
+  });
+  
+  //=============== POST ENDPOINTS =============== //
   
   // call server.listen w/ a port of your choosing
   server.listen(port, () => {
