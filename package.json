@@ -1,0 +1,16 @@
+{
+  "name": "nodeblog",
+  "version": "1.0.0",
+  "description": "a blog backend",
+  "main": "index.js",
+  "repository": "https://github.com/rytwalker/Node-Blog.git",
+  "author": "rytwalker <rytwalker@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "knex": "^0.15.2",
+    "sqlite3": "^4.0.3"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.6"
+  }
+}
