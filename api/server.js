@@ -24,6 +24,19 @@ server.get("/api/users", (req, res) => {
         })
 })
 
+server.get("/api/posts", (req, res) => {
+    postDB.get()
+        .then(posts => {
+            res.status(200).json(posts);
+        })
+        .catch(err => {
+            res
+                .status(500)
+                .json({ error: "The posts could not be retrieved." },
+                console.log(err))
+        })
+})
+
 server.get('/api/users/:id', (req, res) => {
     const { id } = req.params;
 
