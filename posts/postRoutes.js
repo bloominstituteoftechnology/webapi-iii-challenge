@@ -18,9 +18,6 @@ router.get('/', async (req, res)=>{
 
 });
 
-router.get('/:id/posts', ()=>{
-    
-});
 
 router.post('/:id', ()=>{
 
