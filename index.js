@@ -173,6 +173,32 @@ server.get("/api/posts", (req, res) => {
   });
   
   //Update a post
+  server.put("/api/posts/:id", (req, res) => {
+    const { id } = req.params;
+    const { text, userId } = req.body;
+    const newPost = { text, userId };
+    if (!text || !userId) {
+      return res
+        .status(400)
+        .json({ error: "Please provide a userId and text for the post." });
+    }
+    postDb
+      .update(id, newPost)
+      .then(post => {
+        if (post.length < 1) {
+          res.status(404).json({
+            message: "The post with the specified ID does not exist."
+          });
+        } else {
+          res.status(200).json(post);
+        }
+      })
+      .catch(err =>
+        res.status(500).json({
+          error: "The post information could not be modified.."
+        })
+      );
+  });
   
   
   // call server.listen w/ a port of your choosing
