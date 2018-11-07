@@ -102,6 +102,18 @@ server.get('/api/posts', (req, res) => {
     .catch(err => res.status(500).json({ error: "The information of posts could not be retrieved. "}))
 })
 
+server.get('/api/posts/:postId', (req, res) => {
+    const { postId } = req.params;
+    postDb.get(postId)
+    .then(post => {
+        if (!post) {
+            res.status(404).json({ error: "The post with this ID does not exist."})
+        }
+        res.status(200).json(post);
+    })
+    .catch(err => res.status(500).json({ error: "This post information could not be retrieved. "}))
+})
+
 
 const port = 9000;
 server.listen(port, () => console.log(`Party in port ${port}`))
