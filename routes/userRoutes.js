@@ -9,7 +9,7 @@ const router = express.Router();
 
 // CUSTOM MIDDLEWARE
 // ==============================================
-const toUpperCase = (req, _, next) => {
+const capitalizeName = (req, _, next) => {
   const { name } = req.body;
   req.body.name = name.charAt(0).toUpperCase() + name.slice(1, name.length).toLowerCase();
   next();
@@ -48,7 +48,7 @@ router.get('/:id/posts', async (req, res) => {
   }
 });
 
-router.post('/', toUpperCase, async (req, res) => {
+router.post('/', capitalizeName, async (req, res) => {
   if (req.body.name && req.body.name.length < 129) {
     try {
       const addedUser = await userDb.insert(req.body);
