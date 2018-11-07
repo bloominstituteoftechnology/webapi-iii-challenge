@@ -47,4 +47,18 @@ router.get('/:id/posts', async (req, res) => {
   }
 });
 
+router.post('/', toUpperCase, async (req, res) => {
+  if (req.body.name && req.body.name.length < 129) {
+    try {
+      const addedUser = await userDb.insert(req.body);
+      const user = await userDb.get(addedUser.id);
+      res.status(201).json(user);
+    } catch (err) {
+      res.status(500).json({ error: 'There was an error while saving the user to the database.' });
+    }
+  } else {
+    res.status(400).json({ errorMessage: 'Please provide a name for the user.' });
+  }
+});
+
 module.exports = router;
