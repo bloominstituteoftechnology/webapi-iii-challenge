@@ -1,40 +1,74 @@
-const express = require('express');
-const helmet = require('helmet');
-const morgan = require('morgan');
-// npm i express helmet morgan
-// yarn add express helmet morgan
+// import modules
+const express = require('express')
+const helmet = require('helmet')
+const morgan = require('morgan')
 
-const server = express();
+// import db helpers
+const postDb = require('../data/helpers/postDb.js')
+const userDb = require('../data/helpers/userDb.js')
+
+// initialize server
+const server = express()
 
 // configure middleware
-// ORDER MATTERS! they will execute top to bottom
-server.use(express.json()); // built in
-server.use(helmet()); // third party
-server.use(morgan('short')); // third party
+server.use(express.json())
+server.use(helmet())
+server.use(morgan('short'))
 
-// custom
+// configure custom middleware
 function gatekeeper(req, res, next) {
   // next points to the next middleware/route handler in the queue
   if (req.query.pass === 'mellon') {
-    console.log('welcome travelers');
+    console.log('welcome travelers')
 
-    req.welcomeMessage = 'welcome to the mines of Moria';
+    req.welcomeMessage = 'welcome to the mines of Moria'
 
-    next(); // continue to the next middleware
+    next() // continue to the next middleware
   } else {
-    res.send('you shall not pass!');
+    res.send('you shall not pass!')
   }
 }
 
-// server.use(gatekeeper); // using middleware globally
-
-// configure endpoints (route handlers are middleware!!)
+// verification server is live
 server.get('/', (req, res) => {
-  res.status(200).json({ api: 'running' });
-});
+  res.status(200).json({ api: 'running' })
+})
 
-server.get('/secret', gatekeeper, (req, res) => {
-  res.send(req.welcomeMessage);
-});
+// set up routes for users
+server.get('/users/', (req, res) => {
+  userDb
+    .get()
+    .then(users => res.status(200).json(users))
+    .catch(err => res.status(404).json({ error: 'no users found' }))
+})
 
-module.exports = server;
+server.get('/users/:id', (req, res) => {
+  userDb
+    .get(req.params.id)
+    .then(user => res.status(200).json(user))
+    .catch(err => res.status(404).json({ error: 'user not found' }))
+})
+
+server.post('/users/', (req, res) => {
+  userDb
+    .insert(req.body)
+    .then(success => res.status(201).json(success))
+    .catch(err => res.status(400).json({ error: 'failed to add user' }))
+})
+
+server.put('/users/:id', (req, res) => {
+  userDb
+    .update(req.params.id, req.body)
+    .then(count => res.status(201).json(count))
+    .catch(err => res.status(400).json({ error: 'failed to modify user' }))
+})
+
+server.delete('/users/:id', (req, res) => {
+  userDb
+    .remove(req.params.id)
+    .then(count => res.status(200).json(count))
+    .catch(err => res.status(400).json({ error: 'failed to delete user' }))
+})
+
+// export server
+module.exports = server
