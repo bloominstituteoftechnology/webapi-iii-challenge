@@ -10,6 +10,14 @@ server.use(express.json());
 server.use(helmet());
 server.use(morgan('short'));
 
+function nameToUpperCase(req, res, next) {
+    const { body } = req;
+    if (!body.name.length) {
+        res.status(400).json({ message: 'A name is required' })
+    }
+    req.body.name = body.name.toUpperCase();
+    next();
+}
 
 server.get('/', (req, res) => {
     res.status(200).json({ api: 'running' });
@@ -60,7 +68,7 @@ server.get('/api/users', (req, res) => {
       });
   });
   
-  server.post('/api/users', async (req, res) => {
+  server.post('/api/users', nameToUpperCase, async (req, res) => {
     console.log('body', req.body);
     try {
       const userData = req.body;
@@ -78,7 +86,7 @@ server.get('/api/users', (req, res) => {
     }
   });
 
-  server.put('/api/users/:id', (req, res) => {
+  server.put('/api/users/:id', nameToUpperCase, (req, res) => {
     const { id } = req.params;
     const changes = req.body;
     user.update(id, changes)
