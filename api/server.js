@@ -161,7 +161,23 @@ server.put('/api/posts/:id', (req, res) => {
 // getUserPosts()
 server.get('/api/posts/user/:id', (req, res) => {
   const { id } = req.params;
-  user.get.then.catch;
+  user
+    .getUserPosts(id)
+    .then(list => {
+      list.length > 0
+        ? res.status(200).json(list)
+        : res
+            .status(404)
+            .json({ Message: 'The user does not exist/has no posts.' });
+    })
+    .catch(err => {
+      res
+        .status(500)
+        .json({
+          message: 'Posts for the specified user could not be retrieved.',
+          error: err
+        });
+    });
 });
 
 module.exports = server;
