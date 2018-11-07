@@ -145,6 +145,23 @@ server.delete('/api/posts/:postId', (req, res) => {
       });
   })
 
+  server.put('/api/posts/:postId', (req, res) => {
+    const postId = req.params.postId;
+    const { text, userId } = req.body;
+    const newPost = { text, userId };
+    if (!postId) {
+      res.status(404).json({ message: "The post with this ID does not exist." });
+    }
+    else if (!newPost) {
+      res.status(400).json({ errorMessage: "Please provide text and a user id for this post." });
+    }
+    postDb.update(postId, newPost)
+      .then(post => {
+        res.status(200).json({ message: "The post has been updated."});
+      })
+      .catch(err => { res.status(500).json({ error: "The post information could not be updated."});
+      });
+});
 
 const port = 9000;
 server.listen(port, () => console.log(`Party in port ${port}`))
