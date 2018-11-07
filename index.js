@@ -63,13 +63,13 @@ server.get("/api/users", (req, res) => {
     const newUser = req.body;
     if (newUser.name.length > 128) {
         return res.status(411).json({
-          message: " The user name must be under 129 characters."
+         user, message: " The user name must be under 129 characters."
         });
       }
     userDb
       .insert(newUser)
       .then(user => {
-        res.status(201).json(user);
+        res.status(201).json({user, message: "The user was added successfully"});
       })
       .catch(err => {
         res.status(500).json({
@@ -89,7 +89,7 @@ server.get("/api/users", (req, res) => {
             message: "The user with the specified ID does not exist."
           });
         } else {
-          res.status(200).json(user);
+          res.status(200).json({user, message: "The user was deleted successfully"});
         }
       })
       .catch(err =>
@@ -111,7 +111,7 @@ server.get("/api/users", (req, res) => {
             message: "The user with the specified ID does not exist."
           });
         } else {
-          res.status(200).json(user);
+          res.status(200).json({user, message: "The user was updated successfully"});
         }
       })
       .catch(err =>
