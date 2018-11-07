@@ -44,6 +44,26 @@ server.delete('/users/:id', (request, response) => {
        })
 })
 
+//put
+server.put('/users/:id', (request, response) => {
+    if(request.body.name !== undefined) {
+        db.update(request.params.id, request.body)
+          .then(count => {
+                if(count) {
+                    response.status(200).json(count);
+                } else {
+                    response.status(404).json({ message: "The user with the specified ID does not exist." })
+                }
+           })
+          .catch(error => {
+                response.status(500).json({ error: "The user information could not be modified." })
+           })
+    } else {
+        response.status(400).json({ errorMessage: "Please provide name for the user." })
+    }
+})
+
+
 server.listen(9000, () => {
      console.log("Server running on port 9000");
 })
