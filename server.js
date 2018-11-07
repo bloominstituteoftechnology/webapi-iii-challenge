@@ -1,9 +1,11 @@
 const express = require('express');
 const morgan = require('morgan');
-
+const cors = require('cors');
 const userDb = require('./data/helpers/userDb');
+const postDb = require('./data/helpers/postDb');
 
 const server = express();
+server.use(cors());
 server.use(express.json()); // initially forgot to include this.
 server.use(morgan('dev'));
  
@@ -25,9 +27,12 @@ function uppercase(req, res, next) {
 
 server.use(uppercase);
 
+
 // adding a default GET at the root to tell folks the API is live.
 server.get('/', (req,res) => res.send({API: "live", "Users": "live", "Posts": "not live"}));
 
+
+// ALL USER RELATED STUFF 
 server.get('/api/users', (req, res) => {
     userDb.get().then(users => {
         res.status(200).json(users);
@@ -98,4 +103,8 @@ server.put('/api/users/:id', async (req,res) => {
     }
 })
 
+// ALL POST RELATED STUFF
+
+
+// Server Listening on Port 9000
 server.listen(9000, () => console.log('Server running on port 9000'));
