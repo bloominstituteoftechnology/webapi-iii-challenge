@@ -122,7 +122,7 @@ server.get('/api/posts/:id', (req, res) => {
     })
 })
 
-server.post('/api/posts/:id', (req, res) => {
+server.post('/api/posts', (req, res) => {
     const { userId, text } = req.body;
     posts
     .insert({userId, text})
@@ -160,13 +160,6 @@ server.get('/api/tags', (req, res) => {
         return errorMessage(500, 'Not Found', res)
     })
 })
-
-
-
-
-
-
-
 
 
 server.listen(port, () => {console.log(`\n==^_^==Server listening on port ${port}==^_^==`)})
