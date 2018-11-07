@@ -17,9 +17,9 @@
 
 ### Download Project Files and Install Dependencies
 
-- **Fork** and **Clone** this repository.
-- **CD into the folder** where you cloned the repository.
-- Do your magic!
+x **Fork** and **Clone** this repository.
+x **CD into the folder** where you cloned the repository.
+x Do your magic!
 
 ### Database Persistence Helpers
 
@@ -62,8 +62,6 @@ Now that we have a way to add, update, remove and retrieve data from the provide
   - perform CRUD operations on _users_ and _posts_.
   - retrieve the list of posts for a user.
 - **Use _Postman_ to test the API as you work through the exercises.**
-
-
 
 ## Stretch Goal
 
