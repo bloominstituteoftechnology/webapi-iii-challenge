@@ -10,7 +10,8 @@ const router = express.Router();
 // CUSTOM MIDDLEWARE
 // ==============================================
 const toUpperCase = (req, _, next) => {
-  req.body.name = req.body.name.toUpperCase();
+  const { name } = req.body;
+  req.body.name = name.charAt(0).toUpperCase() + name.slice(1, name.length).toLowerCase();
   next();
 };
 
@@ -57,7 +58,10 @@ router.post('/', toUpperCase, async (req, res) => {
       res.status(500).json({ error: 'There was an error while saving the user to the database.' });
     }
   } else {
-    res.status(400).json({ errorMessage: 'Please provide a name for the user.' });
+    res.status(400).json({
+      errorMessage:
+        'Please provide a name (character length must be below 128 characters) for the user.'
+    });
   }
 });
 
