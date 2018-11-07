@@ -1,5 +1,6 @@
 const server = require('./api/server.js');
 const userDb = require('./data/helpers/userDb');
+const upperCaseThat = require('./middleware/upperCaseThat');
 
 const port = 9000;
 server.listen(port, () => console.log(`\nAPI running on port ${port}\n`));
@@ -28,7 +29,7 @@ server.get('/api/users/:id', async (req, res) => {
   }
 });
 
-server.post('/api/users', async (req, res) => {
+server.post('/api/users', upperCaseThat, async (req, res) => {
   const userData = req.body;
   console.log(req.body);
   if (!userData.name) {
@@ -58,7 +59,7 @@ server.delete('/api/users/:id', (req, res) => {
     });
 });
 
-server.put('/api/users/:id', async (req, res) => {
+server.put('/api/users/:id', upperCaseThat, async (req, res) => {
   try {
     const { id } = req.params;
     const changes = req.body;
