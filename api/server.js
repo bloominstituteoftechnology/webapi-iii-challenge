@@ -20,8 +20,34 @@ server.get('/api/users', (req, res) => {
     .get()
     .then(users => res.status(200).json(users))
     .catch(err =>
-      res.status(404).json({ message: 'No users found.', error: err })
+      res.status(500).json({
+        message: 'The user information could not be retrieved.',
+        error: err
+      })
     );
+});
+
+server.get('/api/users/:id', (req, res) => {
+  const { id } = req.params;
+  user
+    .get(id)
+    .then(user => {
+      if (user) {
+        res.status(200).json(user);
+      } else {
+        res
+          .status(404)
+          .json({ message: 'The user with the specified ID does not exist.' });
+      }
+    })
+    .catch(err => {
+      res
+        .status(500)
+        .json({
+          message: 'The post information could not be retrieved.',
+          error: err
+        });
+    });
 });
 
 // routes for posts
