@@ -7,6 +7,13 @@ const server = express();
 //inbuild middleware
 server.use(express.json());
 
+//custom middleware
+const upperCase = (request, response, next) => {
+    console.log(request.body.name.toUpperCase());
+    request.body.name  =  request.body.name.toUpperCase();
+    next();
+};
+ 
 //get
 server.get('/users', (request, response) => {
         db.get()
@@ -19,7 +26,7 @@ server.get('/users', (request, response) => {
 })
 
 //post
-server.post('/users', (request, response) => {
+server.post('/users', upperCase, (request, response) => {
     if(request.body.name !== undefined) {
         db.insert(request.body)
           .then(userId => {
@@ -45,7 +52,7 @@ server.delete('/users/:id', (request, response) => {
 })
 
 //put
-server.put('/users/:id', (request, response) => {
+server.put('/users/:id', upperCase, (request, response) => {
     if(request.body.name !== undefined) {
         db.update(request.params.id, request.body)
           .then(count => {
