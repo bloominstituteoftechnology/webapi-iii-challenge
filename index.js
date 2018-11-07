@@ -58,4 +58,26 @@ server.post("/api/users", (req, res) => {
     : res.status(400).json({ message: "Please provide a name for the user." });
 });
 
+server.put("/api/users/:id", (req, res) => {
+  req.body.name
+    ? userDb
+        .update(req.params.id, req.body)
+        .then(
+          count =>
+            count
+              ? userDb
+                  .get(req.params.id)
+                  .then(user => res.status(200).json(user))
+              : res.status(404).json({
+                  message: "The user with the specified ID does not exist."
+                })
+        )
+        .catch(err =>
+          res.status(500).json({
+            error: "The user information could not be modified."
+          })
+        )
+    : res.status(400).json({ message: "Please provide a name for the user." });
+});
+
 server.listen(5000, () => console.log("API running on port 5000"));
