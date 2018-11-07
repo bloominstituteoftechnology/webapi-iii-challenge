@@ -1,0 +1,28 @@
+{
+  "name": "chad-node-blog",
+  "version": "1.0.0",
+  "description": "basic blog",
+  "main": "knexfile.js",
+  "scripts": {
+    "test": "test",
+    "start": "nodemon"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ceejaay/Node-Blog.git"
+  },
+  "author": "Chad Jemmett",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ceejaay/Node-Blog/issues"
+  },
+  "homepage": "https://github.com/ceejaay/Node-Blog#readme",
+  "devDependencies": {
+    "express": "^4.16.4",
+    "helmet": "^3.15.0",
+    "knex": "^0.15.2",
+    "morgan": "^1.9.1",
+    "nodemon": "^1.18.6",
+    "sqlite3": "^4.0.3"
+  }
+}
