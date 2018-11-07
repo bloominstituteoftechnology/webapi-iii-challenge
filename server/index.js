@@ -13,7 +13,7 @@ const server = express()
 // configure middleware
 server.use(express.json())
 server.use(helmet())
-server.use(morgan('short'))
+server.use(morgan('dev'))
 
 // configure custom middleware
 const uppercaseName = (req, res, next) => {
@@ -61,6 +61,50 @@ server.delete('/users/:id', (req, res) => {
     .remove(req.params.id)
     .then(count => res.status(200).json(count))
     .catch(err => res.status(400).json({ error: 'failed to delete user' }))
+})
+
+// set up routes for posts
+server.get('/posts/', (req, res) => {
+  postDb
+    .get()
+    .then(posts => res.status(200).json(posts))
+    .catch(err => res.status(404).json({ error: 'no posts found' }))
+})
+
+server.get('/posts/:id', (req, res) => {
+  console.log(`getting ${req.params.id}`)
+  postDb
+    .get(req.params.id)
+    .then(post => res.status(200).json(post))
+    .catch(err => res.status(404).json({ error: 'post not found' }))
+})
+
+server.get('/posts/user/:id', (req, res) => {
+  userDb
+    .getUserPosts(req.params.id)
+    .then(posts => res.status(200).json(posts))
+    .catch(err => res.status(404).json({ error: 'no posts for that user' }))
+})
+
+server.post('/posts/', uppercaseName, (req, res) => {
+  postDb
+    .insert(req.body)
+    .then(success => res.status(201).json(success))
+    .catch(err => res.status(400).json({ error: 'failed to add post' }))
+})
+
+server.put('/posts/:id', uppercaseName, (req, res) => {
+  postDb
+    .update(req.params.id, req.body)
+    .then(count => res.status(201).json(count))
+    .catch(err => res.status(400).json({ error: 'failed to modify post' }))
+})
+
+server.delete('/posts/:id', (req, res) => {
+  postDb
+    .remove(req.params.id)
+    .then(count => res.status(200).json(count))
+    .catch(err => res.status(400).json({ error: 'failed to delete post' }))
 })
 
 // export server
