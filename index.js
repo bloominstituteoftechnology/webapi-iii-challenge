@@ -48,10 +48,26 @@ server.get("/posts/tags/:id", (req, res) => {
   });
 });
 
+// U P D A T E  P O S T  by  I D
+server.put("/posts/:id", (req, res) => {
+  const { id } = req.params;
+  const changes = req.body;
+  postDB
+    .update(id, changes)
+    .then(post => {
+      res.status(200).json({ message: "Post updated successfully." });
+    })
+    .catch(err => {
+      res
+        .status(500)
+        .json({ message: "There was an error modifying your post.", err });
+    });
+});
+
 // D E L E T E   P O S T  by  I D
 server.delete("/posts/:id", (req, res) => {
   postDB.remove(req.params.id).then(post => {
-    res.status(200).json({ message: "Post deleted successfully" });
+    res.status(200).json({ message: "Post deleted successfully." });
   });
 });
 
