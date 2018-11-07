@@ -2,6 +2,7 @@
 
 ## Topics
 
+
 - Building RESTful APIs.
 - Performing CRUD Operations on Multiple Resources.
 - Configuring CORS.
