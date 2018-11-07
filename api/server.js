@@ -1,5 +1,5 @@
 const express = require('express');
-// const upperCase = require('../middleware/actions');
+const upperCase = require('../middleware/actions');
 const cors = require('cors');
 const postDB = require('../data/helpers/postDb');
 const userDB = require('../data/helpers/userDb');
@@ -12,13 +12,6 @@ server.use(cors());
 server.get('/', (req, res) => {
 	res.json('alive');
 });
-
-// configure custom middleware
-function upperCase(req, res, next) {
-	// next points to the next middleware/route handler in the queue
-	req.body.name = req.body.name.toUpperCase();
-	next(); // continue to the next middleware
-}
 
 // get all posts
 server.get('/api/posts/all', (req, res) => {
@@ -62,7 +55,7 @@ server.get('/api/posts/:id', (req, res) => {
 });
 // test success
 
-// create a post
+// create a user and uppercase their name
 server.post('/api/user', upperCase, (req, res) => {
 	userDB
 		.insert(req.body)
@@ -75,7 +68,7 @@ server.post('/api/user', upperCase, (req, res) => {
 });
 //test success
 
-// delete a post
+// delete a post by id
 server.delete('/api/posts/:id', (req, res) => {
 	postDB.remove(req.params.id).then((count) => {
 		count
@@ -85,7 +78,7 @@ server.delete('/api/posts/:id', (req, res) => {
 });
 //test success
 
-// update a post
+// update a post by id
 server.put('/api/posts/:id', (req, res) => {
 	const { id } = req.params;
 	const changes = req.body;
@@ -102,4 +95,20 @@ server.put('/api/posts/:id', (req, res) => {
 });
 // test success
 
+// update user by id and uppercase name
+server.put('/api/user/:id', upperCase, (req, res) => {
+	const { id } = req.params;
+	const changes = req.body;
+	userDB
+		.update(id, changes)
+		.then((user) => {
+			user
+				? res.status(200).json({ message: 'User updated successfully' })
+				: res.status(404).json({ message: 'That user was not found' });
+		})
+		.catch((err) => {
+			res.status(500).json({ message: 'error updating user', err });
+		});
+});
+// test successful
 module.exports = server;
