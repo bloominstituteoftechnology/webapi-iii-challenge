@@ -11,7 +11,7 @@ const server = express();
 //Middleware Stuffage
 server.use(express.json());
 server.use(helmet()); 
-server.use(morgan('short'));//does it matter what one we use at all?
+server.use(morgan('dev'));//does it matter what one we use at all?
 
 //Server Code
 
@@ -19,8 +19,26 @@ server.get('/', (req, res) => {
     res.status(200).json({ api: 'it is running properly ' });
 });
 
+//users .gets 
 server.get('/users',(req,res)=>{
-    res.status(200).json({})
+    userDb.get()
+        .then(users => {
+            res.status(200).json(users)
+        })
+        .catch(error => {
+            res.status(500).json("can not find the users ",error)
+        })
+});
+
+//posts .gets
+server.get('/posts',(req,res)=>{
+    postDb.get()
+        .then(posts => {
+            res.status(200).json(posts)
+        })
+        .catch(error => {
+            res.status(500).json("can not find the posts ",error)
+        })
 });
 
 // server.get('/secret', gatekeeper, (req, res) => {
