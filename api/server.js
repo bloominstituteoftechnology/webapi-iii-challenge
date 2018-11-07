@@ -8,6 +8,11 @@ const server = express();
 // middleware
 server.use(express.json());
 
+function setToUpperCase(req, _, next) {
+  req.body.name = req.body.name.toUpperCase();
+  next();
+}
+
 // GET all users
 server.get('/api/users', (_, res) => {
   userDb.get()
@@ -51,7 +56,7 @@ server.get('/api/users/:id/posts', (req, res) => {
 });
 
 // CREATE a new user
-server.post('/api/users', (req, res) => {
+server.post('/api/users', setToUpperCase, (req, res) => {
   const user = req.body;
   const { name } = user;
   console.log('POST req.body:', user);
@@ -70,7 +75,7 @@ server.post('/api/users', (req, res) => {
 });
 
 // UPDATE an existing user
-server.put('/api/users/:id', (req, res) => {
+server.put('/api/users/:id', setToUpperCase, (req, res) => {
   const { id } = req.params;
   const user = req.body;
 
