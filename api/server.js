@@ -9,6 +9,14 @@ const server = express();
 server.use(express.json());
 server.use(cors());
 
+// user name to upper case
+function toUpperCase(req, res, next) {
+  if (req.body.name) {
+    req.body.name = req.body.name.toUpperCase();
+  }
+  next();
+}
+
 // sanity check
 server.get('/', (req, res) => {
   res.status(200).json({ api: 'server go run' });
@@ -59,7 +67,7 @@ server.delete('/api/users/:id', (req, res) => {
     );
 });
 
-server.post('/api/users', (req, res) => {
+server.post('/api/users', toUpperCase, (req, res) => {
   user
     .insert(req.body)
     .then(success => res.status(201).json(success))
@@ -70,7 +78,7 @@ server.post('/api/users', (req, res) => {
     );
 });
 
-server.put('/api/users/:id', (req, res) => {
+server.put('/api/users/:id', toUpperCase, (req, res) => {
   user
     .update(req.params.id, req.body)
     .then(count => res.status(201).json(count))
@@ -148,6 +156,12 @@ server.put('/api/posts/:id', (req, res) => {
         .status(400)
         .json({ message: 'Your post could not be updated.', error: err })
     );
+});
+
+// getUserPosts()
+server.get('/api/posts/user/:id', (req, res) => {
+  const { id } = req.params;
+  user.get.then.catch;
 });
 
 module.exports = server;
