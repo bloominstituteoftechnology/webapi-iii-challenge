@@ -69,6 +69,26 @@ server.post("/api/users", uppercaser, async (req, res) => {
     }
 })
 
+server.post("/api/posts", (req, res) => {
+    try {
+        const postData = req.body;
+        if (postData.text === "" || postData.text === undefined) {
+            res.status(400).json({ error: "Please enter a post." })
+        }
+        else if (postData.userId) {
+            userDB.get(postData.userId).then(post => {if (post === undefined) {
+                res.status(400).json({ error: "The user ID you entered does not correspond to a user." })
+            } else {
+                const newPost = postDB.insert(postData);
+                res.status(201).json(postData);
+            }
+            })
+        }
+    } catch (error) {
+        res.status(500).json({ error: "There was an error while saving the post to the database" })
+    }
+})
+
 server.put("/api/users/:id", uppercaser, (req, res) => {
     const {id} = req.params;
     const user = req.body;
