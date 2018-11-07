@@ -59,6 +59,17 @@ server.delete('/api/users/:id', (req, res) => {
     );
 });
 
+server.post('/api/users', (req, res) => {
+  user
+    .insert(req.body)
+    .then(success => res.status(201).json(success))
+    .catch(err =>
+      res
+        .status(400)
+        .json({ message: 'Your user could not be added.', error: err })
+    );
+});
+
 // routes for posts
 server.get('/api/posts', (req, res) => {
   post
