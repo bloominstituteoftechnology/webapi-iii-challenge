@@ -1,14 +1,16 @@
+//imports
 const express = require('express');
 const cors = require('cors')
-
 const userDb = require('../data/helpers/userDb');
 
+//connects express and server
 const server = express();
 
+//middleware
 server.use(express.json());
 server.use(cors());
-//GET all users
 
+//GET all users
 server.get('/api/users', (req, res) => {
     userDb.get()
     .then( users => {
@@ -84,6 +86,23 @@ server.get('/api/users', (req, res) => {
       })
       .catch(error => {
           res.status(500).json({ message: error})
+      })
+  })
+
+ //DELETE user 
+  server.delete('/api/users/:id', (req, res) => {
+      const { id } = req.params;
+
+      userDb.remove(id)
+      .then(count => {
+          if (count) {
+              res.status(200).json({ message: `${count} user(s) deleted`})
+          } else {
+              res.status(404).json({ message: 'user does not exist'})
+          }
+      })
+      .catch (error => {
+          res.status(500).json ({ message: error})
       })
   })
 module.exports = server;
