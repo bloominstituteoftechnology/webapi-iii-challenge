@@ -48,7 +48,7 @@ server.get('/api/users/:id', (req, res) => {
     });
 });
 
-server.delete('/users/:id', (req, res) => {
+server.delete('/api/users/:id', (req, res) => {
   user
     .remove(req.params.id)
     .then(count => res.status(200).json(count))
@@ -93,6 +93,17 @@ server.get('/api/posts/:id', (req, res) => {
         error: err
       });
     });
+});
+
+server.delete('/api/posts/:id', (req, res) => {
+  post
+    .remove(req.params.id)
+    .then(count => res.status(200).json(count))
+    .catch(err =>
+      res
+        .status(400)
+        .json({ message: 'Your post could not be deleted', error: err })
+    );
 });
 
 module.exports = server;
