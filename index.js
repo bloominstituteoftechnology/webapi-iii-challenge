@@ -24,25 +24,20 @@ server.get("/posts/all", (req, res) => {
   userDB;
 });
 
-// G E T   P O S T S   by   U S E R   I D
-server.get("/posts/:id", (req, res) => {
+// G E T   A L L   P O S T S   by   U S E R   I D
+server.get("/posts/user/:id", (req, res) => {
   const { id } = req.params;
-  userDB.getUserPosts(id).then(posts => {
-    res.status(200).json(posts);
+  userDB.getUserPosts(id).then(user => {
+    res.status(200).json(user);
   });
 });
 
-// C R E A T E   P O S T
-server.post("/posts", async (req, res) => {
-  try {
-    const postData = req.body;
-    const postId = await postDB.insert(postData);
-    console.log("post:", postData.title);
-
-    res.status(201).json(postId);
-  } catch (error) {
-    res.status(500).json({ message: "error creating post" });
-  }
+// G E T   P O S T  by  I D
+server.get("/posts/:id", (req, res) => {
+  const { id } = req.params;
+  postDB.get(id).then(post => {
+    res.status(200).json(post);
+  });
 });
 
 // G E T  T A G S  by  P O S T  I D
@@ -50,6 +45,13 @@ server.get("/posts/tags/:id", (req, res) => {
   const { id } = req.params;
   tagDB.getPostTags(id).then(posts => {
     res.status(200).json(posts);
+  });
+});
+
+// D E L E T E   P O S T  by  I D
+server.delete("/posts/:id", (req, res) => {
+  postDB.remove(req.params.id).then(post => {
+    res.status(200).json({ message: "Post deleted successfully" });
   });
 });
 
