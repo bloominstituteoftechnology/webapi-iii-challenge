@@ -70,6 +70,17 @@ server.post('/api/users', (req, res) => {
     );
 });
 
+server.put('/api/users/:id', (req, res) => {
+  user
+    .update(req.params.id, req.body)
+    .then(count => res.status(201).json(count))
+    .catch(err =>
+      res
+        .status(400)
+        .json({ message: 'Your user could not be updated.', error: err })
+    );
+});
+
 // routes for posts
 server.get('/api/posts', (req, res) => {
   post
