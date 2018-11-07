@@ -5,11 +5,13 @@
   "repository": "https://github.com/KHollobaugh/Node-Blog.git",
   "author": "KHollobaugh <khollobaugh@gmail.com>",
   "license": "MIT",
-  "private": false,
+  "private": true,
   "scripts": {
-    "start": "nodemon"
+    "server": "nodemon index.js"
   },
   "dependencies": {
+    "axios": "^0.18.0",
+    "cors": "^2.8.5",
     "express": "^4.16.4",
     "knex": "^0.15.2",
     "sqlite3": "^4.0.3"
