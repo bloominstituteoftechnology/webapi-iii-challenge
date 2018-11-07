@@ -53,9 +53,8 @@ server.delete('/api/posts/:id', (req, res) => {
 });
 
 // update a post
-
 server.put('/api/posts/:id', (req, res) => {
-	const { id } = req.perams;
+	const { id } = req.params;
 	const changes = req.body;
 	postDB
 		.update(id, changes)
