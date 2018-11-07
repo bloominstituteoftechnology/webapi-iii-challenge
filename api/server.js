@@ -45,65 +45,6 @@ server.get("/api/users/:id", (req, res) => {
     });
 });
 
-// all posts
-server.get("/api/posts", (req, res) => {
-  postDb
-    .get()
-    .then(post => {
-      res.status(200).json(post);
-    })
-    .catch(error => {
-      res
-        .status(500)
-        .json({ error: "The user information could not be retrieved." });
-    });
-});
-
-// posts by user id
-server.get("/api/posts/:id", gateKeeper, (req, res) => {
-  const { id } = req.params;
-  const userId = id;
-
-  userDb
-    .getUserPosts(userId)
-    .then(post => {
-      if (post.length !== 0) {
-        res.status(200).json(post);
-      } else {
-        res
-          .status(404)
-          .json({ message: "The post with the specified ID does not exist." });
-      }
-    })
-    .catch(error => {
-      res
-        .status(500)
-        .json({ error: "The post information could not be retrieved." });
-    });
-});
-
-// posts by post id
-server.get("/api/post/:id", (req, res) => {
-  const { id } = req.params;
-
-  postDb
-    .get(id)
-    .then(post => {
-      if (post.length !== 0) {
-        res.status(200).json(post);
-      } else {
-        res
-          .status(404)
-          .json({ message: "The post with the specified ID does not exist." });
-      }
-    })
-    .catch(error => {
-      res
-        .status(500)
-        .json({ error: "The post information could not be retrieved." });
-    });
-});
-
 // add new user
 server.post("/api/users", uppercase, (req, res) => {
   userDb
@@ -159,7 +100,6 @@ server.put("/api/users/:id", uppercase, (req, res) => {
           .status(404)
           .json({ message: "The user with the spucified ID does not exist." });
       }
-    //   res.status(400).json({ errorMessage: "Please provide a name" });
     })
     .catch(error => {
       res
@@ -167,5 +107,127 @@ server.put("/api/users/:id", uppercase, (req, res) => {
         .json({ error: "The user information can not be modified." });
     });
 });
+
+// all posts
+server.get("/api/posts", (req, res) => {
+    postDb
+      .get()
+      .then(post => {
+        res.status(200).json(post);
+      })
+      .catch(error => {
+        res
+          .status(500)
+          .json({ error: "The user information could not be retrieved." });
+      });
+  });
+  
+  // posts by user id
+  server.get("/api/posts/:id", gateKeeper, (req, res) => {
+    const { id } = req.params;
+    const userId = id;
+  
+    userDb
+      .getUserPosts(userId)
+      .then(post => {
+        if (post.length !== 0) {
+          res.status(200).json(post);
+        } else {
+          res
+            .status(404)
+            .json({ message: "The post with the specified ID does not exist." });
+        }
+      })
+      .catch(error => {
+        res
+          .status(500)
+          .json({ error: "The post information could not be retrieved." });
+      });
+  });
+  
+  // posts by post id
+  server.get("/api/post/:id", (req, res) => {
+    const { id } = req.params;
+  
+    postDb
+      .get(id)
+      .then(post => {
+        if (post.length !== 0) {
+          res.status(200).json(post);
+        } else {
+          res
+            .status(404)
+            .json({ message: "The post with the specified ID does not exist." });
+        }
+      })
+      .catch(error => {
+        res
+          .status(500)
+          .json({ error: "The post information could not be retrieved." });
+      });
+  });
+
+  // add new post
+server.post("/api/posts", (req, res) => {
+    postDb
+      .insert(req.body)
+      .then(post => {
+        return postDb
+          .get(post.id)
+          .then(post => {
+            res.status(201).json(post);
+          })
+          .catch(error => {
+            res.status(500).json({
+              error: "There was an error while saving the post to the database"
+            });
+          });
+      })
+      .catch(error => {
+        res.status(400).json({
+          errorMessage: "Please provide text."
+        });
+      });
+  });
+  
+  // delete post
+  server.delete("/api/posts/:id", (req, res) => {
+    postDb
+      .remove(req.params.id)
+      .then(post => {
+        if (post) {
+          res.status(200).json(post);
+        } else {
+          res
+            .status(404)
+            .json({ message: "The post with the specified ID does not exist." });
+        }
+      })
+      .catch(error => {
+        res.status(500).json({ error: "The post could not be removed" });
+      });
+  });
+  
+  // update a post
+  server.put("/api/posts/:id", (req, res) => {
+    const { id } = req.params;
+    const changes = req.body;
+    postDb
+      .update(id, changes)
+      .then(post => {
+        if (post) {
+          res.status(200).json(post);
+        } else {
+          res
+            .status(404)
+            .json({ message: "The post with the spucified ID does not exist." });
+        }
+      })
+      .catch(error => {
+        res
+          .status(500)
+          .json({ error: "The post information can not be modified." });
+      });
+  });
 
 module.exports = server;
