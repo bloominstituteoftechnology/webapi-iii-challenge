@@ -45,6 +45,19 @@ server.get('/api/users', (req, res) => {
       });
   });
 
+  server.get('/api/users/posts/:userId', (req, res) => {
+    const { userId } = req.params;
+    user.getUserPosts(userId)
+      .then(usersPosts => {
+        if (usersPosts === 0) {
+          return errorHelper(404, 'No posts by that user', res);
+        }
+        res.json(usersPosts);
+      })
+      .catch(err => {
+        res.status(500).json({ message: "could not find the user's post", err });
+      });
+  });
   
 
 
