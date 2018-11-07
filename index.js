@@ -36,6 +36,14 @@ server.get('/users/:id', (req, res) => {
     })
 })
 
+server.get('/users/:id/all', (req, res) => {
+    userDb.getUserPosts(req.params.id)
+    .then(posts => res.status(200).json(posts))
+    .catch(err => {
+        res.status(500).json({ message: "failed to get user posts" })
+    })
+})
+
 server.get('/posts/:id', (req, res) => {
     postDb.get(req.params.id)
     .then(post => res.status(200).json(post))
