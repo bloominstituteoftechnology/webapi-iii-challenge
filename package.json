@@ -5,8 +5,8 @@
   "repository": "https://github.com/brad-mortensen/Node-Blog.git",
   "author": "Brad Mortensen <b.mort86@gmail.com>",
   "license": "MIT",
-  "script":{
-    "start":"nodemon"
+  "scripts": {
+    "start": "nodemon"
   },
   "dependencies": {
     "cors": "^2.8.5",
