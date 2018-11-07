@@ -22,6 +22,7 @@ server.get('/api/posts/', (req, res) => {
 		})
 		.catch((err) => err.status(500).json({ message: "Can't retrieve post data!!" }));
 });
+// test success
 
 // get post by id
 server.get('/api/posts/:id', (req, res) => {
@@ -30,6 +31,7 @@ server.get('/api/posts/:id', (req, res) => {
 		post.length <= 0 ? res.status(404).json({ message: 'That post was not found' }) : res.status(200).json(post);
 	});
 });
+// test success
 
 // create a post
 server.post('/api/posts/', (req, res) => {
@@ -42,6 +44,7 @@ server.post('/api/posts/', (req, res) => {
 			res.status(500).json({ message: 'error creating post', err });
 		});
 });
+//test success
 
 // delete a post
 server.delete('/api/posts/:id', (req, res) => {
@@ -51,6 +54,7 @@ server.delete('/api/posts/:id', (req, res) => {
 			: res.status(404).json({ message: 'That post was not found or already deleted' });
 	});
 });
+//test success
 
 // update a post
 server.put('/api/posts/:id', (req, res) => {
@@ -67,5 +71,6 @@ server.put('/api/posts/:id', (req, res) => {
 			res.status(500).json({ message: 'error updating post', err });
 		});
 });
+// test success
 
 module.exports = server;
