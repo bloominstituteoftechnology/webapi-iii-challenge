@@ -25,4 +25,15 @@ router.get('/', async (_, res) => {
   }
 });
 
+router.get('/:id', async (req, res) => {
+  try {
+    const user = await userDb.get(req.params.id);
+    user
+      ? res.status(200).json(user)
+      : res.status(404).json({ message: 'The user with the specified ID does not exist.' });
+  } catch (err) {
+    res.status(500).json({ error: "The user's information could not be retrieved." });
+  }
+});
+
 module.exports = router;
