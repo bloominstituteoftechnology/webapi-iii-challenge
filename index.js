@@ -239,6 +239,31 @@ server.put("/api/posts/:id", (req, res) => {
   });
 });
 
+server.delete("/api/posts/:id", (req, res) => {
+  const { id } = req.params;
+  postDb.get(id).then(post => {
+    if (post) {
+      postDb
+        .remove(id)
+        .then(count => {
+          res
+            .status(200)
+            .json(`Deleted ${count} post. Post id ${id} successfully deleted.`);
+        })
+        .catch(err =>
+          sendUserError(
+            500,
+            "The post information could not be deleted.",
+            res,
+            err
+          )
+        );
+    } else {
+      res.status(404).json({ error: `Post id ${id} not found` });
+    }
+  });
+});
+
 server.listen(port, () => {
   console.log(`\n=== Listening on port ${port} ===\n`);
 });
