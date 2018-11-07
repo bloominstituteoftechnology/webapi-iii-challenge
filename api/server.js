@@ -44,7 +44,6 @@ server.get('/api/users/:id', (req, res) => {
 server.post("/api/users", uppercaser, async (req, res) => {
     try {
         const userData = req.body;
-        console.log(userData)
         if (userData.name === "" || userData.name === undefined) {
             res.status(400).json({ error: "Please provide username." })
         }
@@ -55,6 +54,27 @@ server.post("/api/users", uppercaser, async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: "There was an error while saving the user to the database" })
     }
+})
+
+server.put("/api/users/:id", uppercaser, (req, res) => {
+    const {id} = req.params;
+    const user = req.body;
+
+    userDB.update(id, user)
+        .then(count => {
+            if (user.name === "" || user.name === undefined) {
+                res.status(400).json({ errorMessage: "Please provide username." });
+            }
+            if(count) {
+                res.status(200).json(user);
+            }
+            else {
+                res.status(404).json({ message: "The user with the specified ID does not exist." })
+            }
+        })
+        .catch(err => {
+            res.status(500).json({ error: "The user information could not be modified." })
+        })
 })
 
 module.exports = server;
