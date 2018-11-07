@@ -1,11 +1,12 @@
 const express = require('express');
+const cors = require('cors')
 
 const userDb = require('../data/helpers/userDb');
 
 const server = express();
 
 server.use(express.json());
-
+server.use(cors());
 //GET all users
 
 server.get('/api/users', (req, res) => {
@@ -50,4 +51,21 @@ server.get('/api/users', (req, res) => {
          res.status(500).json({ message:error})
      })
  })
+
+ //POST (create) new user
+ server.post('/api/users', (req, res) => {
+    const user = req.body;
+    const { name } = user;
+    console.log('POST', user);
+     if (!name) {
+      res.status(400).json({ message: "Name required" })
+    }
+     userDb.insert(user)
+      .then(newUser => {
+        res.status(201).json(newUser);
+      })
+      .catch(error => {
+        res.status(500).json({ message: error });
+      })
+  });
 module.exports = server;
