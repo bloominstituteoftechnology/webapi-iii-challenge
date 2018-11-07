@@ -27,6 +27,7 @@ server.get('/api/posts/all', (req, res) => {
 
 // get user by id
 server.get('/api/user/:id', (req, res) => {
+	const { id } = req.params;
 	userDB
 		.get(id)
 		.then((user) => {
@@ -34,6 +35,7 @@ server.get('/api/user/:id', (req, res) => {
 		})
 		.catch((err) => res.status(500).json({ message: "can't revieve user data!!" }));
 });
+// test success ex. localhost:9000/api/user/1 ==> "id": 1, "name": "Frodo Baggings"
 
 // get all user posts
 server.get(`/api/posts/user/`, (req, res) => {
