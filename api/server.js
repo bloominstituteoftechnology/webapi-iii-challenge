@@ -8,7 +8,17 @@ const server = express();
 
 server.use(express.json());
 server.use(helmet());
-server.use(morgan('short'));
+server.use(morgan('dev'));
+
+
+function upperCaseUser(req, res, next) {
+    if (req.body.name) {
+        req.body.name = req.body.name.toUpperCase();
+    }
+    next();
+}
+
+server.use(upperCaseUser);
 
 // User Requests
 
@@ -35,7 +45,7 @@ server.get('/api/users/:id', (req, res) => {
         })
 })
 
-server.post('/api/users', (req, res) => {
+server.post('/api/users', upperCaseUser, (req, res) => {
     req.body.name ?
         userDb.insert(req.body)
             .then(user => {
@@ -48,7 +58,7 @@ server.post('/api/users', (req, res) => {
         res.status(400).json({ errorMessage: "Please provide the name for the user." })
 })
 
-server.put('/api/users/:id', (req, res) => {
+server.put('/api/users/:id', upperCaseUser, (req, res) => {
     const { id } = req.params;
     req.body.name ?
         userDb.update(id, req.body)
