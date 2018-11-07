@@ -2,7 +2,7 @@ const express = require('express');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const userDb = require('../data/helpers/userDb');
-const postDb = require('../data/helpers/postDb.js');
+const postDb = require('../data/helpers/postDb');
 
 const server = express();
 
@@ -11,7 +11,6 @@ server.use(helmet());
 server.use(morgan('short'));
 
 // User Requests
-// id (generated), name
 
 server.get('/api/users', (req, res) => {
     userDb.get()
@@ -55,8 +54,8 @@ server.put('/api/users/:id', (req, res) => {
         userDb.update(id, req.body)
             .then(count => {
                 count === 1 ?
-                res.status(200).json({ message: 'Post Added'}) :
-                res.status(404).json({ message: "The post with the specified ID does not exist." })
+                res.status(200).json({ message: 'User updated'}) :
+                res.status(404).json({ message: "The user with the specified ID does not exist." })
             })
             .catch(err => {
                 res.status(500).json({ error: "The user information could not be modified." })
@@ -70,15 +69,14 @@ server.delete('/api/users/:id', (req, res) => {
     userDb.remove(id)
         .then(count => {
             count === 1 ?
-            res.status(200).json({ message: 'Post Deleted'}) :
-            res.status(404).json({ message: "The post with the specified ID does not exist." })
+            res.status(200).json({ message: 'User deleted'}) :
+            res.status(404).json({ message: "The user with the specified ID does not exist." })
         })
         .catch(err => {
             res.status(500).json({ error: "The user information could not be deleted." })
         })
 })
 
-// need correct endpoint
 // server.get('/api/users/:id', (req, res) => {
 //     const { id } = req.params;
 //     userDb.getUserPosts(id)
@@ -91,13 +89,69 @@ server.delete('/api/users/:id', (req, res) => {
 //             res.status(500).json({ error: "Posts for the specified user could not be retrieved."})
 //         })
 // })
+
 // Post Requests
-// id (generated), userId, text
 
-// get() returns array or item if passed id
-// insert() passed object to add; returns object with id
-// update() passed id, changes; returns count
-// remove() passed id; returns count
+server.get('/api/posts', (req, res) => {
+    postDb.get()
+        .then(posts => {
+            res.status(200).json(posts)
+        })
+        .catch(err => {
+            res.status(500).json({ error: "The posts information could not be retrieved." })
+        })
+})
 
-// getUserPosts() passed user id; returns list of user's posts
+server.get('/api/posts/:id', (req, res) => {
+    const { id } = req.params;
+    postDb.get(id)
+        .then(post => {
+            post ?
+            res.status(200).json(post) :
+            res.status(404).json({ message: "The post with the specified ID does not exist." })
+        })
+})
+
+server.post('/api/posts', (req, res) => {
+    req.body.userId && req.body.text ?
+        postDb.insert(req.body)
+            .then(post => {
+                res.status(201).json(post.id)
+            })
+            .catch(err => {
+                res.status(500).json({ error: "The post could not be added." })
+            })
+    :
+        res.status(400).json({ errorMessage: "Please provide the user ID and text for the post." })
+})
+
+server.put('/api/posts/:id', (req, res) => {
+    const { id } = req.params;
+    req.body.userId && req.body.text ?
+        postDb.update(id, req.body)
+            .then(count => {
+                count === 1 ?
+                res.status(200).json({ message: 'Post updated'}) :
+                res.status(404).json({ message: "The post with the specified ID does not exist." })
+            })
+            .catch(err => {
+                res.status(500).json({ error: "The post information could not be modified." })
+            })
+    :
+        res.status(400).json({ errorMessage: "Please provide the user ID and text for the post." })
+})
+
+server.delete('/api/posts/:id', (req, res) => {
+    const { id } = req.params;
+    postDb.remove(id)
+        .then(count => {
+            count === 1 ?
+            res.status(200).json({ message: 'Post deleted'}) :
+            res.status(404).json({ message: "The post with the specified ID does not exist." })
+        })
+        .catch(err => {
+            res.status(500).json({ error: "The post information could not be deleted." })
+        })
+})
+
 module.exports = server;
