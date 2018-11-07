@@ -31,6 +31,17 @@ server.get('/api/users/:id', (req, res) => {
          })
 })
 
+server.post('/api/users', (req, res) => {
+    const { name } = req.body;
+    users.insert({ name })
+         .then(user => {
+             res.status(200).json(user)
+         })
+         .catch(err => {
+             res.status(500).json({ message: 'error unable to create new user'})
+         })
+})
+
 
 
 server.listen(port, () => console.log(`Server listen to port ${port}`))
