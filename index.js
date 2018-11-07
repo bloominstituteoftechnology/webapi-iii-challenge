@@ -36,4 +36,14 @@ server.post('/api/users', (req, res) => {
         })
 });
 
+server.put('/api/users/:id', (req, res) => {
+    db.update(req.params.id, req.body)
+        .then(count => {
+            res.status(400).json({ count });
+        })
+        .catch(err => {
+            res.status(500).json({ error: 'Error updating user.', err });
+        })
+});
+
 server.listen(9000, () => console.log('The server is listening at port 9000'));
