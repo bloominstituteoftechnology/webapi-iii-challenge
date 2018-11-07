@@ -4,13 +4,47 @@ const users = require('../data/helpers/userDb');
 const server = express();
 server.use(express.json());
 
-
 const sendErrorMsg = (errCode, msg, res) => {
     res.status(errCode);
     res.json({ Error: msg });
 }
 
+// custom middleware
+
+const upperCase = (req, res, next) => {
+    console.log(req.params)
+    req.body.name = req.body.name.toUpperCase();
+
+    next();
+};
+
+//update user
+
+server
+    .put('/api/users/:id', upperCase, (req, res) => {
+        const { id } = req.params;
+        const changes = req.body;
+
+        users
+            .update(id, changes)
+            .then(count => {
+                if (count) {
+                    res.status(200).json({ message: `${count} name was updated` })
+                } else {
+                    return sendErrorMsg(400, 'id not found')
+                }
+            })
+            .catch(err => {
+                return sendErrorMsg(500, 'The name could not be modified');
+            });
+    });
+
+
+
+
+
 //get users
+
 server
     .get('/', (req, res) => {
         res.status(200).json({ api: 'running' });
@@ -47,7 +81,7 @@ server
 
 // new user
 server
-    .post('/api/users', (req, res) => {
+    .post('/api/users', upperCase, (req, res) => {
         const { name } = req.body;
 
         users
@@ -68,37 +102,14 @@ server
 
         users
             .remove(id)
-            .then(user => {
-                if (user[0]) {
-                    return sendErrorMsg(404, `The name with ${id} does not exist`)
-                } else {
-                    res.status(200).json({ message: `User has been removed` })
-                }
+            .then(count => {
+                res.status(200).json({ message: `${count} name has been removed` })
+
             })
             .catch(err => {
                 return sendErrorMsg(500, 'The user could not be removed', res);
             });
     });
 
-//update user
-
-server
-    .put('/api/users/:id', (req, res) => {
-        const { id } = req.params;
-        const changes = req.body;
-
-        users
-            .update(id, changes)
-            .then(userId => {
-                if (!req.body.name) {
-                    return sendErrorMsg(400, 'Please provide a name to be posted')
-                } else {
-                    res.status(200).json(req.body)
-                }
-            })
-            .catch(err => {
-                return sendErrorMsg(500, 'The name could not be modified');
-            });
-    });
 
 module.exports = server;
