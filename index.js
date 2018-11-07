@@ -183,11 +183,60 @@ server.get("/api/posts/:id", (req, res) => {
     .catch(err => {
       sendUserError(
         500,
-        "The user's information could not be retrieved.",
+        "The post's information could not be retrieved.",
         res,
         err
       );
     });
+});
+
+server.post("/api/posts/", (req, res) => {
+  const { userId, text } = req.body;
+  const newPost = { userId, text };
+  if (!newPost) {
+    res.status(400).json({ message: "Please provide text and userId." });
+    return;
+  }
+  postDb
+    .insert(newPost)
+    .then(post => {
+      res.status(201).json({ message: `Added post with id of ${post.id}.` });
+    })
+    .catch(err => {
+      sendUserError(
+        500,
+        "There was an error while saving the post to the database",
+        res,
+        err
+      );
+    });
+});
+
+server.put("/api/posts/:id", (req, res) => {
+  const { id } = req.params;
+  const { text } = req.body;
+  const newPost = { text };
+  postDb.get(id).then(post => {
+    if (post) {
+      postDb
+        .update(id, newPost)
+        .then(count => {
+          res
+            .status(200)
+            .json(`Updated ${count} post. Post id ${id} successfully updated.`);
+        })
+        .catch(err =>
+          sendUserError(
+            500,
+            "The post information could not be modified.",
+            res,
+            err
+          )
+        );
+    } else {
+      res.status(404).json({ error: `Post id ${id} not found` });
+    }
+  });
 });
 
 server.listen(port, () => {
