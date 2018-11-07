@@ -80,6 +80,27 @@ server.get("/api/users/:id/posts", (req, res) => {
     });
 });
 
+server.post("/api/users/", upperCase, (req, res) => {
+  const newUser = req.body;
+  if (!newUser) {
+    res.status(400).json({ message: "Please provide a username." });
+    return;
+  }
+  userDb
+    .insert(newUser)
+    .then(userId => {
+      res.status(201).json({ message: `Added user with id of ${userId.id}.` });
+    })
+    .catch(err => {
+      sendUserError(
+        500,
+        "There was an error while saving the user to the database",
+        res,
+        err
+      );
+    });
+});
+
 server.listen(port, () => {
   console.log(`\n=== Listening on port ${port} ===\n`);
 });
