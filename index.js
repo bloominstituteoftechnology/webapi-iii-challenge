@@ -1,9 +1,11 @@
 const express = require('express');
 const userDb = require('./data/helpers/userDb');
+const cors = require('cors');
 
 const app = express();
 
 app.use(express.json());
+app.use(cors());
 
 const userUpperCase = (req, res, next) => {
   req.body.name = req.body.name.toUpperCase();
@@ -88,7 +90,7 @@ app.put('/api/users/:id', userUpperCase, (req, res) => {
   })
 });
 
-app.delete('/users/:id', (req, res) => {
+app.delete('/api/users/:id', (req, res) => {
   userDb.remove(req.params.id).then(count => {
     res.status(200).json(count)
   }).catch(error => {
