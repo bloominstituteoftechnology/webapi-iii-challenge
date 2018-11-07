@@ -94,6 +94,28 @@ server.delete("/api/users/:id", (req, res) => {
         })
     );
 });
+//Update USER
+server.put("/api/users/:id", (req, res) => {
+    const { id } = req.params;
+    const newUser = req.body;
+    userDb
+    .update(id, newUser)
+    .then(user => {
+        if (user.length < 1) {
+        res.status(404).json({
+            message: "The user with the specified ID does not exist."
+        });
+        } else {
+        res.status(200).json({user, message: "The user was updated successfully"});
+        }
+    })
+    .catch(err =>
+        res.status(500).json({
+        error: "The user information could not be modified.."
+        })
+    );
+});
+
 //------------------------------------ POST-ENDPOINTS -------------------------------------------------- //
 //update POST
 server.put("/api/posts/:id", (req, res) => {
@@ -161,6 +183,20 @@ server.post("/api/posts/", (req, res) => {
         error: "There was an error saving your post."
         });
     });
+});
+
+//Get all POSTS
+server.get("/api/posts", (req, res) => {
+    postDb
+    .get()
+    .then(post => {
+        res.json(post);
+    })
+    .catch(err =>
+        res.status(500).json({
+        error: "The post information could not be retrieved."
+        })
+    );
 });
 
     // call server.listen w/ a port of your choosing (9000)
