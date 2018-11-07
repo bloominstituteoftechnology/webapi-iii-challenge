@@ -4,8 +4,28 @@ const morgan = require('morgan');
 const userDb = require('./data/helpers/userDb');
 
 const server = express();
+server.use(express.json()); // initially forgot to include this.
 server.use(morgan('dev'));
+ 
+// custom middleware 
+function uppercase(req, res, next) {
 
+    if (req.body.name !== undefined) {
+        const reqName = req.body.name;
+        const checkName = req.body.name.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+        if (reqName === checkName) {
+            next();
+        } else {
+            res.status(400).json({message:'Please capitalize the user name'});
+        }
+    } else {
+        next();
+    }
+}
+
+server.use(uppercase);
+
+// adding a default GET at the root to tell folks the API is live.
 server.get('/', (req,res) => res.send({API: "live", "Users": "live", "Posts": "not live"}));
 
 server.get('/api/users', (req, res) => {
@@ -22,21 +42,29 @@ server.get('/api/users/:id', (req,res) => {
         .then(user => {
             if (user) {
                 res.status(200).json(user);
-            } 
-            res.status(404).json({message: "The user with the specified ID does not exist."});
+            } else {
+                res.status(404).json({message: "The user with the specified ID does not exist."});
+            }
         })
         .catch(err => {
             res.status(500).json({error: "The user information could not be retrieved."});
         })
 });
 
-server.post('/api/users/', async (req, res) => {
-    try {
-        const user = await userDb.insert(req.body);
-        db.get(user.id).then(user => res.status(201).json(user)).catch(err => res.status(404).json({message: "The user with the specified ID does not exist."}));
-    }
-    catch (err) {
-        res.status(500).json({error: "There was an error while saving the user to the database", err})
+server.post('/api/users/', uppercase, async (req, res) => {
+    if (req.body.name !== undefined) {
+        try {
+            console.log(req.body);
+            const user = await userDb.insert(req.body);
+            userDb.get(user.id)
+                .then(user => res.status(201).json(user))
+                .catch(err => res.status(404).json({message: "The user with the specified ID does not exist."}));
+        }
+        catch (err) {
+            res.status(500).json({message: "There was an error while saving the user to the database", err})
+        }
+    } else {
+        res.status(400).json({message: "Please provide a name for the user."});
     }
 })
 
@@ -53,6 +81,21 @@ server.delete('/api/users/:id', (req,res) => {
     })
 })
 
-
+server.put('/api/users/:id', async (req,res) => {
+    if (req.body.name !== undefined) {
+        userDb.update(req.params.id, req.body).then(count => {
+            if (count) {
+                userDb.get(req.params.id).then(user => res.status(200).json(user)).catch(err => res.status(404).json({message:"The user with the specified ID does not exist."}));
+            }
+            else {
+                res.status(404).json({message: "The user with the specified ID does not exist."});
+            }
+        }).catch(err => {
+            res.status(500).json({message: "The user with the specified ID could not be modified."});
+        })
+    } else {
+        res.status(400).json({message: "Please provide a name for the user."});
+    }
+})
 
 server.listen(9000, () => console.log('Server running on port 9000'));
