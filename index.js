@@ -101,6 +101,26 @@ server.post("/api/users/", upperCase, (req, res) => {
     });
 });
 
+server.put("/api/users/:id", upperCase, (req, res) => {
+  const { id } = req.params;
+  const newUser = req.body;
+  userDb
+    .update(id, newUser)
+    .then(count => {
+      res
+        .status(200)
+        .json(`Updated ${count} user. User id ${id} successfully updated.`);
+    })
+    .catch(err =>
+      sendUserError(
+        500,
+        "The user information could not be modified.",
+        res,
+        err
+      )
+    );
+});
+
 server.listen(port, () => {
   console.log(`\n=== Listening on port ${port} ===\n`);
 });
