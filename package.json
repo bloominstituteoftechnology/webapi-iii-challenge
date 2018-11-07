@@ -1,0 +1,11 @@
+{
+  "name": "Node-Blog",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/Riley-Brown/Node-Blog.git",
+  "author": "Riley-Brown <riley@riley.gg>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
