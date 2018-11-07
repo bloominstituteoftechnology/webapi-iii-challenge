@@ -104,21 +104,47 @@ server.post("/api/users/", upperCase, (req, res) => {
 server.put("/api/users/:id", upperCase, (req, res) => {
   const { id } = req.params;
   const newUser = req.body;
-  userDb
-    .update(id, newUser)
-    .then(count => {
-      res
-        .status(200)
-        .json(`Updated ${count} user. User id ${id} successfully updated.`);
-    })
-    .catch(err =>
-      sendUserError(
-        500,
-        "The user information could not be modified.",
-        res,
-        err
-      )
-    );
+  userDb.get(id).then(user => {
+    if (user) {
+      userDb
+        .update(id, newUser)
+        .then(count => {
+          res
+            .status(200)
+            .json(`Updated ${count} user. User id ${id} successfully updated.`);
+        })
+        .catch(err =>
+          sendUserError(
+            500,
+            "The user information could not be modified.",
+            res,
+            err
+          )
+        );
+    } else {
+      res.status(404).json({ error: `User id ${id} not found` });
+    }
+  });
+});
+
+server.delete("/api/users/:id", (req, res) => {
+  const { id } = req.params;
+  userDb.get(id).then(user => {
+    if (user) {
+      userDb
+        .remove(id)
+        .then(count => {
+          res
+            .status(200)
+            .json(`Deleted ${count} user. User id ${id} successfully deleted.`);
+        })
+        .catch(err => {
+          sendUserError(500, "The user could not be deleted.", res, err);
+        });
+    } else {
+      res.status(404).json({ error: `User id ${id} not found` });
+    }
+  });
 });
 
 server.listen(port, () => {
