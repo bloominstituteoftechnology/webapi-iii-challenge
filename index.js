@@ -148,6 +148,18 @@ server.get('/api/posts/tags/:id', (req, res) => {
         return errorMessage(500, 'Not Found', res)
     })
 })
+// ===========================TAGS ENDPOINTS===================
+
+server.get('/api/tags', (req, res) => {
+    users
+    .get()
+    .then(foundTags => {
+        res.json({foundTags})
+    })
+    .catch(err => {
+        return errorMessage(500, 'Not Found', res)
+    })
+})
 
 
 
