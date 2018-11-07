@@ -3,6 +3,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 
+const upperCase = require('../middleware/upperCase')
 const userDb = require('../data/helpers/userDb');
 const postDb = require('../data/helpers/postDb');
 
@@ -33,7 +34,7 @@ server.get('/api/users/:id', async (req, res) => {
     }
 });
 
-server.post('/api/users', async (req, res) => {
+server.post('/api/users', upperCase, async (req, res) => {
     try {
         const { body } = req;
         const userId = await userDb.insert(body)
@@ -58,7 +59,7 @@ server.delete('/api/users/delete/:id', async (req, res) => {
     }
 })
 
-server.put('/api/users/edit/:id', async (req, res) => {
+server.put('/api/users/edit/:id', upperCase, async (req, res) => {
     try {
         const { id } = req.params;
         const count = await userDb.update(id, req.body);
