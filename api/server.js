@@ -2,7 +2,9 @@ const express = require('express');
 const helmet = require('helmet');
 const morgan = require('morgan');
 
-const upperCase = require("../upperCase/upperCase.js")
+const upperCase = require("../upperCase/upperCase.js");
+const postDb = require('../data/helpers/postDb');
+const userDb = require('../data/helpers/userDb');
 
 const server = express();
 
@@ -15,6 +17,10 @@ server.use(morgan('short'));//does it matter what one we use at all?
 
 server.get('/', (req, res) => {
     res.status(200).json({ api: 'it is running properly ' });
+});
+
+server.get('/users',(req,res)=>{
+    res.status(200).json({})
 });
 
 // server.get('/secret', gatekeeper, (req, res) => {
