@@ -3,9 +3,12 @@ const userDB = require("../data/helpers/userDb.js");
 const postDB = require("../data/helpers/postDb");
 const server = express();
 
+server.use(express.json());
+
 function uppercaser(req, res, next) {
     // next points to the next middleware/route handler in the queue
-    console.log(req.body);
+    req.body.name = req.body.name.toUpperCase();
+    next();
   }
 
 server.get("/api/users", (req, res) => {
@@ -36,6 +39,22 @@ server.get('/api/users/:id', (req, res) => {
         .catch(err => {
             res.status(500).json({ error: "The user's post information could not be retrieved." });
         })
+})
+
+server.post("/api/users", uppercaser, async (req, res) => {
+    try {
+        const userData = req.body;
+        console.log(userData)
+        if (userData.name === "" || userData.name === undefined) {
+            res.status(400).json({ error: "Please provide username." })
+        }
+        else {
+            const user = await userDB.insert(userData);
+            res.status(201).json(user);
+        }
+    } catch (error) {
+        res.status(500).json({ error: "There was an error while saving the user to the database" })
+    }
 })
 
 module.exports = server;
