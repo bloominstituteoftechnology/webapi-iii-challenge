@@ -27,5 +27,19 @@ server.get("/api/users/:id", (req, res) => {
   });
 });
 
+// post new user
+server.post("/api/users/", (req, res) => {
+  let newUser = req.body;
+  console.log(newUser);
+
+  if (!newUser.name) {
+    res.status(400).json({ errorMessage: "Please add a Username" });
+  } else {
+    userDb.insert(newUser).then(user => {
+      res.status(201).json(user.id);
+    });
+  }
+});
+
 // server listen
 server.listen(9000, () => console.log("Server is started"));
