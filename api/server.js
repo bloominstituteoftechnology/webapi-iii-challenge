@@ -48,4 +48,24 @@ server.get('/api/users/:id/posts', async (req, res) => {
   }
 });
 
+// POST add a new user
+server.post('/api/users', async (req, res) => {
+  const newUser = req.body;
+  if (newUser.name.length > 128) {
+    res.status(400).json({
+      message: "User name too long. User's can have up to 128 characters"
+    });
+  } else if (!newUser.name) {
+    res.status(400).json({ message: 'User needs a name' });
+  } else {
+    try {
+      const newUserId = await userDb.insert(newUser);
+      const user = await userDb.get(newUserId.id);
+      res.status(201).json(user);
+    } catch (error) {
+      res.status(500).json({ error: 'There was an error creating a new user' });
+    }
+  }
+});
+
 module.exports = server;
