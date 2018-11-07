@@ -3,9 +3,11 @@ const postDb = require('./data/helpers/postDb');
 const userDb = require('./data/helpers/userDb');
 // const cors = require('cors');
 const server = express();
+const toUpperCase = require('./middleware/toUpperCase');
 
 
 server.use(express.json());
+// server.use(toUpperCase);
 
 
 server.get('/', (req, res) => {
