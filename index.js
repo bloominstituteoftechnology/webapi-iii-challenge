@@ -7,6 +7,17 @@ const userDb = require("./data/helpers/userDb.js");
 const server = express();
 server.use(morgan("dev"), cors(), helmet(), express.json());
 
+
+//middleware here 
+
+const allCaps = (req, res, next) => {
+    console.log(req.body);
+
+    Object.assign(req.body, { name: req.body.name.toUpperCase() });
+
+    next();
+};
+
 //Get all users
 server.get("/api/users", (req, res) => {
     userDb
@@ -23,7 +34,7 @@ server.get("/api/users", (req, res) => {
 
 
 //Gets posts of a user
-server.get("/api/users/:id", (req, res) => {
+server.get("/api/users/:id/posts", (req, res) => {
     userDb
     .getUserPosts(req.params.id)
     .then(user => {
@@ -45,17 +56,22 @@ server.get("/api/users/:id", (req, res) => {
 //Add new user
 server.post("/api/users", allCaps, (req, res) => {
     const newUser = req.body;
+    if (newUser.name.length > 128) {
+        return res.status(411).json({
+        user, message: " The user name must be under 129 characters."
+        });
+    }
     userDb
     .insert(newUser)
     .then(user => {
-        res.status(201).json(user);
+        res.status(201).json({user, message: "The user was added successfully"});
     })
     .catch(err => {
         res.status(500).json({
         error: "There was an error while saving the user to the database."
         });
-        });
     });
+});
 
 
     //Delete a user
@@ -75,6 +91,34 @@ server.delete("/api/users/:id", (req, res) => {
     .catch(err =>
         res.status(500).json({
         error: "The user could not be removed."
+        })
+    );
+});
+
+//update post
+server.put("/api/posts/:id", (req, res) => {
+    const { id } = req.params;
+    const { text, userId } = req.body;
+    const newPost = { text, userId };
+    if (!text || !userId) {
+    return res
+        .status(400)
+        .json({ error: "Please provide a userId and text for the post." });
+    }
+    postDb
+    .update(id, newPost)
+    .then(post => {
+        if (post.length < 1) {
+        res.status(404).json({
+            message: "The post with the specified ID does not exist."
+        });
+        } else {
+        res.status(200).json(post);
+        }
+    })
+    .catch(err =>
+        res.status(500).json({
+        error: "The post information could not be modified.."
         })
     );
 });
