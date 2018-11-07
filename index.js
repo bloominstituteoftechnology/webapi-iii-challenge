@@ -7,6 +7,7 @@ const server = express();
 //inbuild middleware
 server.use(express.json());
 
+//get
 server.get('/users', (request, response) => {
         db.get()
           .then(users => {
@@ -17,6 +18,7 @@ server.get('/users', (request, response) => {
            }) 
 })
 
+//post
 server.post('/users', (request, response) => {
     if(request.body.name !== undefined) {
         db.insert(request.body)
@@ -31,6 +33,16 @@ server.post('/users', (request, response) => {
     }
 }) 
 
+//delete
+server.delete('/users/:id', (request, response) => {
+    db.remove(request.params.id)
+      .then(count => {
+            response.status(200).json(count);
+       })
+      .catch(error => {
+            response.status(500).json({message : 'error deleting user'})
+       })
+})
 
 server.listen(9000, () => {
      console.log("Server running on port 9000");
