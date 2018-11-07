@@ -45,7 +45,55 @@ server.post('/api/users', nameCheckMiddleware, (req, res) => {
     })
 })
 
+server.get('/api/users/:id', (req, res) => {
+    const { id } = req.params;
+    users
+    .get(id)
+    .then(user => {
+        if(user === 0) {
+            return errorMessage(404, 'No user by that id', res)
+        }
+        res.json(user)
+    })
+    .catch(err => {
+        return errorMessage(500, 'Not found', res)
+    })
+})
 
+server.delete('/api/users/:id', (req, res) => {
+    const { id } = req.params;
+    users
+    .remove(id)
+    .then(removedUser => {
+        if (removedUser === 0) {
+            return errorMessage(404, 'No user by that id')
+        } else {
+            res.json({success: 'Removed User Successfully'})
+        }
+    })
+    .catch(err => {
+        return errorMessage(500, 'Not Found', res)
+    })
+})
+
+server.put('/api/users/:id', nameCheckMiddleware, (req, res) => {
+    const { id } = req.params;
+    const { name } = req.body;
+    users
+    .update(id, { name })
+    .then(response => {
+        if (response === 0) {
+            return errorMessage(404, 'No user by that id')
+        } else {
+            db.find(id).then(user => {
+                res.json(user)
+            })
+        }
+    })
+    .catch(err => {
+        return errorMessage(500, 'Not Found', res)
+    }) 
+})
 
 
 
