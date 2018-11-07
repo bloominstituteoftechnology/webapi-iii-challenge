@@ -18,11 +18,11 @@ function capitalize(req, res, next) {
   name = name.split(" ").map(item => {
     return item = item.substring(0,1).toUpperCase() + item.substring(1);
   }).join(" ");
-  req.body.name = name; 
+  req.body.name = name;
   next();
 }
 
-// server.use(capitalize);
+
 
 server.get('', (req, res) => {
   res.status(200).json({ message: 'hi there!' })
@@ -46,7 +46,7 @@ server.post('/users', capitalize, (req, res) => {
   const userData = req.body;
   userDb
     .insert(userData)
-    .then(userId => res.status(201).json({ message: 'added!' }))
+    .then(userId => res.status(201).json(userId))
     .catch(err => res.status(500).json({ message: 'there was an error adding the user' }))
 })
 
@@ -64,8 +64,7 @@ server.put('/users/:id', capitalize, (req, res) => {
   userDb
     .update(id, userUpdate)
     .then(count => res.status(201).json(count))
-    .catch(err => res.status(500).json({ message: 'there was an error editing the user'
-    }))
+    .catch(err => res.status(400).json({ message: 'could not update user' }))
 })
 
 module.exports = server;
