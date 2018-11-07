@@ -1,5 +1,6 @@
 const express = require('express');
 const userDb = require('../data/helpers/userDb');
+const uppercaseName = require('../middleware/uppercaseMiddleware');
 
 const server = express();
 
@@ -49,7 +50,7 @@ server.get('/api/users/:id/posts', async (req, res) => {
 });
 
 // POST add a new user
-server.post('/api/users', async (req, res) => {
+server.post('/api/users', uppercaseName, async (req, res) => {
   const newUser = req.body;
   if (newUser.name.length > 128) {
     res.status(400).json({
@@ -69,7 +70,7 @@ server.post('/api/users', async (req, res) => {
 });
 
 // PUT request to update user
-server.put('/api/users/:id', async (req, res) => {
+server.put('/api/users/:id', uppercaseName, async (req, res) => {
   const { id } = req.params;
   const updatedUserInfo = req.body;
   if (updatedUserInfo.name.length > 128) {
