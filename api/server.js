@@ -139,4 +139,15 @@ server.post('/api/posts', (req, res) => {
     );
 });
 
+server.put('/api/posts/:id', (req, res) => {
+  post
+    .update(req.params.id, req.body)
+    .then(count => res.status(201).json(count))
+    .catch(err =>
+      res
+        .status(400)
+        .json({ message: 'Your post could not be updated.', error: err })
+    );
+});
+
 module.exports = server;
