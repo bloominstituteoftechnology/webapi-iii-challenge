@@ -41,13 +41,22 @@ server.get('/api/users/:id', (req, res) => {
       }
     })
     .catch(err => {
-      res
-        .status(500)
-        .json({
-          message: 'The post information could not be retrieved.',
-          error: err
-        });
+      res.status(500).json({
+        message: 'The post information could not be retrieved.',
+        error: err
+      });
     });
+});
+
+server.delete('/users/:id', (req, res) => {
+  user
+    .remove(req.params.id)
+    .then(count => res.status(200).json(count))
+    .catch(err =>
+      res
+        .status(400)
+        .json({ message: 'Your user could not be deleted', error: err })
+    );
 });
 
 // routes for posts
