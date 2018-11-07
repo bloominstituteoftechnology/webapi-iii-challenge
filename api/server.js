@@ -68,4 +68,29 @@ server.post('/api/users', async (req, res) => {
   }
 });
 
+// POST request to update user
+server.put('/api/users/:id', async (req, res) => {
+  const { id } = req.params;
+  const updatedUserInfo = req.body;
+  if (updatedUserInfo.name.length > 128) {
+    res.status(400).json({
+      message: "User name too long. User's can have up to 128 characters"
+    });
+  } else if (!updatedUserInfo.name) {
+    res.status(400).json({ message: 'User needs a name' });
+  } else {
+    try {
+      const count = await userDb.update(id, updatedUserInfo);
+      if (!count) {
+        res.status(500).json({ error: 'There was an error updating' });
+      } else {
+        const updatedUser = await userDb.get(id);
+        res.status(200).json(updatedUser);
+      }
+    } catch (error) {
+      res.status(500).json({ error: 'There was an error updating user' });
+    }
+  }
+});
+
 module.exports = server;
