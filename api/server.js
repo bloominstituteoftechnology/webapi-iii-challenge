@@ -9,6 +9,22 @@ const server = express();
 server.use(express.json());
 server.use(cors());
 
+// sanity check
+server.get('/', (req, res) => {
+  res.status(200).json({ api: 'server go run' });
+});
+
+// routes for users
+server.get('/api/users', (req, res) => {
+  user
+    .get()
+    .then(users => res.status(200).json(users))
+    .catch(err =>
+      res.status(404).json({ message: 'No users found.', error: err })
+    );
+});
+
+// routes for posts
 server.get('/api/posts', (req, res) => {
   post
     .get()
@@ -37,12 +53,10 @@ server.get('/api/posts/:id', (req, res) => {
       }
     })
     .catch(err => {
-      res
-        .status(500)
-        .json({
-          message: 'The post information could not be retrieved.',
-          error: err
-        });
+      res.status(500).json({
+        message: 'The post information could not be retrieved.',
+        error: err
+      });
     });
 });
 
