@@ -96,6 +96,23 @@ server.put('/api/users/:id', nameCheckMiddleware, (req, res) => {
 })
 
 // ==================POSTS ENDPOINTS=========================
+server.put('/api/posts/:id', (req, res) => {
+    const { id } = req.params;
+    const { userId, text } = req.body;
+    posts
+    .update(userId, text)
+    .then(response => {
+        if (response === 0) {
+            errorMessage(404, 'No post by that id found')
+        } else {
+            db.find(id).then(post => {
+                res.json(post)
+            })
+        }
+    })
+    .catch(500, 'Not found', res)
+})
+
 server.get('/api/posts', (req, res) => {
     posts
     .get()
@@ -131,6 +148,22 @@ server.post('/api/posts', (req, res) => {
     })
     .catch(err => {
         return errorMessage(500, 'Not found', res)
+    })
+})
+
+server.delete('/api/posts/:id', (req, res) => {
+    const { id } = req.params;
+    posts
+    .remove(id)
+    .then(removedPost => {
+        if (removedPost === 0) {
+            return errorMessage(404, 'No post with that id')
+        } else {
+            res.json({message: 'Success deleting Post'})
+        }
+    })
+    .catch(err => {
+        return errorMessage(500, 'Not Found', res)
     })
 })
 
