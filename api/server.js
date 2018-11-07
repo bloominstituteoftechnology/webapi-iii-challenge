@@ -68,4 +68,22 @@ server.get('/api/users', (req, res) => {
         res.status(500).json({ message: error });
       })
   });
+
+  //UPDATE user
+  server.put('/api/users/:id', (req, res) => {
+      const { id } = req.params;
+      const user = req.body;
+
+      userDb.update(id,user)
+      .then (count => {
+          if (count) {
+              res.status(200).json({ message: `${count} user(s) updated`});
+          } else {
+              res.status(404).json({ message: 'User does not exist'})
+          }
+      })
+      .catch(error => {
+          res.status(500).json({ message: error})
+      })
+  })
 module.exports = server;
