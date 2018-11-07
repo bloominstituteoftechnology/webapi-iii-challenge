@@ -1,5 +1,6 @@
 const express = require("express");
 const server = express();
+const uppercase = require("./middleware/uppercase.js");
 server.use(express.json());
 
 const postDB = require("./data/helpers/postDb.js");
@@ -46,6 +47,20 @@ server.get("/posts/tags/:id", (req, res) => {
   tagDB.getPostTags(id).then(posts => {
     res.status(200).json(posts);
   });
+});
+
+// C R E A T E  a  U S E R  with  U P P E R C A S E  M I D D L E W A R E
+server.post("/user", uppercase, (req, res) => {
+  userDB
+    .insert(req.body)
+    .then(userData => {
+      res.status(201).json(userData);
+    })
+    .catch(err => {
+      res
+        .status(500)
+        .json({ message: "There was an error creating the user", err });
+    });
 });
 
 // U P D A T E  P O S T  by  I D
