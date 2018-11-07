@@ -59,5 +59,17 @@ server.put("/api/users/:id", (req, res) => {
     });
 });
 
+// delete user
+server.delete("/api/users/:id", (req, res) => {
+  userDb
+    .remove(req.params.id)
+    .then(count => {
+      res.status(200).json(count);
+    })
+    .catch(err => {
+      res.status(500).json({ errorMessage: "error deleting user" });
+    });
+});
+
 // server listen
 server.listen(9000, () => console.log("Server is started"));
