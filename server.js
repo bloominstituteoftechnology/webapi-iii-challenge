@@ -14,12 +14,49 @@ server.use(express.json());
 
 // Routes
 server.get('/api/users', (req, res) => {
-  userDb.get()
+  userDb
+    .get()
     .then(users => res.status(200).json(users))
-    .catch(error => res.status(500).json({ message: 'There has been an error getting the users.' }));
+    .catch(error =>
+      res
+        .status(500)
+        .json({ message: 'There has been an error getting the users.' })
+    );
 });
 
+server.get('/api/users/:id', (req, res) => {
+  const id = req.params.id;
 
+  userDb
+    .get(id)
+    .then(user => {
+      if (user) {
+        res.status(200).json(user);
+      } else {
+        res.status(404).json({ message: 'Unable to find user' });
+      }
+    })
+    .catch(error =>
+      res
+        .status(500)
+        .json({ message: 'Error has occurred while fetching user' })
+    );
+});
+
+server.post('/api/users', (req, res) => {
+  const newUser = req.body;
+  if (!req.body.name) {
+    res.status(400).json({ message: 'You are missing a name.' });
+  }
+  userDb
+    .insert(newUser)
+    .then(user => res.status(200).json(user))
+    .catch(error =>
+      res
+        .status(500)
+        .json({ message: 'There was a problem added the new user.' })
+    );
+});
 
 // Server export
 module.exports = server;
