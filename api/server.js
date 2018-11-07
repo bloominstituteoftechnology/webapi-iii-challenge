@@ -4,14 +4,13 @@ const userDb = require('../data/helpers/userDb');
 server.use(express.json());
 
 function allCaps(req, res, next) {
-    const { body } = req;
-    console.log(body.name)
+    req.body.name = req.body.name.toUpperCase();
     next();
 }
 
 server.use(allCaps)
 
-server.get('/user/:id', allCaps, (req, res) => {
+server.get('/user/:id', (req, res) => {
     userDb.get(req.params.id)
         .then(user => {
             if(user) {
@@ -37,6 +36,21 @@ server.get('/user/posts/:id', (req, res) => {
         .catch(err => {
             res.status(500).json({ message: `the posts from ${req.params.id} can not be found` })
         })    
+})
+
+server.post('/user', allCaps, (req, res) => {
+    const post = req.body
+   userDb.insert(post)
+    .then(user => {
+        if(!req.body.name) {
+            res.status(400).json({ message: 'Please provide a name' })
+        } else {
+            res.status(201).json(post)
+        }
+    }) 
+    .catch(err => {
+        res.status(500).json({ message: 'Error adding user to database' })
+    })
 })
 
 
