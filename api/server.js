@@ -19,4 +19,38 @@ server.get('/', (req, res) => {
     )
   });
 
+  server.post('/add', (req, res) => {
+    const newUser = req.body;
+
+  userDb.insert(newUser)
+  .then( id =>
+      res.status(200).json(id))
+  .catch( (error) => 
+      res.status(500).json({ message: 'could not add user', error })
+  )
+});
+
+server.put('/edit/:id', (req, res) => {
+    const {id} = req.params;
+    const editUser = req.body;
+
+  userDb.update(id, editUser)
+  .then( id =>
+      res.status(200).json(id))
+  .catch( (error) => 
+      res.status(500).json({ message: 'could not add user', error })
+  )
+});
+
+  server.delete('/delete/:id', (req, res) => {
+      const {id} = req.params;
+
+    userDb.remove(id)
+    .then( count =>
+        res.status(200).json(count))
+    .catch( (error) => 
+        res.status(500).json({ message: 'could not delete user', error })
+    )
+  });
+
 module.exports = server;
