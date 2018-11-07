@@ -43,4 +43,19 @@ server.get("/api/users/:id", (req, res) => {
     );
 });
 
+server.post("/api/users", (req, res) => {
+  req.body.name
+    ? userDb
+        .insert(req.body)
+        .then(userId =>
+          userDb.get(userId.id).then(user => res.status(200).json(user))
+        )
+        .catch(err =>
+          res.status(500).json({
+            error: "There was an error while saving the user to the database"
+          })
+        )
+    : res.status(400).json({ message: "Please provide a name for the user." });
+});
+
 server.listen(5000, () => console.log("API running on port 5000"));
