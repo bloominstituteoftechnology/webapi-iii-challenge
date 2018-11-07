@@ -6,7 +6,7 @@
   "author": "KHollobaugh <khollobaugh@gmail.com>",
   "license": "MIT",
   "private": false,
-  "script": {
+  "scripts": {
     "start": "nodemon"
   },
   "dependencies": {
