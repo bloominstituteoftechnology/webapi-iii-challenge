@@ -14,15 +14,26 @@ server.get('/', (req, res) => {
 });
 
 // get all posts
-server.get('/api/posts/', (req, res) => {
+server.get('/api/posts/all', (req, res) => {
 	postDB
 		.get()
 		.then((post) => {
 			res.status(200).json(post);
 		})
-		.catch((err) => err.status(500).json({ message: "Can't retrieve post data!!" }));
+		.catch((err) => res.status(500).json({ message: "Can't retrieve post data!!" }));
+	userDB;
 });
 // test success
+
+// get user by id
+server.get('/api/user/:id', (req, res) => {
+	userDB
+		.get(id)
+		.then((user) => {
+			res.status(200).json(user);
+		})
+		.catch((err) => res.status(500).json({ message: "can't revieve user data!!" }));
+});
 
 // get all user posts
 server.get(`/api/posts/user/`, (req, res) => {
@@ -31,6 +42,7 @@ server.get(`/api/posts/user/`, (req, res) => {
 		user.length <= 0 ? res.status(404).json({ message: 'That user was not found' }) : res.status(200).json(user);
 	});
 });
+// test success ex. localhost:9000/api/posts/user/?userId=1 ==> return of posts by Froto
 
 // get post by id
 server.get('/api/posts/:id', (req, res) => {
