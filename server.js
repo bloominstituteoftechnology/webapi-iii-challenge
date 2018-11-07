@@ -46,7 +46,12 @@ server.get('/api/users/:id', (req,res) => {
     userDb.get(id)
         .then(user => {
             if (user) {
-                res.status(200).json(user);
+                //res.status(200).json(user);
+                userDb.getUserPosts(id).then(posts => {
+                    res.status(200).json({user: user, posts: posts});
+                }).catch(err => {
+                    res.status(500).json({error: "The user and posts could not be retrieved."})
+                })
             } else {
                 res.status(404).json({message: "The user with the specified ID does not exist."});
             }
