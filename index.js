@@ -4,6 +4,11 @@ const userDb = require('./data/helpers/userDb')
 const server = express();
 server.use(express.json());
 
+function setToUpperCase(req, res, next) {
+    req.body.name = req.body.name.toUpperCase();
+    next();
+}
+
 // get all users
 server.get('/api/users', (req, res) => {
   userDb.get()
@@ -47,7 +52,7 @@ server.get('/api/users/:id/posts', (req, res) => {
 });
 
 // create a new user
-server.post('/api/users', (req, res) => {
+server.post('/api/users', setToUpperCase, (req, res) => {
     const user = req.body;
     const { name } = user;
     console.log('Post req.body:', user);
@@ -66,7 +71,7 @@ server.post('/api/users', (req, res) => {
 });
 
 // Update an existing user
-server.put('/api/users/:id', (req, res) => {
+server.put('/api/users/:id', setToUpperCase, (req, res) => {
     const { id } = req.params;
     const user = req.body;
 
