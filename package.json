@@ -1,0 +1,17 @@
+{
+  "name": "Node-Blog",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/BeneventoFrank/Node-Blog.git",
+  "author": "frankbenevento <frankbenevento123@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.4"
+  },
+  "scripts": {
+    "server": "nodemon"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.6"
+  }
+}
