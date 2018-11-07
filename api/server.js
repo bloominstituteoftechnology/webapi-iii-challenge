@@ -13,7 +13,9 @@ server.use(morgan('dev'));
 
 function upperCaseUser(req, res, next) {
     if (req.body.name) {
-        req.body.name = req.body.name.toUpperCase();
+        let split = req.body.name.split('')
+        let capitalized = split.map((letter, i) => i === 0 ? letter.toUpperCase() : letter)
+        req.body.name = capitalized.join('');
     }
     next();
 }
