@@ -106,4 +106,15 @@ server.delete('/api/posts/:id', (req, res) => {
     );
 });
 
+server.post('/api/posts', (req, res) => {
+  post
+    .insert(req.body)
+    .then(success => res.status(201))
+    .catch(err =>
+      res
+        .status(400)
+        .json({ message: 'Your post could not be added.', error: err })
+    );
+});
+
 module.exports = server;
