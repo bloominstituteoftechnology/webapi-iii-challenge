@@ -16,17 +16,10 @@ server.use(helmet())
 server.use(morgan('short'))
 
 // configure custom middleware
-function gatekeeper(req, res, next) {
-  // next points to the next middleware/route handler in the queue
-  if (req.query.pass === 'mellon') {
-    console.log('welcome travelers')
-
-    req.welcomeMessage = 'welcome to the mines of Moria'
-
-    next() // continue to the next middleware
-  } else {
-    res.send('you shall not pass!')
-  }
+const uppercaseName = (req, res, next) => {
+  const { name } = req.body
+  req.body.name = name.substring(0, 1).toUpperCase() + name.substring(1)
+  next()
 }
 
 // verification server is live
@@ -49,14 +42,14 @@ server.get('/users/:id', (req, res) => {
     .catch(err => res.status(404).json({ error: 'user not found' }))
 })
 
-server.post('/users/', (req, res) => {
+server.post('/users/', uppercaseName, (req, res) => {
   userDb
     .insert(req.body)
     .then(success => res.status(201).json(success))
     .catch(err => res.status(400).json({ error: 'failed to add user' }))
 })
 
-server.put('/users/:id', (req, res) => {
+server.put('/users/:id', uppercaseName, (req, res) => {
   userDb
     .update(req.params.id, req.body)
     .then(count => res.status(201).json(count))
