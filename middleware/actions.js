@@ -1,1 +1,5 @@
-module.exports = (req, res, next) => {};
+module.exports = (req, res, next) => {
+	// const name = req.params;
+	// name.toUpperCase();
+	// next();
+};

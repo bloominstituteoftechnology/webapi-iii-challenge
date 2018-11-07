@@ -1,5 +1,5 @@
 const express = require('express');
-
+// const upperCase = require('../middleware/actions');
 const cors = require('cors');
 const postDB = require('../data/helpers/postDb');
 const userDB = require('../data/helpers/userDb');
@@ -12,6 +12,13 @@ server.use(cors());
 server.get('/', (req, res) => {
 	res.json('alive');
 });
+
+// configure custom middleware
+function upperCase(req, res, next) {
+	// next points to the next middleware/route handler in the queue
+	req.body.name = req.body.name.toUpperCase();
+	next(); // continue to the next middleware
+}
 
 // get all posts
 server.get('/api/posts/all', (req, res) => {
@@ -56,11 +63,11 @@ server.get('/api/posts/:id', (req, res) => {
 // test success
 
 // create a post
-server.post('/api/posts/', (req, res) => {
-	postDB
+server.post('/api/user', upperCase, (req, res) => {
+	userDB
 		.insert(req.body)
-		.then((postData) => {
-			res.status(201).json(postData);
+		.then((userData) => {
+			res.status(201).json(userData);
 		})
 		.catch((err) => {
 			res.status(500).json({ message: 'error creating post', err });
