@@ -68,7 +68,7 @@ server.post('/api/users', async (req, res) => {
   }
 });
 
-// POST request to update user
+// PUT request to update user
 server.put('/api/users/:id', async (req, res) => {
   const { id } = req.params;
   const updatedUserInfo = req.body;
@@ -90,6 +90,24 @@ server.put('/api/users/:id', async (req, res) => {
     } catch (error) {
       res.status(500).json({ error: 'There was an error updating user' });
     }
+  }
+});
+
+// DELETE request user
+server.delete('/api/users/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const removedUser = await userDb.get(id);
+    if (!removedUser) {
+      res
+        .status(400)
+        .json({ message: "Sorry, I can't delete a user who doesn't exist." });
+    } else {
+      await userDb.remove(id);
+      res.status(200).json(removedUser);
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'There was an error deleting the user.' });
   }
 });
 
