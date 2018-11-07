@@ -10,17 +10,11 @@ const userDb = require("./data/helpers/userDb.js");
 const server = express();
 
 
-const allCaps = (req, res, next) => {
-    console.log(req.params);
-     req.user = req.params.user.toUpperCase();
-     next();
-  };
-   server.use(logger("tiny"), cors(), helmet());
-   // ROUTES
-  server.get("/user/:id", allCaps, (req, res) => {
-    res.send(`${req.user}`);
-  });
-   server.get("/users", (req, res) => {
+
+server.use(logger("tiny"), cors(), helmet(), express.json());
+   
+  //Get all users
+server.get("/api/users", (req, res) => {
     userDb
       .get()
       .then(users => {
@@ -32,6 +26,28 @@ const allCaps = (req, res, next) => {
         })
       );
   });
+
+
+  //Get posts of a specific user
+  server.get("/api/users/:id", (req, res) => {
+    userDb
+      .getUserPosts(req.params.id)
+      .then(user => {
+        if (user.length > 0) {
+          res.json(user);
+        } else
+          res.status(404).json({
+            message: "The user with the specified ID does not exist."
+          });
+      })
+      .catch(err =>
+        res
+          .status(500)
+          .json({ error: "The user information could not be retrieved." })
+      );
+  });
+
+
    // call server.listen w/ a port of your choosing
   server.listen(port, () => {
     console.log(`\n === API running on port ${port} ===\n`);
