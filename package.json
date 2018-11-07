@@ -2,7 +2,7 @@
   "name": "Node-Blog",
   "version": "1.0.0",
   "description": "## Topics",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
     "start": "nodemon"
   },
