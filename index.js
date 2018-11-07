@@ -61,6 +61,8 @@ server.post('/api/users/', upperCaseIt, (req,res) => {
     .then(insertedUser => {
         res.status.json({ newUser, message: 'User added'});
     })
+    .catch(err => { res.status(500).json({ error: "This user could not be added."});
+    });
 })
 
 server.delete('/api/users/:userId', (req, res) => {
@@ -72,8 +74,7 @@ server.delete('/api/users/:userId', (req, res) => {
       .then(removedUser => {
         res.status(200).json(removedUser);
       })
-      .catch(err => {
-        res.status(500).json({ error: "This user could not be deleted."});
+      .catch(err => { res.status(500).json({ error: "This user could not be deleted."});
       });
   })
 
@@ -130,6 +131,19 @@ server.post('/api/posts', (req, res) => {
     .catch(err => { res.status(500).json({ error: "The post you added could not be saved." });
     })
 });
+
+server.delete('/api/posts/:postId', (req, res) => {
+    const { postId } = req.params;
+    if (!postId) {
+      res.status(404).json({ message: "The post with this ID does not exist." });
+    }
+    postDb.remove(postId)
+      .then(removedPost => {
+        res.status(200).json(removedPost);
+      })
+      .catch(err => { res.status(500).json({ error: "This post could not be deleted."});
+      });
+  })
 
 
 const port = 9000;
