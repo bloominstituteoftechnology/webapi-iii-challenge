@@ -80,4 +80,19 @@ server.put("/api/users/:id", (req, res) => {
     : res.status(400).json({ message: "Please provide a name for the user." });
 });
 
+server.delete("/api/users/:id", (req, res) => {
+  userDb
+    .remove(req.params.id)
+    .then(count => {
+      count
+        ? res.status(204).json(count)
+        : res.status(404).json({
+            message: "The user with the specified ID does not exist."
+          });
+    })
+    .catch(err =>
+      res.status(500).json({ error: "The user could not be removed." })
+    );
+});
+
 server.listen(5000, () => console.log("API running on port 5000"));
