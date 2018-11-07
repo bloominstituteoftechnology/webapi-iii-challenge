@@ -6,7 +6,11 @@
   "repository": "https://github.com/rytwalker/Node-Blog.git",
   "author": "rytwalker <rytwalker@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "start": "nodemon"
+  },
   "dependencies": {
+    "express": "^4.16.4",
     "knex": "^0.15.2",
     "sqlite3": "^4.0.3"
   },
