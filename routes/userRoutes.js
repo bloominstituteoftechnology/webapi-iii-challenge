@@ -22,7 +22,7 @@ router.get('/', async (_, res) => {
     const users = await userDb.get();
     res.status(200).json(users);
   } catch (err) {
-    res.status(500).json({ error: 'The users could not be retrieved.' });
+    res.status(500).json({ error: 'The users could not be retrieved from the database.' });
   }
 });
 
@@ -33,7 +33,7 @@ router.get('/:id', async (req, res) => {
       ? res.status(200).json(user)
       : res.status(404).json({ message: 'The user with the specified ID does not exist.' });
   } catch (err) {
-    res.status(500).json({ error: 'The user could not be retrieved.' });
+    res.status(500).json({ error: 'The user could not be retrieved from the database.' });
   }
 });
 
@@ -44,7 +44,7 @@ router.get('/:id/posts', async (req, res) => {
       ? res.status(200).json(posts)
       : res.status(404).json({ message: 'The user with the specified ID does not exist.' });
   } catch (err) {
-    res.status(500).json({ error: 'The user could not be retrieved.' });
+    res.status(500).json({ error: 'The user could not be retrieved from the database.' });
   }
 });
 
@@ -62,6 +62,17 @@ router.post('/', capitalizeName, async (req, res) => {
       errorMessage:
         'Please provide a name (character length must be below 128 characters) for the user.'
     });
+  }
+});
+
+router.delete('/:id', async (req, res) => {
+  try {
+    const count = await userDb.remove(req.params.id);
+    count
+      ? res.status(200).json({ message: 'Successfully deleted user.' })
+      : res.status(404).json({ message: 'The user with the specified ID does not exist.' });
+  } catch (err) {
+    res.status(500).json({ error: 'There was a database error deleting the user.' });
   }
 });
 
