@@ -77,18 +77,18 @@ server.delete('/api/users/:id', (req, res) => {
         })
 })
 
-// server.get('/api/users/:id', (req, res) => {
-//     const { id } = req.params;
-//     userDb.getUserPosts(id)
-//         .then(list => {
-//             list.length > 0 ?
-//             res.status(200).json(list) :
-//             res.status(404).json(list)
-//         })
-//         .catch(err => {
-//             res.status(500).json({ error: "Posts for the specified user could not be retrieved."})
-//         })
-// })
+server.get('/api/posts/user/:id', (req, res) => {
+    const { id } = req.params;
+    userDb.getUserPosts(id)
+        .then(list => {
+            list.length > 0 ?
+            res.status(200).json(list) :
+            res.status(404).json({ error: "The user with the specified ID has no posts or does not exist." })
+        })
+        .catch(err => {
+            res.status(500).json({ error: "Posts for the specified user could not be retrieved."})
+        })
+})
 
 // Post Requests
 
