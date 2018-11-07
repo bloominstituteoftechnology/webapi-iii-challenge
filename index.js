@@ -17,8 +17,8 @@ const allCaps = (req, res, next) => {
 
     next();
 };
-
-//Get all users
+//------------------------------------ USER-ENDPOINTS -------------------------------------------------- 
+//Get all USERS
 server.get("/api/users", (req, res) => {
     userDb
     .get()
@@ -33,7 +33,7 @@ server.get("/api/users", (req, res) => {
 });
 
 
-//Gets posts of a user
+//Gets posts of a USER
 server.get("/api/users/:id/posts", (req, res) => {
     userDb
     .getUserPosts(req.params.id)
@@ -53,7 +53,7 @@ server.get("/api/users/:id/posts", (req, res) => {
 });
 
 
-//Add new user
+//Add new USER
 server.post("/api/users", allCaps, (req, res) => {
     const newUser = req.body;
     if (newUser.name.length > 128) {
@@ -74,7 +74,7 @@ server.post("/api/users", allCaps, (req, res) => {
 });
 
 
-    //Delete a user
+    //Delete a USER
 server.delete("/api/users/:id", (req, res) => {
     const { id } = req.params;
     userDb
@@ -94,8 +94,8 @@ server.delete("/api/users/:id", (req, res) => {
         })
     );
 });
-
-//update post
+//------------------------------------ POST-ENDPOINTS -------------------------------------------------- //
+//update POST
 server.put("/api/posts/:id", (req, res) => {
     const { id } = req.params;
     const { text, userId } = req.body;
@@ -121,6 +121,46 @@ server.put("/api/posts/:id", (req, res) => {
         error: "The post information could not be modified.."
         })
     );
+});
+
+//Delete  POST
+server.delete("/api/posts/:id", (req, res) => {
+    const { id } = req.params;
+    postDb
+    .remove(id)
+    .then(post => {
+        if (post.length < 1) {
+        res.status(404).json({
+            message: "The post with that ID does not exist."
+        });
+        } else {
+        res.status(200).json(post);
+        }
+    })
+    .catch(err =>
+        res.status(500).json({
+        error: "The post could not be removed."
+        })
+    );
+});
+
+//Add POST
+server.post("/api/posts/", (req, res) => {
+    const { text, userId } = req.body;
+    const newPost = { text, userId };
+    if (!text || !userId) {
+    return res.status(400).json({ error: "Please provide text to your post." });
+    }
+    postDb
+    .insert(newPost)
+    .then(post => {
+        res.status(201).json(post);
+    })
+    .catch(err => {
+        res.status(500).json({
+        error: "There was an error saving your post."
+        });
+    });
 });
 
     // call server.listen w/ a port of your choosing (9000)
