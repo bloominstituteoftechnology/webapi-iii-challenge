@@ -1,9 +1,11 @@
 const express = require('express');
 const db = require('../data/helpers/userDb.js');
+const upperCase = require('./middleware/upperCase.js');
 
 const server = express();
 
 server.use(express.json());
+
 
 server.get('/api/users', (req, res) => {
     db.get()
@@ -26,7 +28,7 @@ server.get('/api/users/:id', (req, res) => {
 
 });
 
-server.post('/api/users', (req, res) => {
+server.post('/api/users', upperCase, (req, res) => {
     db.insert(req.body)
         .then(userId => {
             res.status(201).json({ userId });
@@ -36,7 +38,7 @@ server.post('/api/users', (req, res) => {
         })
 });
 
-server.put('/api/users/:id', (req, res) => {
+server.put('/api/users/:id', upperCase, (req, res) => {
     db.update(req.params.id, req.body)
         .then(count => {
             res.status(400).json({ count });
