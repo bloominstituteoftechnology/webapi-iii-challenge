@@ -1,11 +1,17 @@
 {
-  "name": "Node-Blog",
+  "name": "node-blog",
   "version": "1.0.0",
   "main": "index.js",
+  "scripts": {
+    "server": "nodemon index.js"
+  },
   "repository": "https://github.com/Riley-Brown/Node-Blog.git",
   "author": "Riley-Brown <riley@riley.gg>",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.16.4"
+    "express": "^4.16.4",
+    "knex": "^0.15.2",
+    "nodemon": "^1.18.6",
+    "sqlite3": "^4.0.3"
   }
 }
