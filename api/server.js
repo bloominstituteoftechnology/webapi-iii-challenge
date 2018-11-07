@@ -75,10 +75,11 @@ server.delete('/posts/:id', (req, res) => {
    })
 })
 
-server.put('/posts/:id', (req, res) => {
+server.put('/users/:id', upperCase, (req, res) => {
+  console.log(req.body)
   const {id} = req.params;
   const changes = req.body;
-  postDb.update(id, changes).then(count => {
+  userDb.update(id, changes).then(count => {
       res.status(200).json({message: `${count} post updated`})
   })
 })
