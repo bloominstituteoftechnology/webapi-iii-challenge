@@ -10,6 +10,16 @@ const database = require('../data/helpers/userDb.js');
 const users = express.Router();
 module.exports = users;
 
+//-- Utilities -----------------------------------
+function upperJustInCaser(request, response, next) {
+    let name = request.body.name;
+    if(name){
+        name = name.charAt(0).toUpperCase() + name.slice(1);
+        request.body.name = name;
+    }
+    next();
+}
+
 
 //== Route Handlers ============================================================
 
