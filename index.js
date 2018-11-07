@@ -3,7 +3,10 @@ const express = require('express');
 const helmet = require ('helmet');
 const cors = require('cors');
 const logger = require('morgan');
+
 const userDb = require('./data/helpers/userDb.js');
+const postDb = require('./data/helpers/postDb.js');
+
 
 // server
 const server = express();
@@ -91,6 +94,13 @@ server.put('/api/users/:userId', (req,res) => {
 })
 
 // POSTS - CRUD
+server.get('/api/posts', (req, res) => {
+    postDb.get().then(posts => {
+        console.log('\n*** post **', posts);
+        res.status(200).json(posts);
+    })
+    .catch(err => res.status(500).json({ error: "The information of posts could not be retrieved. "}))
+})
 
 
 const port = 9000;
