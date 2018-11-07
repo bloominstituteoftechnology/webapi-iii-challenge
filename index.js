@@ -100,7 +100,7 @@ server.get('/api/posts', (req, res) => {
     posts
     .get()
     .then(posts => {
-        res.jsom(posts)
+        res.json(posts)
     })
     .catch(err => {
         return errorMessage(500, "Not Found", res)
