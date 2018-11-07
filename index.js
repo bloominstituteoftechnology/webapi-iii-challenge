@@ -152,6 +152,25 @@ server.get("/api/posts", (req, res) => {
   });
   
   //Delete a post
+  server.delete("/api/posts/:id", (req, res) => {
+    const { id } = req.params;
+    postDb
+      .remove(id)
+      .then(post => {
+        if (post.length < 1) {
+          res.status(404).json({
+            message: "The post with that ID does not exist."
+          });
+        } else {
+          res.status(200).json(post);
+        }
+      })
+      .catch(err =>
+        res.status(500).json({
+          error: "The post could not be removed."
+        })
+      );
+  });
   
   //Update a post
   
