@@ -29,10 +29,10 @@ server.use(uppercase);
 
 
 // adding a default GET at the root to tell folks the API is live.
-server.get('/', (req,res) => res.send({API: "live", "Users": "live", "Posts": "not live"}));
+server.get('/', (req,res) => res.send({API: "live", "Users": "live", "Posts": "live"}));
 
 
-// ALL USER RELATED STUFF 
+// ALL USER RELATED STUFF -----------------------------------------------------------------------------------------------------------
 server.get('/api/users', (req, res) => {
     userDb.get().then(users => {
         res.status(200).json(users);
@@ -91,7 +91,7 @@ server.delete('/api/users/:id', (req,res) => {
     })
 })
 
-server.put('/api/users/:id', async (req,res) => {
+server.put('/api/users/:id', uppercase, async (req,res) => {
     if (req.body.name !== undefined) {
         userDb.update(req.params.id, req.body).then(count => {
             if (count) {
@@ -108,7 +108,76 @@ server.put('/api/users/:id', async (req,res) => {
     }
 })
 
-// ALL POST RELATED STUFF
+// ALL POST RELATED STUFF -----------------------------------------------------------------------------------------------------------
+server.get('/api/posts', (req, res) => {
+    postDb.get().then(posts => {
+        res.status(200).json(posts);
+    }).catch(err => {
+        res.status(500).json({error: "The posts information could not be retrieved."})
+    })
+})
+
+server.get('/api/posts/:id', (req,res) => {
+    const id = req.params.id;
+    postDb.get(id)
+        .then(post => {
+            if (post) {
+                res.status(200).json(post);
+            } else {
+                res.status(404).json({message: "The post with the specified ID does not exist."});
+            }
+        })
+        .catch(err => {
+            res.status(500).json({error: "The post information could not be retrieved."});
+        })
+});
+
+server.post('/api/posts/', async (req, res) => {
+    if (req.body.userId !== undefined && req.body.text !== undefined) {
+        try {
+            console.log(req.body);
+            const post = await postDb.insert(req.body);
+            postDb.get(post.id)
+                .then(post => res.status(201).json(post))
+                .catch(err => res.status(404).json({message: "The post with the specified ID does not exist."}));
+        }
+        catch (err) {
+            res.status(500).json({message: "There was an error while saving the post to the database", err})
+        }
+    } else {
+        res.status(400).json({message: "Please provide a name for the post."});
+    }
+})
+
+server.delete('/api/posts/:id', (req,res) => {
+    postDb.remove(req.params.id).then(count => {
+        if (count) {
+            res.status(200).json(count);
+        }
+        else {
+            res.status(404).json({message: "The post with the specified ID does not exist."});
+        }
+    }).catch(err => {
+        res.status(500).json({error: "The post could not be removed"});
+    })
+})
+
+server.put('/api/posts/:id', async (req,res) => {
+    if (req.body.userId !== undefined && req.body.text !== undefined) {
+        postDb.update(req.params.id, req.body).then(count => {
+            if (count) {
+                postDb.get(req.params.id).then(post => res.status(200).json(post)).catch(err => res.status(404).json({message:"The post with the specified ID does not exist."}));
+            }
+            else {
+                res.status(404).json({message: "The post with the specified ID does not exist."});
+            }
+        }).catch(err => {
+            res.status(500).json({message: "The post with the specified ID could not be modified."});
+        })
+    } else {
+        res.status(400).json({message: "Please provide a name for the post."});
+    }
+})
 
 
 // Server Listening on Port 9000
