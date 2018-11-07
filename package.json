@@ -1,0 +1,11 @@
+{
+  "name": "Node-Blog",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/sarahtennis/Node-Blog.git",
+  "author": "sarahtennis",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
