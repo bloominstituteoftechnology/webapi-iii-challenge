@@ -1,4 +1,4 @@
 module.exports = (req, res, next) => {
-    req.body.name.toUpperCase();
+    req.body.name = req.body.name.toUpperCase();
     next();
   };
