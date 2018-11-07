@@ -114,6 +114,23 @@ server.get('/api/posts/:postId', (req, res) => {
     .catch(err => res.status(500).json({ error: "This post information could not be retrieved. "}))
 })
 
+server.post('/api/posts', (req, res) => {
+    const { text, userId } = req.body;
+    const newPost = { text, userId };
+    postDb.insert(newPost)
+    .then(postId => {
+        const { id } = postId;
+        postDb.get(id).then(post => {
+            if (!post) {
+                res.status(400).json({ error: "Please provide a text and user id for this post." });
+            }
+            res.status(201).json(post);
+        });
+    })
+    .catch(err => { res.status(500).json({ error: "The post you added could not be saved." });
+    })
+});
+
 
 const port = 9000;
 server.listen(port, () => console.log(`Party in port ${port}`))
