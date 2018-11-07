@@ -10,6 +10,7 @@ server.use(express.json());
 server.use(helmet());
 server.use(morgan('short'));
 
+
 server.get('/', (req, res) => {
     res.status(200).json({ api: 'running' });
 });
@@ -59,7 +60,50 @@ server.get('/api/users', (req, res) => {
       });
   });
   
+  server.post('/api/users', async (req, res) => {
+    console.log('body', req.body);
+    try {
+      const userData = req.body;
+      const userId = await user.insert(userData);
+      const users = await user.get(userId.id);
+      res.status(201).json(users);
+    } catch (error) {
+      let message = 'error creating the user';
+  
+      if (error.errno === 19) {
+        message = 'please provide both the name and the bio';
+      }
+  
+      res.status(500).json({ message, error });
+    }
+  });
 
+  server.put('/api/users/:id', (req, res) => {
+    const { id } = req.params;
+    const changes = req.body;
+    user.update(id, changes)
+    .then(count => {
+      if (count) {
+        res.status(200).json({ message: `${count} users updated` });
+      } else {
+        res.status(404).json({ message: 'User not found' })
+      }
+      
+    })
+    .catch(err => {
+      res.status(500).json({ message: 'error deleting user', err });
+    })
+  });
+  
+  server.delete('/api/users/:id', (req, res) => {
+    user.remove(req.params.id)
+      .then(count => {
+        res.status(200).json(count);
+      })
+      .catch(err => {
+        res.status(500).json({ message: 'error deleting user', err });
+      });
+  });
 
 
 server.listen(port, () => console.log(`\nApi running on port ${port}\n`));
