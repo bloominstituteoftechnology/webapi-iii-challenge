@@ -19,6 +19,7 @@
   "homepage": "https://github.com/shawnantonucci/Node-Blog#readme",
   "dependencies": {
     "express": "^4.16.4",
+    "knex": "^0.15.2",
     "sqlite3": "^4.0.3"
   },
   "devDependencies": {
