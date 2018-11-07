@@ -10,6 +10,14 @@ const server = express();
 server.use(express.json());
 server.use(cors());
 
+//custom middleware
+const upperCase = (request, response, next) => {
+    console.log(request.body.name.toUpperCase());
+    request.body.name  =  request.body.name.toUpperCase();
+    next();
+};
+ 
+
 //GET all users
 server.get('/api/users', (req, res) => {
     userDb.get()
@@ -55,7 +63,7 @@ server.get('/api/users', (req, res) => {
  })
 
  //POST (create) new user
- server.post('/api/users', (req, res) => {
+ server.post('/api/users', upperCase, (req, res) => {
     const user = req.body;
     const { name } = user;
     console.log('POST', user);
@@ -72,7 +80,7 @@ server.get('/api/users', (req, res) => {
   });
 
   //UPDATE user
-  server.put('/api/users/:id', (req, res) => {
+  server.put('/api/users/:id', upperCase, (req, res) => {
       const { id } = req.params;
       const user = req.body;
 
