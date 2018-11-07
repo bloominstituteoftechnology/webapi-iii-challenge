@@ -13,9 +13,9 @@
   "name": "Node-Blog",
   "description": "## Topics",
   "version": "1.0.0",
-  "main": "knexfile.js",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "server": "nodemon"
   },
   "repository": {
     "type": "git",
