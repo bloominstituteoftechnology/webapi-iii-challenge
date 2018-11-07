@@ -1,5 +1,5 @@
 const express = require("express");
-const logger = require("morgan");
+const morgan = require("morgan");
 const cors = require("cors");
 const helmet = require("helmet");
 
@@ -11,7 +11,7 @@ const server = express();
 
 
 
-server.use(logger("tiny"), cors(), helmet(), express.json());
+server.use(morgan("dev"), cors(), helmet(), express.json());
    
   //Get all users
 server.get("/api/users", (req, res) => {
@@ -47,6 +47,45 @@ server.get("/api/users", (req, res) => {
       );
   });
 
+
+    //Add a new User
+    server.post("/api/users", (req, res) => {
+        const newUser = req.body;
+        console.log({ newUser });
+        userDb
+        .insert(newUser)
+        .then(user => {
+            res.status(201).json(user);
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+            error: "There was an error while saving the user to the database."
+            });
+        });
+    });
+
+    //delete a user
+server.delete("/api/users/:id", (req, res) => {
+    const { id } = req.params;
+    userDb
+      .remove(id)
+      .then(user => {
+        if (user.length < 1) {
+          res.status(404).json({
+            message: "The user with the specified ID does not exist."
+          });
+        } else {
+          res.status(200).json(user);
+        }
+      })
+      .catch(err =>
+        res.status(500).json({
+          error: "The user could not be removed."
+        })
+      );
+  });
+  
 
    // call server.listen w/ a port of your choosing
   server.listen(port, () => {
