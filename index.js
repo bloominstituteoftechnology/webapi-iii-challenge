@@ -6,12 +6,11 @@ const userDB = require("./data/helpers/userDb");
 server.use(express.json());
 server.use(cors());
 
-function capitalizer (req, res, next){
-  let name = req.body.name
-  req.body.name = name.toUpperCase()
+function capitalizer(req, res, next) {
+  let name = req.body.name;
+  req.body.name = name.toUpperCase();
   next();
-};
-
+}
 
 const sendError = (status, errorMessage, res) => {
   res.status(status).json({ error: errorMessage });
@@ -26,33 +25,44 @@ server.get("/api/users", async (req, res) => {
   }
 });
 
-server.get('/api/users/:id', async (req, res)=>{
-    
-        const { id } = req.params;
-        const user = await userDB.get(id)
-        if (user){
-            res.json(user)
-        }
-        else{
-          sendError(404, 'No user with that id', res)  
-        }
-    
-})
+server.get("/api/users/:id", async (req, res) => {
+  const { id } = req.params;
+  const user = await userDB.get(id);
+  if (user) {
+    res.json(user);
+  } else {
+    sendError(404, "No user with that id", res);
+  }
+});
 
-server.post('/api/users/', capitalizer, async (req, res) =>{
-    try{
-        const {name} = req.body
-        if (!name){
-            sendError(400, 'must include name', res)
-            return
-        }
-        const id = await userDB.insert({name})
-        const user = await userDB.get(id.id)
-        await res.json(user)
+server.delete("/api/users/:id", async (req, res) => {
+  const { id } = req.params;
+  const user = await userDB.get(id);
+  const count = await userDB.remove(id);
+  if (!user) {
+    sendError(404, "No user with that id", res);
+    return;
+  }
+  if (!count) {
+    sendError(500, "No user deleted", res);
+    return;
+  }
+  res.json({'deleted': user})
+});
+
+server.post("/api/users/", capitalizer, async (req, res) => {
+  try {
+    const { name } = req.body;
+    if (!name) {
+      sendError(400, "must include name", res);
+      return;
     }
-    catch(err){
-        sendError(500, 'server error', res)
-    }
-})
+    const id = await userDB.insert({ name });
+    const user = await userDB.get(id.id);
+    await res.json(user);
+  } catch (err) {
+    sendError(500, "server error", res);
+  }
+});
 
 server.listen(port, () => console.log(`we hear you ${port}`));
