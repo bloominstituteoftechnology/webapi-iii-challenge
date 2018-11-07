@@ -18,6 +18,19 @@ router.get('/', async (req, res)=>{
 
 });
 
+router.get('/:id', async (req, res)=>{
+
+ let {id} = req.params;
+ let user = await db.get(id);
+
+ try{
+    res.status(200).json(user)
+ }
+ catch(er){
+    res.status(500).json({message: 'There was an error retrieving the data'})
+ }
+})
+
 router.get('/:id/posts', async (req, res)=>{
     let {id} = req.params;
     let userPosts = await db.getUserPosts(id);
