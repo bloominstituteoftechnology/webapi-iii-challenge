@@ -23,14 +23,34 @@ server.get('/users', (req, res) => {
 
 server.get('/users/:id', async (req, res) => {
     try {
-        console.log('req.params', req.params);
         const { id } = req.params;
         const user = await dbUser.get(id);
         res.status(200).json(user);
     } catch(err) {
-        res.status(500).json({ message: error });
+        res.status(500).json({ message: err });
     } 
 
+});
+
+server.post('/users/', async (req, res) => {
+    try {
+        const userData = req.body;
+        const insertedId = await dbUser.insert(userData);
+        res.status(201).json(insertedId);
+    } catch(err) {
+        res.status(500).json({ message: err });
+    }
+});
+
+server.delete('/users/:id', async (req, res) => {
+    try {
+        console.log('req.params', req.params);
+        const { id } = req.params;
+        const deleteCount = await dbUser.remove(id);
+        res.status(200).json(`Messages deleted: ${deleteCount}`);
+    } catch(err) {
+        res.status(500).json({ message: err });
+    }
 });
 
 const port = 9000;
