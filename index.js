@@ -9,11 +9,25 @@ const userDb = require("./data/helpers/userDb.js");
 
 const server = express();
 
+// MIDDLEWARES
+
+const allCaps = (req, res, next) => {
+    console.log(req.body);
+  
+    Object.assign(req.body, { name: req.body.name.toUpperCase() });
+  
+    next();
+  };
 
 
 server.use(morgan("dev"), cors(), helmet(), express.json());
    
-  //Get all users
+  // ROUTES
+// server.get("/api/users/:id", allCaps, (req, res) => {
+//   res.send(`${req.user}`);
+// });
+
+//Get all users
 server.get("/api/users", (req, res) => {
     userDb
       .get()
@@ -26,10 +40,9 @@ server.get("/api/users", (req, res) => {
         })
       );
   });
-
-
+  
   //Get posts of a specific user
-  server.get("/api/users/:id", (req, res) => {
+  server.get("/api/users/:id/posts", (req, res) => {
     userDb
       .getUserPosts(req.params.id)
       .then(user => {
@@ -46,27 +59,24 @@ server.get("/api/users", (req, res) => {
           .json({ error: "The user information could not be retrieved." })
       );
   });
-
-
-    //Add a new User
-    server.post("/api/users", (req, res) => {
-        const newUser = req.body;
-        console.log({ newUser });
-        userDb
-        .insert(newUser)
-        .then(user => {
-            res.status(201).json(user);
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({
-            error: "There was an error while saving the user to the database."
-            });
+  
+  //Add a new User
+  server.post("/api/users", allCaps, (req, res) => {
+    const newUser = req.body;
+    userDb
+      .insert(newUser)
+      .then(user => {
+        res.status(201).json(user);
+      })
+      .catch(err => {
+        res.status(500).json({
+          error: "There was an error while saving the user to the database."
         });
-    });
-
-    //delete a user
-server.delete("/api/users/:id", (req, res) => {
+      });
+  });
+  
+  //delete a user
+  server.delete("/api/users/:id", (req, res) => {
     const { id } = req.params;
     userDb
       .remove(id)
@@ -86,8 +96,9 @@ server.delete("/api/users/:id", (req, res) => {
       );
   });
   
-
-   // call server.listen w/ a port of your choosing
+  //Update a user
+  
+  // call server.listen w/ a port of your choosing
   server.listen(port, () => {
     console.log(`\n === API running on port ${port} ===\n`);
   });
