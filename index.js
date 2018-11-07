@@ -6,7 +6,7 @@ const cors = require('cors');
 // FILE IMPORTS, CONSTANTS
 // ==============================================
 const userRouter = require('./routes/userRoutes');
-const port = 5000;
+const port = process.env.PORT || 5000;
 
 const server = express();
 
