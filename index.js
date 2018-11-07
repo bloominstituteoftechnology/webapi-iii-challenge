@@ -11,6 +11,15 @@ server.get('/', (req, res) => {
    console.log('something');
 });
 
+// CUSTOM MIDDLEWARE
+const uppercaseName = (req, res, next) => {
+    req.body.name = req.body.name.toUpperCase();
+
+    next();
+}
+
+
+// CRUD OPERATIONS
 server.get('/users', (req, res) => {
     dbUser.get()
         .then(users => {
@@ -32,7 +41,7 @@ server.get('/users/:id', async (req, res) => {
 
 });
 
-server.post('/users/', async (req, res) => {
+server.post('/users/', uppercaseName, async (req, res) => {
     try {
         const userData = req.body;
         const insertedId = await dbUser.insert(userData);
@@ -52,7 +61,7 @@ server.delete('/users/:id', async (req, res) => {
     }
 });
 
-server.put('/users/:id', async (req, res) => {
+server.put('/users/:id', uppercaseName, async (req, res) => {
     try {
         const userData = req.body;
         const { id } = req.params;
