@@ -35,9 +35,20 @@ router.post('/', async (req, res) => {
         const postData = req.body;
         const id = await dbPost.insert(postData);
         const posts = await dbPost.get()
-        res.status(200).json({id, posts});
+        res.status(200).json({ newPostId: id, posts});
     } catch(err) {
         res.status(404).json({ message: err });
+    }
+});
+
+router.delete('/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const deleteCount = await dbPost.remove(id);
+        const posts = await dbPost.get();
+        res.status(200).json({deleteCount: deleteCount, posts});
+    } catch(err) {
+        res.status(404).json({ message: err })
     }
 });
 
