@@ -8,6 +8,10 @@ const server = express();
 
 server.use(express.json());
 
+//custom middleware
+// function pascalcase(req, res, next) {
+//     console.log(req.body)
+// }
 
 //posts
 server.get('/api/posts', async (req, res) => {
@@ -100,7 +104,7 @@ server.get('/api/users/:id', async (req, res) => {
     }
 });
 
-server.post('/api/users', async (req, res) => {
+server.post('/api/users', pascalcase, async (req, res) => {
     const name = req.body;
     try {
         const new_user_id = await dbUser.insert(name);
