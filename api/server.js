@@ -40,6 +40,19 @@ server.post('/api/posts', async (req, res) => {
     }
 })
 
+server.delete('/api/posts/:id', async (req, res) => {
+    const id = req.params.id;
+    try {
+        const postId = await dbPost.remove(id);
+        if (postId === 0) {
+            res.status(404).json({ error: `There is not a post with the id of ${id}`});
+        } else {
+            res.status(200).json({ message: 'The post has been deleted.'});
+        }
+    } catch (error) {
+        res.status(500).json({ error: "something is a miss."})
+    }
+})
 
 
 //users
@@ -81,12 +94,12 @@ server.delete('/api/users/:id', async (req, res) => {
         const user = await dbUser.get(id);
         const userId = await dbUser.remove(id);
         if (userId === 0) {
-            res.status(404).json({ message: `There is not user with the id of ${id}`})
+            res.status(404).json({ error: `There is not user with the id of ${id}`})
         } else {
             res.status(200).json({ message: `${user.name} has been deleted.`});
         }
     } catch (error) {
-        res.status(500).json({ message: "things didnt go well"})
+        res.status(500).json({ error: "things didnt go well"})
     }
 })
 
