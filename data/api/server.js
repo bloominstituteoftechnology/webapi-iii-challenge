@@ -5,6 +5,9 @@ const upperCaseUser = require('../middleware/upperCaseUsers');
 const postDb = require('../helpers/postDb');
 const userDb = require('../helpers/userDb');
 
+const cors = require('cors');
+server.use(cors());
+
 server.use(express.json());
 
 server.get('/', (req, res) => {
