@@ -99,7 +99,7 @@ router.put('/:id', capitalizeName, async (req, res) => {
     }
   } else {
     res.status(400).json({
-      errorMessage:
+      error:
         'Please provide a name (character length must be below 128 characters) for the user.'
     });
   }

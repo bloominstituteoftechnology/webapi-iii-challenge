@@ -27,4 +27,15 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+router.get('/:id/tags', async (req, res) => {
+  try {
+    const tags = await postDb.getPostTags(req.params.id);
+    res.status(200).json(tags);
+  } catch (err) {
+    res.status(500).json({ error: "The post's could not not be retrieved from the database." });
+  }
+});
+
+
+
 module.exports = router;
