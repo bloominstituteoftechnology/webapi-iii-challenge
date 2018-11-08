@@ -17,3 +17,7 @@ code {
 .App {
   text-align: center;
 }
+
+.name {
+  cursor: pointer;
+}
