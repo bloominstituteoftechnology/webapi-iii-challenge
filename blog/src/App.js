@@ -12,7 +12,7 @@ class App extends Component {
   }
   componentDidMount() {
     axios
-    .get('http://localhost:9000/api/users')
+    .get('http://lee-blog.herokuapp.com/api/users')
     .then(response => {
       this.setState({
         users: response.data
