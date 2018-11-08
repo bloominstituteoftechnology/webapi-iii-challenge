@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 class Posts extends React.Component {
   constructor(props) {
@@ -50,6 +51,7 @@ class Posts extends React.Component {
     } else {
       return (
         <div>
+            <Link to={`/api/users`}>Go Back</Link>
           <h1>{this.state.name}</h1>
           {this.state.posts.map(post => {
               return <p key={post.id}>{post.text}</p>
