@@ -22,17 +22,17 @@ class App extends Component {
       .then(response => this.setState({ users: response.data }))
       .catch(error => console.log(error));
 
-      axios
-      .get("http://localhost:8000/api/posts")
-      .then(response => this.setState({ posts: response.data }))
-      .catch(error => console.log(error));
+    axios
+    .get("http://localhost:8000/api/posts")
+    .then(response => this.setState({ posts: response.data }))
+    .catch(error => console.log(error));
   }
 
   render() {
     return (
       <div className="App">
         <Route exact path="/api/users" render={props => <Users {...props} users={this.state.users} />}/>
-        <Route path="/api/posts/:id" render={props => <Posts {...props} users={this.state.users} posts={this.state.posts} />}/>
+        <Route path="/api/posts/:id" render={props => <Posts {...props} />}/>
       </div>
     );
   }

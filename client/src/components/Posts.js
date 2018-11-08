@@ -5,8 +5,8 @@ class Posts extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: this.props.users.name,
-      text: this.props.posts.text
+      name: [],
+      posts: []
     };
   }
 
@@ -19,15 +19,18 @@ class Posts extends React.Component {
     axios
       .get(`http://localhost:8000/api/users/${id}`)
       .then(response => {
-        this.setState(() => ({ users: response.data }));
+        //   console.log(response);
+        this.setState(() => ({ name: response.data.name }));
       })
       .catch(error => {
         console.error(error);
       });
 
+      console.log(`http://localhost:8000/api/posts/${id}/?id=${id}`);
     axios
-      .get(`http://localhost:8000/api/posts/${id}`)
+      .get(`http://localhost:8000/api/posts/${id}?id=${id}`)
       .then(response => {
+        console.log(response)
         this.setState(() => ({ posts: response.data }));
       })
       .catch(error => {
@@ -42,11 +45,18 @@ class Posts extends React.Component {
   }
 
   render() {
-    return (
-      <div>
-        <h1>{this.state.users.name}</h1>
-      </div>
-    );
+    if (!this.state.name && !this.state.text) {
+      return <h2>Loading data...</h2>;
+    } else {
+      return (
+        <div>
+          <h1>{this.state.name}</h1>
+          {this.state.posts.map(post => {
+              return <p key={post.id}>{post.text}</p>
+          })}
+        </div>
+      );
+    }
   }
 }
 
