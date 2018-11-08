@@ -1,18 +1,12 @@
 const server = require('./api/server.js');
 const userDb = require('./data/helpers/userDb');
 const upperCaseThat = require('./middleware/upperCaseThat');
+const userRouter = require('./users/userRouter.js');
 
 const port = 9000;
 server.listen(port, () => console.log(`\nAPI running on port ${port}\n`));
 
-server.get('/api/users', async (req, res) => {
-  try {
-    const users = await userDb.get();
-    res.status(200).json(users);
-  } catch (error) {
-    res.status(500).json({ message: " error: 'The users could not be retrieved'", error: error });
-  }
-});
+server.use('/api/users/', userRouter);
 
 server.get('/api/users/:id', async (req, res) => {
   const { id } = req.params;
