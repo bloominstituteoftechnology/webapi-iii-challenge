@@ -5,8 +5,6 @@ const morgan = require('morgan');
 
 const dbPost = require('../data/helpers/postDb.js');
 
-const dbTag = require('../data/helpers/tagDb.js');
-
 const dbUser = require('../data/helpers/userDb.js');
 
 const users = require('../users/users.js');
@@ -107,6 +105,15 @@ server.delete('/api/users/:id', async (req, res) => {
         res.status(201).json(removeUser)
     } catch (error) {
         res.status(500).json({message: "User could not be removed"})
+    }
+})
+
+server.delete('/api/users/posts/:userId/:postId', async (req, res) => {
+    const removeUser = await dbPost.remove(req.params.postId);
+    try {
+        res.status(201).json(removeUser)
+    } catch (error) {
+        res.status(500).json({message: "Post could not be removed"})
     }
 })
 
