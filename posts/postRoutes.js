@@ -22,11 +22,27 @@ router.get('/', async (req, res)=>{
 
 });
 
+router.get('/:id', async (req, res)=> {
+    let userID = req.params.id;
+    let posts = await db.get(userID);
+
+    if(posts){
+    try{
+        res.status(200).json({message: 'The '})
+    }
+    catch(err){
+       
+    }
+}
+
+})
+
 
 
 router.post('/:id', userIDMW, (req, res)=>{
      
     let text = req.body;
+    
     console.log(text);
     if(text){
     db.insert(text)
@@ -39,12 +55,12 @@ router.post('/:id', userIDMW, (req, res)=>{
 })
 
 router.put('/:id', async (req, res)=>{
-    let {id} = req.params;
-    let user = req.body;
-    let prevName = await db.get(id);
-
-    db.update(id, user)
-    .then(r => res.status(200).json({message: `${prevName.name} has been changed to ${user.name}`}))
+    let { id } = req.params;
+    let post = req.body;
+    let prevPost = await db.get(id);
+    console.log(prevPost);
+    db.update(id, post)
+    .then(r => res.status(200).json({message: `${prevPost.text} has been changed to ${post.text}`}))
     .catch(err => res.status(500).json({message: 'There was an error processing the data'}) )
 
 })
@@ -53,15 +69,17 @@ router.put('/:id', async (req, res)=>{
 
 router.delete('/:id', async (req, res) => {
     let {id} = req.params;
-    let user = await db.get(id);
+    
+    
     let deletion = await db.remove(id);
+    
 
-    try{
-        res.status(200).json({message: `${user.name} has been deleted`})
+    try{console.log(post)
+        res.status(200).json({message: `Message has been deleted`})
     }
-    catch(er){
-        if(!user){
-            res.status(404).json({message: 'User Not Found'})
+    catch(err){
+        if(!deletion){
+            res.status(404).json({message: 'Post Not Found'})
         }
         else{
         res.status(500).json({message: 'There was an error processing your request'})

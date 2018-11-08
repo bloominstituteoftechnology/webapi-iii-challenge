@@ -3,7 +3,10 @@ const express = require('express');
 const router = express.Router();
 const db = require('./userDb');
 
-
+function allCap(req, res, next){
+    req.body.name = req.body.name.toUpperCase();
+    next();
+}
 
 
 router.get('/', async (req, res)=>{
@@ -44,7 +47,7 @@ router.get('/:id/posts', async (req, res)=>{
 });
 
 
-router.post('/', (req, res)=>{
+router.post('/', allCap, (req, res)=>{
     
     let user = req.body;
     
@@ -54,11 +57,11 @@ router.post('/', (req, res)=>{
 
 })
 
-router.put('/:id', async (req, res)=>{
+router.put('/:id', allCap, async (req, res)=>{
     let {id} = req.params;
-    let user = req.body;
+    let post = req.body; 
     let prevName = await db.get(id);
-
+    
     db.update(id, user)
     .then(r => res.status(200).json({message: `${prevName.name} has been changed to ${user.name}`}))
     .catch(err => res.status(500).json({message: 'There was an error processing the data'}) )
