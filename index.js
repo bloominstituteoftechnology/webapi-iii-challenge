@@ -20,4 +20,4 @@ server.listen(PORT, () => console.log(MESSAGE_SERVER_START));
 
 //-- Routing & Subcomponents ---------------------
 server.use('/users', require('./routes/users.js'));
-server.use('/posts', require('./routes/posts.js'));
+server.use('/posts', require('./routes/posts'));
