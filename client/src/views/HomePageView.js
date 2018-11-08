@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 // Action import
 import { fetchUsers } from '../actions';
+// Components imports
+import { PostList } from '../components';
 
 class HomePageView extends Component {
   componentDidMount() {
@@ -10,10 +12,10 @@ class HomePageView extends Component {
   }
 
   render() {
-    console.log(this.props.users);
+    const { users } = this.props;
     return (
       <div>
-        <h1>HOME PAGE VIEW</h1>
+        <PostList users={users} />
       </div>
     );
   }
