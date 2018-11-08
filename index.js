@@ -2,15 +2,19 @@ const express = require('express');
 const postDb = require('./data/helpers/postDb');
 const userDb = require('./data/helpers/userDb');
 // const cors = require('cors');
+
+
+const toUpperCase = require('./config/middleware/toUpperCase');
+const postRouter = require('./data/posts/postRouter');
+const configureMiddleware = require('./config/middleware/middleware');
+
 const server = express();
-
-
-const toUpperCase = require('./middleware/toUpperCase');
-
-
 server.use(express.json());
+// server.use(helmet());
+// server.use(morgan('short'));
 
 
+// configureMiddleware(server);
 
 server.get('/', (req, res) => {
     res.json('alive');
@@ -24,6 +28,8 @@ server.get('/users', (req, res) => {
     })
 })
 
+// server.user('/posts', postRouter)
+
 server.get('/posts', (req, res) => {
     postDb.get()
     .then(posts => res.status(200).json(posts))
@@ -31,6 +37,7 @@ server.get('/posts', (req, res) => {
     res.status(500).json({ message: "Couldn't retrieve posts" })
 })
 })
+
 
 server.get('/users/:id', (req, res) => {
     userDb.get(req.params.id)

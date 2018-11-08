@@ -8,3 +8,5 @@ module.exports = (req, res, next) => {
       console.log('Please add name');
     }
   };
+
+  // module.exports = toUpperCase;
