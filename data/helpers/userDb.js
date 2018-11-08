@@ -27,7 +27,7 @@ module.exports = {
   },
   remove: function(id) {
     return db('users')
-      .where('id', id)
+      .where('id', Number(id))
       .del();
   },
 };

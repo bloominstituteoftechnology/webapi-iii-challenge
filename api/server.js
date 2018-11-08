@@ -106,13 +106,15 @@ server.put('/api/users/:id', async (req, res) => {
 server.delete('/api/users/:id', (req, res) => {
     const { id } = req.params;
     db.get(id)
-        .then(user => { //then check for ...
-          if (user && user.length) { // status 200 - we found it!
-            db.remove(id) 
-            res.status(200).json({ message: "The post with the specified ID was deleted." });
-          } else { // or oops - if we could retrieve it, we would but it's not here, status 404
+        .then(user => { 
+          if (!user) { 
             res.status(404).json({ message: "The post with the specified ID does not exist." });
-          }
+            return
+          } else if (user){ // or oops - if we could retrieve it, we would but it's not here, status 404
+          db.remove(user.id) 
+          res.status(200).json({ message: "The post with the specified ID was deleted." });
+          return
+        }
         })
         .catch(err => {
           res //if data can't be retrieved ... 
