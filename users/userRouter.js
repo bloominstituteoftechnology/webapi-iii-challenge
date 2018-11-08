@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
 
 router.get('/api/users/:id', async (req, res) => {
   const { id } = req.params;
-  console.log(id);
+  console.log('this is the id: ', id);
   try {
     let foundUser = await userDb.get(id);
     {
@@ -29,6 +29,21 @@ router.get('/api/users/:id', async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({ error: 'The user could not be retrieved.' });
+  }
+});
+
+router.get('/api/users/posts/:id', async (req, res) => {
+  const { id } = req.params;
+  console.log('this is the id: ', id);
+  try {
+    let foundUserPosts = await userDb.getUserPosts(id);
+    {
+      foundUserPosts
+        ? res.status(200).json(foundUserPosts)
+        : res.status(404).json({ error: 'The user with that ID does not exist.' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: `The user's posts could not be retrieved.` });
   }
 });
 

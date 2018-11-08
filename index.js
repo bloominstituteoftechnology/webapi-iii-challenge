@@ -10,6 +10,7 @@ server.listen(port, () => console.log(`\nAPI running on port ${port}\n`));
 //USER METHODS
 server.use('/api/users/', userRouter);
 server.get('/api/users/:id', userRouter);
+server.get('/api/users/posts/:id', userRouter);
 server.post('/api/users', userRouter);
 server.delete('/api/users/:id', userRouter);
 server.put('/api/users/:id', userRouter);
