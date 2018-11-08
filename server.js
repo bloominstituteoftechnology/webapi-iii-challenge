@@ -1,33 +1,18 @@
 const express = require('express');
-const morgan = require('morgan');
-const cors = require('cors');
-const userDb = require('./data/helpers/userDb');
-const postDb = require('./data/helpers/postDb');
-
 const server = express();
-server.use(cors());
-server.use(express.json()); // initially forgot to include this.
-server.use(morgan('dev'));
+
+const userDb = require('./data/helpers/userDb');
+const postRouter = require('./routers/PostRouter');
+
+// middleware moved to middleware.js inside config folder
+const configureMiddleware = require('./config/middleware');
+configureMiddleware(server);
  
 // custom middleware 
-function uppercase(req, res, next) {
-    if (req.body.name !== undefined) {
-        const reqName = req.body.name;
-        const checkName = req.body.name.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-        if (reqName === checkName) {
-            next();
-        } else {
-            req.body.name = checkName;
-            next();
-        }
-    } else {
-        next();
-    }
-}
+const uppercase = require('./config/uppercase');
 
 server.use(uppercase);
-
-
+ 
 // adding a default GET at the root to tell folks the API is live.
 server.get('/', (req,res) => res.send({"Users API": "live", "Posts API": "live", "Tags API": "not live"}));
 
@@ -109,77 +94,7 @@ server.put('/api/users/:id', uppercase, (req,res) => {
     }
 })
 
-// ALL POST RELATED STUFF -----------------------------------------------------------------------------------------------------------
-server.get('/api/posts', (req, res) => {
-    postDb.get().then(posts => {
-        res.status(200).json(posts);
-    }).catch(err => {
-        res.status(500).json({error: "The posts information could not be retrieved."})
-    })
-})
-
-server.get('/api/posts/:id', (req,res) => {
-    const id = req.params.id;
-    postDb.get(id)
-        .then(post => {
-            if (post) {
-                res.status(200).json(post);
-            } else {
-                res.status(404).json({message: "The post with the specified ID does not exist."});
-            }
-        })
-        .catch(err => {
-            res.status(500).json({error: "The post information could not be retrieved."});
-        })
-});
-
-server.post('/api/posts', uppercase, (req,res) => {
-    const {userId, text} = req.body;
-    if (!userId || !text) {
-        res.status(400).json({message: "Please provide a User ID and text body for the post"});
-    } else {
-        postDb.insert(req.body).then(post => {
-            postDb.get(post.id)
-                .then(post => res.status(201).json(post))
-                .catch(err => res.status(404).json({message: "The post with the specified ID does not exist."}));
-        }).catch(err => {
-            res.status(500).json({message: "There was an error while saving the post to the database"})
-        })
-    }
-})
-
-server.delete('/api/posts/:id', (req,res) => {
-    postDb.remove(req.params.id).then(count => {
-        if (count) {
-            res.status(200).json(count);
-        }
-        else {
-            res.status(404).json({message: "The post with the specified ID does not exist."});
-        }
-    }).catch(err => {
-        res.status(500).json({error: "The post could not be removed"});
-    })
-})
-
-server.put('/api/posts/:id', (req,res) => {
-    const {userId, text} = req.body;
-    if (!userId || !text) {
-        res.status(400).json({message: "Please provide a User ID and text body for the post"});
-    } else {
-        postDb.update(req.params.id, req.body).then(count => {
-            if (count) {
-                postDb.get(req.params.id)
-                    .then(post => res.status(200).json(post))
-                    .catch(err => res.status(404).json({message:"The post with the specified ID does not exist."}));
-            }
-            else {
-                res.status(404).json({message: "The post with the specified ID does not exist."});
-            }
-        }).catch(err => {
-            res.status(500).json({message: "There was an error while saving the post to the database"})
-        })
-    }
-})
+server.use('/api/posts', postRouter);
 
 // Server Listening on Port 9000
 server.listen(9000, () => console.log('Server running on port 9000'));
