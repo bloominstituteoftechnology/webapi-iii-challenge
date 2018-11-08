@@ -25,6 +25,17 @@ router.get('/:id', async (req, res) => {
     }
 });
 
+router.get('/posts/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const posts = await userDb.getUserPosts(id)
+        
+        res.status(200).json(posts);
+    } catch(error) {
+        res.status(500).json(error);
+    }
+});
+
 router.post('/', upperCase, async (req, res) => {
     try {
         const { body } = req;
