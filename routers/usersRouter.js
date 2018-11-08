@@ -65,4 +65,26 @@ router.post('/create-new', (req, res) => {
     }
 });
 
+// DELETE user by user id
+// user at id does not exist --> error
+// user successfully deleted --> respond success message
+router.delete('/:id/delete', (req, res) => {
+    userDb.get(req.params.id)
+        .then(user => {
+            if(user) {
+                return userDb.remove(req.params.id);
+            } else {
+                res.status(404).json({ error: `The user with id ${req.params.id} does not exist.`})
+            }
+        })
+        .then(recordsDeleted => {
+            if(recordsDeleted){
+                res.status(200).json({ message: `User successfully deleted.`})
+            }
+        })
+        .catch(err => {
+            res.status(500).json({ error: `Failed to delete the user with id ${req.params.id}.`})
+        });
+})
+
 module.exports = router;
