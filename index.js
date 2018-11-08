@@ -5,6 +5,7 @@ const uppercase = require("./middleware/uppercase.js");
 const postDB = require("./data/helpers/postDb.js");
 const userDB = require("./data/helpers/userDb.js");
 const tagDB = require("./data/helpers/tagDb.js");
+const port = process.env.PORT || 9000;
 
 const cors = require("cors");
 server.use(cors());
@@ -91,4 +92,4 @@ server.delete("/posts/:id", (req, res) => {
 
 server.use("/products", productsRouter);
 
-server.listen(9000, () => console.log("server be runnin: port 9000"));
+server.listen(port, () => console.log("server be runnin: port 9000"));
