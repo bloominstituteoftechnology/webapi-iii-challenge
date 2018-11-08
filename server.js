@@ -74,7 +74,7 @@ server.post("/api/users", uppercaseMiddleware, (req, res) => {
   users
     .get(user.id)
     .then(user => {
-      if (req.body.name === undefined) {
+      if (req.body.name === "") {
         res
           .status(400)
           .json({ message: "Please provide a name for the user." });
