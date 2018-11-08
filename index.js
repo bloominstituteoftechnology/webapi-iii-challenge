@@ -8,8 +8,10 @@ const tagDB = require("./data/helpers/tagDb.js");
 
 const cors = require("cors");
 server.use(cors());
+
 server.use(express.json());
 
+const productsRouter = require("./products/productsRouter");
 // R O O T
 server.get("/", (req, res) => {
   res.status(200).send("<h1>THIS IS THE <em>root directory</em></h1>");
@@ -86,5 +88,7 @@ server.delete("/posts/:id", (req, res) => {
     res.status(200).json({ message: "Post deleted successfully." });
   });
 });
+
+server.use("/products", productsRouter);
 
 server.listen(9000, () => console.log("server be runnin: port 9000"));
