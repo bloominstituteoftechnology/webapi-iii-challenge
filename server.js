@@ -5,7 +5,13 @@ const postDb = require('./data/helpers/postDb');
 const userDb = require('./data/helpers/userDb');
 
 const server = express();
-server.use(express.json(), cors());
+server.use(express.json());
+server.use(cors());
+
+function upCase(req, res, next) {
+  req.body.name = req.body.name.toUpperCase();
+  next();
+}
 
 server.get('/users', (req, res) => {
   userDb
@@ -30,7 +36,7 @@ server.get('/users/:id', (req, res) => {
     });
 });
 
-server.post('/users', (req, res) => {
+server.post('/users', upCase, (req, res) => {
   if (!req.body.name) {
     res.status(400).json({ errorMessage: 'Please provide a name' });
   }
@@ -64,7 +70,7 @@ server.delete('/users/:id', (req, res) => {
     });
 });
 
-server.put('/users/:id', (req, res) => {
+server.put('/users/:id', upCase, (req, res) => {
   if (!req.body.name) {
     res.status(404).json({ message: 'Please provide a new name.' });
   }
