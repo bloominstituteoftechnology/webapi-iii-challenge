@@ -13,6 +13,16 @@ router.get('/', (req, res) => {
     )
   });
   
+  router.get('/userpost/:id', (req, res) => {
+    const {id} = req.params;
+    userDb.getUserPosts(id)
+    .then( posts =>
+        res.status(200).json(posts))
+    .catch( (error) => 
+        res.status(500).json({ message: 'could not get users', error })
+    )
+  });
+
   router.post('/add', upperCase, (req, res) => {
     const newUser = req.body;
     console.log(newUser);
@@ -47,5 +57,7 @@ router.put('/edit/:id', upperCase, (req, res) => {
         res.status(500).json({ message: 'could not delete user', error })
     )
   });
+
+  
 
   module.exports = router;
