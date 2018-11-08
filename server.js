@@ -16,18 +16,54 @@ const upperCaser = (req, res, next) => {
     }
 }
 
-server.get('/api/users)', (req, res) => {
-    users
+server.get('/users)', (req, res) => {
+    userDb
         .get()
         .then(userList => {
-            res.json(userList);
+            res.status(200).json(userList);
         })
         .catch(error => {
-            res.status(500).json({ message: "Server Error"});
+            res.status(500).json({ message: "Server Error" });
         })
 }
+);
 
-)
+server.get('/users/:id', (req, res) => {
+    const { id } = reqs.params;
+    userDb
+        .get(id)
+        .then(user => {
+            res.status(200).json(user);
+        })
+        .catch(error => {
+            res.status(500).json({ message: "Server Error" });
+        })
+})  //404?
+
+server.get('/posts', (req, res) => {
+    postDb
+        .get()
+        .then(postList => {
+            res.status(200).json(postList);
+        })
+        .catch(error => {
+            res.status(500).json({ message: "Server Error" });
+        })
+})
+
+server.get('/posts/user/:id', (req, res) => {
+    const { id } = req.params;
+    userDb  //or postDb?
+        .getUsersPosts(id)
+        .then(user => {
+            res.status(200).json(user);
+        })
+        .catch(error => {
+            res.status(500).json({ message: "Server Error" });
+        })
+})
+
+
 
 
 
