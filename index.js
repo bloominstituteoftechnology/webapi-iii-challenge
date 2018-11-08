@@ -1,4 +1,5 @@
 const server = require("./api/server");
 
 // server listen
-server.listen(9000, () => console.log("Server is started"));
+const port = process.env.PORT || 9000;
+server.listen(port, () => console.log("Server is started"));
