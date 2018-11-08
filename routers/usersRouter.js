@@ -30,7 +30,7 @@ router.get('/:id', (req, res) =>{
    })
 })
 
-router.post('/', (req, res) => {
+router.post('/', upperCaser, (req, res) => {
   const userData = req.body;
   if(userData.name.length === 0) {
     res.status(500).json({message: 'no empty strings'})
@@ -61,7 +61,7 @@ router.delete('/:id', (req, res) => {
    })
 })
 
-router.put('/:id', (req, res) => {
+router.put('/:id', upperCaser, (req, res) => {
   console.log(req.body)
   const {id} = req.params;
   const changes = req.body;
