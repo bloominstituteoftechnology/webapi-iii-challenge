@@ -1,12 +1,13 @@
 //importing node modules
 const express = require('express');
+const cors = require('cors');
 
 const userRouter = require('./users/userRouters');
 const postRouter = require('./posts/postRouter');
 
 //create server
 const server=express();
-
+server.use(cors());
 //all methods attached to userdb
 server.use('/api/users', userRouter);
 
