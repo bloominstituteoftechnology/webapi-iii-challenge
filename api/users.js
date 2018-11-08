@@ -50,7 +50,7 @@ router.post("/", capitalize, (req, res) => {
 });
 
 /* ======= EDIT USER ====== */
-router.put("/:id", (req, res) => {
+router.put("/:id", capitalize, (req, res) => {
   userDb
     .update(req.params.id, req.body)
     .then(count => {
