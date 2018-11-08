@@ -1,7 +1,6 @@
 const express = require('express');
-const helmet = require('helmet');
-const morgan = require('morgan');
 
+const server = express();
 
 const dbPost = require('../data/helpers/postDb.js');
 
@@ -9,11 +8,10 @@ const dbUser = require('../data/helpers/userDb.js');
 
 const users = require('../users/users.js');
 
-const server = express();
+const configureMiddleware = require('../config/middleware.js');
 
-server.use(express.json());
-server.use(helmet());
-server.use(morgan('short'));
+configureMiddleware(server)
+
 server.use(users);
 
 server.get('/', (req, res) => {
