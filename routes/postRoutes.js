@@ -36,5 +36,29 @@ router.post('/', (req, res) => {
         .json({ message: 'There was an error adding the post', error });
     });
 });
+// Deletes post
+router.delete('/:id', (req, res) => {
+  const id = req.params.id;
+
+  postDb
+    .remove(id)
+    .then(count => {
+      if (count) {
+        res.status(200).json({
+          message: `The post with the id of ${id} was deleted.`,
+          count
+        });
+      } else {
+        res
+          .status(404)
+          .json({ message: `User with the id of ${id} could not be found` });
+      }
+    })
+    .catch(error => {
+      res
+        .status(500)
+        .json({ message: 'There was an error deleting the post.', error });
+    });
+});
 
 module.exports = router;
