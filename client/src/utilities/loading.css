@@ -9,6 +9,7 @@
     width: 100%;
     height: 100%;
     flex-grow: 1;
+    padding: 1rem;
 }
 .loading-spinner {
     color: white;
@@ -16,14 +17,14 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 10rem;
-    height: 10rem;
+    width: 6rem;
+    height: 6rem;
     border-radius: 50%;
     animation-name: spin;
     animation-duration: 5000ms;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
-    border: 5rem dotted white;
+    border: 3rem dotted white;
     background-color: black;
 }
 @keyframes spin {

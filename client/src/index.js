@@ -5,23 +5,20 @@
 //-- Dependencies --------------------------------
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {BrowserRouter as Router, Route} from 'react-router-dom';
 import './reset.css';
 import './client.css';
-import List from './utilities/list.js';
-import User from './user.js';
+import {UserList, UserViewer} from './user.js';
 
 //-- Constants -----------------------------------
-const URL_BASE = 'http://localhost:8080';
-const URL_USERS = URL_BASE + '/users';
+export const URL_BASE = 'http://localhost:8080';
+export const URL_USERS = URL_BASE + '/users';
 
 //-- Mounting ------------------------------------
 const applicationStructure = (
-    <React.Fragment>
-        <h1>Characters from Lord of the Rings</h1>
-        <List
-            listUrl={URL_USERS}
-            itemComponent={User}
-        />
-    </React.Fragment>
+    <Router><React.Fragment>
+        <Route exact path="/" component={UserList} />
+        <Route path="/users/:id" component={UserViewer} />
+    </React.Fragment></Router>
 );
 ReactDOM.render(applicationStructure, document.getElementById('root'));
