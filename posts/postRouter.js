@@ -1,6 +1,6 @@
 const express = require('express');
 const postdb = require('../data/helpers/postDb');
-
+const userdb = require('../data/helpers/userDb');
 const router = express.Router();
 
 //middleware
@@ -36,23 +36,31 @@ router.get('/:id', (req, res) => {
     })
 })
 
-// //POST /api.posts/
-// router.post('/', async (req, res) => {
-//     const {name} = req.body;
+//POST /api.posts/
+router.post('/', async (req, res) => {
+    const {userId, text} = req.body;
     
-//     if (!name) {
-//     res.status(400)
-//     .json({message: "Please provide a name for the new user."})
-//     } else {
-//         try {
-//         const userInfo = req.body;
-//         const userId  =await userdb.insert(userInfo);
-//         res.status(201).json(userId);
-//         } catch (error) {
-//         res.status(500).json({error: "An error occurred while saving this user."})
-//     }
-//     }
-// })
+    if (!userId || !text) {
+    res.status(400)
+    .json({message: "Please provide the user's id and the text for their new post."})
+    } else {
+        postdb.get(userId)
+        .then(post =>{
+
+            if(post) {
+        try {
+        const postInfo = req.body;
+        const dbUserId  = await postdb.insert(postInfo);
+        res.status(201).json(dbUserId);
+        } catch (error) {
+        res.status(500).json({error: "An error occurred while saving this post."})
+    }
+            } else {
+                res.status(404).json({message: "The user with that userId does not exist."})
+            }        
+})
+    }
+})
 
 // //UPDATE /api/users/:id
 // router.put('/:id', nameCap, (req, res) => {
