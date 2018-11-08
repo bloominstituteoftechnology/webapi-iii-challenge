@@ -10,18 +10,17 @@ const router = express.Router();
 // CUSTOM MIDDLEWARE
 // ==============================================
 const capitalizeName = (req, _, next) => {
-  if (req.body.name) {
+  if (req.body.name.indexOf(' ') >= 0) {
     req.body.name = req.body.name
       .split(' ')
-      .map(name =>
-        name
-          .split('')
-          .map((letter, i) => (i === 0 ? letter.toUpperCase() : letter.toLowerCase()))
-          .join('')
-      )
+      .map(name => name.charAt(0).toUpperCase() + name.slice(1, name.length).toLowerCase())
       .join(' ');
+    next();
+  } else {
+    const { name } = req.body;
+    req.body.name = name.charAt(0).toUpperCase() + name.slice(1, name.length).toLowerCase();
+    next();
   }
-  next();
 };
 
 // ROUTES
