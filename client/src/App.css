@@ -1,0 +1,13 @@
+.App {
+  display: flex;
+  justify-content: center;
+}
+
+.posts-list{
+  width: 600px;
+}
+.post{
+  border: 1px solid rgb(223, 223, 223);
+  padding:20px;
+  margin-bottom:10px;
+}
