@@ -155,4 +155,19 @@ server.put('/api/posts/:id', (req, res) => {
         res.status(400).json({message: 'please provide some text'});
     }
 })
+server.delete('/api/posts/:id', (req, res) => {
+    const id = req.params.id;
+
+    postDb.remove(id)
+        .then(count => {
+            if (count === 1) {
+                res.status(200).json({ message: 'the post has been deleted' });
+            } else {
+                res.status(404).json({ message: 'the post does not exist' })
+            }
+        })
+        .catch(error => {
+            res.status(500).json({ error: 'the post cannot be deleted', error: error })
+        })
+})
 module.exports = server;
