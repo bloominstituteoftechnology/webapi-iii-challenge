@@ -1,9 +1,12 @@
-const userDb = require('./data/helpers/userDb');
 
-const upperCase = require('./middleware/')
+
 const express = require('express');
 
 const server = express();
+
+const upperCase = require('./middleware/upperCase.js');
+
+const userDb = require('./data/helpers/userDb');
 
 server.use(express.json());
 
