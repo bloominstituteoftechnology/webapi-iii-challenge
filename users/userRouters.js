@@ -30,8 +30,13 @@ router.get('/:id', (req, res) => {
     const {id} = req.params;
     
     userdb.get(id)
-    .then(user => {res.status(200)
+    .then(user => {
+        if (user && user.length) {
+        res.status(200)
         .json(user);
+        } else {
+            res.status({message: "The user with the specified data does not exist."})
+        }
     })
     .catch(error => {res.status(500)
         .json({message: "The user info could not be retrieved."})

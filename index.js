@@ -10,7 +10,7 @@ const server=express();
 //all methods attached to userdb
 server.use('/api/users', userRouter);
 
-//all methods attache dto postdb
+//all methods attached to postdb
 server.use('/api/posts', postRouter);
 
 //set port for server to listen to
