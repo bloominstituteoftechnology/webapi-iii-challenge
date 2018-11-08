@@ -1,127 +1,85 @@
 <template lang="pug">
     div.container
-        div.user-container.placeholder(v-bind:class="{showplaceholder: editMode}")
+        div.user-container(v-bind:class='{placeholder: editMode}')
             h1.user-name {{userName}}
-            div.button-container
-                button.button.edit-button(type="button" v-on:click="editMode = !editMode") EDIT
-                button.button.delete-button(type="button") DELETE
-
-        //- div.user-container(v-show="editMode" transition="expand")
-        div.user-container(v-bind:class="{active: editMode}")
-            h1.user-name {{userName}}
-            div.button-container
-                button.button.edit-button(type="button" v-on:click="editMode = !editMode") EDIT
-                button.button.delete-button(type="button") DELETE
+            div.post-container(v-if='posts.length > 0')
+                Post(v-bind:text='posts[0].text' v-bind:postId='posts[0].id')
+            //- div.post-container(v-for='post in posts')
+                Post(v-bind:text='post.text' v-bind:postId='post.id')
+            button.button.edit-button(type="button" v-on:click="editMode = !editMode") EDIT
 </template>
 
 <script>
+    import axios from 'axios';
+
+    import Post from './Post.vue';
+
     export default {
         name: 'User',
+        components: {
+            Post
+        },
         data: () => {
             return {
+                posts: [],
                 editMode: false
             }
         },
         props: {
-            userName: String
+            userName: String,
+            userId: Number,
         },
         methods: {},
+        created () {
+            axios.get(`http://localhost:9000/api/users/posts/${this.userId}`)
+                .then(res => {
+                    console.log(res.data, this.userId)
+                    this.posts = res.data
+                })
+                .catch(error => console.error(error));
+        }
     }
 
 </script>
 
 <style lang="sass" scoped>
 
-    @keyframes cardSelected
-        0%
-            position: fixed
-            z-index: 2
-            width: 300px
-            height: 200px
-            top: 50%
-            left: 50%
-            margin-top: -100px
-            margin-left: -150px
-        100%
-            position: fixed
-            z-index: 2
-            width: 600px;
-            height: 350px;
-            top: 50%
-            left: 50%
-            margin-top: -175px
-            margin-left: -300px
-
-    @keyframes cardDeselected
-        0%
-            position: fixed
-            z-index: 2
-            width: 600px;
-            height: 350px;
-            top: 50%
-            left: 50%
-            margin-top: -175px
-            margin-left: -300px
-        99%
-            position: fixed
-            width: 300px
-            height: 200px
-            top: 50%
-            left: 50%
-            margin-top: -100px
-            margin-left: -150px
-        100%
-            position: default
-            margin-top: 0
-            margin-left: 0
-        
-
-    .expand-transition
-
-    .expand-enter
-        animation: cardSelected .412s ease-in forwards
-    
-    .expand-leave
-        animation: cardDeselected .412s ease-in forwards
-
-
-    
     .container 
         width: 100%
         height: 100%
     
     .user-container
         width: 300px
-        height: 200px
+        min-height: 250px
         border: 1px solid rgba(0,0,0,0.1)
         border-radius: 8px
         margin: 10px
         display: flex
         flex-direction: column
-        justify-content: space-between
+        justify-content: flex-start
         padding-bottom: 20px
         background: white
+        position: relative
+        padding: 0px 15px
         &:hover 
             transition: all .212s ease-in
             box-shadow: 1px 1px 8px -1px rgba(0,0,0,0.4)
         .user-name
             font-size: 22px
             font-weight: 700
+        h1
+            user-select: none
 
     .placeholder
         filter: blur(3px)
-        display: none
-    
-    .showplaceholder
-        display: flex
-
-    .active
-        animation: cardSelected .412s ease-in forwards
 
     .button 
         width: 200px
         height: 35px
-        margin: 5px 0
+        position: absolute
+        bottom: 20px
+        left: 50%
+        margin-left: -100px
         border: none
         border-radius: 12px
         border: 1px solid rgba(0,0,0,0.1)
