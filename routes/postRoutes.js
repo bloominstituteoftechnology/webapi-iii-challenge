@@ -2,6 +2,7 @@
 // ==============================================
 const express = require('express');
 const postDb = require('../data/helpers/postDb.js');
+const userDb = require('../data/helpers/userDb.js');
 
 // EXPRESS ROUTER
 // ==============================================
@@ -36,6 +37,25 @@ router.get('/:id/tags', async (req, res) => {
   }
 });
 
-
+router.post('/', async (req, res) => {
+  if (req.body.userId && req.body.text) {
+    const user = await userDb.get(req.body.userId);
+    if (user) {
+      try {
+        const addedPost = await postDb.insert(req.body);
+        const post = await postDb.get(addedPost.id);
+        res.status(201).json({ post });
+      } catch (err) {
+        res
+          .status(500)
+          .json({ error: 'There was an error while saving the post to the database.' });
+      }
+    } else {
+      res.status(404).json({ message: 'The user with the specified ID does not exist.' });
+    }
+  } else {
+    res.status(400).json({ errorMessage: 'Please provide a userID and text for the post.' });
+  }
+});
 
 module.exports = router;
