@@ -1,11 +1,14 @@
 const express = require('express');
 const userDb = require('./data/helpers/userDb');
-const cors = require('cors');
+
+
+const configureMiddleware = require('./config/middleware');
 
 const app = express();
 
+configureMiddleware(app);
+
 app.use(express.json());
-app.use(cors());
 
 const userUpperCase = (req, res, next) => {
   req.body.name = req.body.name.toUpperCase();
