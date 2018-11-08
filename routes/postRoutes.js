@@ -12,7 +12,6 @@ router.get('/', (req, res) => {
       res.status(500).json({ message: 'Error fetching all posts.', error });
     });
 });
-
 // Fetches specific post
 router.get('/:id', (req, res) => {
   const id = req.params.id;
@@ -22,6 +21,19 @@ router.get('/:id', (req, res) => {
     .then(post => res.status(200).json(post))
     .catch(error => {
       res.status(200).json({ message: 'Error fetching all posts' });
+    });
+});
+// Adds a new post
+router.post('/', (req, res) => {
+  const newPost = req.body;
+
+  postDb
+    .insert(newPost)
+    .then(post => res.status(200).json(post))
+    .catch(error => {
+      res
+        .status(500)
+        .json({ message: 'There was an error adding the post', error });
     });
 });
 
