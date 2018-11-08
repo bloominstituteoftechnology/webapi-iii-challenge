@@ -25,5 +25,15 @@ server.get('/api/users/:id', (req, res) => {
     });
 });
 
+server.get('/api/users/:id/posts', (req, res) => {
+  const userId = req.params.id;
+  userDb
+    .getUserPosts(userId)
+    .then((userPosts) => res.status(200).json({ userPosts }))
+    .catch((err) => {
+      res.status(500).json({ message: 'no posts by this user', err });
+    });
+});
+
 // --EXPORT--
 module.exports = server;
