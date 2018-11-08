@@ -1,12 +1,13 @@
 const express = require('express');
-const dbPost = require('./data/helpers/postDb.js');
 const dbTag = require('./data/helpers/tagDb.js');
 const usersRouter = require('./users/usersRouter');
+const postsRouter = require('./posts/postsRoutes');
 
 const server = express();
 
 server.use(express.json());
 server.use('/users', usersRouter);
+server.use('/posts', postsRouter);
 
 // Root response
 server.get('/', (req, res) => {
