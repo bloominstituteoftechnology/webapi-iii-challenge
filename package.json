@@ -9,9 +9,12 @@
     "start": "nodemon index.js"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "cors": "^2.8.5",
     "express": "^4.16.4",
     "knex": "^0.15.2",
+    "react-router": "^4.3.1",
+    "react-router-dom": "^4.3.1",
     "server": "^1.0.18",
     "sqlite3": "^4.0.3"
   },
