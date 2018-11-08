@@ -12,7 +12,8 @@ server.use(morgan('short'));
 
 /*
 _____Posts_____
-id: number, no need to provide it when creating posts, the database will automatically generate it.
+id: number, no need to provide it when creating posts, 
+the database will automatically generate it.
 userId: number, required, must be the id of an existing user.
 text: string, no size limit, required.
 */
@@ -165,20 +166,23 @@ server.get('/api/posts/:id', (req, res) => {
   });
 //----- POST posts -----
 
-server.post('/api/users', makeUppercase, async (req, res) => {
-    const userData = req.body;
-    if (!userData.name || userData.name==="" ) {
-        const errorMessage = "Please provide name for the user"; 
+server.post('/api/posts', async (req, res) => {
+    console.log("HI AGAIN")
+    const postData = req.body;
+    console.log(postData)
+    if (!postData.text|| postData.text==="" ) {
+        const errorMessage = "Please provide post content"; 
         res.status(400).json({ errorMessage});
         return
     }   
+
     try {
-        await userDb.insert(userData);
+        await postDb.insert(postData);
     } catch (error) {
             res.status(500).json({ error: "There was an error while saving the post to the database" });
             return      
     }
-    res.status(201).json({message: "user was added to database" });
+    res.status(201).json({message: "post was added blog" });
     return
 });
 //----- PUT posts -----
