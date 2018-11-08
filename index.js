@@ -1,7 +1,7 @@
 const express = require('express');
 const postDb = require('./data/helpers/postDb');
 const userDb = require('./data/helpers/userDb');
-// const cors = require('cors');
+const cors = require('cors');
 
 
 const toUpperCase = require('./config/middleware/toUpperCase');
@@ -13,6 +13,7 @@ server.use(express.json());
 // server.use(helmet());
 // server.use(morgan('short'));
 
+server.use(cors());
 
 // configureMiddleware(server);
 
