@@ -8,7 +8,6 @@ class Users extends React.Component {
         super();
         this.state = {
             users : [],
-            posts : []
         }
     }
 
@@ -19,16 +18,6 @@ class Users extends React.Component {
                   this.setState({users : response.data})
               })
              .catch(error => console.log(error));
-    }
-
-    postDisplayForUser(id) {
-            console.log("######3  ",id);
-            axios.get('http://localhost:9000/users/:id/posts')
-                 .then(response => {
-                     console.log(response.data)
-                     // this.setState({posts : response.data})
-                  })
-                 .catch(error => console.log(error));
     }
 
     render() {
