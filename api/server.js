@@ -78,6 +78,25 @@ server.get('/api/users/:id/posts', (req, res) => {
         })
 });
 
+// Posts post section
+
+server.post('/api/posts', async (req, res) => {
+    console.log('body', req.body);
+    try {
+        const postData = req.body;
+        const postId = await postDb.insert(postData);
+        const post = await postDb.get(postId.id);
+        res.status(201).json(post);
+    } catch (error) {
+        let message = 'error creating the post';
+
+        if (error.errno === 19) {
+            message = 'please provide both the title and the text section';
+        }
+
+        res.status(500).json({ error: "There was an error while saving the post to the database" });
+    }
+});
 // server.get('/secret', gatekeeper, (req, res) => {
 //     res.send(req.welcomeMessage);
 //   });   how he did it
