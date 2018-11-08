@@ -69,4 +69,27 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
+router.put('/:id', async (req, res) => {
+  if (req.body.userId && req.body.text) {
+    const user = await userDb.get(req.body.userId);
+    if (user) {
+      try {
+        const count = await postDb.update(req.params.id, req.body);
+        if (count > 0) {
+          const post = await postDb.get(req.params.id);
+          res.status(200).json(post);
+        } else {
+          res.status(404).json({ message: 'The post with the specified ID does not exist.' });
+        }
+      } catch (err) {
+        res.status(500).json({ error: 'There was an database error updating the post.' });
+      }
+    } else {
+      res.status(404).json({ message: 'The user with the specified ID does not exist.' });
+    }
+  } else {
+    res.status(400).json({ errorMessage: 'Please provide a userId and text for the post.' });
+  }
+});
+
 module.exports = router;
