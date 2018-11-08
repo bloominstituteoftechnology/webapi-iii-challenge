@@ -5,7 +5,7 @@
   "main": "knexfile.js",
   "scripts": {
     "test": "test",
-    "start": "nodemon"
+    "server": "nodemon"
   },
   "repository": {
     "type": "git",
