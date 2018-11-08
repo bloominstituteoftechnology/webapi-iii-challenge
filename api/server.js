@@ -2,7 +2,7 @@ const express = require('express');
 
 const server = express();
 
-const dbPost = require('../data/helpers/postDb.js');
+
 
 const dbUser = require('../data/helpers/userDb.js');
 
@@ -29,17 +29,6 @@ server.get('/api/users/:id', (req, res) => {
     })
 })
 
-server.get('/api/users/posts/:id', (req, res) => {
-    const {id} = req.params;
-    dbUser.getUserPosts(id)
-    .then(posts => {
-        res.status(200).json(posts);
-    })
-    .catch(error => {
-        res.status(404).json({error: "USER NOT FOUND"})
-    })
-})
-
 
 server.post('/api/users', users, async (req,res) => {
     try {
@@ -51,15 +40,6 @@ server.post('/api/users', users, async (req,res) => {
     }
 })
 
-server.post('/api/users/posts/:id', async (req,res) => {
-    try {
-        const postData = req.body;
-        const postId = await dbPost.insert(postData);
-        res.status(201).json(postId);
-    } catch(error) {
-        res.status(500).json({message: "The post could not be added"}, error)
-    }
-})
 
 server.put('/api/users/:id', users, (req, res) => {
     const userData = req.body;
@@ -79,22 +59,7 @@ server.put('/api/users/:id', users, (req, res) => {
     }
 })
 
-server.put('/api/users/posts/:userId/:postId', (req, res) => {
-    const postData = req.body;
-    if (!postData.text) {
-        res.status(400).json({errorMessage: "Please provide text." })
-    } else {
-        dbPost.update(req.params.postId, postData).then(count => {
-        if(count) {
-            res.status(200).json({message: `${count} post updated`})
-        } else {
-            res.status(404).json({error: "Post not found"})
-        }
-    }).catch(error => {
-        res.status(400).json({message: "Post could not be updated"})
-    })
-    }
-})
+
 
 server.delete('/api/users/:id', async (req, res) => {
     const {id} = req.params;
@@ -106,13 +71,6 @@ server.delete('/api/users/:id', async (req, res) => {
     }
 })
 
-server.delete('/api/users/posts/:userId/:postId', async (req, res) => {
-    const removeUser = await dbPost.remove(req.params.postId);
-    try {
-        res.status(201).json(removeUser)
-    } catch (error) {
-        res.status(500).json({message: "Post could not be removed"})
-    }
-})
+
 
 module.exports = server;
