@@ -8,6 +8,16 @@ const server=express();
 
 server.use(express.json());
 
+//custom middleware to make sure POST and PUT requests have names properly capitalized
+function nameCap(req, res, next) {
+    //first pull name off the sent request
+    let {name} = req.body;
+ //then reassign that value with one where all first letters have been capitalized
+    req.body.name=name.toLowerCase().split(' ').map(word=>word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+ //then call the next middleware (in this example, the POST and PUT routehandlers)
+    next();
+}
+
 //CRUD methods for userdb
 //GET
 server.get('/api/users', (req, res) =>{
@@ -39,24 +49,26 @@ server.get('/api/users/:id', (req, res) => {
 })
 
 //POST
-server.post('/api/users', async (req, res) => {
-const {name} = req.body;
-if (!name) {
+server.post('/api/users', nameCap, async (req, res) => {
+
+    const {name} = req.body;
+
+    if (!name) {
     res.status(400)
     .json({message: "Please provide a name for the new user."})
-} else {
-    try {
+    } else {
+        try {
         const userInfo = req.body;
         const userId  =await userdb.insert(userInfo);
         res.status(201).json(userId);
-    } catch (error) {
+        } catch (error) {
         res.status(500).json({error: "An error occurred while saving this user."})
     }
-}
+    }
 })
 
 //UPDATE
-server.put('/api/users/:id', (req, res) => {
+server.put('/api/users/:id', nameCap, (req, res) => {
     const {id} = req.params;
     const changes = req.body;
 
@@ -83,7 +95,9 @@ server.put('/api/users/:id', (req, res) => {
 
 //DELETE
 server.delete('/api/users/:id', (req, res) => {
+    
     const {id} = req.params;
+    
     userdb.remove(id)
     .then(count=>{
         if (count) {
@@ -98,7 +112,6 @@ server.delete('/api/users/:id', (req, res) => {
         res.status(500)
         .json({error: "The user could not be removed."})
     })
-
 })
 
 server.listen(7000, ()=>console.log('\nServer is listening on port 7000\n'));
