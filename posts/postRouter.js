@@ -37,21 +37,21 @@ router.get('/:id', (req, res) => {
 })
 
 //POST /api.posts/
-router.post('/', async (req, res) => {
+router.post('/', (req, res) => {
     const {userId, text} = req.body;
     
     if (!userId || !text) {
     res.status(400)
     .json({message: "Please provide the user's id and the text for their new post."})
     } else {
-        postdb.get(userId)
-        .then(post =>{
+        userdb.get(userId)
+        .then(user =>{
 
-            if(post) {
+            if(user) {
         try {
         const postInfo = req.body;
-        const dbUserId  = await postdb.insert(postInfo);
-        res.status(201).json(dbUserId);
+        postdb.insert(postInfo);
+        res.status(201).json(req.body);
         } catch (error) {
         res.status(500).json({error: "An error occurred while saving this post."})
     }
