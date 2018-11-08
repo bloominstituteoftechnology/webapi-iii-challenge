@@ -10,7 +10,7 @@ const userDb = require('./data/helpers/userDb');
 
 server.use(express.json());
 
-server.get('/api/user/', (req, res) => {
+server.get('/api/users', (req, res) => {
   const { id } = req.params;
   userDb
     .get(id)
@@ -20,23 +20,22 @@ server.get('/api/user/', (req, res) => {
     .catch( error => {
       res
         .status(500)
-        .json({error: "Could not retrieve user info", error: error});
+        .json({ message : "Could not retrieve user info", error: error});
     });
-  
 });
 
 server.get('/api/user/:id', (req, res) => {
   const { id } = req.params;
-
   userDb
     .get(id)
     .then(user => {
        res.status(200).json(user) 
     })
     .catch( error => {
-      res.status(500).json({error: "Could not retrieve user info", error: error})
+      res.status(500).json({ message: "Could not retrieve user info", error: error})
     })
 })
+
 server.get('/api/user/:id', (req, res) => {
   const { userId } = req.query.userId;
   userDb
@@ -45,7 +44,7 @@ server.get('/api/user/:id', (req, res) => {
        res.status(200).json(user) 
     })
     .catch( error => {
-      res.status(500).json({error: "Could not retrieve user info", error: error})
+      res.status(500).json({ message: "Could not retrieve user info", error: error})
     })
 })
 
@@ -56,7 +55,7 @@ server.post('/api/user', upperCase, (req, res) => {
       res.status(201).json(userData);
     })
     .catch(error => {
-      res.status(500).json({ error: "Could not create post", error})
+      res.status(500).json({ message: "Could not create post", error})
     })
 })
 
@@ -81,13 +80,13 @@ server.put('/api/user/:id', upperCase, (req, res) => {
     const { id } = req.params
     userDb
       .remove(id)
-      .then(user => {
-        user
+      .then(count => {
+        count
           ? res.status(200).json(count) 
           : res.status(404).json({ message: "The user with the specified ID does not exist."})
       })
       .catch( error => {
-        res.status(500).json({ error: "The user could not be removed", error })
+        res.status(500).json({ message: "The user could not be removed", error })
       })
   })
 
