@@ -66,6 +66,22 @@ server.post('/api/users', async (req, res) => {
     }
 });
 
+server.delete('/api/users/:id', async (req, res) => {
+    const id = req.params.id;
+    try {
+        const user = await dbUser.get(id);
+        const userId = await dbUser.remove(id);
+        if (userId === 0) {
+            res.status(404).json({ message: `There is not user with the id of ${id}`})
+        } else {
+            res.status(200).json({ message: `${user.name} has been deleted.`});
+        }
+    } catch (error) {
+        res.status(500).json({ message: "things didnt go well"})
+    }
+    console.log(id)
+})
+
 
 
 // server.post('/api/users', async (req, res) => {
