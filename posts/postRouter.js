@@ -64,7 +64,7 @@ router.post('/', (req, res) => {
         }
 })
 
-//UPDATE /api/users/:id
+//UPDATE /api/posts/:id
 router.put('/:id', (req, res) => {
     const {id} = req.params;
     const changes = req.body;
@@ -89,24 +89,24 @@ router.put('/:id', (req, res) => {
     }
 })
 
-// //DELETE /api/users/:id
-// router.delete('/:id', (req, res) => {
-//     const {id} = req.params;
+//DELETE /api/posts/:id
+router.delete('/:id', (req, res) => {
+    const {id} = req.params;
     
-//     userdb.remove(id)
-//     .then(count=>{
-//         if (count) {
-//         res.status(200)
-//         .json(count);
-//         } else {
-//             res.status(404)
-//             .json({message: "The user with the specififed ID does not exist."})
-//         }
-//     })
-//     .catch(error=>{
-//         res.status(500)
-//         .json({error: "The user could not be removed."})
-//     })
-// })
+    postdb.remove(id)
+    .then(count=>{
+        if (count) {
+        res.status(200)
+        .json(count);
+        } else {
+            res.status(404)
+            .json({message: "The post with the specififed ID does not exist."})
+        }
+    })
+    .catch(error=>{
+        res.status(500)
+        .json({error: "The post could not be removed."})
+    })
+})
 
 module.exports = router;
