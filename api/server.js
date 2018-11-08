@@ -65,6 +65,21 @@ server.delete('/user/:id', (req, res) => {
         })
 })
 
+server.put('/user/:id', allCaps, (req, res) => {
+    if (!req.body.name) {
+        res.status(400).json({ message: 'Please provide a name' })
+    } else {
+        userDb.update(req.params.id, req.body)
+            .then(user => {
+                res.status(200).json({ message: 'user has been updated', user })
+            })
+            .catch(err => {
+                res.status(500).json({ message: 'Error updating user in database' })
+            })
+    }
+    
+})
+
 
 
 
