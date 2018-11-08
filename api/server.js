@@ -12,11 +12,16 @@ server.use(cors());
 // user name to upper case
 function toUpperCase(req, res, next) {
   if (req.body.name) {
-    let split = req.body.name.split('');
-    let properName = split.map(name => name.split('').map((letter, i) =>
-      i === 0 ? letter.toUpperCase() : letter.toLowerCase()).join(''))
-    
-    req.body.name = properName.join('');
+    let names = req.body.name.split(' ');
+    let properName = names.map(name =>
+      name
+        .split('')
+        .map((letter, i) =>
+          i === 0 ? letter.toUpperCase() : letter.toLowerCase()
+        )
+        .join('')
+    );
+    req.body.name = properName.join(' ');
   }
   next();
 }
