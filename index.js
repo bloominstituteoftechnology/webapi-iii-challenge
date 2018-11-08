@@ -5,8 +5,8 @@ const userDb = require('./data/helpers/userDb');
 
 
 const toUpperCase = require('./config/middleware/toUpperCase');
-const postRouter = require('./data/posts/postRouter');
-const configureMiddleware = require('./config/middleware/middleware');
+// const postRouter = require('./data/posts/postRouter');
+// const configureMiddleware = require('./config/middleware/middleware');
 
 const server = express();
 server.use(express.json());
