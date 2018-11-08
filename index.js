@@ -81,4 +81,24 @@ server.put('/api/users/:id', (req, res) => {
     }
 })
 
+//DELETE
+server.delete('/api/users/:id', (req, res) => {
+    const {id} = req.params;
+    userdb.remove(id)
+    .then(count=>{
+        if (count) {
+        res.status(200)
+        .json(count);
+        } else {
+            res.status(404)
+            .json({message: "The user with the specififed ID does not exist."})
+        }
+    })
+    .catch(error=>{
+        res.status(500)
+        .json({error: "The user could not be removed."})
+    })
+
+})
+
 server.listen(7000, ()=>console.log('\nServer is listening on port 7000\n'));
