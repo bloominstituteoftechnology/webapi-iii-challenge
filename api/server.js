@@ -77,25 +77,27 @@ server.put('/api/posts/:id', async (req, res) => {
 
 
 //users
-server.get('/api/users', (req, res) => {
-    dbUser.get()
-    .then(user => {
-        res.json({ user })
-    })
-    .catch(err => {
+server.get('/api/users', async (req, res) => {
+    try {
+        const users = await dbUser.get();
+        res.status(200).json({ users })
+    } catch (error) {
         res.status(500).json({ error: "The users could not be retrieved."})
-    })
+    }
 })
 
-server.get('/api/users/:id', (req, res) => {
+server.get('/api/users/:id', async (req, res) => {
     const id = req.params.id;
-    dbUser.get(id)
-    .then(user => {
-        res.json({ user })
-    })
-    .catch(err => {
+    try {
+        const user = await dbUser.get(id);
+        if(!user) {
+            res.status(404).json({ error: `There is no user with the id of ${id}` })
+        } else {
+            res.status(200).json({ user })
+        }
+    } catch (error) {
         res.status(500).json({ error: "The information could not be retrieved."})
-    })
+    }
 });
 
 server.post('/api/users', async (req, res) => {
