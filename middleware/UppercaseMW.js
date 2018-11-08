@@ -1,4 +1,3 @@
-const express = require('express');
 
 function nameToUpperCase(req, res, next) {
     const { body } = req;
