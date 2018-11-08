@@ -6,8 +6,8 @@
   "author": "Rahul Desai <rd825@georgetown.edu>",
   "license": "MIT",
   "scripts": {
-    "start": "node server.js",
-    "server": "nodemon server.js"
+    "start": "node index.js",
+    "server": "nodemon"
   },
   "dependencies": {
     "cors": "^2.8.5",

@@ -16,6 +16,4 @@ server.get('/', (req,res) => res.send({"Users API": "live", "Posts API": "live",
 server.use('/api/users', userRouter);
 server.use('/api/posts', postRouter);
 
-// Server Listening on Port 9000
-const port = process.env.PORT || 9000;
-server.listen(port, () => console.log('Server running on port 9000'));
+module.exports = server;
