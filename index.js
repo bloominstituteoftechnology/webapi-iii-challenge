@@ -97,6 +97,84 @@ server.delete("/users/:id", (req, res) => {
 // - id: number, no need to provide it when creating posts, the database will automatically generate it.
 // - userId: number, required, must be the id of an existing user.
 // - text: string, no size limit, required.
+server.get("/posts", (req, res) => {
+  postDb
+    .get()
+    .then(posts => {
+      res.status(200).json(posts);
+    })
+    .catch(err => {
+      res.status(500).json({error: "something went wrong"});
+    });
+});
+
+server.get("/posts/:id", (req, res) => {
+  postDb
+    .get(req.params.id)
+    .then(post => {
+      res.status(200).json(post);
+    })
+    .catch(err => {
+      res.status(500).json({error: "something went wrong"});
+    });
+});
+
+// server.get("/posts/:tag", (req, res) => {
+//   console.log(req.params.tag);
+//   postDb
+//     .getPostTags(req.params.tag)
+//     .then(posts => {
+//       res.status(200).json(posts);
+//     })
+//     .catch(err => {
+//       res.status(500).json({error: "something went wrong"});
+//     });
+// });
+
+server.post("/posts", (req, res) => {
+  console.log(req.body.text);
+  postDb
+    .insert({text: req.body.text, userId: req.body.userId})
+    .then(post => {
+      // console.log(post);
+      res.status(200).json({message: "post added"});
+    })
+    .catch(err => {
+      res.status(500).json({error: "something went wrong"});
+    });
+});
+
+server.delete("/posts/:id", (req, res) => {
+  postDb
+    .remove(req.params.id)
+    .then(count => {
+      if (count > 0) {
+        res.status(200).json({success: `${count} post deleted`});
+      } else {
+        res.status(404).json({error: "post doesn't exist"});
+      }
+    })
+    .catch(err => {
+      res.status(500).json({error: "something went wrong"});
+    });
+});
+
+server.put("/posts/:id", (req, res) => {
+  const id = req.params.id;
+  const change = req.body;
+  postDb
+    .update(id, {text: change.text, userId: change.userId})
+    .then(count => {
+      if (count > 0) {
+        res.status(201).json({success: `${count} post updated`});
+      } else {
+        res.status(404).json({error: "post doesn't exist"});
+      }
+    })
+    .catch(err => {
+      res.status(500).json({error: "something went wrong"});
+    });
+});
 
 server.use(uppercase);
 // server.post("/users");
