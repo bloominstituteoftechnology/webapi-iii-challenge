@@ -21,9 +21,10 @@ server.use(cors());
 server.use('/api/users', userRouter);
 server.use('/api/posts', postRouter);
 
-app.use(express.static(path.resolve(__dirname, './client/', 'build')));
-
-app.get('/*', (_, res) => {
+// HEROKU SETUP
+// ==============================================
+server.use(express.static(path.resolve(__dirname, './client/', 'build')));
+server.get('/*', (_, res) => {
   res.sendFile(path.join(__dirname, './client/', 'build/index.html'), err => {
     if (err) {
       res.status(500).send(err);
