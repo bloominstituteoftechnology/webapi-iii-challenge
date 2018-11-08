@@ -44,4 +44,15 @@ router.post('/new-post', (req, res) => {
         })
 })
 
+// ***** DELETE post by post id *****
+router.delete('/:id', (req, res) => {
+    postDb.remove(req.params.id)
+        .then(recordsDeleted => {
+            res.status(200).json({ message: 'Successfully deleted post.'})
+        })
+        .catch(err => {
+            res.status(500).json({ error: 'Failed to delete post.'})
+        })
+})
+
 module.exports = router;
