@@ -1,6 +1,8 @@
 const express = require('express');
 const userDb = require('../data/helpers/userDb.js');
 
+const uppercaseMiddleware = require('../middleware/uppercaseMiddleware.js');
+
 const router = express.Router();
 
 // ***** GET user by user id *****
@@ -44,7 +46,7 @@ router.get('/:id/posts', (req, res) => {
 // after user created, find by id --> responds with new user object
 // name is empty or greater than 128 characters --> error
 // after user inserted, cannot find by user id --> error
-router.post('/create-new', (req, res) => {
+router.post('/create-new', uppercaseMiddleware, (req, res) => {
     if (req.body.name && (req.body.name.length < 128)) {
         userDb.insert(req.body)
             .then(id => {
@@ -90,7 +92,7 @@ router.delete('/:id', (req, res) => {
 })
 
 // ***** PUT update user by user id *****
-router.put('/:id', (req, res) => {
+router.put('/:id', uppercaseMiddleware, (req, res) => {
     if (req.body.name) {
         userDb.get(req.params.id)
             .then(user => {
