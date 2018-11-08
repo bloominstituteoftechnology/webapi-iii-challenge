@@ -109,4 +109,14 @@ server.put('/api/posts/:id', (req, res) => {
         })
 });
 
+server.delete('/api/posts/:id', (req, res) => {
+    dbPosts.remove(req.params.id)
+        .then(count => {
+            res.status(200).json({ count });
+        })
+        .catch(err => {
+            res.status(500).json({ error: 'Error deleting post', err });
+        })
+});
+
 module.exports = server;
