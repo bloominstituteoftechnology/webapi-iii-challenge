@@ -65,6 +65,17 @@ server.get("/api/posts/:id",(req,res)=>{
         })
 })
 
+server.get('/api/users/:id/posts', (req, res) => {
+    const { id } = req.params;
+    userDb.getUserPosts(id)
+        .then(posts => {
+            res.status(200).json(posts);
+        })
+        .catch(error => {
+            res.status(500).json({message: error})
+        })
+});
+
 // server.get('/secret', gatekeeper, (req, res) => {
 //     res.send(req.welcomeMessage);
 //   });   how he did it
