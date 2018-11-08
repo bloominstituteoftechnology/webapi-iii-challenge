@@ -1,5 +1,4 @@
 const express = require('express');
-
 // database
 const userDb = require('../data/helpers/userDb');
 
