@@ -8,6 +8,7 @@ const userDb = require('../data/helpers/userDb.js')
 const express = require('express')
 
 const router = express.Router();
+const upperCaser = require('../middleware/upperCaser.js')
 
 router.get('/', (req, res) =>{
   userDb.get()
