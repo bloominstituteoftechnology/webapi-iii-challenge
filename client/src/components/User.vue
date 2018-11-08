@@ -1,9 +1,17 @@
 <template lang="pug">
-    div.user-container(v-bind:class="{active: editMode}")
-        h1.user-name {{userName}}
-        div.button-container
-            button.button.edit-button(type="button" v-on:click="showEdit") EDIT
-            button.button.delete-button(type="button") DELETE
+    div.container
+        div.user-container.placeholder(v-bind:class="{showplaceholder: editMode}")
+            h1.user-name {{userName}}
+            div.button-container
+                button.button.edit-button(type="button" v-on:click="editMode = !editMode") EDIT
+                button.button.delete-button(type="button") DELETE
+
+        //- div.user-container(v-show="editMode" transition="expand")
+        div.user-container(v-bind:class="{active: editMode}")
+            h1.user-name {{userName}}
+            div.button-container
+                button.button.edit-button(type="button" v-on:click="editMode = !editMode") EDIT
+                button.button.delete-button(type="button") DELETE
 </template>
 
 <script>
@@ -17,11 +25,7 @@
         props: {
             userName: String
         },
-        methods: {
-            showEdit: function() {
-                this.editMode = !this.editMode;
-            }
-        }
+        methods: {},
     }
 
 </script>
@@ -47,8 +51,45 @@
             left: 50%
             margin-top: -175px
             margin-left: -300px
-            
 
+    @keyframes cardDeselected
+        0%
+            position: fixed
+            z-index: 2
+            width: 600px;
+            height: 350px;
+            top: 50%
+            left: 50%
+            margin-top: -175px
+            margin-left: -300px
+        99%
+            position: fixed
+            width: 300px
+            height: 200px
+            top: 50%
+            left: 50%
+            margin-top: -100px
+            margin-left: -150px
+        100%
+            position: default
+            margin-top: 0
+            margin-left: 0
+        
+
+    .expand-transition
+
+    .expand-enter
+        animation: cardSelected .412s ease-in forwards
+    
+    .expand-leave
+        animation: cardDeselected .412s ease-in forwards
+
+
+    
+    .container 
+        width: 100%
+        height: 100%
+    
     .user-container
         width: 300px
         height: 200px
@@ -66,6 +107,13 @@
         .user-name
             font-size: 22px
             font-weight: 700
+
+    .placeholder
+        filter: blur(3px)
+        display: none
+    
+    .showplaceholder
+        display: flex
 
     .active
         animation: cardSelected .412s ease-in forwards

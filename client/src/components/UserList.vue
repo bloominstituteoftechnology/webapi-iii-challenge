@@ -1,6 +1,6 @@
 <template lang="pug">
     div.list-container
-        //- h1.user-list-title {{name}}
+        h1.user-list-title {{name}}
         div(v-for='user in users')
             User(v-bind:userName="user.name")
 </template>
