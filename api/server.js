@@ -158,6 +158,7 @@ server.put("/api/posts/:id", (req, res) => {
     });
 });
 
+//delete a post
 server.delete("/api/posts/:id", (req, res) => {
   postDB
     .remove(req.params.id)
