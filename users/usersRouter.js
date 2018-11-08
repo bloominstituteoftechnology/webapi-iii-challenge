@@ -22,7 +22,7 @@ router.get('/', (req, res) => {
             res.status(200).json(user);
         })
         .catch(err => {
-            return sendErrorMsg(500, 'Users information could not be retrieded', res)
+            return sendErrorMsg(500, 'User information could not be found', res)
         });
 });
 
