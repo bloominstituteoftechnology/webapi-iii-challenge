@@ -24,19 +24,21 @@ export default class App extends Component {
   }
 
   render() {
-    return (
+    return this.state.posts.length > 0 ? (
       <>
-        {this.state.users.map(user => (
-          <div key={user.id}>
-            <h2>{user.name}</h2>
-          </div>
-        ))}
         {this.state.posts.map(post => (
           <div key={post.id}>
+            <h3>
+              {`Author: ${
+                this.state.users.find(user => user.id === post.userId).name
+              }`}
+            </h3>
             <p>{post.text}</p>
           </div>
         ))}
       </>
+    ) : (
+      <div>Loading...</div>
     );
   }
 }

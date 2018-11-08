@@ -27,7 +27,7 @@ router.get("/:id", (req, res) => {
     .get(id)
     .then(post => {
       if (post) {
-        res.status(200).json(post);
+        utils.sendUserSuccess(res, 200, post);
       } else {
         res.status(404).json({ error: `Post id ${id} not found` });
       }
