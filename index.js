@@ -1,18 +1,18 @@
 const express = require("express");
 const server = express();
 const uppercase = require("./middleware/uppercase.js");
+const cors = require("cors");
 
 const postDB = require("./data/helpers/postDb.js");
 const userDB = require("./data/helpers/userDb.js");
 const tagDB = require("./data/helpers/tagDb.js");
-const port = process.env.PORT || 9000;
 
-const cors = require("cors");
-server.use(cors());
+const port = process.env.PORT || 9000;
+const productsRouter = require("./products/productsRouter");
 
 server.use(express.json());
+server.use(cors());
 
-const productsRouter = require("./products/productsRouter");
 // R O O T
 server.get("/", (req, res) => {
   res.status(200).send("<h1>THIS IS THE <em>root directory</em></h1>");
@@ -64,6 +64,20 @@ server.post("/user", uppercase, (req, res) => {
       res
         .status(500)
         .json({ message: "There was an error creating the user", err });
+    });
+});
+
+// C R E A T E  P O S T
+server.post("/posts", (req, res) => {
+  postDB
+    .insert(req.body)
+    .then(postData => {
+      res.status(201).json(postData);
+    })
+    .catch(err => {
+      res
+        .status(500)
+        .json({ message: "There was an error creating the post." });
     });
 });
 
