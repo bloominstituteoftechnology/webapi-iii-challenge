@@ -1,36 +1,27 @@
-import React, { Component } from 'react';
-import axios from 'axios';
+import React from 'react';
+import { Route } from "react-router-dom";
+import Users from './components/Users';
+import User from './components/User';
 
-class App extends Component {
-  constructor() {
-    super();
-    this.state = {
-      users: [],
-    }
-  }
+const App = () => {
+  return (
+    <div className="App">
 
-  componentDidMount() {
-    axios.get('http://localhost:9000/api/users/')
-        .then(res => this.setState({
-            users: res.data,
-          }))
-        .catch(err => console.dir(err));
-  }
+      <Route exact path='/' 
+        render={(props) => (
+          <Users {...props} />
+        )} 
+      />
 
-  render() {
-    if (this.state.users !== [])
-      return (
-        <div className="App">
-          {this.state.users.map(user => <p key={user.id}>{user.name}</p>)}
-        </div>
-      );
-    
-      else {
-      return (
-        <div>Loading...</div>
-      );
-    }
-  }
+      <Route
+        path="/:id"
+        render={props => (
+          <User {...props} />
+        )}
+      />
+
+    </div>
+  )
 }
 
 export default App;
