@@ -13,9 +13,10 @@ const userDb = require('../data/helpers/userDb')
 server.use(express.json())
 // server.use(helmet())
 // server.use(morgan('short'))
+module.exports = server
 
 
-// middleware
+// ================== middleware ==================
 
 function uppercased(req, res, next) {
     if (req.body.name) {
@@ -24,15 +25,14 @@ function uppercased(req, res, next) {
     next()
 }
 
-
 // ================== server ==================
 server.get('/', (req, res) => {
-    res.send({ message: 'api running' })
+    res.send({ message: 'hellooooooooooo' })
 })
 
 
-// ==================================== USER ENDPOINTS ====================================
 
+// ==================================== USER ENDPOINTS ====================================
 // ================== get users ==================
 server.get('/api/users', (req, res) => {
     userDb.get()
@@ -46,49 +46,60 @@ server.get('/api/users', (req, res) => {
 
 // ================== get specific user ==================
 server.get('/api/users/:id', (req, res) => {
-    const { id } = req.params.id
+    const { id } = req.params
     userDb.get(id)
         .then(user => {
             if (user) {
                 res.status(200).json(user)
             } else {
-                res.status(404).json({ message: 'The user with the specified ID does not exist.' })
+                res.status(404).json({ message: "The user with the specified ID does not exist." })
             }
         })
         .catch(error => {
-            res.status(500).json({ message: 'The user information could not be retrieved.', error: error })
+            res.status(500).json({ message: "The user information could not be retrieved.", error: error })
         })
 })
 
 // ================== add new user ==================
-server.post('/api/users/:id', uppercased, (req, res) => {
-    const { newUser } = req.body
-    if (!newUser) {
+server.post('/api/users', uppercased, (req, res) => {
+    const { name } = req.body
+    if (!name) {
         res.status(400).json({ message: "Provide a name for the new user." })
     } else {
-        userDb.insert(newUser)
+        userDb.insert(req.body)
             .then(user => {
-                res.status(201).json(user)
+                userDb.get(user.id)
+                    .then(user => {
+                        res.status(201).json(user)
+                    })
+                    .catch(error => {
+                        res.status(404).json({ message: "The user with the specified ID does not exist." })
+                    })
             })
             .catch(error => {
                 res.status(500).json({ message: "There was an error while saving the user to the database", error: error })
             })
-        
     }
 })
 
 // ================== update user ==================
 server.put('/api/users/:id', uppercased, (req, res) => {
-    const { newUser } = req.body
+    const { name } = req.body
     const { id } = req.params.id
-    if (!newUser) {
+    if (!name) {
         res.status(400).json({ message: "Provide a name for the new user." })
     } else {
         userDb
-            .update(id, newUser)
+            .update(req.params.id, req.body)
             .then(user => {
                 if (user) {
-                    res.status(200).json(user)
+                    userDb.get(req.params.id)
+                        .then(user => {
+                            res.status(200).json(user)
+                        })
+                        .catch(error => {
+                            res.status(404).json({ message: "The user with the specified ID does not exist." })
+                        })
                 } else {
                     res.status(404).json({ message: "The user with the specified ID does not exist." })
                 }
@@ -101,8 +112,7 @@ server.put('/api/users/:id', uppercased, (req, res) => {
 
 // ================== delete user ==================
 server.delete('/api/users/:id', (req, res) => {
-    const { id } = req.params.id
-    userDb.remove(id)
+    userDb.remove(req.params.id)
         .then(user => {
             if (user) {
                 res.status(200).json(user)
@@ -118,7 +128,6 @@ server.delete('/api/users/:id', (req, res) => {
 
 
 // ==================================== POST ENDPOINTS ====================================
-
 // ================== get posts ==================
 server.get('/api/posts', (req, res) => {
     postDb.get()
@@ -132,49 +141,60 @@ server.get('/api/posts', (req, res) => {
 
 // ================== get specific post ==================
 server.get('/api/posts/:id', (req, res) => {
-    const { id } = req.params.id
+    const { id } = req.params
     postDb.get(id)
         .then(post => {
             if (post) {
                 res.status(200).json(post)
             } else {
-                res.status(404).json({ message: 'The post with the specified ID does not exist.' })
+                res.status(404).json({ message: "The post with the specified ID does not exist." })
             }
         })
         .catch(error => {
-            res.status(500).json({ message: 'The post information could not be retrieved.', error: error })
+            res.status(500).json({ message: "The post information could not be retrieved.", error: error })
         })
 })
 
 // ================== add new post ==================
-server.post('/api/posts/:id', uppercased, (req, res) => {
-    const { newpost } = req.body
-    if (!newpost) {
-        res.status(400).json({ message: "Provide a name for the new post." })
+server.post('/api/posts', uppercased, (req, res) => {
+    const { text, userId } = req.body
+    if (!text || !userId) {
+        res.status(400).json({ message: "Provide text and a user ID for the new post." })
     } else {
-        postDb.insert(newpost)
+        postDb.insert(req.body)
             .then(post => {
-                res.status(201).json(post)
+                postDb.get(post.id)
+                    .then(post => {
+                        res.status(201).json(post)
+                    })
+                    .catch(error => {
+                        res.status(404).json({ message: "The post with the specified ID does not exist.", error: error })
+                    })
             })
             .catch(error => {
                 res.status(500).json({ message: "There was an error while saving the post to the database", error: error })
             })
-        
     }
 })
 
 // ================== update post ==================
 server.put('/api/posts/:id', uppercased, (req, res) => {
-    const { newpost } = req.body
+    const { text, userId } = req.body
     const { id } = req.params.id
-    if (!newpost) {
-        res.status(400).json({ message: "Provide a name for the new post." })
+    if (!text || !userId) {
+        res.status(400).json({ message: "Provide a name and user ID for the new post." })
     } else {
         postDb
-            .update(id, newpost)
+            .update(req.params.id, req.body)
             .then(post => {
                 if (post) {
-                    res.status(200).json(post)
+                    postDb.get(req.params.id)
+                        .then(post => {
+                            res.status(200).json(post)
+                        })
+                        .catch(error => {
+                            res.status(404).json({ message: "The post with the specified ID does not exist.", error: error })
+                        })
                 } else {
                     res.status(404).json({ message: "The post with the specified ID does not exist." })
                 }
@@ -187,8 +207,7 @@ server.put('/api/posts/:id', uppercased, (req, res) => {
 
 // ================== delete post ==================
 server.delete('/api/posts/:id', (req, res) => {
-    const { id } = req.params.id
-    postDb.remove(id)
+    postDb.remove(req.params.id)
         .then(post => {
             if (post) {
                 res.status(200).json(post)
@@ -200,9 +219,3 @@ server.delete('/api/posts/:id', (req, res) => {
             res.status(500).json({ message: "The post could not be removed.", error: error })
         })
 })
-
-
-
-
-
-module.exports = server
