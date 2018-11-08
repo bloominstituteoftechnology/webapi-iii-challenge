@@ -59,6 +59,7 @@ server.post('/api/users', async (req, res) => {
         res.status(400).json({ errorMessage});
         return
     }   
+    //need to add character length conditional
     try {
         await db.insert(userData);
     } catch (error) {
@@ -74,11 +75,10 @@ server.put('/api/users/:id', async (req, res) => {
     const userChanges = req.body;
     db.get(id)
         .then(user => { 
-            console.log("in the then state,emt")
-        // if (!user ||!user.length) { 
-           // res.status(404).json({ message: "The user with the specified ID does not exist." });
-            //return  
-          // }
+        if (!user) { 
+           res.status(404).json({ message: "The user with the specified ID does not exist." });
+           return  
+         }
          })
          .catch(err => {
           res //if data can't be retrieved ... 
