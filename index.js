@@ -1,5 +1,5 @@
 const server = require('./server');
 
-const port = 9000
+const port = process.env.PORT || 9000;
 
 server.listen(port, () => console.log("API should be working.")); 
