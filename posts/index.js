@@ -52,7 +52,9 @@ router.post("/", (req, res) => {
   postDb
     .insert(newPost)
     .then(post => {
-      res.status(201).json({ message: `Added post with id of ${post.id}.` });
+      utils.sendUserSuccess(res, 201, {
+        message: `Added post with id of ${post.id}.`
+      });
     })
     .catch(err => {
       sendUserError(
@@ -73,9 +75,11 @@ router.put("/:id", (req, res) => {
       postDb
         .update(id, newPost)
         .then(count => {
-          res
-            .status(200)
-            .json(`Updated ${count} post. Post id ${id} successfully updated.`);
+          utils.sendUserSuccess(
+            res,
+            200,
+            `Updated ${count} post. Post id ${id} successfully updated.`
+          );
         })
         .catch(err =>
           sendUserError(
@@ -98,9 +102,11 @@ router.delete("/:id", (req, res) => {
       postDb
         .remove(id)
         .then(count => {
-          res
-            .status(200)
-            .json(`Deleted ${count} post. Post id ${id} successfully deleted.`);
+          utils.sendUserSuccess(
+            res,
+            200,
+            `Deleted ${count} post. Post id ${id} successfully deleted.`
+          );
         })
         .catch(err =>
           sendUserError(
