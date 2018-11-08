@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "server": "nodemon index.js",
-    "heroku-prebuild": "yarn install --production=false",
+    "heroku-prebuild": "yarn install --production=false"
   },
   "repository": {
     "type": "git",
