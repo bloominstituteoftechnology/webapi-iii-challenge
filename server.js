@@ -12,6 +12,7 @@ server.use(toUpperCase);
 
 function toUpperCase(req, res, next) {
     if (req.body.name) {
+       req.body.name = req.body.name.toLowerCase();
        let name = req.body.name.substring(1)
        req.body.name = req.body.name[0].toUpperCase() + name
     }
@@ -76,6 +77,29 @@ server.delete('/api/users/:id', (req, res) => {
             res.status(500).json({ message: 'error no user found'})
         })
 })
+
+
+// Posts
+
+server.get('/api/posts', (req, res) => {
+    posts.get()
+      .then(post => {
+        res.json(post);
+      })
+      .catch(err => {
+        res.status(500).json({ message: 'error posts not found'})
+      });
+  });
+
+  server.get('/api/posts/:id', (req, res) => {
+      const { id } = req.params;
+      posts.get(id).then(user => {
+          res.status(200).json(user)
+      })
+      .catch(err => {
+          res.status(500).json({ message: "post by that id not found"})
+      })
+  })
 
 
 server.listen(port, () => console.log(`Server listen to port ${port}`))
