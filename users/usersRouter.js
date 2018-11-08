@@ -64,4 +64,17 @@ router.put('/:id', uppercaseName, async (req, res) => {
     }
 });
 
+// get user posts
+router.get('/userId/:id', async (req, res) => {
+    try {
+        const userId = req.params.id;
+        console.log('req.params', req.params);
+        console.log('userId',userId);
+        const posts = await dbUser.getUserPosts(userId);
+        res.status(200).json(posts);
+    } catch(err) {
+        res.status(500).json({ message: err});
+    }
+});
+
 module.exports = router;

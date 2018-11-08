@@ -37,7 +37,7 @@ router.post('/', async (req, res) => {
         const posts = await dbPost.get()
         res.status(200).json({ newPostId: id, posts});
     } catch(err) {
-        res.status(404).json({ message: err });
+        res.status(500).json({ message: err });
     }
 });
 
@@ -46,9 +46,21 @@ router.delete('/:id', async (req, res) => {
         const { id } = req.params;
         const deleteCount = await dbPost.remove(id);
         const posts = await dbPost.get();
-        res.status(200).json({deleteCount: deleteCount, posts});
+        res.status(200).json({deleteCount, posts});
     } catch(err) {
-        res.status(404).json({ message: err })
+        res.status(500).json({ message: err })
+    }
+});
+
+router.put('/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const post = req.body;
+        const updateCount = await dbPost.update(id, post);
+        const posts = await dbPost.get();
+        res.status(200).json({updateCount, posts});
+    } catch(err) {
+        res.status(500).json({message: err});
     }
 });
 
