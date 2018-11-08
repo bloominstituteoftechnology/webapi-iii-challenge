@@ -59,8 +59,8 @@ server.put('/users/:id', capitalize, (req, res) => {
     userDb
         .update(id, userUpdate)
         .then(count => res.status(201).json(count))
-        .catch(err => res.status(500).json({
-            message: 'there was an error editing the user'
+        .catch(err => res.status(400).json({
+            message: 'Could not update the user'
         }))
 })
 module.exports = server;
