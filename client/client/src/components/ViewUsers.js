@@ -14,18 +14,21 @@ class ViewUsers extends React.Component {
   }
 
   getUsers = () => {
-    axios.get("https://localhost:9000/api/users").then(res => {
+    axios.get("http://localhost:9000/api/users").then(res => {
       this.setState({
         users: res.data
       });
-    }).catch(err => console.log(err));
+    }).catch(err => console.dir(err));
+    console.log("Hey im trying to get users")
   };
 
   render() {
     return (
       <div className="viewUsers">
         <h2>Users: </h2>
-        {this}
+        {this.state.users.map(user => {
+          return <p>{user.name}</p>
+        })}
       </div>
     );
   }

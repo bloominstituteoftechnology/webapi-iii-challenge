@@ -1,9 +1,11 @@
 const express = require("express");
 const userDb = require("../data/helpers/userDb.js");
 const postDb = require("../data/helpers/postDb");
+const cors = require('cors')
 
 const server = express();
 
+server.use(cors());
 server.use(express.json());
 
 server.get("/api/users", (req, res) => {
