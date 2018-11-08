@@ -5,6 +5,7 @@ import axios from 'axios';
 import { Route } from 'react-router-dom';
 
 import PostsList from './components/PostsComponent/PostsList';
+import PostPage from './components/PostsComponent/PostPage';
 
 class App extends Component {
   constructor(props){
@@ -25,6 +26,17 @@ class App extends Component {
     return (
       <div className="App">
         <PostsList posts={this.state.posts}/>
+
+        <Route
+          exact
+          path="/api/posts/:id"
+          render={props => (
+            <PostPage
+              {...props}
+              posts={this.state.posts}
+            />
+          )}
+        />
       </div>
     );
   }

@@ -6,7 +6,7 @@ const PostsList = (props) => {
         <div className="posts-list">
             {props.posts.map(post => {
                 return(
-                    <Post content={post.text}/>
+                    <Post post={post}/>
                 );
             })}
         </div>
