@@ -8,7 +8,15 @@ const users = require('./data/helpers/userDb');
 const tags = require('./data/helpers/tagDb');
 
 server.use(express.json());
+server.use(toUpperCase);
 
+function toUpperCase(req, res, next) {
+    if (req.body.name) {
+       let name = req.body.name.substring(1)
+       req.body.name = req.body.name[0].toUpperCase() + name
+    }
+    next();
+}
 
 server.get('/api/users', (req, res) => {
     users.get()
@@ -31,7 +39,7 @@ server.get('/api/users/:id', (req, res) => {
          })
 })
 
-server.post('/api/users', (req, res) => {
+server.post('/api/users', toUpperCase, (req, res) => {
     const { name } = req.body;
     users.insert({ name })
          .then(user => {
@@ -42,7 +50,7 @@ server.post('/api/users', (req, res) => {
          })
 })
 
-server.put('/api/users/:id', (req, res) => {
+server.put('/api/users/:id', toUpperCase, (req, res) => {
     const { id } = req.params;
     const changes = req.body;
     users.update(id, changes)
