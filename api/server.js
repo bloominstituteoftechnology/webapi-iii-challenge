@@ -97,6 +97,16 @@ server.post('/api/posts', (req, res) => {
         .catch(err => {
             res.status(500).json({ error: 'Error adding post', err });
         })
-})
+});
+
+server.put('/api/posts/:id', (req, res) => {
+    dbPosts.update(req.params.id, req.body)
+        .then(count => {
+            res.status(400).json({ count });
+        })
+        .catch(err => {
+            res.status(500).json({ error: 'Error updating post', err });
+        })
+});
 
 module.exports = server;
