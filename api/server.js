@@ -105,7 +105,7 @@ server.delete('/api/users/:id', async (req, res) => {
         .json({ message: "Sorry, I can't delete a user who doesn't exist." });
     } else {
       await userDb.remove(id);
-      res.status(200).json(removedUser);
+      res.status(200).json({ message: `${removedUser.name} was deleted.` });
     }
   } catch (error) {
     res.status(500).json({ error: 'There was an error deleting the user.' });
