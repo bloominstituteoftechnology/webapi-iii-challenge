@@ -188,3 +188,25 @@ users.put('/:id', upperJustInCaser, async function (request, response, next) {
         next();
     }
 });
+
+//-- Get all Posts by User -----------------------
+users.get('/:id/posts', async function (request, response, next) {
+    const userId = request.params.id;
+    // Retrieve all posts by a user from the database, then send to user
+    try{
+        let posts = await database.getUserPosts(userId);
+        response.status(200);
+        response.json(posts);
+    }
+    // Inform user of failure (database error)
+    catch(error){
+        response.status(500);
+        response.json({
+            error: "The user's posts could not be retrieved.",
+        });
+    }
+    // Pass to next middleware
+    finally{
+        next();
+    }
+});
