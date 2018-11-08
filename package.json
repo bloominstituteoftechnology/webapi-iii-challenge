@@ -4,6 +4,7 @@
   "description": "Node Blog",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "server": "nodemon"
   },
   "repository": {
