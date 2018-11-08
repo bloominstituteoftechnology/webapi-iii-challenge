@@ -3,11 +3,13 @@ const postDb = require('./data/helpers/postDb');
 const userDb = require('./data/helpers/userDb');
 // const cors = require('cors');
 const server = express();
+
+
 const toUpperCase = require('./middleware/toUpperCase');
 
 
 server.use(express.json());
-// server.use(toUpperCase);
+
 
 
 server.get('/', (req, res) => {
@@ -54,7 +56,7 @@ server.get('/posts/:id', (req, res) => {
     })
 })
 
-server.post('/users', (req, res) => {
+server.post('/users', toUpperCase, (req, res) => {
     userDb.insert(req.body)
     .then(done => res.status(201).json(done))
     .catch(err => {
@@ -70,7 +72,7 @@ server.post('/posts', (req, res) => {
     })
 })
 
-server.put('/users/:id', (req, res) => {
+server.put('/users/:id', toUpperCase, (req, res) => {
     userDb.update(req.params.id, req.body)
     .then(user => res.status(201).json(user))
     .catch(err => {

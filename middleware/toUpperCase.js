@@ -1,10 +1,10 @@
 module.exports = (req, res, next) => {
 
-    if (req.params.name) {
-      let userName = req.params.name;
-      res.send(userName.toUpperCase())
+    if (req.body.name) {
+      let userName = req.body.name
+      req.body.name = userName.toUpperCase();
       next();
     } else {
-      res.send('Please add name');
+      console.log('Please add name');
     }
   };
