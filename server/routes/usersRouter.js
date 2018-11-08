@@ -48,11 +48,11 @@ router.get('/:id/posts', async (req, res) => {
 router.post('/', uppercaseName, async (req, res) => {
   const { name } = req.body
 
-  if (!userId) {
+  if (!name) {
     res.status(400).json({ error: 'missing name' })
   } else {
     try {
-      const newUserId = await userDb.insert({ name })
+      const newUserId = await userDb.insert(req.body)
       const newUser = await userDb.get(newUserId)
       res.status(201).json(newUser)
     } catch (error) {
@@ -64,13 +64,15 @@ router.post('/', uppercaseName, async (req, res) => {
 })
 
 router.put('/:id', uppercaseName, async (req, res) => {
+  const { name } = req.body
+
   if (!userDb.get(req.params.id)) {
     res.status(404).json({ error: 'no user with that id' })
-  } else if (!req.body.title || !req.body.contents) {
-    res.status(400).json({ error: 'missing data for user' })
+  } else if (!name) {
+    res.status(400).json({ error: 'missing name' })
   } else {
     try {
-      const count = await userDb.update(req.params.id, req.body)
+      const count = await userDb.update(req.params.id, { name })
       if (count) {
         const user = await userDb.get(req.params.id)
         res.status(200).json(user)

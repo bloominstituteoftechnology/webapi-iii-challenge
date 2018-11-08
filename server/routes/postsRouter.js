@@ -18,6 +18,8 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   const { id } = req.params
+  console.log('getting ', id)
+  postDb.get(id).then(res => console.log(res)).catch(err => console.log(err))
 
   try {
     const post = await postDb.get(id)
@@ -27,7 +29,7 @@ router.get('/:id', async (req, res) => {
       res.status(404).json({ error: `post ${id} not found` })
     }
   } catch (error) {
-    res.status(500).json({ error: 'faild to retrieve posts' })
+    res.status(500).json({ error: 'faild to retrieve post' })
   }
 })
 
@@ -50,9 +52,11 @@ router.post('/', async (req, res) => {
 })
 
 router.put('/:id', async (req, res) => {
+  const { userId, text } = req.body
+
   if (!postDb.get(req.params.id)) {
     res.status(404).json({ error: 'no post with that id' })
-  } else if (!req.body.title || !req.body.contents) {
+  } else if (!userId || !text) {
     res.status(400).json({ error: 'missing data for post' })
   } else {
     try {
