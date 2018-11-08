@@ -36,21 +36,20 @@ router.get('/', (req, res) => {
 })
 
 // //POST (create) new post [/api/posts/]
-// router.post('/',  (req, res) => {
-//     const post = req.body;
-//     const { text } = post;
-//     console.log('POST', post);
-//      if (!name && !text) {
-//       res.status(400).json({ message: "Name required" })
-//     }
-//      postDb.insert(post)
-//       .then(newpost => {
-//         res.status(201).json(newpost);
-//       })
-//       .catch(error => {
-//         res.status(500).json({ message: error });
-//       })
-//   });
+router.post('/',  (req, res) => {
+    
+    console.log(req.body.text);
+    
+     postDb.insert({
+         text: req.body.text, 
+         userId: req.body.userId})
+      .then(newpost => {
+        res.status(201).json(newpost);
+      })
+      .catch(error => {
+        res.status(500).json({ message: error });
+      })
+  });
 
  //UPDATE post [/api/posts/:id]
  router.put('/:id', (req, res) => {

@@ -13,7 +13,7 @@ const upperCase = (request, response, next) => {
     next();
 };
 
-//===== user Endpoints ======
+//===== USER Endpoints ======
 //GET all users [/api/users]
 router.get('/', (req, res) => {
     userDb.get()
@@ -36,7 +36,7 @@ router.get('/', (req, res) => {
           if (user) {
               res.status(200).json(user)
           } else {
-              res.status(404).json({message: 'user Not Found'})
+              res.status(404).json({message: 'User Not Found'})
           }
       })
       .catch( error => {
@@ -49,7 +49,7 @@ router.get('/', (req, res) => {
  router.get('/:id/posts', (req, res) => {
      const { id } = req.params;
 
-     userDb.getuserPosts(id)
+     userDb.getUserPosts(id)
      .then(posts => {
          res.status(200).json(posts);
      })
@@ -67,8 +67,8 @@ router.get('/', (req, res) => {
       res.status(400).json({ message: "Name required" })
     }
      userDb.insert(user)
-      .then(newuser => {
-        res.status(201).json(newuser);
+      .then(newUser => {
+        res.status(201).json(newUser);
       })
       .catch(error => {
         res.status(500).json({ message: error });
@@ -85,7 +85,7 @@ router.get('/', (req, res) => {
           if (count) {
               res.status(200).json({ message: `${count} user(s) updated`});
           } else {
-              res.status(404).json({ message: 'user does not exist'})
+              res.status(404).json({ message: 'User does not exist'})
           }
       })
       .catch(error => {
