@@ -1,13 +1,14 @@
 const express = require('express');
- const configureMiddleware = require('../config/middleware');
 
-const routes = require('../config/routes')
+const configureMiddleware = require('../config/middleware');
 
- const server = express();
+const server = express();
 
  // middleware
 configureMiddleware(server);
 
- // routes
-routes.usersRouter(server);
+server.get('/', (req, res) => {
+    res.status(200).json({ api: 'running' });
+  });
+
  module.exports = server;

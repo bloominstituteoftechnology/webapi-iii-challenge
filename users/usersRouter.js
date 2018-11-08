@@ -13,7 +13,7 @@ const upperCase = (request, response, next) => {
     next();
 };
 
-//===== Endpoints ======
+//===== USER Endpoints ======
 //GET all users [/api/users]
 router.get('/', (req, res) => {
     userDb.get()
