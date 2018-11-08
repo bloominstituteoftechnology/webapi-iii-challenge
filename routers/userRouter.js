@@ -1,5 +1,6 @@
 const express = require('express');
 const user = require('../data/helpers/userDb.js');
+const nameToUpperCase = require('../middleware/UppercaseMW.js');
 
 const router = express.Router();
 
@@ -48,7 +49,7 @@ router.get('/', (req, res) => {
       });
   });
   
-  router.post('/', async (req, res) => {
+  router.post('/', nameToUpperCase, async (req, res) => {
     console.log('body', req.body);
     try {
       const userData = req.body;
@@ -66,7 +67,7 @@ router.get('/', (req, res) => {
     }
   });
 
-  router.put('/:id', (req, res) => {
+  router.put('/:id', nameToUpperCase, (req, res) => {
     const { id } = req.params;
     const changes = req.body;
     user.update(id, changes)
