@@ -30,6 +30,35 @@ router.get('/tags/:id', (req, res) => {
         })
 })
 
+router.post('/', (req, res) => {
+    if (!req.body.userId || !req.body.text) {
+        res.status(400).json({ message: 'Please provide a name and text' })
+    } else {
+        postDb.insert(req.body)
+            .then(post => {
+                res.status(201).json(post)
+            }) 
+            .catch(err => {
+                res.status(500).json({ message: 'post can not be added at this time'})
+            })
+    }
+})
+
+router.delete('/:id', (req, res) => {
+    const { id } = req.params
+        postDb.remove(id)
+            .then(post => {
+               if(post) {
+                res.status(200).json({ message: `deleted post with id:${req.params.id}` })
+               } else {
+                res.status(404).json({ message: `user with id:${req.params.id} does not exist` })
+               }
+            })
+            .catch(err => {
+                res.status(500).json({ message: 'Error deleting post from database' })
+            })
+})
+
 
 
 
