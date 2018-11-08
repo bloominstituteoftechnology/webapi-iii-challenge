@@ -100,7 +100,49 @@ server.delete('/posts/:id', async(req,res)=>{
     } catch (error) {
         res.status(500).send({message:"Unable to delete post by Id, an error has occurred. ", id, error})
     }
-
 })
-
+server.put('/posts/:id',async(req,res)=>{
+    if(req.body.userId)
+    {
+        try {
+            const userExists = await userHelper.get(req.body.userId)
+            if(userExists.id > 0){
+                try {
+                    const response = await postHelper.update(req.params.id,req.body)
+                    res.status(200).json(response);
+                } catch (error) {
+                    res.status(500).send({message:"Unable to update post post, an error has occurred. ", id, error})
+                }
+            } else {
+                res.status(500).send({message:"Unable to update post, userid must be a valid user. "})
+            }
+        } catch (error) {
+            res.status(500).send({message:"Unable to update post, An error was thrown getting the user. ",error})
+        }
+    } else {
+        res.status(500).send({message:"Unable to update post, userid is required. "})
+    }
+})
+server.post('/posts',async(req,res)=>{
+    if(req.body.userId && req.body.text)
+    {
+        try {
+            const userExists = await userHelper.get(req.body.userId)
+            if(userExists.id > 0){
+                try {
+                    const response = await postHelper.insert(req.body)
+                    res.status(200).json(response);
+                } catch (error) {
+                    res.status(500).send({message:"Unable to insert new post, an error has occurred. ", id, error})
+                }
+            } else {
+                res.status(500).send({message:"Unable to insert new post, userid must be a valid user. "})
+            }
+        } catch (error) {
+            res.status(500).send({message:"Unable to insert new post, An error was thrown getting the user. ",error})
+        }
+    } else {
+        res.status(500).send({message:"Unable to insert new post, userid is required. "})
+    }
+})
 module.exports = server;
