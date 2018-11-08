@@ -70,4 +70,17 @@ router.put('/:id', capitalize, (req, res) => {
   .catch(err => res.status(400).json({ message: 'could not update user' }))
 })
 
+router.get('/:id/posts', (req, res) => {
+  const id = req.params.id;
+  userDb
+    .getUserPosts(id)
+    .then(posts => {
+      if (posts.length === 0) {
+        res.status(404).json({ message: 'There are no posts for this user' })
+      }
+      res.status(200).json(posts);
+    })
+    .catch(err => res.status(500).json({ message: 'The post information could not be retrieved for this user' }))
+})
+
 module.exports = router;
