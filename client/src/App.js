@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import axios from 'axios';
+import headerImage from './lotr.jpg';
 
 import './App.css';
 
@@ -26,7 +27,7 @@ class App extends Component {
     return (
       <div className="App">
         <header className="header">
-          <img />
+          <img src={headerImage} alt="The Gatesof Argonath" />
           {this.state.users.map(user => (
             <div key={user.id}>
               <h2 className="character">{user.name}</h2>
