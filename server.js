@@ -38,11 +38,29 @@ server.post('/users', (req, res) => {
   userDb
     .insert(req.body)
     .then(obj => {
-      res.status(200).json({name: req.body.name})
+      res.status(200).json({ name: req.body.name });
     })
     .catch(e => {
       console.log(e);
       res.status(500).json({ error: 'Error inserting user into database' });
+    });
+});
+
+server.delete('/users/:id', (req, res) => {
+  userDb
+    .get(req.params.id)
+    .then(user => {
+      !user
+        ? res.status(404).json({ message: 'ID not found.' })
+        : userDb.remove(req.params.id).then(count => {
+            if (count > 0) {
+              res.status(200).json({ success: 'User has been deleted.' });
+            }
+          });
+    })
+    .catch(e => {
+      console.log(e);
+      res.status(500).json({ error: 'Error deleting user from the database.' });
     });
 });
 
