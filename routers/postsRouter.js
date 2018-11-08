@@ -55,4 +55,18 @@ router.delete('/:id', (req, res) => {
         })
 })
 
+// ***** PUT update post by post id *****
+router.put('/:id', (req, res) => {
+    postDb.update(req.params.id, req.body)
+        .then(recordsUpdated => {
+            return postDb.get(req.params.id);
+        })
+        .then(post => {
+            res.status(200).json(post);
+        })
+        .catch(err => {
+            res.status(500).json({ error: 'Failed to update post.'})
+        });
+});
+
 module.exports = router;
