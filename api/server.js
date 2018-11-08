@@ -13,6 +13,10 @@ server.use(helmet());
 server.use(morgan("dev"));
 server.use(cors({ origin: "http://localhost:3000" }));
 
+const upperCase = (req, res, next) => {
+  req.body.uppercase = req.body.name.toUpperCase();
+};
+
 //endpoints
 server.get("/api/users", (req, res) => {
   userDB
