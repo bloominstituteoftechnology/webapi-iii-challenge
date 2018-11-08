@@ -4,7 +4,7 @@ exports.seed = function(knex, Promise) {
     .then(function() {
       return knex('posts').insert([
         {
-          userId: 1,
+          userId: 3,
           text:
             'I wish the ring had never come to me. I wish none of this had happened.',
         },
