@@ -12,7 +12,11 @@ server.use(cors());
 // user name to upper case
 function toUpperCase(req, res, next) {
   if (req.body.name) {
-    req.body.name = req.body.name.toUpperCase();
+    let split = req.body.name.split('');
+    let properName = split.map(name => name.split('').map((letter, i) =>
+      i === 0 ? letter.toUpperCase() : letter.toLowerCase()).join(''))
+    
+    req.body.name = properName.join('');
   }
   next();
 }
@@ -171,12 +175,10 @@ server.get('/api/posts/user/:id', (req, res) => {
             .json({ Message: 'The user does not exist/has no posts.' });
     })
     .catch(err => {
-      res
-        .status(500)
-        .json({
-          message: 'Posts for the specified user could not be retrieved.',
-          error: err
-        });
+      res.status(500).json({
+        message: 'Posts for the specified user could not be retrieved.',
+        error: err
+      });
     });
 });
 
