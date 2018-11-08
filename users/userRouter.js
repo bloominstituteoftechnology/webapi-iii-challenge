@@ -1,5 +1,6 @@
 const express = require('express');
 const dbUser = require('../data/helpers/userDb.js');
+const pascalCase = require('../middleware/pascalcase/pascalcaseMiddleware.js');
 
 const router = express.Router();
 
@@ -28,7 +29,7 @@ router.get('/:id', async (req, res) => {
 });
 
 //need to add the middleware
-router.post('/', async (req, res) => {
+router.post('/', pascalCase, async (req, res) => {
     const name = req.body;
     try {
         const new_user_id = await dbUser.insert(name);
