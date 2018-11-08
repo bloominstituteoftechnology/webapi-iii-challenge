@@ -1,6 +1,12 @@
+
+
+//==============================================================================
+
+//-- Dependencies --------------------------------
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import UserViewer from './user-viewer';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+//-- Mounting ------------------------------------
+ReactDOM.render(<UserViewer />, document.getElementById('root'));
