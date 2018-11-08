@@ -38,7 +38,48 @@ server.get("/api/users/:id", (req, res) => {
       }
     })
     .catch(err => {
-      res.status(500).json({ message: "the post info could not be received" });
+      res.status(500).json({ message: "the post info could not be received", err });
+    });
+});
+
+server.post("/api/users", (req, res) => {
+  console.log("body", req.body);
+  userDB
+    .insert(req.body)
+    .then(user => {
+      res.status(201).json(user);
+    })
+    .catch(err => {
+      res.status(500).json({ message: "There was an error while saving the post to the database", err });
+    });
+});
+
+server.put("/api/users/:id", (req, res) => {
+  const { id } = req.params;
+  const changes = req.body;
+  console.log("put", changes, id);
+  userDB
+    .update(id, changes)
+    .then(count => {
+      if (count) {
+        res.status(200).json({ message: `${count} posts updated` });
+      } else {
+        res.status(404).json({ message: "post not found" });
+      }
+    })
+    .catch(err => {
+      res.status(500).json({ message: "error updating the post", err });
+    });
+});
+
+server.delete("/api/users/:id", (req, res) => {
+  userDB
+    .remove(req.params.id)
+    .then(count => {
+      res.status(200).json(count);
+    })
+    .catch(err => {
+      res.status(500).json({ message: "error updating the post", err });
     });
 });
 
