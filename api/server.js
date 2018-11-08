@@ -54,6 +54,27 @@ server.delete('/api/posts/:id', async (req, res) => {
     }
 })
 
+server.put('/api/posts/:id', async (req, res) => {
+    const id = req.params.id;
+    const changes = await req.body;
+    const count = await dbPost.update(id, changes);
+    if(!changes.userId || !changes.text) {
+        res.status(404).json({ error: "Please be sure to include a userId and text input."})
+    } else {
+        try {
+            if(count === 0) {
+                res.status(404).json({ error: `There is no post with the id of ${id}` })
+            } else {
+                const updated = await dbPost.get(id);
+                res.status(200).json({ updated })
+            }
+            console.log(count)
+        } catch (error) {
+            res.status(500).json({ error: "We were unablet to update your post."})
+        }
+    }
+})
+
 
 //users
 server.get('/api/users', (req, res) => {
@@ -100,6 +121,26 @@ server.delete('/api/users/:id', async (req, res) => {
         }
     } catch (error) {
         res.status(500).json({ error: "things didnt go well"})
+    }
+})
+
+server.put('/api/users/:id', async (req, res) => {
+    const id = req.params.id;
+    const changes = await req.body;
+    const count = await dbUser.update(id, changes);
+    if (!changes.name) {
+        res.status(404).json({ error: "Please be sure to include a name input." })
+    } else {
+        try {
+            if (count === 0) {
+                res.status(404).json({ error: `There is no name with the id of ${id}` })
+            } else {
+                const updated = await dbUser.get(id);
+                res.status(200).json({ updated })
+            }
+        } catch (error) {
+            res.status(500).json({ error: "We were unablet to update your name." })
+        }
     }
 })
 
