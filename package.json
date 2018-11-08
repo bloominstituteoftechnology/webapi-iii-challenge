@@ -6,11 +6,13 @@
   "author": "cembreyfarquhar <cembreyfarquhar@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon"
+    "start": "nodemon index.js"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.16.4",
     "knex": "^0.15.2",
+    "server": "^1.0.18",
     "sqlite3": "^4.0.3"
   },
   "devDependencies": {
