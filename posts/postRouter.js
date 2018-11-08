@@ -39,53 +39,55 @@ router.get('/:id', (req, res) => {
 //POST /api.posts/
 router.post('/', (req, res) => {
     const {userId, text} = req.body;
-    
+    //first check to make sure the user submitted a text and userId with the request
     if (!userId || !text) {
     res.status(400)
     .json({message: "Please provide the user's id and the text for their new post."})
     } else {
-        userdb.get(userId)
-        .then(user =>{
-
-            if(user) {
-        try {
-        const postInfo = req.body;
-        postdb.insert(postInfo);
-        res.status(201).json(req.body);
-        } catch (error) {
-        res.status(500).json({error: "An error occurred while saving this post."})
-    }
-            } else {
+        //then check to make sure a user exists in the USERDB with the submitted userId
+    userdb.get(userId)
+    .then(user =>{
+        if(user) {
+                //if yes, then run the post request to postdb
+            try {
+            const postInfo = req.body;
+            postdb.insert(postInfo);
+            res.status(201).json(req.body);
+            } catch (error) {
+            res.status(500).json({error: "An error occurred while saving this post."})
+            }
+    //otherwise, return 404
+        } else {
                 res.status(404).json({message: "The user with that userId does not exist."})
             }        
+        })
+        }
 })
+
+//UPDATE /api/users/:id
+router.put('/:id', (req, res) => {
+    const {id} = req.params;
+    const changes = req.body;
+
+    if (!changes.text || !changes.userId) {res.status(400)
+        .json({error: "Please provide the updated post's text and user ID."})
+    } else {
+        postdb.update(id, changes)
+        .then(count => {
+            if (count) {
+            res.status(200)
+            .json(count);
+            } else {
+                res.status(404)
+                .json({message: "The post with the specified ID does not exist."})
+            }
+        })
+        .catch(error => {
+            res.status(500)
+            .json({error: "The post info could not be modified."})
+        })
     }
 })
-
-// //UPDATE /api/users/:id
-// router.put('/:id', nameCap, (req, res) => {
-//     const {id} = req.params;
-//     const changes = req.body;
-
-//     if (!changes.name) {res.status(400)
-//         .json({error: "Please provide the updated user's name."})
-//     } else {
-//         userdb.update(id, changes)
-//         .then(count => {
-//             if (count) {
-//             res.status(200)
-//             .json(count);
-//             } else {
-//                 res.status(404)
-//                 .json({message: "The user with the specified ID does not exist."})
-//             }
-//         })
-//         .catch(error => {
-//             res.status(500)
-//             .json({error: "The user info could not be modified."})
-//         })
-//     }
-// })
 
 // //DELETE /api/users/:id
 // router.delete('/:id', (req, res) => {
