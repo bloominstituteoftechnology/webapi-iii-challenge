@@ -38,7 +38,7 @@ server.post('/users', (req, res) => {
   userDb
     .insert(req.body)
     .then(obj => {
-      res.status(200).json({ name: req.body.name });
+      res.status(201).json({ name: req.body.name });
     })
     .catch(e => {
       console.log(e);
@@ -61,6 +61,27 @@ server.delete('/users/:id', (req, res) => {
     .catch(e => {
       console.log(e);
       res.status(500).json({ error: 'Error deleting user from the database.' });
+    });
+});
+
+server.put('/users/:id', (req, res) => {
+  if (!req.body.name) {
+    res.status(404).json({ message: 'Please provide a new name.' });
+  }
+  userDb
+    .get(req.params.id)
+    .then(user => {
+      !user
+        ? res.status(404).json({ errorMessage: 'ID not found' })
+        : userDb.update(req.params.id, req.body).then(count => {
+            if (count === 1) {
+              res.status(200).json({ name: req.body.name });
+            }
+          });
+    })
+    .catch(e => {
+      console.log(e);
+      res.status(500).json({ error: 'There was an error updating the user.' });
     });
 });
 
