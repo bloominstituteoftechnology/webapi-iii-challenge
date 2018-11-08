@@ -10,25 +10,34 @@ server.use(express.json());
 
 
 //posts
-server.get('/api/posts', (req, res) => {
-    dbPost.get()
-        .then(posts => {
-            res.json({ posts })
-        })
-        .catch(err => {
-            res.status(500).json({ error: "The posts could not be retrieved."})
-        })
+server.get('/api/posts', async (req, res) => {
+    try {
+        const posts = await dbPost.get()
+        res.status(200).json({ posts })
+    } catch (error) {
+        res.status(500).json({ error: "The posts could not be retrieved."})
+    }
 });
 
-server.get('/api/posts/:id', (req, res) => {
-    const id = req.params.id;
-    dbPost.get(id)
-        .then(post => {
-            res.json({ post })
-        })
-        .catch(err => {
-            res.status(500).json({ error: "The posts could not be retrieved." })
-        })
+server.get('/api/posts/:id', async (req, res) => {
+    try {
+        const id = await req.params.id;
+        const post = await dbPost.get(id);
+        res.json({ post })
+    } catch (error) {
+        res.status(500).json({ error: "The posts could not be retrieved." })
+    }
+})
+
+server.post('/api/posts', async (req, res) => {
+    const posting = req.body;
+    try {
+        const newpost = await dbPost.insert(posting);
+        const post = await dbPost.get(newpost.id);
+        res.status(200).json(post);
+    } catch (error) {
+        res.status(500).json({ error: "We were unable to add your post."})
+    }
 })
 
 
@@ -79,7 +88,6 @@ server.delete('/api/users/:id', async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: "things didnt go well"})
     }
-    console.log(id)
 })
 
 
