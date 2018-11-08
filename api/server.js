@@ -4,7 +4,8 @@ const helmet = require('helmet')
 const morgan = require('morgan')
 const userDb = require('../data/helpers/userDb.js')
 const postDb= require('../data/helpers/postDb.js')
-const usersRouter = require('../usersRouter.js')
+const usersRouter = require('../routers/usersRouter.js')
+const postsRouter = require('../routers/postsRouter.js')
 server.use(express.json())
 server.use(helmet())
 server.use(morgan('dev'))
@@ -14,14 +15,14 @@ upperCase = (req, res, next) => {
     next()
 }
 
-server.get('/users/:id/posts', (req, res) => {
-  userDb.getUserPosts(req.params.id).then(posts => {
-    res.status(200).json(posts)
-  })
-   .catch(error => {
-     res.status(500).json({message: 'there was a problem getting posts'})
-   })
-})
+// server.get('/users/:id/posts', (req, res) => {
+//   userDb.getUserPosts(req.params.id).then(posts => {
+//     res.status(200).json(posts)
+//   })
+//    .catch(error => {
+//      res.status(500).json({message: 'there was a problem getting posts'})
+//    })
+// })
 
 // server.get('/posts', (req, res) => {
 //   postDb.get()
@@ -34,6 +35,7 @@ server.get('/users/:id/posts', (req, res) => {
 // })
 
 server.use('/users', usersRouter);
+server.use('/posts', postsRouter);
 
 // server.get('/users', (req, res) => {
 //   userDb.get()
@@ -63,27 +65,26 @@ server.use('/users', usersRouter);
 
 // })
 
-server.delete('/users/:id', (req, res) => {
-    userDb.remove(req.params.id).then(count => {
-      if(count){
-        res.status(200).json({message: `${count} user deleted`})
-      } else {
-        res.status(404).json({message: `user not found`})
-      }
-    })
-     .catch(error => {
-       res.status(500).json({message: 'there was a problem deleting post'})
-   })
-})
+// server.delete('/users/:id', (req, res) => {
+//     userDb.remove(req.params.id).then(count => {
+//       if(count){
+//         res.status(200).json({message: `${count} user deleted`})
+//       } else {
+//         res.status(404).json({message: `user not found`})
+//       }
+//     })
+//      .catch(error => {
+//        res.status(500).json({message: 'there was a problem deleting post'})
+//    })
+// })
 
-server.put('/users/:id', upperCase, (req, res) => {
-  console.log(req.body)
-  const {id} = req.params;
-  const changes = req.body;
-  userDb.update(id, changes).then(count => {
-      res.status(200).json({message: `${count} post updated`})
-  })
-})
-
+// server.put('/users/:id', upperCase, (req, res) => {
+//   console.log(req.body)
+//   const {id} = req.params;
+//   const changes = req.body;
+//   userDb.update(id, changes).then(count => {
+//       res.status(200).json({message: `${count} post updated`})
+//   })
+// })
 
 module.exports = server

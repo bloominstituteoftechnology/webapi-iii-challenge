@@ -4,6 +4,7 @@
   "description": "basic blog",
   "main": "knexfile.js",
   "scripts": {
+    "start": "node index.js",
     "test": "test",
     "server": "nodemon"
   },
