@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import { Route, NavLink, withRouter, Switch } from 'react-router-dom';
+
 import axios from 'axios';
 import headerImage from './lotr.jpg';
 
@@ -27,7 +29,7 @@ class App extends Component {
     return (
       <div className="App">
         <header className="header">
-          <img src={headerImage} alt="The Gatesof Argonath" />
+          <img src={headerImage} alt="The Gates of Argonath" />
           {this.state.users.map(user => (
             <div key={user.id}>
               <h2 className="character">{user.name}</h2>
