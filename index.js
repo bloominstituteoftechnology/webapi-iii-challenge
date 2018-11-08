@@ -1,6 +1,7 @@
 //all required
 const express = require('express');
 const morgan = require('morgan');
+const cors = require('cors');
 
 //database
 const userdb = require('./data/helpers/userDb.js');
@@ -11,6 +12,7 @@ const server = express();
 //inbuild middleware
 server.use(express.json());
 server.use(morgan('short'));
+server.use(cors());
 
 //custom middleware
 const upperCase = (request, response, next) => {
