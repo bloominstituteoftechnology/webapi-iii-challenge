@@ -8,8 +8,6 @@ function allCaps(req, res, next) {
     next();
 }
 
-server.use(allCaps)
-
 server.get('/user/:id', (req, res) => {
     userDb.get(req.params.id)
         .then(user => {
@@ -40,17 +38,31 @@ server.get('/user/posts/:id', (req, res) => {
 
 server.post('/user', allCaps, (req, res) => {
     const post = req.body
+    if (!req.body.name) {
+        res.status(400).json({ message: 'Please provide a name' })
+    } else {
    userDb.insert(post)
     .then(user => {
-        if(!req.body.name) {
-            res.status(400).json({ message: 'Please provide a name' })
-        } else {
-            res.status(201).json(post)
+         res.status(201).json(post)
         }
-    }) 
+    ) 
     .catch(err => {
         res.status(500).json({ message: 'Error adding user to database' })
-    })
+    })}
+})
+
+server.delete('/user/:id', (req, res) => {
+    userDb.remove(req.params.id)
+        .then(user => {
+            if(user) {
+                res.status(200).json({ message: `deleted id:${req.params.id}` })
+            } else {
+                res.status(404).json({ message: `user with id:${req.params.id} does not exist` })
+            }
+        })
+        .catch(err => {
+            res.status(500).json({ message: 'Error deleting user from database' })
+        })
 })
 
 
