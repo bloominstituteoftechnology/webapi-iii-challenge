@@ -1,5 +1,7 @@
 const express = require('express');
 const postDb = require('../data/helpers/postDb.js');
+// const userDb = require('../data/helpers/userDb.js');
+const validUser = require('../middleware/validUser.js');
 
 const router = express.Router();
 
@@ -24,9 +26,8 @@ router.get('/:id', (req, res) => {
     });
 });
 // Adds a new post
-router.post('/', (req, res) => {
+router.post('/', validUser, (req, res) => {
   const newPost = req.body;
-
   postDb
     .insert(newPost)
     .then(post => res.status(200).json(post))
@@ -69,12 +70,10 @@ router.put('/:id', (req, res) => {
     .update(id, update)
     .then(count => {
       if (count) {
-        res
-          .status(200)
-          .json({
-            message: `Post with the id of ${id} has been updated`,
-            count
-          });
+        res.status(200).json({
+          message: `Post with the id of ${id} has been updated`,
+          count
+        });
       } else {
         res.status(404).json({ message: 'Could not find post.' });
       }
