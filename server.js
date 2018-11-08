@@ -42,6 +42,21 @@ server.post('/api/users', (req, res) => {
          })
 })
 
+server.put('/api/users/:id', (req, res) => {
+    const { id } = req.params;
+    const changes = req.body;
+    users.update(id, changes)
+    .then(count => {
+        if(count) {
+            res.status(200).json({ message: `${count} user updated`});
+        } else {
+            res.status(404).json({ message: 'user not found'})
+        }
+    })
+    .catch(err => {
+        res.status(500).json({ message: 'error updating the user'})
+    })
+}) 
 
 
 server.listen(port, () => console.log(`Server listen to port ${port}`))
