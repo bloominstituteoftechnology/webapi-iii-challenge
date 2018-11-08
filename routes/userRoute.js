@@ -1,15 +1,18 @@
 const express = require('express');
-const router = express.Router();
-const userDb = require('../helpers/userDb');
+const userDb = require('../data/helpers/userDb');
+const capitalize = require('../middleware/capitalize');
 
-function capitalize(req, res, next) {
-  let name = req.body.name;
-  name = name.split(" ").map(item => {
-    return item = item.substring(0,1).toUpperCase() + item.substring(1);
-  }).join(" ");
-  req.body.name = name;
-  next();
-}
+const router = express.Router();
+
+
+// function capitalize(req, res, next) {
+//   let name = req.body.name;
+//   name = name.split(" ").map(item => {
+//     return item = item.substring(0,1).toUpperCase() + item.substring(1);
+//   }).join(" ");
+//   req.body.name = name;
+//   next();
+// }
 
 router.get('/', (req, res) => {
   userDb

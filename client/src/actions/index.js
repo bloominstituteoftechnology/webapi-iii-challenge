@@ -8,6 +8,7 @@ export const FETCH_POSTS_SUCCESS = 'FETCH_POSTS_SUCCESS';
 export const FETCH_POSTS_FAILURE = 'FETCH_POSTS_FAILURE';
 export const FETCH_USER_SUCCESS = 'FETCH_USER_SUCCESS';
 export const FETCH_USER_FAILURE = 'FETCH_USER_FAILURE';
+export const CLEAR_ERROR = 'CLEAR_ERROR'
 
 const url = 'http://localhost:9000/users';
 
@@ -44,4 +45,8 @@ export const fetchUserById = id => dispatch => {
     .catch(error => {
       dispatch({ type: FETCH_USER_FAILURE, payload: error})
     })
+}
+
+export const clearError = () => dispatch => {
+  dispatch({ type: CLEAR_ERROR })
 }

@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const tagDb = require('../helpers/tagDb');
-
+const tagDb = require('../data/helpers/tagDb');
 
 router.get('/', (req, res) => {
   tagDb
