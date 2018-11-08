@@ -132,8 +132,45 @@ server.put('/api/posts/edit/:id', (req, res) => {
             res.status(500).json({ error: "The post information could not be modified.",error : error });
         });
 });
+
+server.delete('/api/posts/:id', (req, res) => {
+    postDb.remove(req.params.id)
+        .then(count => {
+        res.status(200).json({message : `${count} posts were deleted : ID ${req.params.id}`});
+    })
+    .catch(err => {
+        res.status(500).json({ message: 'error deleting post',error : error });
+    });
+});
 // server.get('/secret', gatekeeper, (req, res) => {
 //     res.send(req.welcomeMessage);
 //   });   how he did it
+
+
+server.put('/api/users/edit/:id', (req, res) => {
+    const { id } = req.params;
+    const edited = req.body;
+    userDb.update(id, edited)
+        .then(count => {
+            if (count) {
+                res.status(200).json({ message: `${count} user updated`,ID : id });
+            } else {
+                res.status(404).json({ message: 'user does not exist' });
+            }
+        })
+        .catch(err => {
+            res.status(500).json({ error: "This users information could not be modified.",error : error });
+        });
+});
+
+server.delete('/api/users/:id', (req, res) => {
+    userDb.remove(req.params.id)
+        .then(count => {
+        res.status(200).json({message : `${count} users were deleted : ID ${req.params.id}`});
+    })
+    .catch(err => {
+        res.status(500).json({ message: 'error deleting user',error : err });
+    });
+});
 
 module.exports=server;
