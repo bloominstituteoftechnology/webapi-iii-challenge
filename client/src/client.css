@@ -21,8 +21,10 @@ h1 {
 }
 
 /*-- User Detailed View ------------------------*/
+/*
 .user-details {}
 .user-viewer {}
+*/
 .user-viewer .list {
     display: flex;
     flex-direction: column;
