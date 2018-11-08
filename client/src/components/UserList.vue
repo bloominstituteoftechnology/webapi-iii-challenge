@@ -19,8 +19,8 @@
         },
         created () {
             axios.get('http://localhost:9000/api/users')
-            .then(res => this.users = res.data)
-            .catch(error => console.error(error));
+                .then(res => this.users = res.data)
+                .catch(error => console.error(error));
         }
     }
 </script>
@@ -32,5 +32,6 @@
         flex-direction: column
         justify-content: flex-start
         align-items: center
+        position: relative
 </style>
 
