@@ -5,6 +5,7 @@ const postDb = require('./data/helpers/postDb');
 const userDb = require('./data/helpers/userDb');
 
 const server = express();
+exports.server = server;
 server.use(express.json());
 server.use(cors());
 
@@ -13,7 +14,7 @@ function upCase(req, res, next) {
   next();
 }
 
-server.get('/users', (req, res) => {
+server.get('/api/users', (req, res) => {
   userDb
     .get()
     .then(users => {
@@ -24,7 +25,7 @@ server.get('/users', (req, res) => {
     });
 });
 
-server.get('/users/:id', (req, res) => {
+server.get('/api/users/:id', (req, res) => {
   userDb
     .get(req.params.id)
     .then(user => {
@@ -36,7 +37,7 @@ server.get('/users/:id', (req, res) => {
     });
 });
 
-server.post('/users', upCase, (req, res) => {
+server.post('/api/users', upCase, (req, res) => {
   if (!req.body.name) {
     res.status(400).json({ errorMessage: 'Please provide a name' });
   }
@@ -45,6 +46,7 @@ server.post('/users', upCase, (req, res) => {
     .insert(req.body)
     .then(obj => {
       res.status(201).json({ name: req.body.name });
+      console.log(`Added with ${obj.id} given id`);
     })
     .catch(e => {
       console.log(e);
@@ -52,7 +54,7 @@ server.post('/users', upCase, (req, res) => {
     });
 });
 
-server.delete('/users/:id', (req, res) => {
+server.delete('/api/users/:id', (req, res) => {
   userDb
     .get(req.params.id)
     .then(user => {
@@ -70,7 +72,7 @@ server.delete('/users/:id', (req, res) => {
     });
 });
 
-server.put('/users/:id', upCase, (req, res) => {
+server.put('/api/users/:id', upCase, (req, res) => {
   if (!req.body.name) {
     res.status(404).json({ message: 'Please provide a new name.' });
   }
@@ -91,7 +93,7 @@ server.put('/users/:id', upCase, (req, res) => {
     });
 });
 
-server.get('/posts', (req, res) => {
+server.get('/api/posts', (req, res) => {
   postDb
     .get()
     .then(posts => {
@@ -103,16 +105,64 @@ server.get('/posts', (req, res) => {
     });
 });
 
-server.get('/posts/:id', (req, res) => {
-  const { id } = req.params;
+server.get('/api/posts/:id', (req, res) => {
   postDb
-    .get(id)
+    .get(req.params.id)
     .then(post => {
       !post.length === 0 ? res.status(200).json(post) : res.status(404).json({ errorMessage: 'The ID was not found.' });
     })
     .catch(e => {
       console.log(e);
       res.status(500).json({ error: 'An error occurred while attempting to retrieve the post from the database.' });
+    });
+});
+
+server.post('/api/posts', (req, res) => {
+  if (!req.body.text) {
+    res.status(404).json({ errorMessage: 'Please provide text.' });
+  }
+
+  postDb
+    .insert(req.body)
+    .then(obj => {
+      res.status(201).json(req.body, ...obj);
+    })
+    .catch(e => {
+      console.log(e);
+      res.status(500).json({ error: 'There was an error adding the post to the database.' });
+    });
+});
+
+server.delete('/api/posts/:id', (req, res) => {
+  postDb.get(req.params.id).then(post => {
+    !post
+      ? res.status(404).json({ errorMessage: 'ID not found' })
+      : postDb.remove(req.params.id).then(count => {
+          if (count > 0) {
+            res.status(200).json({ success: 'User has been deleted.' });
+          }
+        });
+  });
+});
+
+server.put('/api/posts/:id', (req, res) => {
+  if (!req.body.text) {
+    res.status(404).json({ message: 'Please provide text for a post.' });
+  }
+  postDb
+    .get(req.params.id)
+    .then(post => {
+      !post
+        ? res.status(404).json({ errorMessage: 'ID not found' })
+        : userDb.update(req.params.id, req.body).then(count => {
+            if (count === 1) {
+              res.status(200).json(req.body);
+            }
+          });
+    })
+    .catch(e => {
+      console.log(e);
+      res.status(500).json({ error: 'There was an error updating the post.' });
     });
 });
 
