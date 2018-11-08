@@ -74,7 +74,6 @@ server
             });
     });
 
-
 //update user
 
 server
@@ -116,23 +115,38 @@ server
 
 // New Post
 
-server 
-    .post('/api/posts', async (req, res) =>{
-        try{
+server
+    .post('/api/posts', async (req, res) => {
+        try {
             const { text, userId } = req.body;
             const changes = req.body;
-            if(!changes){
+            if (!changes) {
                 return sendErrorMsg(500, 'Both text and a UserId are required', res)
-            } 
-            const id = await posts.insert({ text, userId});
+            }
+            const id = await posts.insert({ text, userId });
             const post = await posts.get(id.id);
             res.status(200).json(post);
-        } catch (err){
+        } catch (err) {
             return sendErrorMsg(500, 'error post could not be added', res);
         }
     });
 
 //get posts
+
+server
+    .get('/api/user/posts/:userId', (req, res) => {
+        const { userId } = req.params;
+        users
+            .getUserPosts(userId)
+            .then(userPost => {
+                userPost === 0 ?
+                    sendErrorMsg(404, 'There are no posts by that users', res) :
+                    res.status(200).json(userPost)
+            })
+            .catch(err => {
+                return sendErrorMsg(500, 'There was an error searching for posts');
+            });
+    });
 
 server
     .get('/api/posts', (req, res) => {
@@ -163,24 +177,24 @@ server
             });
     });
 
-    //update post
+//update post
 
-    server
-        .put('/api/posts/:id', (req, res) => {
-            const { id } = req.params;
-            const { text, userId } = req.body;
-            const changes = req.body;
-            posts   
-                .update(id, changes)
-                .then(count => {
-                    count === 0 ?
+server
+    .put('/api/posts/:id', (req, res) => {
+        const { id } = req.params;
+        const { text, userId } = req.body;
+        const changes = req.body;
+        posts
+            .update(id, changes)
+            .then(count => {
+                count === 0 ?
                     sendErrorMsg(500, 'Post id cannot be found', res) :
-                    res.status(200).json({message: `${count} post was updated`})      
-                })
-                .catch(err =>{
-                    return sendErrorMsg(500, `the post could not be updated`)
-                });
-        });
+                    res.status(200).json({ message: `${count} post was updated` })
+            })
+            .catch(err => {
+                return sendErrorMsg(500, `the post could not be updated`)
+            });
+    });
 
 
 // delete post
