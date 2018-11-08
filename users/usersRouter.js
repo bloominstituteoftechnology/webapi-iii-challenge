@@ -33,40 +33,42 @@ router.get("/:id", (req, res) => {
 });
 
 router.post("/", upperCase, (req, res) => {
-  req.body.name
-    ? userDb
-        .insert(req.body)
-        .then(userId =>
-          userDb.get(userId.id).then(user => res.status(200).json(user))
-        )
-        .catch(err =>
-          res.status(500).json({
-            error: "There was an error while saving the user to the database"
-          })
-        )
-    : res.status(400).json({ message: "Please provide a name for the user." });
+  if (req.body.name) {
+    userDb
+      .insert(req.body)
+      .then(userId =>
+        userDb.get(userId.id).then(user => res.status(201).json(user))
+      )
+      .catch(err =>
+        res.status(500).json({
+          error: "There was an error while saving the user to the database"
+        })
+      );
+  } else {
+    res.status(400).json({ message: "Please provide a name for the user." });
+  }
 });
 
 router.put("/:id", upperCase, (req, res) => {
-  req.body.name
-    ? userDb
-        .update(req.params.id, req.body)
-        .then(
-          count =>
-            count
-              ? userDb
-                  .get(req.params.id)
-                  .then(user => res.status(200).json(user))
-              : res.status(404).json({
-                  message: "The user with the specified ID does not exist."
-                })
-        )
-        .catch(err =>
-          res.status(500).json({
-            error: "The user information could not be modified."
-          })
-        )
-    : res.status(400).json({ message: "Please provide a name for the user." });
+  if (req.body.name) {
+    userDb
+      .update(req.params.id, req.body)
+      .then(
+        count =>
+          count
+            ? userDb.get(req.params.id).then(user => res.status(200).json(user))
+            : res.status(404).json({
+                message: "The user with the specified ID does not exist."
+              })
+      )
+      .catch(err =>
+        res.status(500).json({
+          error: "The user information could not be modified."
+        })
+      );
+  } else {
+    res.status(400).json({ message: "Please provide a name for the user." });
+  }
 });
 
 router.delete("/:id", (req, res) => {
