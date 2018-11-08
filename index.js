@@ -15,7 +15,7 @@ function uppercase(req, res, next) {
   req.body.uppercaseName = req.body.name.toUpperCase();
   next();
 }
-
+// ======== USERS ==========
 // GET ALL
 server.get("/users", (req, res) => {
   userDb
@@ -55,13 +55,17 @@ server.get("/users/:id/posts", (req, res) => {
   });
 });
 
-// DELETE
-server.delete("/users/:id", (req, res) => {
+// PUT
+server.put("/users/:id", uppercase, (req, res) => {
+  const id = req.params.id;
+  const changes = req.body.uppercaseName;
+  console.log(id);
+  console.log(changes);
   userDb
-    .remove(req.params.id)
+    .update(id, {name: changes})
     .then(count => {
-      if (count) {
-        res.status(200).json(count);
+      if (count > 0) {
+        res.status(201).json(count);
       } else {
         res.status(404).json({error: "user doesn't exist"});
       }
@@ -70,6 +74,29 @@ server.delete("/users/:id", (req, res) => {
       res.status(500).json({error: "something went wrong"});
     });
 });
+
+// DELETE
+server.delete("/users/:id", (req, res) => {
+  userDb
+    .remove(req.params.id)
+    .then(count => {
+      if (count) {
+        res.status(200).json(count);
+      } else {
+        res
+          .status(404)
+          .json({error: "can't delete a user that doesn't exist yo"});
+      }
+    })
+    .catch(err => {
+      res.status(500).json({error: "something went wrong"});
+    });
+});
+
+// ######### POSTS #########
+// - id: number, no need to provide it when creating posts, the database will automatically generate it.
+// - userId: number, required, must be the id of an existing user.
+// - text: string, no size limit, required.
 
 server.use(uppercase);
 // server.post("/users");
