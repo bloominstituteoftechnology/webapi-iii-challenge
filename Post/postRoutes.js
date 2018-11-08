@@ -3,7 +3,6 @@ const postDb = require('../data/helpers/postDb.js');
 const router = express.Router();
 
 
-
 router.get('/:id', (req, res) => {
     const { id } = req.params
     postDb.get(id)
@@ -31,8 +30,8 @@ router.get('/tags/:id', (req, res) => {
 })
 
 router.post('/', (req, res) => {
-    if (!req.body.userId || !req.body.text) {
-        res.status(400).json({ message: 'Please provide a name and text' })
+    if (!req.body.text) {
+        res.status(400).json({ message: 'Please a text body' })
     } else {
         postDb.insert(req.body)
             .then(post => {
@@ -57,6 +56,21 @@ router.delete('/:id', (req, res) => {
             .catch(err => {
                 res.status(500).json({ message: 'Error deleting post from database' })
             })
+})
+
+router.put('/:id', (req, res) => {
+    const { id } = req.params
+    if (!req.body.text) {
+        res.status(400).json({ message: 'Please provide a text body' })
+    } else {
+        postDb.update(id, req.body)
+            .then(post => {
+                res.status(201).json(req.body)
+            })
+            .catch(err => {
+                res.status(500).json({ message: 'post can not be updated at this time'})
+            })
+    }
 })
 
 

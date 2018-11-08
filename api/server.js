@@ -7,11 +7,4 @@ const postRoutes = require('../Post/postRoutes.js')
 server.use('/', userRoutes)
 server.use('/posts', postRoutes)
 
-
-
-
-
-
-
-
 module.exports = server;
