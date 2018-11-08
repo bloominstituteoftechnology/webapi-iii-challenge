@@ -1,0 +1,20 @@
+
+
+/*== Application Styles ======================================================*/
+
+h1 {
+    font-size: 4rem;
+    margin: 1em auto;
+    text-align: center;
+    font-weight: bold;
+}
+.list {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+}
+.user {
+    margin: 1rem;
+    padding: 1rem;
+    border: 1px solid #ccc;
+}

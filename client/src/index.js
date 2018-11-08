@@ -5,7 +5,8 @@
 //-- Dependencies --------------------------------
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import './reset.css';
+import './client.css';
 import List from './utilities/list.js';
 import User from './user.js';
 
@@ -15,9 +16,12 @@ const URL_USERS = URL_BASE + '/users';
 
 //-- Mounting ------------------------------------
 const applicationStructure = (
-    <List
-        listUrl={URL_USERS}
-        itemComponent={User}
-    />
+    <React.Fragment>
+        <h1>Characters from Lord of the Rings</h1>
+        <List
+            listUrl={URL_USERS}
+            itemComponent={User}
+        />
+    </React.Fragment>
 );
 ReactDOM.render(applicationStructure, document.getElementById('root'));
