@@ -13,7 +13,7 @@ const capitalizeName = (req, _, next) => {
   if (req.body.name.indexOf(' ') >= 0) {
     req.body.name = req.body.name
       .split(' ')
-      .forEach(name => name.charAt(0).toUpperCase() + name.slice(1, name.length).toLowerCase())
+      .map(name => name.charAt(0).toUpperCase() + name.slice(1, name.length).toLowerCase())
       .join(' ');
     next();
   } else {
