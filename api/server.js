@@ -4,7 +4,6 @@ const helmet = require('helmet')
 const morgan = require('morgan')
 const userDb = require('../data/helpers/userDb.js')
 const postDb= require('../data/helpers/postDb.js')
-let theDatabase;
 server.use(express.json())
 server.use(helmet())
 server.use(morgan('dev'))
@@ -23,15 +22,15 @@ server.get('/users/:id/posts', (req, res) => {
    })
 })
 
-server.get('/posts', (req, res) => {
-  postDb.get()
-    .then(posts => {
-      res.status(200).json(posts)
-    })
-   .catch(error => {
-     res.status(500).json({message: `there was a problem getting posts`})
-   })
-})
+// server.get('/posts', (req, res) => {
+//   postDb.get()
+//     .then(posts => {
+//       res.status(200).json(posts)
+//     })
+//    .catch(error => {
+//      res.status(500).json({message: `there was a problem getting posts`})
+//    })
+// })
 
 
 server.get('/users', (req, res) => {
@@ -62,12 +61,12 @@ server.post('/users', upperCase, (req, res) => {
 
 })
 
-server.delete('/posts/:id', (req, res) => {
-    postDb.remove(req.params.id).then(count => {
+server.delete('/users/:id', (req, res) => {
+    userDb.remove(req.params.id).then(count => {
       if(count){
-        res.status(200).json({message: `${count} ${req.params.thing} deleted`})
+        res.status(200).json({message: `${count} user deleted`})
       } else {
-        res.status(404).json({message: `${req.params.thing} not found`})
+        res.status(404).json({message: `user not found`})
       }
     })
      .catch(error => {
