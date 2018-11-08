@@ -69,6 +69,8 @@ server.get("/api/users/:id/posts", (req, res) => {
     });
 });
 
+// POST requests
+
 server.post("/api/users", uppercaseMiddleware, (req, res) => {
   const user = users.insert(req.body);
   users
@@ -78,6 +80,10 @@ server.post("/api/users", uppercaseMiddleware, (req, res) => {
         res
           .status(400)
           .json({ message: "Please provide a name for the user." });
+      } else if (req.body.name.length > 128) {
+        res.status(400).json({
+          messsage: "Users name can not be longer than 128 characters"
+        });
       } else {
         res.status(201).json(user);
       }
@@ -87,6 +93,56 @@ server.post("/api/users", uppercaseMiddleware, (req, res) => {
         message: "There was an error while saving the user to the database"
       })
     );
+});
+
+// Delete user
+
+server.delete("/api/users/:id", (req, res) => {
+  const { id } = req.params;
+  const removeUser = users.get(id);
+  users
+    .remove(id)
+    .then(count => {
+      if (count === 0) {
+        res
+          .status(404)
+          .json({ message: "User with specified Id does not exist" });
+      } else {
+        res.status(200).json(removeUser);
+      }
+    })
+    .catch(err => {
+      res
+        .status(500)
+        .json({ message: "There was an error when deleting the user" });
+    });
+});
+
+//  PUT request
+
+server.put("/api/users/:id", uppercaseMiddleware, (req, res) => {
+  const { id } = req.params;
+  const changes = req.body;
+  users
+    .update(id, changes)
+    .then(count => {
+      if (count) {
+        res.status(200).json({ message: `${count} user updated` });
+      } else if (changes.name === "") {
+        res
+          .status(400)
+          .json({ message: "Please provide a name for the user." });
+      } else if (changes.name.length > 128) {
+        res.status(400).json({
+          messsage: "Users name can not be longer than 128 characters"
+        });
+      }
+    })
+    .catch(err => {
+      res
+        .status(500)
+        .json({ message: "There was an error with updating the users post" });
+    });
 });
 
 server.listen(port, () => console.log(`\nServer listening on port ${port}`));
