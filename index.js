@@ -3,8 +3,6 @@ const logger = require("morgan");
 const cors = require("cors");
 const helmet = require("helmet");
 
-
-const tagDb = require("./data/helpers/tagDb");
 const userRouter = require("./users");
 const postRouter = require("./posts");
 
