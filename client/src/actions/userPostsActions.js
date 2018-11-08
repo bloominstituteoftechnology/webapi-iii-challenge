@@ -2,7 +2,7 @@ import axios from 'axios';
 
 import { FETCH_USER_POSTS, CLEAR_USER_POSTS } from './types';
 
-const URL = 'http://localhost:5000/api/users';
+const URL = '/api/users';
 
 export const fetchUserPosts = id => async dispatch => {
   const res = await axios.get(`${URL}/${id}/posts`);
