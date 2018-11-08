@@ -8,3 +8,5 @@ function capitalize(req, res, next) {
     }
     next();
 }
+
+module.exports = { capitalize }; 
