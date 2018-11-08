@@ -29,4 +29,19 @@ router.get('/:id/tags', (req, res) => {
         });
 });
 
+// ***** POST new post *****
+router.post('/new-post', (req, res) => {
+    //check user exists
+    postDb.insert(req.body)
+        .then(id => {
+            return postDb.get(id.id);
+        })
+        .then(post => {
+            res.status(201).json(post);
+        })
+        .catch(err => {
+            res.status(500).json({ error: 'Failed to create new post.' })
+        })
+})
+
 module.exports = router;
