@@ -13,11 +13,17 @@ server.use(morgan('dev'));
 
 function upperCaseUser(req, res, next) {
     if (req.body.name) {
-        let split = req.body.name.split('')
-        let capitalized = split.map((letter, i) => i === 0 ? letter.toUpperCase() : letter)
-        req.body.name = capitalized.join('');
+        req.body.name = req.body.name
+            .split(' ')
+            .map(name =>
+                name
+                .split('')
+                .map((letter, i) => (i === 0 ? letter.toUpperCase() : letter.toLowerCase()))
+                .join('')
+            )
+            .join(' ');
     }
-    next();
+    next()
 }
 
 server.use(upperCaseUser);
