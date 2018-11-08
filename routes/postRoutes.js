@@ -60,5 +60,30 @@ router.delete('/:id', (req, res) => {
         .json({ message: 'There was an error deleting the post.', error });
     });
 });
+// Updates post
+router.put('/:id', (req, res) => {
+  const id = req.params.id;
+  const update = req.body;
+
+  postDb
+    .update(id, update)
+    .then(count => {
+      if (count) {
+        res
+          .status(200)
+          .json({
+            message: `Post with the id of ${id} has been updated`,
+            count
+          });
+      } else {
+        res.status(404).json({ message: 'Could not find post.' });
+      }
+    })
+    .catch(error => {
+      res
+        .status(500)
+        .json({ message: 'There was an error updating the post.', error });
+    });
+});
 
 module.exports = router;
