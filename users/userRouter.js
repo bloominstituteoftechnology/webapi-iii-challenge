@@ -2,8 +2,17 @@ const express = require("express");
 
 const router = express.Router();
 
+const userDb = require("../data/helpers/userDb");
+
 module.exports = router;
 
+const allCaps = (req, res, next) => {
+    console.log(req.body);
+  
+    Object.assign(req.body, { name: req.body.name.toUpperCase() });
+  
+    next();
+  };
 
 //=============== USER ENDPOINTS =============== //
 
