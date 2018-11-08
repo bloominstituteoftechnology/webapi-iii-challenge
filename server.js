@@ -101,5 +101,46 @@ server.get('/api/posts', (req, res) => {
       })
   })
 
+  server.post('/api/posts', (req, res) => {
+      const { userId, text } = req.body;
+      posts.insert({ userId, text }).then(response => {
+          res.status(200).json(response)
+      })
+      .catch(err => {
+        res.status(500).json({ message: "error can not add new post"})
+      })
+  })
+
+  server.delete('/api/posts/:id', (req, res) => {
+        const { id } = req.params;
+        posts.remove(id).then(id => {
+            res.status(200).json(id)
+        })
+        .catch(err => {
+            res.status(500).json({ message: "error can not remove post"})
+        })
+  })
+
+  server.put('/api/posts/:id', (req, res) => {
+      const { id } = req.params;
+      const changes = req.body;
+      posts.update(id, changes).then(response => {
+          res.status(200).json(response)
+      })
+      .catch(err => {
+          res.status(500).json({ message: "can not make update changes"})
+      })
+  })
+
+  server.delete('/api/posts/:id', (req, res) => {
+      const { id } = req.params;
+      posts.remove(id).then(id => {
+          res.status(200).json(id)
+      })
+      .catch(err => {
+          res.status(500).json({ message: "can not delete post with that id"})
+      })
+  })
+
 
 server.listen(port, () => console.log(`Server listen to port ${port}`))
