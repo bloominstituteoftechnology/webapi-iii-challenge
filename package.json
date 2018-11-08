@@ -5,7 +5,9 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "server": "nodemon index.js"
+    "server": "nodemon index.js",
+    "build": "yarn --cwd ./friends build",
+    "postinstall": "yarn --cwd ./friends install && yarn --cwd ./friends build"
   },
   "license": "ISC",
   "dependencies": {
