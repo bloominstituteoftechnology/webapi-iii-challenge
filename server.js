@@ -85,7 +85,7 @@ server.post("/api/users", uppercaseMiddleware, (req, res) => {
           messsage: "Users name can not be longer than 128 characters"
         });
       } else {
-        res.status(201).json(user);
+        res.status(201).json({ message: "User added" });
       }
     })
     .catch(err =>
@@ -126,9 +126,7 @@ server.put("/api/users/:id", uppercaseMiddleware, (req, res) => {
   users
     .update(id, changes)
     .then(count => {
-      if (count) {
-        res.status(200).json({ message: `${count} user updated` });
-      } else if (changes.name.length <= 0) {
+      if (changes.name === "") {
         res
           .status(400)
           .json({ message: "Please provide a name for the user." });
@@ -136,6 +134,8 @@ server.put("/api/users/:id", uppercaseMiddleware, (req, res) => {
         res.status(400).json({
           messsage: "Users name can not be longer than 128 characters"
         });
+      } else {
+        res.status(200).json({ message: `${count} user updated` });
       }
     })
     .catch(err => {
