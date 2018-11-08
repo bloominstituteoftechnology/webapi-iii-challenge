@@ -5,8 +5,11 @@ const routes = require('../config/routes');
 
 const server = express();
 
+// Middleware
 configureMiddleware(server);
 
+// routes
 routes.usersRouter(server);
+routes.postsRouter(server);
 
 module.exports = server;
