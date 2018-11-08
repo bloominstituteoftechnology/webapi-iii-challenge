@@ -50,22 +50,37 @@ server.post('/users',uppercase,(req,res)=>{
     if(req.body.name && req.body.name.length < 129){
         userHelper.insert(req.body)
             .then(response=>{
-                res.status(201).json(response)
+               
+                userHelper.get(response.id)
+                    .then(user=>{
+                            res.status(201).json(user)
+                        })
+                    .catch(error => res.status(500).json({message:error}))
+
             })
             .catch(error=>{console.log("An error occurred creating user data ", error)});
     } else  {
         res.status(400).send({message:"Name is required and cannot exceed 128chars "})
     }
 })
-server.put('/users/:id',uppercase,(req,res)=>{
+server.put('/users/:id',uppercase, async (req,res)=>{
     const { id } = req.params;
 
     if(req.body.name && req.body.name.length < 129){
-        userHelper.update(id,req.body)
-        .then(response=>{
-            res.status(200).json(response)
-        })
-        .catch(error=>{console.log("An error occurred updating user data ", error)});
+        try {
+            let response = await userHelper.update(id,req.body)
+            if(response === 1)
+            {
+                let user = await userHelper.get(id)
+                res.status(200).json(user)
+            } else 
+            {
+                res.status(404).json({message:'user not found for update'})
+            }
+                
+        } catch (error) {
+            res.status(500).json({message:error})            
+        }
     } else  {
         res.status(400).send({message:"Name is required and cannot exceed 128chars "})
     }    
@@ -108,15 +123,26 @@ server.put('/posts/:id',async(req,res)=>{
             if(userExists.id > 0){
                 try {
                     const response = await postHelper.update(req.params.id,req.body)
-                    res.status(200).json(response);
+
+                    if(response === 1){
+                        try {
+                            let post = await postHelper.get(req.params.id);
+                            res.status(200).json(post)
+                        } catch (error) {
+                            res.status(500).json({message:error})          
+                        }
+                    }   
+                     else {
+                         res.status(404).json({message:"no post was found for update.",id})
+                     }
                 } catch (error) {
-                    res.status(500).send({message:"Unable to update post post, an error has occurred. ", id, error})
+                    res.status(500).send({message:error, id})
                 }
             } else {
                 res.status(500).send({message:"Unable to update post, userid must be a valid user. "})
             }
         } catch (error) {
-            res.status(500).send({message:"Unable to update post, An error was thrown getting the user. ",error})
+            res.status(500).send({message:error})
         }
     } else {
         res.status(500).send({message:"Unable to update post, userid is required. "})
@@ -130,7 +156,8 @@ server.post('/posts',async(req,res)=>{
             if(userExists.id > 0){
                 try {
                     const response = await postHelper.insert(req.body)
-                    res.status(200).json(response);
+                    const post = await postHelper.get(response.id)
+                    res.status(200).json(post);
                 } catch (error) {
                     res.status(500).send({message:"Unable to insert new post, an error has occurred. ", id, error})
                 }
