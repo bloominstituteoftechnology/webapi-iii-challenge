@@ -4,6 +4,7 @@
   "description": "- Building RESTful APIs.\r - Performing CRUD Operations on Multiple Resources.\r - Configuring CORS.\r - Writing Custom Middleware.\r - Using Express Routers to Modularize Application.",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "server": "nodemon"
   },
   "repository": {
