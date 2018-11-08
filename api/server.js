@@ -13,6 +13,8 @@ server.use(express.json());
 server.use(helmet()); 
 server.use(morgan('dev'));//does it matter what one we use at all?
 
+// server.use(upperCase);
+
 //Server Code
 
 server.get('/', (req, res) => {
