@@ -3,21 +3,19 @@ const express = require('express');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const server = express();
-
+//-----MIDDLEWARE---------
+const makeUppercase = require('../middleware/makeUppercase.js');
 server.use(express.json());
 server.use(helmet());
 server.use(morgan('short')); 
 
-// configure endpoints (route handlers are middleware!!)
-/*
-----Users------
-id: number, no need to provide it when creating users, 
-the database will generate it.
-name: up to 128 characters long, required.
 
-Create GET, POST, PUT, and DELETE functionality for users 
- 
+/*
+Write custom middleware to ensure that the user's
+name is uppercased before the request 
+reaches the POST or PUT route handler.
   */
+
 
 //----- GET -----
 
@@ -39,7 +37,7 @@ server.get('/api/users/:id', (req, res) => {
       .then(user => { //then check for ...
         console.log(user)
         if (!user) { // status 200 - we found it!
-        res.status(404).json({ message: "The post with the specified ID does not exist." });
+        res.status(404).json({ message: "The user with the specified ID does not exist." });
         return  
         } else if (user){ // or oops - if we could retrieve it, we would but it's not here, status 404
         res.status(200).json(user);
@@ -54,7 +52,7 @@ server.get('/api/users/:id', (req, res) => {
   });
 //----- POST -----
 
-server.post('/api/users', async (req, res) => {
+server.post('/api/users', makeUppercase, async (req, res) => {
     const userData = req.body;
     if (!userData.name || userData.name==="" ) {
         const errorMessage = "Please provide name for the user"; 
@@ -72,7 +70,7 @@ server.post('/api/users', async (req, res) => {
     return
 });
 //----- PUT -----
-server.put('/api/users/:id', async (req, res) => {
+server.put('/api/users/:id', makeUppercase, async (req, res) => {
     const { id } = req.params;
     const userChanges = req.body;
     db.get(id)
@@ -104,23 +102,27 @@ server.put('/api/users/:id', async (req, res) => {
       });
 //----- DELETE -----
 server.delete('/api/users/:id', (req, res) => {
-    const { id } = req.params;
-    db.get(id)
-        .then(user => { 
-          if (!user) { 
-            res.status(404).json({ message: "The post with the specified ID does not exist." });
-            return
-          } else if (user){ // or oops - if we could retrieve it, we would but it's not here, status 404
-          db.remove(user.id) 
-          res.status(200).json({ message: "The post with the specified ID was deleted." });
-          return
-        }
-        })
+    const id = req.params.id;
+   // db.get(id)
+   db.remove(id)
+   .then(count => res.status(200).json(count))
+    // .then(user => { 
+     // console.log("we're in then")
+        //  if (!user) { 
+        //  res.status(404).json({ message: "The post with the specified ID does not exist." });
+        /*  return
+       } else if (user){ // or oops - if we could retrieve it, we would but it's not here, status 404
+        db.remove(user.id) 
+         res.status(200).json({ message: "The post with the specified ID was deleted." });
+         return
+       }
+        })*/
         .catch(err => {
           res //if data can't be retrieved ... 
             .status(500)
             .json({ error: "The post information could not be retrieved." });
         });
+        //res.status(200).json({ message: "The post with the specified ID was deleted." });
       });
 
 
