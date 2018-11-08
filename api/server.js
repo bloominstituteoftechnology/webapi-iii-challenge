@@ -89,4 +89,14 @@ server.get('/api/posts/tags/:id', (req, res) => {
         })
 });
 
+server.post('/api/posts', (req, res) => {
+    dbPosts.insert(req.body)
+        .then(userId => {
+            res.status(201).json({ userId });
+        })
+        .catch(err => {
+            res.status(500).json({ error: 'Error adding post', err });
+        })
+})
+
 module.exports = server;
