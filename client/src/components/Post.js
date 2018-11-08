@@ -1,11 +1,15 @@
 import React from 'react';
 
+import { Link } from 'react-router-dom';
+
 const Post = props => {
-  const { name } = props.user;
+  const { name, id } = props.user;
   return (
-    <div>
-      <h1>{name}</h1>
-    </div>
+    <Link to={`/user/${id}/posts`}>
+      <div>
+        <h1>{name}</h1>
+      </div>
+    </Link>
   );
 };
 

@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 // View imports
-import { HomePageView } from './views';
+import { HomePageView, SingleUserView } from './views';
+// React router imports
+import { Route } from 'react-router-dom';
 class App extends Component {
   render() {
     return (
       <div className="App">
-        <HomePageView />
+        <Route exact path="/" component={HomePageView} />
+        <Route path="/user/:id/posts" component={SingleUserView} />
       </div>
     );
   }
