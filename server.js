@@ -1,7 +1,6 @@
 // Imports
 const express = require('express');
-const morgan = require('morgan');
-const helmet = require('helmet');
+const configMiddleware = require('./middleware/middleware.js');
 const userRoutes = require('./routes/userRoutes.js');
 const postRoutes = require('./routes/postRoutes.js');
 
@@ -9,9 +8,7 @@ const postRoutes = require('./routes/postRoutes.js');
 const server = express();
 
 // Middleware
-server.use(morgan('dev'));
-server.use(helmet());
-server.use(express.json());
+configMiddleware(server);
 
 // Routes
 server.use('/api/users', userRoutes);
