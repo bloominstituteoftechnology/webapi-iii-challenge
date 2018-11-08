@@ -11,14 +11,14 @@ server.use(morgan('dev'));
  
 // custom middleware 
 function uppercase(req, res, next) {
-
     if (req.body.name !== undefined) {
         const reqName = req.body.name;
         const checkName = req.body.name.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
         if (reqName === checkName) {
             next();
         } else {
-            res.status(400).json({message:'Please capitalize the user name'});
+            req.body.name = checkName;
+            next();
         }
     } else {
         next();
@@ -29,7 +29,7 @@ server.use(uppercase);
 
 
 // adding a default GET at the root to tell folks the API is live.
-server.get('/', (req,res) => res.send({API: "live", "Users": "live", "Posts": "live"}));
+server.get('/', (req,res) => res.send({"Users API": "live", "Posts API": "live", "Tags API": "not live"}));
 
 
 // ALL USER RELATED STUFF -----------------------------------------------------------------------------------------------------------
@@ -61,20 +61,18 @@ server.get('/api/users/:id', (req,res) => {
         })
 });
 
-server.post('/api/users/', uppercase, async (req, res) => {
-    if (req.body.name !== undefined) {
-        try {
-            console.log(req.body);
-            const user = await userDb.insert(req.body);
+server.post('/api/users', uppercase, (req,res) => {
+    const {name} = req.body;
+    if (!name) {
+        res.status(400).json({message: "Please provide a name for the user"});
+    } else {
+        userDb.insert(req.body).then(user => {
             userDb.get(user.id)
                 .then(user => res.status(201).json(user))
                 .catch(err => res.status(404).json({message: "The user with the specified ID does not exist."}));
-        }
-        catch (err) {
+        }).catch(err => {
             res.status(500).json({message: "There was an error while saving the user to the database", err})
-        }
-    } else {
-        res.status(400).json({message: "Please provide a name for the user."});
+        })
     }
 })
 
@@ -91,20 +89,23 @@ server.delete('/api/users/:id', (req,res) => {
     })
 })
 
-server.put('/api/users/:id', uppercase, async (req,res) => {
-    if (req.body.name !== undefined) {
+server.put('/api/users/:id', uppercase, (req,res) => {
+    const {name} = req.body;
+    if (!name) {
+        res.status(400).json({message: "Please provide a name for the user"});
+    } else {
         userDb.update(req.params.id, req.body).then(count => {
             if (count) {
-                userDb.get(req.params.id).then(user => res.status(200).json(user)).catch(err => res.status(404).json({message:"The user with the specified ID does not exist."}));
+                userDb.get(req.params.id)
+                    .then(user => res.status(200).json(user))
+                    .catch(err => res.status(404).json({message:"The user with the specified ID does not exist."}));
             }
             else {
                 res.status(404).json({message: "The user with the specified ID does not exist."});
             }
         }).catch(err => {
-            res.status(500).json({message: "The user with the specified ID could not be modified."});
+            res.status(500).json({message: "There was an error while saving the user to the database", err})
         })
-    } else {
-        res.status(400).json({message: "Please provide a name for the user."});
     }
 })
 
@@ -132,20 +133,18 @@ server.get('/api/posts/:id', (req,res) => {
         })
 });
 
-server.post('/api/posts/', async (req, res) => {
-    if (req.body.userId !== undefined && req.body.text !== undefined) {
-        try {
-            console.log(req.body);
-            const post = await postDb.insert(req.body);
+server.post('/api/posts', uppercase, (req,res) => {
+    const {userId, text} = req.body;
+    if (!userId || !text) {
+        res.status(400).json({message: "Please provide a User ID and text body for the post"});
+    } else {
+        postDb.insert(req.body).then(post => {
             postDb.get(post.id)
                 .then(post => res.status(201).json(post))
                 .catch(err => res.status(404).json({message: "The post with the specified ID does not exist."}));
-        }
-        catch (err) {
-            res.status(500).json({message: "There was an error while saving the post to the database", err})
-        }
-    } else {
-        res.status(400).json({message: "Please provide a name for the post."});
+        }).catch(err => {
+            res.status(500).json({message: "There was an error while saving the post to the database"})
+        })
     }
 })
 
@@ -162,23 +161,25 @@ server.delete('/api/posts/:id', (req,res) => {
     })
 })
 
-server.put('/api/posts/:id', async (req,res) => {
-    if (req.body.userId !== undefined && req.body.text !== undefined) {
+server.put('/api/posts/:id', (req,res) => {
+    const {userId, text} = req.body;
+    if (!userId || !text) {
+        res.status(400).json({message: "Please provide a User ID and text body for the post"});
+    } else {
         postDb.update(req.params.id, req.body).then(count => {
             if (count) {
-                postDb.get(req.params.id).then(post => res.status(200).json(post)).catch(err => res.status(404).json({message:"The post with the specified ID does not exist."}));
+                postDb.get(req.params.id)
+                    .then(post => res.status(200).json(post))
+                    .catch(err => res.status(404).json({message:"The post with the specified ID does not exist."}));
             }
             else {
                 res.status(404).json({message: "The post with the specified ID does not exist."});
             }
         }).catch(err => {
-            res.status(500).json({message: "The post with the specified ID could not be modified."});
+            res.status(500).json({message: "There was an error while saving the post to the database"})
         })
-    } else {
-        res.status(400).json({message: "Please provide a name for the post."});
     }
 })
-
 
 // Server Listening on Port 9000
 server.listen(9000, () => console.log('Server running on port 9000'));
