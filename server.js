@@ -91,6 +91,31 @@ server.put('/users/:id', upCase, (req, res) => {
     });
 });
 
-server.listen(8000, () => {
-  console.log('Running on port 8000');
+server.get('/posts', (req, res) => {
+  postDb
+    .get()
+    .then(posts => {
+      res.status(200).json(posts);
+    })
+    .catch(e => {
+      console.log(e);
+      res.status(500).json({ error: 'Error getting posts from database.' });
+    });
+});
+
+server.get('/posts/:id', (req, res) => {
+  const { id } = req.params;
+  postDb
+    .get(id)
+    .then(post => {
+      !post.length === 0 ? res.status(200).json(post) : res.status(404).json({ errorMessage: 'The ID was not found.' });
+    })
+    .catch(e => {
+      console.log(e);
+      res.status(500).json({ error: 'An error occurred while attempting to retrieve the post from the database.' });
+    });
+});
+
+server.listen(7000, () => {
+  console.log('Running on port 7000');
 });
