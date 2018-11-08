@@ -30,6 +30,22 @@ server.get('/users/:id', (req, res) => {
     });
 });
 
+server.post('/users', (req, res) => {
+  if (!req.body.name) {
+    res.status(400).json({ errorMessage: 'Please provide a name' });
+  }
+
+  userDb
+    .insert(req.body)
+    .then(obj => {
+      res.status(200).json({name: req.body.name})
+    })
+    .catch(e => {
+      console.log(e);
+      res.status(500).json({ error: 'Error inserting user into database' });
+    });
+});
+
 server.listen(8000, () => {
   console.log('Running on port 8000');
 });
