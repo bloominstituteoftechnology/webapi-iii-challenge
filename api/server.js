@@ -1,5 +1,6 @@
 const express = require('express');
-const db = require('../data/helpers/userDb.js');
+const dbUsers = require('../data/helpers/userDb.js');
+const dbPosts = require('../data/helpers/postDb.js');
 const upperCase = require('./middleware/upperCase.js');
 
 const server = express();
@@ -8,7 +9,7 @@ server.use(express.json());
 
 
 server.get('/api/users', (req, res) => {
-    db.get()
+    dbUsers.get()
         .then(users => {
             res.status(200).json(users);
         })
@@ -18,7 +19,7 @@ server.get('/api/users', (req, res) => {
 });
 
 server.get('/api/users/:id', (req, res) => {
-    db.getUserPosts(req.params.id)
+    dbUsers.getUserPosts(req.params.id)
         .then(posts => {
             res.status(200).json(posts);
         })
@@ -29,7 +30,7 @@ server.get('/api/users/:id', (req, res) => {
 });
 
 server.post('/api/users', upperCase, (req, res) => {
-    db.insert(req.body)
+    dbUsers.insert(req.body)
         .then(userId => {
             res.status(201).json({ userId });
         })
@@ -39,7 +40,7 @@ server.post('/api/users', upperCase, (req, res) => {
 });
 
 server.put('/api/users/:id', upperCase, (req, res) => {
-    db.update(req.params.id, req.body)
+    dbUsers.update(req.params.id, req.body)
         .then(count => {
             res.status(400).json({ count });
         })
@@ -49,12 +50,32 @@ server.put('/api/users/:id', upperCase, (req, res) => {
 });
 
 server.delete('/api/users/:id', (req, res) => {
-    db.remove(req.params.id)
+    dbUsers.remove(req.params.id)
         .then(count => {
             res.status(200).json({ count });
         })
         .catch(err => {
             res.status(500).json({ error: 'Error deleting user', err });
+        })
+});
+
+server.get('/api/posts', (req, res) => {
+    dbPosts.get()
+        .then(posts => {
+            res.status(200).json({ posts });
+        })
+        .catch(err => {
+            res.status(500).json({ error: 'Error retrieving posts', err });
+        })
+});
+
+server.get('/api/posts/:id', (req, res) => {
+    dbPosts.get(req.params.id)
+        .then(post => {
+            res.status(200).json({ post });
+        })
+        .catch(err => {
+            res.status(500).json({ error: 'Error retrieving posts', err });
         })
 });
 
