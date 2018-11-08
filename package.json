@@ -6,8 +6,8 @@
   "main": "index.js",
   "scripts": {
     "server": "nodemon index.js",
-    "build": "yarn --cwd ./friends build",
-    "postinstall": "yarn --cwd ./friends install && yarn --cwd ./friends build"
+    "build": "yarn --cwd ./client build",
+    "postinstall": "yarn --cwd ./client install && yarn --cwd ./client build"
   },
   "license": "ISC",
   "dependencies": {
