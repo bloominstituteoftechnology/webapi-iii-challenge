@@ -14,7 +14,8 @@ server.use(morgan("dev"));
 server.use(cors({ origin: "http://localhost:3000" }));
 
 const upperCase = (req, res, next) => {
-  req.body.uppercase = req.body.name.toUpperCase();
+  req.body.name = req.body.name.toUpperCase();
+  next();
 };
 
 //endpoints
@@ -46,7 +47,7 @@ server.get("/api/users/:id", (req, res) => {
     });
 });
 
-server.post("/api/users", (req, res) => {
+server.post("/api/users", upperCase, (req, res) => {
   console.log("body", req.body);
   userDB
     .insert(req.body)
@@ -58,7 +59,7 @@ server.post("/api/users", (req, res) => {
     });
 });
 
-server.put("/api/users/:id", (req, res) => {
+server.put("/api/users/:id", upperCase, (req, res) => {
   const { id } = req.params;
   const changes = req.body;
   console.log("put", changes, id);
