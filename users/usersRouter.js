@@ -1,5 +1,6 @@
 const express = require("express");
 const userDb = require("../data/helpers/userDb");
+const upperCase = require("../middleware/upperCase");
 
 const router = express.Router();
 
@@ -31,7 +32,7 @@ router.get("/:id", (req, res) => {
     );
 });
 
-router.post("/", (req, res) => {
+router.post("/", upperCase, (req, res) => {
   req.body.name
     ? userDb
         .insert(req.body)
@@ -46,7 +47,7 @@ router.post("/", (req, res) => {
     : res.status(400).json({ message: "Please provide a name for the user." });
 });
 
-router.put("/:id", (req, res) => {
+router.put("/:id", upperCase, (req, res) => {
   req.body.name
     ? userDb
         .update(req.params.id, req.body)
