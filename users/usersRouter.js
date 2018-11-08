@@ -12,6 +12,16 @@ router.get("/", async (req, res) => {
     }
   });
   
+  router.get("/:id/posts", async (req, res) => {
+    const { id } = req.params;
+    const userPosts = await userDB.getUserPosts(id);
+    if (userPosts) {
+      res.json(userPosts);
+    } else {
+      sendError(404, "No user with that id", res);
+    }
+  });
+
   router.get("/:id", async (req, res) => {
     const { id } = req.params;
     const user = await userDB.get(id);
@@ -21,6 +31,7 @@ router.get("/", async (req, res) => {
       sendError(404, "No user with that id", res);
     }
   });
+  
   
   router.delete("/:id", async (req, res) => {
     const { id } = req.params;
