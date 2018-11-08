@@ -1,12 +1,15 @@
 {
   "dependencies": {
-    "express": "^4.16.4"
+    "express": "^4.16.4",
+    "knex": "^0.15.2",
+    "sqlite3": "^4.0.3"
   },
   "name": "Node-Blog",
   "description": "- Building RESTful APIs.\r - Performing CRUD Operations on Multiple Resources.\r - Configuring CORS.\r - Writing Custom Middleware.\r - Using Express Routers to Modularize Application.",
   "version": "1.0.0",
   "main": "index.js",
   "devDependencies": {
+    "morgan": "^1.9.1",
     "nodemon": "^1.18.6"
   },
   "scripts": {
