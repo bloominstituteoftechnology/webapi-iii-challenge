@@ -1,14 +1,21 @@
+//dependencies
 const express = require('express');
 const router = express.Router();
 const userDb = require('../helpers/userDb');
-function capitalize(req, res, next) {
-    let name = req.body.name;
-    name = name.split(" ").map(item => {
-        return item = item.substring(0, 1).toUpperCase() + item.substring(1);
-    }).join(" ");
-    req.body.name = name;
-    next();
-}
+
+
+//the middleware function
+// function capitalize(req, res, next) {
+//     let name = req.body.name;
+//     name = name.split(" ").map(item => {
+//         return item = item.substring(0, 1).toUpperCase() + item.substring(1);
+//     }).join(" ");
+//     req.body.name = name;
+//     next();
+// }
+const capitalize = require('../../Middleware/capitalize');
+
+//router endpoints
 router.get('/', (req, res) => {
     userDb
         .get()
@@ -66,4 +73,6 @@ router.put('/:id', capitalize, (req, res) => {
         })
         .catch(err => res.status(400).json({ message: 'could not update user' }))
 })
+
+//export the router
 module.exports = router
