@@ -35,5 +35,57 @@ router.get('/', (req, res) => {
     })
 })
 
+// //POST (create) new post [/api/posts/]
+// router.post('/',  (req, res) => {
+//     const post = req.body;
+//     const { text } = post;
+//     console.log('POST', post);
+//      if (!name && !text) {
+//       res.status(400).json({ message: "Name required" })
+//     }
+//      postDb.insert(post)
+//       .then(newpost => {
+//         res.status(201).json(newpost);
+//       })
+//       .catch(error => {
+//         res.status(500).json({ message: error });
+//       })
+//   });
+
+ //UPDATE post [/api/posts/:id]
+ router.put('/:id', (req, res) => {
+    const { id } = req.params;
+    const post = req.body;
+
+    postDb.update(id,post)
+    .then (count => {
+        if (count) {
+            res.status(200).json({ message: `${count} post(s) updated`});
+        } else {
+            res.status(404).json({ message: 'post does not exist'})
+        }
+    })
+    .catch(error => {
+        res.status(500).json({ message: error})
+    })
+})
+
+
+//DELETE post [/api/posts/:id]
+router.delete('/:id', (req, res) => {
+    const { id } = req.params;
+
+    postDb.remove(id)
+    .then(count => {
+        if (count) {
+            res.status(200).json({ message: `${count} post(s) deleted`})
+        } else {
+            res.status(404).json({ message: 'post does not exist'})
+        }
+    })
+    .catch (error => {
+        res.status(500).json ({ message: error})
+    })
+})
 
   module.exports = router;
