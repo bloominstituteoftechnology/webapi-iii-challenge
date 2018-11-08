@@ -48,4 +48,24 @@ server.get("/api/users/:id", (req, res) => {
     });
 });
 
+// Get users posts
+
+server.get("/api/users/:id/posts", (req, res) => {
+  const { id } = req.params;
+  users
+    .getUserPosts(id)
+    .then(usersPost => {
+      if (!usersPost) {
+        res.status(404).json({ message: "Users post does not exist " });
+      } else {
+        res.status(200).json({ usersPost });
+      }
+    })
+    .catch(err => {
+      res
+        .status(500)
+        .json({ message: "There was an error retrieving users post " });
+    });
+});
+
 server.listen(port, () => console.log(`\nServer listening on port ${port}`));
