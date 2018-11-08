@@ -103,7 +103,7 @@ server.get('/api/users', (req, res) => {
       
     })
     .catch(err => {
-      res.status(500).json({ message: 'error deleting user', err });
+      res.status(500).json({ message: 'error updating the user', err });
     })
   });
   

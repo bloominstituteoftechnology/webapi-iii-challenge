@@ -34,17 +34,17 @@ router.get('/', (req, res) => {
       });
   });
 
-  router.get('/api/users/posts/:userId', (req, res) => {
-    const { postId } = req.params;
-    post.getUserPosts(postId)
-      .then(usersPosts => {
-        if (usersPosts === 0) {
-          return errorHelper(404, 'No posts by that user', res);
+  router.get('/tags/:id', (req, res) => {
+    const { id } = req.params;
+    post.getPostTags(id)
+      .then(postTags => {
+        if (postTags === 0) {
+          return errorHelper(404, 'Post not found', res);
         }
-        res.json(usersPosts);
+        res.status(200).json(postTags);
       })
       .catch(err => {
-        res.status(500).json({ message: "could not find the user's post", err });
+        res.status(500).json({ message: 'error getting the tag', err });
       });
   });
   
@@ -72,14 +72,14 @@ router.get('/', (req, res) => {
     post.update(id, changes)
     .then(count => {
       if (count) {
-        res.status(200).json({ message: `${count} users updated` });
+        res.status(200).json({ message: `${count} posts updated` });
       } else {
-        res.status(404).json({ message: 'User not found' })
+        res.status(404).json({ message: 'Post not found' })
       }
       
     })
     .catch(err => {
-      res.status(500).json({ message: 'error deleting user', err });
+      res.status(500).json({ message: 'error updating post', err });
     })
   });
   
@@ -89,7 +89,7 @@ router.get('/', (req, res) => {
         res.status(200).json(count);
       })
       .catch(err => {
-        res.status(500).json({ message: 'error deleting user', err });
+        res.status(500).json({ message: 'error deleting post', err });
       });
   });
 
