@@ -12,7 +12,7 @@ router.get('/', (req, res) => {
     .catch(error =>
       res
         .status(500)
-        .json({ message: 'There has been an error getting the users.' })
+        .json({ message: 'There has been an error getting the users.', error })
     );
 });
 // Gets specific user
@@ -31,7 +31,7 @@ router.get('/:id', (req, res) => {
     .catch(error =>
       res
         .status(500)
-        .json({ message: 'Error has occurred while fetching user' })
+        .json({ message: 'Error has occurred while fetching user', error })
     );
 });
 // Adds a new user
@@ -46,7 +46,7 @@ router.post('/', (req, res) => {
     .catch(error =>
       res
         .status(500)
-        .json({ message: 'There was a problem added the new user.' })
+        .json({ message: 'There was a problem added the new user.', error })
     );
 });
 // Deletes a user
@@ -61,12 +61,15 @@ router.delete('/:id', (req, res) => {
           .json({ message: `User with the id of ${id} was deleted.` });
       } else {
         res.status(404).json({
-          message: 'The user you wish to delete can not be found.'
+          message: 'The user you wish to delete can not be found.',
+          error
         });
       }
     })
     .catch(error =>
-      res.status(500).json({ message: 'There was an error deleting the user.' })
+      res
+        .status(500)
+        .json({ message: 'There was an error deleting the user.', error })
     );
 });
 // Updates a user
@@ -86,7 +89,7 @@ router.put('/:id', uppercase, (req, res) => {
       }
     })
     .catch(error => {
-      res.status(500).json({ message: 'Error updating the user.' });
+      res.status(500).json({ message: 'Error updating the user.', error });
     });
 });
 
