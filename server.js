@@ -24,6 +24,16 @@ server.get('/api/users', (req, res) => {
       console.log(err, res.status(500).json({ error: 'Error getting users from database' }));
     });
 });
+server.get('/api/users/:id', (req, res) => {
+  dbUsers
+    .getUserPosts(req.params.id)
+    .then(posts => {
+      res.status(200).json(posts);
+    })
+    .catch(err => {
+      res.status(500).json({ error: 'Error loading posts.', err });
+    });
+});
 
 server.get('/api/users/:id', (req, res) => {
   userDb
@@ -105,11 +115,15 @@ server.get('/api/posts', (req, res) => {
     });
 });
 
-server.get('/api/posts/:id', (req, res) => {
+server.get('/api/post/:id', (req, res) => {
   postDb
     .get(req.params.id)
     .then(post => {
-      !post.length === 0 ? res.status(200).json(post) : res.status(404).json({ errorMessage: 'The ID was not found.' });
+      if (!post) {
+        res.status(404).json({ errorMessage: 'ID not found' });
+      } else {
+        res.status(200).json(post);
+      }
     })
     .catch(e => {
       console.log(e);
@@ -117,19 +131,14 @@ server.get('/api/posts/:id', (req, res) => {
     });
 });
 
-server.post('/api/posts', (req, res) => {
-  if (!req.body.text) {
-    res.status(404).json({ errorMessage: 'Please provide text.' });
-  }
-
+server.get('/api/posts/tags/:id', (req, res) => {
   postDb
-    .insert(req.body)
-    .then(obj => {
-      res.status(201).json(req.body, ...obj);
+    .getPostTags(req.params.id)
+    .then(tags => {
+      res.status(200).json({ tags });
     })
-    .catch(e => {
-      console.log(e);
-      res.status(500).json({ error: 'There was an error adding the post to the database.' });
+    .catch(err => {
+      res.status(500).json({ error: 'Error getting post tags', err });
     });
 });
 
@@ -146,26 +155,30 @@ server.delete('/api/posts/:id', (req, res) => {
 });
 
 server.put('/api/posts/:id', (req, res) => {
-  if (!req.body.text) {
-    res.status(404).json({ message: 'Please provide text for a post.' });
-  }
   postDb
-    .get(req.params.id)
-    .then(post => {
-      !post
-        ? res.status(404).json({ errorMessage: 'ID not found' })
-        : userDb.update(req.params.id, req.body).then(count => {
-            if (count === 1) {
-              res.status(200).json(req.body);
-            }
-          });
+    .update(req.params.id, req.body)
+    .then(count => {
+      res.status(400).json({ count });
     })
-    .catch(e => {
-      console.log(e);
-      res.status(500).json({ error: 'There was an error updating the post.' });
+    .catch(err => {
+      res.status(500).json({ error: 'Error updating post', err });
     });
 });
 
-server.listen(7000, () => {
-  console.log('Running on port 7000');
+server.post('/api/posts', async (req, res) => {
+  const postData = req.body;
+  if (!postData.text || !postData.userId) {
+    res.status(404).json({ message: 'That post does not exist' });
+  } else {
+    try {
+      const newPostId = await postDb.insert(postData);
+      const newPost = await postDb.get(newPostId.id);
+      res.status(201).json(newPost);
+    } catch (error) {
+      res.status(500).json({ error: 'There was an error creating a new post.' });
+    }
+  }
+});
+server.listen(9000, () => {
+  console.log('Running on port 9000');
 });
