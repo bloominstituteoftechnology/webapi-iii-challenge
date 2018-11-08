@@ -17,14 +17,18 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
     try {
-        const { id } = req.params;
-        const post = await dbPost.get(id);
-        res.status(200).json(post);
-        // refactor this to check validity of id
-        // if (post.text === '') {
-        // } else {
-        //     res.status(404).json({ message: `Post ${id} has not been created yet.`});
-        // }
+        const id = parseInt(req.params.id, 10);
+        const posts = await dbPost.get();
+        const foundPost = posts.find(post => {
+            return post.id === id;
+        });
+        if (foundPost) {
+            const post = await dbPost.get(id);
+            res.status(200).json(post);
+        } else {
+            res.status(404).json({ message: 'That post does not exist.'});
+        }
+        
     } catch(err) {
         res.status(404).json({ message: err });
     }
