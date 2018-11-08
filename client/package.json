@@ -5,6 +5,8 @@
   "dependencies": {
     "react": "^16.6.1",
     "react-dom": "^16.6.1",
+    "react-router": "^4.3.1",
+    "react-router-dom": "^4.3.1",
     "react-scripts": "2.1.1"
   },
   "scripts": {
@@ -21,5 +23,11 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
+  "main": "index.js",
+  "devDependencies": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const userDb = require("../data/helpers/userDb.js");
 const postDb = require("../data/helpers/postDb.js");
 
@@ -6,8 +7,8 @@ const gateKeeper = require("../middleware/gateKeeperMiddleWare.js");
 const uppercase = require("../middleware/uppercaseMiddleWare.js");
 
 const server = express();
-
 server.use(express.json());
+server.use(cors());
 
 // all users
 server.get("/api/users", (req, res) => {
@@ -153,6 +154,7 @@ server.get("/api/posts", (req, res) => {
       .get(id)
       .then(post => {
         if (post.length !== 0) {
+          console.log(post);
           res.status(200).json(post);
         } else {
           res
