@@ -142,5 +142,12 @@ server.get('/api/posts', (req, res) => {
       })
   })
 
+  server.get('/api/posts/user/:id', (req, res) => {
+      const { id } = req.params;
+      users.getUserPosts(id).then(response => {
+          res.status(200).json(response)
+      })
+  })
+
 
 server.listen(port, () => console.log(`Server listen to port ${port}`))
