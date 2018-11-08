@@ -27,5 +27,6 @@ server.get('/', (req, res) => {
     res.send('Blog');
 })
 
-const port = process.env.PORT || 9000
-server.listen(port, () => console.log(`Party in port ${port}`))
+server.listen(process.env.PORT || 3000, function(){
+    console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
+  });
