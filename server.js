@@ -56,7 +56,18 @@ server.put('/api/users/:id', (req, res) => {
     .catch(err => {
         res.status(500).json({ message: 'error updating the user'})
     })
-}) 
+})
+
+server.delete('/api/users/:id', (req, res) => {
+    const { id } = req.params;
+    users.remove(id)
+        .then(user => {
+            res.status(200).json(user)
+        })
+        .catch(err => {
+            res.status(500).json({ message: 'error no user found'})
+        })
+})
 
 
 server.listen(port, () => console.log(`Server listen to port ${port}`))
