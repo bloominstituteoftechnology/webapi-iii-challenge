@@ -116,6 +116,22 @@ server.post('/api/posts', async (req, res) => {
         res.status(500).json({ error: "There was an error while saving the post to the database" });
     }
 });
+
+server.put('/api/posts/edit/:id', (req, res) => {
+    const { id } = req.params;
+    const edited = req.body;
+    postDb.update(id, edited)
+        .then(count => {
+            if (count) {
+                res.status(200).json({ message: `${count} posts updated`,ID : id });
+            } else {
+                res.status(404).json({ message: 'post is non-existant' });
+            }
+        })
+        .catch(err => {
+            res.status(500).json({ error: "The post information could not be modified.",error : error });
+        });
+});
 // server.get('/secret', gatekeeper, (req, res) => {
 //     res.send(req.welcomeMessage);
 //   });   how he did it
