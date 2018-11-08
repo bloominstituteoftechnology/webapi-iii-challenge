@@ -79,4 +79,14 @@ server.get('/api/posts/:id', (req, res) => {
         })
 });
 
+server.get('/api/posts/tags/:id', (req, res) => {
+    dbPosts.getPostTags(req.params.id)
+        .then(tags => {
+            res.status(200).json({ tags });
+        })
+        .catch(err => {
+            res. status(500).json({ error: 'Error getting post tags', err });
+        })
+});
+
 module.exports = server;
