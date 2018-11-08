@@ -128,7 +128,7 @@ server.put("/api/users/:id", uppercaseMiddleware, (req, res) => {
     .then(count => {
       if (count) {
         res.status(200).json({ message: `${count} user updated` });
-      } else if (changes.name === "") {
+      } else if (changes.name.length <= 0) {
         res
           .status(400)
           .json({ message: "Please provide a name for the user." });
