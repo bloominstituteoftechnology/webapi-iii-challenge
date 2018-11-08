@@ -145,4 +145,17 @@ server.put("/api/users/:id", uppercaseMiddleware, (req, res) => {
     });
 });
 
+// Posts
+
+server.get("/api/posts", (req, res) => {
+  const { id } = req.params;
+  posts
+    .get()
+    .then(post => {
+      res.status(200).json(post);
+    })
+    .catch(err => ({
+      message: "Could not retrieve any post at this time"
+    }));
+});
 server.listen(port, () => console.log(`\nServer listening on port ${port}`));
