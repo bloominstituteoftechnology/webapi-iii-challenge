@@ -17,4 +17,7 @@ server.use('/users', userRoute);
 server.use('/posts', postRoute)
 server.use('/tags', tagRoute),
 
+server.get('', (req, res) => {
+  res.json({ message: 'Hey there!'})
+})
 module.exports = server;
