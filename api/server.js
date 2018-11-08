@@ -44,6 +44,25 @@ server.get("/api/users/:id",(req,res)=>{
         })
 })
 
+// user .posts
+server.post('/api/users', async (req, res) => {
+    console.log('body', req.body);
+    try {
+        const userData = req.body;
+        const userId = await userDb.insert(userData);
+        const user = await userDb.get(userId.id);
+        res.status(201).json(user);
+    } catch (error) {
+        let message = 'error creating the user';
+
+        if (error.errno === 19) {
+            message = 'please provide the name of the user';
+        }
+
+        res.status(500).json({ error: "There was an error while saving the user to the database" });
+    }
+});
+
 //posts .gets
 server.get('/api/posts',(req,res)=>{
     postDb.get()
