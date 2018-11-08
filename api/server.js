@@ -37,11 +37,13 @@ server.get('/api/users/:id', (req, res) => {
     const { id } = req.params; //pull the id off the request 
     db.get(id) //call findbyid method, passing in id from above
       .then(user => { //then check for ...
-        console.log(user.length)
-        if (user) { // status 200 - we found it!
-          res.status(200).json(user);
-        } else { // or oops - if we could retrieve it, we would but it's not here, status 404
-          res.status(404).json({ message: "The post with the specified ID does not exist." });
+        console.log(user)
+        if (!user) { // status 200 - we found it!
+        res.status(404).json({ message: "The post with the specified ID does not exist." });
+        return  
+        } else if (user){ // or oops - if we could retrieve it, we would but it's not here, status 404
+        res.status(200).json(user);
+        return  
         }
       })
       .catch(err => {
@@ -100,25 +102,25 @@ server.put('/api/users/:id', async (req, res) => {
       res.status(201).json({message: "user was updated" });
       return
       });
- 
-
-/*
-
-
-  
-//----- PUT -----
-server.put('/api/posts/:id', async (req, res) => {
-  const { id } = req.params;
-  
-});
-
 //----- DELETE -----
+server.delete('/api/users/:id', (req, res) => {
+    const { id } = req.params;
+    db.get(id)
+        .then(user => { //then check for ...
+          if (user && user.length) { // status 200 - we found it!
+            db.remove(id) 
+            res.status(200).json({ message: "The post with the specified ID was deleted." });
+          } else { // or oops - if we could retrieve it, we would but it's not here, status 404
+            res.status(404).json({ message: "The post with the specified ID does not exist." });
+          }
+        })
+        .catch(err => {
+          res //if data can't be retrieved ... 
+            .status(500)
+            .json({ error: "The post information could not be retrieved." });
+        });
+      });
 
-server.delete('/api/posts/:id', (req, res) => {
-  const { id } = req.params;
-  
-  
-  */
 
 
 module.exports = server;
