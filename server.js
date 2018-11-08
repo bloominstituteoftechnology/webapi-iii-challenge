@@ -10,7 +10,8 @@ server.use(express.json());
 // Middleware
 
 const uppercaseMiddleware = (req, res, next) => {
-  req.body.name = req.body.name.toUpperCase();
+  req.body.name =
+    req.body.name.charAt(0).toUpperCase() + req.body.name.slice(1);
   next();
 };
 
@@ -66,6 +67,26 @@ server.get("/api/users/:id/posts", (req, res) => {
         .status(500)
         .json({ message: "There was an error retrieving users post " });
     });
+});
+
+server.post("/api/users", uppercaseMiddleware, (req, res) => {
+  const user = users.insert(req.body);
+  users
+    .get(user.id)
+    .then(user => {
+      if (req.body.name === undefined) {
+        res
+          .status(400)
+          .json({ message: "Please provide a name for the user." });
+      } else {
+        res.status(201).json(user);
+      }
+    })
+    .catch(err =>
+      res.status(500).json({
+        message: "There was an error while saving the user to the database"
+      })
+    );
 });
 
 server.listen(port, () => console.log(`\nServer listening on port ${port}`));
