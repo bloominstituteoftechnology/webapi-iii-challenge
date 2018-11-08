@@ -2,6 +2,7 @@
 // ==============================================
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 
 // FILE IMPORTS, CONSTANTS
 // ==============================================
@@ -24,7 +25,7 @@ server.use('/api/posts', postRouter);
 // HEROKU SETUP
 // ==============================================
 server.use(express.static(path.resolve(__dirname, './client/', 'build')));
-server.get('/*', (_, res) => {
+server.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, './client/', 'build/index.html'), err => {
     if (err) {
       res.status(500).send(err);
