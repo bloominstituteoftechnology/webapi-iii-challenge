@@ -1,12 +1,13 @@
 const express = require("express");
 const server = express();
 const uppercase = require("./middleware/uppercase.js");
-server.use(express.json());
 
 const postDB = require("./data/helpers/postDb.js");
 const userDB = require("./data/helpers/userDb.js");
 const tagDB = require("./data/helpers/tagDb.js");
 
+const cors = require("cors");
+server.use(cors());
 server.use(express.json());
 
 // R O O T
