@@ -17,7 +17,6 @@ function uppercase(req,res,next){
 
 server.get('/posts')
 
-
 server.get('/users',(req,res)=>{
     userHelper.get()
         .then(response => res.status(200).json(response))
