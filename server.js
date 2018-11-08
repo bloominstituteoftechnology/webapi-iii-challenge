@@ -2,6 +2,7 @@ const express = require('express');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const user = require('./data/helpers/userDb');
+const postRouter = require('./routers/postRouter.js');
 const port = 8000;
 
 const server = express();
@@ -9,6 +10,7 @@ const server = express();
 server.use(express.json());
 server.use(helmet());
 server.use(morgan('short'));
+
 
 function nameToUpperCase(req, res, next) {
     const { body } = req;
@@ -22,6 +24,8 @@ function nameToUpperCase(req, res, next) {
 server.get('/', (req, res) => {
     res.status(200).json({ api: 'running' });
 });
+
+server.use('/api/posts', postRouter);
 
 server.get('/api/users', (req, res) => {
     const { id } = req.params;
@@ -79,7 +83,7 @@ server.get('/api/users', (req, res) => {
       let message = 'error creating the user';
   
       if (error.errno === 19) {
-        message = 'please provide both the name and the bio';
+        message = 'please provide both the name';
       }
   
       res.status(500).json({ message, error });
