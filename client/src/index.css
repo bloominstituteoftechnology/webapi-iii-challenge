@@ -22,7 +22,8 @@ margin: 15px auto 15px auto;
   background: white;
   border: 1px solid black;
   width: 50%;
-  margin: 0 auto 25px auto;
+  margin: 25px auto 25px auto;
+  cursor: pointer;
 }
 
 .postsContainer {

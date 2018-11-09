@@ -1,6 +1,7 @@
 import React from 'react'
 import User from './User'
 
+
 const BlogListView = props => {
     return (
         <div className="userCont">

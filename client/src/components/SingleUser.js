@@ -1,4 +1,5 @@
 import React from 'react'
+import Post from './Post'
 
 class SingleUser extends React.Component {
     constructor(props){
@@ -17,8 +18,11 @@ componentDidMount() {
 
 render() {
     return (
-        <div>
-            
+        <div className="individualUser">
+        <h1>{this.state.user.name}'s Section</h1>
+        {this.props.posts.map(post => {
+           return this.state.user.id === post.userId ? <Post key={post.id} post={post}/> : null
+        })}
         </div>
         )
     }
