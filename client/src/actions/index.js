@@ -13,7 +13,7 @@ export const fetchUsers = () => dispatch => {
 };
 
 export const fetchUsersPost = id => dispatch => {
-  axios.get(`http://localhost:8000/api/posts/${id}`).then(response => {
+  axios.get(`http://localhost:8000/api/users/${id}/posts`).then(response => {
     console.log(response);
     dispatch({ type: FETCH_POSTS_SUCCESS, payload: response.data });
   });

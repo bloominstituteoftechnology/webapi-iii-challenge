@@ -12,11 +12,12 @@ class SingleUserView extends Component {
   }
   render() {
     const { posts } = this.props;
+    // console.log(posts);
     return (
       <div>
-        {/* {posts.map((post, index) => {
+        {posts.map((post, index) => {
           return <h1 key={index}>{post.text}</h1>;
-        })} */}
+        })}
       </div>
     );
   }

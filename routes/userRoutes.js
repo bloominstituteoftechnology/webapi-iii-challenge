@@ -34,6 +34,20 @@ router.get('/:id', (req, res) => {
         .json({ message: 'Error has occurred while fetching user', error })
     );
 });
+// Gets users post
+router.get('/:id/posts', (req, res) => {
+  const id = req.params.id;
+
+  userDb
+    .getUserPosts(id)
+    .then(posts => res.send(posts))
+    .catch(error => {
+      res
+        .status(500)
+        .json({ message: 'There was an error getting this users post', error });
+    });
+});
+
 // Adds a new user
 router.post('/', (req, res) => {
   const newUser = req.body;
