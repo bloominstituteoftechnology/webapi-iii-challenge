@@ -4,8 +4,9 @@ const morgan = require('morgan');
 // npm i express helmet morgan
 // yarn add express helmet morgan
 
-const gatekeeper = require('../gatekeeper/gatekeeperMiddleware.js');
-
+// const gatekeeper = require('../gatekeeper/gatekeeperMiddleware.js');
+const userDb = require('../data/helpers/userDb.js');
+const postDb = require('../data/helpers/postDb')
 const server = express();
 
 // configure middleware
@@ -24,16 +25,20 @@ server.get('/', (req, res) => {
 });
 
 //can use as many middleware as desired before the homies.
-server.get('/secret', gatekeeper, (req, res) => { 
+// server.get('/secret', gatekeeper, (req, res) => { 
+//   res.send(req.welcomeMessage);
+// });
+
+server.get( (req, res) => { 
   res.send(req.welcomeMessage);
 });
 
 
 // USERS: GET ALL
 server.get('/api/users', (req, res) => {
-  db.find()
+  userDb.get()
     .then(users => {
-      res.status(200).json(users);
+      return res.status(200).json(users);
     })
     .catch(err => {
       res
@@ -45,14 +50,11 @@ server.get('/api/users', (req, res) => {
 // USERS: GET BY ID
 server.get('/api/users/:id', (req, res) => {
   const { id } = req.params;
-
-  db.findById(id)
+  userDb.get(id)
     .then(user => {
-      if (user) {
-        res.status(200).json(user);
-      } else {
-        res.status(404).json({ message: 'user not found' });
-      }
+      return user 
+      ? res.status(200).json(user)
+      : res.status(404).json({ message: 'user not found' });
     })
     .catch(err => {
       res
@@ -61,13 +63,16 @@ server.get('/api/users/:id', (req, res) => {
     });
 });
 
-// USERS: POST
+
+// USERS: GET USER POSTS -- getUserPosts 
+
+// USERS: POST -- insert
 server.post('/api/users', async (req, res) => {
   console.log('body', req.body);
   try {
     const userData = req.body;
-    const userId = await db.insert(userData);
-    const user = await db.findById(userId.id);
+    const userId = await userDb.insert(userData);
+    const user = await userDb.get(userId.id);
     res.status(201).json(user);
   } catch (error) {
     let message = 'error creating the user';
@@ -80,12 +85,12 @@ server.post('/api/users', async (req, res) => {
   }
 });
 
-// USERS: PUT
+// USERS: PUT -- update
 server.put('/api/users/:id', (req, res) => {
   const { id } = req.params;
   const changes = req.body;
 
-  db.update(id, changes)
+  userDb.update(id, changes)
     .then(count => {
       count 
       ? res.status(200).json({ message: `${count} user(s) updated`})
@@ -97,9 +102,9 @@ server.put('/api/users/:id', (req, res) => {
   })
 })
 
-// USER: DELETE
+// USER: DELETE -- remove
 server.delete('/api/users/:id', (req, res) => {
-  db.remove(req.params.id)
+  userDb.remove(req.params.id)
   .then(count => {
     res.status(200).json(count);
   })
@@ -169,31 +174,31 @@ server.post('/api/users', (req, res) => {
 
 // POSTS: GET ALL
 server.get('/api/posts', (req, res) => {
-  db.find()
+  postDb.get()
     .then(posts => {
       return res.status(200).json(posts)
     })
     .catch(err => {
       res.status(500).json({
-        message: "The posts information count not be retrieved.",
+        message: "The posts information can not be retrieved.",
         error: err })
     })
 })
 
-// POST GET BY ID
+// POSTS: GET BY ID
 server.get('/api/posts/:id', (req, res) => {
   const { id } = req.params;
   console.log('id:', id);
-  db.findById()
-    .then(posts => {
-      return !(post.length)
-      
-      ? res.status(404).json({ message: "The post with the specified ID does not exist."})
-      : res.status(200).json(posts)
+  postDb.get(id)
+    .then(post => {
+      console.log(post); // text: blah, postedBy: blah, tags: blah
+      return post
+      ? res.status(200).json(post)
+      : res.status(404).json({ message: "The post with the specified ID does not exist."});
     })
     .catch(err => {
       res.status(500).json({
-        message: "The posts information count not be retrieved.",
+        message: "The posts information can not be retrieved.",
         error: err })
     })
 })
@@ -247,14 +252,15 @@ server.get('/api/users/:id', (req, res) => {
         .status(500)
         .json({ message: "we failed you, can't get the user", error: err });
     });
-});
+});*/
 
-server.post('/api/users', async (req, res) => {
+server.post('/api/posts', async (req, res) => {
   console.log('body', req.body);
   try {
     const userData = req.body;
-    const userId = await db.insert(userData);
-    const user = await db.findById(userId.id);
+    const userId = await postDb.insert(userData);
+    const user = await postDb.get(userId.id);
+    // const user = await postDb.get(userId.id);
     res.status(201).json(user);
   } catch (error) {
     let message = 'error creating the user';
@@ -270,50 +276,50 @@ server.post('/api/users', async (req, res) => {
 // error !== exception
 // throw new Error('reason')
 
-/*
-server.post('/api/users', (req, res) => {
-  const userData = req.body;
-  db.insert(req.body)
-    .then(userId => {
-      res.status(201).json(userId);
-      db.getById(userId.id).then(user => {
 
-      })
-      .catch(err => {
-        // error getting one user by id
-      })
+// server.post('/api/users', (req, res) => {
+//   const userData = req.body;
+//   db.insert(req.body)
+//     .then(userId => {
+//       res.status(201).json(userId);
+//       db.getById(userId.id).then(user => {
+
+//       })
+//       .catch(err => {
+//         // error getting one user by id
+//       })
+//     })
+//     .catch(error => {
+//       res.status(500).json({ message: 'error creating user', error });
+//     });
+// });
+
+
+server.put('/api/users/:id', (req, res) => {
+  const { id } = req.params;
+  const changes = req.body;
+  postDb.update(id, changes)
+    .then(count => {
+      if (count) {
+        res.status(200).json({ message: `${count} users updated` });
+      } else {
+        res.status(404).json({ message: 'user not found' });
+      }
     })
-    .catch(error => {
-      res.status(500).json({ message: 'error creating user', error });
+    .catch(err => {
+      res.status(500).json({ message: 'error updating the user' });
     });
 });
-*/
 
-// server.put('/api/users/:id', (req, res) => {
-//   const { id } = req.params;
-//   const changes = req.body;
-//   db.update(id, changes)
-//     .then(count => {
-//       if (count) {
-//         res.status(200).json({ message: `${count} users updated` });
-//       } else {
-//         res.status(404).json({ message: 'user not found' });
-//       }
-//     })
-//     .catch(err => {
-//       res.status(500).json({ message: 'error updating the user' });
-//     });
-// });
-
-// server.delete('/api/users/:id', (req, res) => {
-//   db.remove(req.params.id)
-//     .then(count => {
-//       res.status(200).json(count);
-//     })
-//     .catch(err => {
-//       res.status(500).json({ message: 'error deleting user' });
-//     });
-// });
+server.delete('/api/users/:id', (req, res) => {
+  postDb.remove(req.params.id)
+    .then(count => {
+      res.status(200).json(count);
+    })
+    .catch(err => {
+      res.status(500).json({ message: 'error deleting user' });
+    });
+});
 
 // server.get('/users', (req, res) => {
 //   console.dir(req, { depth: 1 });
