@@ -1,0 +1,151 @@
+.App {
+  text-align: center;
+  font-family: 'Source Sans Pro', sans-serif;
+  background-color: whitesmoke;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+.user {
+  border: 1px solid black;
+  padding: 10px;
+  width: 300px;
+  margin: 20px;
+}
+
+.name {
+  font-size: 1.8rem;
+}
+
+ul {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 0;
+}
+
+.user-list {
+  margin: auto;
+  padding: 40px 0 10px;
+  font-weight: 400;
+  font-size: 2rem;
+}
+
+.user-list-title {
+  font-weight: 400;
+  margin: auto;
+  width: 110px;
+}
+
+.add-user {
+  margin: auto;
+  padding: 40px 0;
+}
+
+.add-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 2.4rem;
+  font-weight: 400;
+  margin-top: 20px;
+}
+
+.input-add {
+  font-size: 1.8rem;
+  padding: 10px;
+  margin: 10px 0;
+  width: 300px;
+}
+
+.submit-add {
+  font-size: 1.8rem;
+  padding: 10px;
+  width: 200px;
+  border: 1px solid black;
+  border-radius: 4px;
+  margin-top: 10px;
+  background-color: white;
+}
+
+.submit-add:hover {
+  background-color: #d8d8eb;
+}
+
+.user-btns {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.user-btn {
+  font-size: 1.4rem;
+  border: 1px solid black;
+  border-radius: 4px;
+  padding: 10px;
+  text-align: center;
+  width: 50px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  background-color: white;
+}
+
+.user-btn:hover {
+  background-color: #d8d8eb;
+}
+
+.editing-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 5px auto 20px;
+}
+
+.edit-input {
+  font-size: 1.4rem;
+  margin: 5px;
+  padding: 5px;
+  width: 220px;
+}
+
+.submit-edit {
+  font-size: 1.2rem;
+  font-weight: 400;
+  border: 1px solid black;
+  border-radius: 4px;
+  padding: 10px;
+  margin-top: 15px;
+  cursor: pointer;
+  background-color: white;
+}
+
+.submit-edit:hover {
+  background-color: #d8d8eb;
+}
+
+.hidden {
+  display: none;
+}
+
+.user-page {
+  height: 100vh;
+  margin: 0;
+  padding: 50px;
+}
+
+.user-name {
+  font-size: 3rem;
+}
+
+.user-post {
+  font-size: 2rem;
+  border: 1px solid black;
+  padding: 10px;
+  width: 500px;
+  word-wrap: wrap;
+  margin: 10px auto;
+  background-color: white;
+}
