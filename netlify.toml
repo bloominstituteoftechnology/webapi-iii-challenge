@@ -7,5 +7,4 @@
 
 [build]
   base    = "client/"
-  publish = "client/build"
   command = "yarn"
