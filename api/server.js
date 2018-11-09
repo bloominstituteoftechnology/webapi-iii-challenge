@@ -17,6 +17,12 @@ server.use(morgan('dev'));//does it matter what one we use at all?
 
 //Server Code
 
+
+/*
+--------------------------------
+I will hopefully have time before you start grading to implement router
+--------------------------------
+*/
 server.get('/', (req, res) => {
     res.status(200).json({ api: 'it is running properly ' });
 });
@@ -153,7 +159,7 @@ server.put('/api/users/edit/:id', (req, res) => {
     userDb.update(id, edited)
         .then(count => {
             if (count) {
-                res.status(200).json({ message: `${count} user updated`,ID : id });
+                res.status(200).json({ message: `${count} users updated`,ID : id });
             } else {
                 res.status(404).json({ message: 'user does not exist' });
             }
