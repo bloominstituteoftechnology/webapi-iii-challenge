@@ -1,17 +1,32 @@
 <template lang="pug">
     div.list-container
+        transition(name="expand")
+            UserEdit(
+                v-if="editMode" 
+                v-bind:editModeToggle="editModeToggle"
+                v-bind:user='editUser'
+                v-bind:posts='editPosts'
+            )
         button.arrow.left-button(@click="moveCarousel(-1)" :disabled="atHeadOfList")
         button.arrow.right-button(@click="moveCarousel(1)" :disabled="atEndOfList")
         div.list-wrapper(v-for='user in users' :style="{ transform: 'translateX' + '(' + offset + 'px' + ')'}")
-            User(v-bind:userName="user.name" v-bind:userId="user.id")
+            User(
+                v-bind:userName="user.name" 
+                v-bind:userId="user.id"
+                v-bind:editModeToggle="editModeToggle"
+            )
 </template>
 
 <script>
     import axios from 'axios';
     import User from './User.vue';
+    import UserEdit from './UserEdit.vue';
     export default {
         name: 'UserList',
-        components: {User},
+        components: {
+            User,
+            UserEdit
+        },
         data : () => {
             return {
                 name: 'UserList',
@@ -20,6 +35,10 @@
                 // factor: 960,
                 offset: 0,
                 amount: 3,
+                editMode: false,
+                // editMode: true,
+                editUser: {},
+                editPosts: [],
             }
         },
         created () {
@@ -42,12 +61,30 @@
                 } else if (direction === -1) {
                     this.offset += this.factor
                 }
+            },
+            editModeToggle(user, posts){
+
+                if (this.editMode) {
+                    this.editUser = {};
+                    this.editPosts = [];
+                    this.editMode = !this.editMode;
+                    return
+                }
+
+                if (user && posts) {
+                    this.editUser = user;
+                    this.editPosts = posts;
+                    this.editMode = !this.editMode;
+                }
+
+
             }
         }
     }
 </script>
 
 <style lang="sass" scoped>
+
     .list-container
         width: 85%
         margin: 0 auto

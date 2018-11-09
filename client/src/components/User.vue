@@ -4,20 +4,23 @@
             h1.user-name {{userName}}
             div.post-container(v-if='posts.length > 0')
                 Post(v-bind:text='posts[0].text' v-bind:postId='posts[0].id')
-            //- div.post-container(v-for='post in posts')
-                Post(v-bind:text='post.text' v-bind:postId='post.id')
-            button.button.edit-button(type="button" v-on:click="editMode = !editMode") EDIT
+            button.button.edit-button(
+                type="button" 
+                @click="editModeToggle({userName, userId}, posts)"
+            ) EDIT
 </template>
 
 <script>
     import axios from 'axios';
 
     import Post from './Post.vue';
+    import UserEdit from './UserEdit.vue';
 
     export default {
         name: 'User',
         components: {
-            Post
+            Post,
+            UserEdit
         },
         data: () => {
             return {
@@ -28,25 +31,24 @@
         props: {
             userName: String,
             userId: Number,
+            editModeToggle: Function,
         },
         methods: {},
         created () {
             axios.get(`http://localhost:9000/api/users/posts/${this.userId}`)
-                .then(res => {
-                    console.log(res.data, this.userId)
-                    this.posts = res.data
-                })
+                .then(res => this.posts = res.data)
                 .catch(error => console.error(error));
         }
     }
 
 </script>
 
-<style lang="sass" scoped>
+<style lang="sass">
 
     .container 
         width: 100%
         height: 100%
+        position: relative
     
     .user-container
         width: 300px
@@ -59,8 +61,8 @@
         justify-content: flex-start
         padding-bottom: 20px
         background: white
-        position: relative
         padding: 0px 15px
+        
         &:hover 
             transition: all .212s ease-in
             box-shadow: 1px 1px 8px -1px rgba(0,0,0,0.4)
