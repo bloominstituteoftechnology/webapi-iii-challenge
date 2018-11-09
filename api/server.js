@@ -3,8 +3,11 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 // npm i express helmet morgan
 // yarn add express helmet morgan
+// IN POSTS - userId: number, required, must be the id of an existing user.
 
-// const gatekeeper = require('../gatekeeper/gatekeeperMiddleware.js');
+const idMatcher = require('../gatekeeper/idMatcher');
+const gatekeeper = require('../gatekeeper/gatekeeperMiddleware.js');
+const tooLong = require('../gatekeeper/tooLong.js');
 const userDb = require('../data/helpers/userDb.js');
 const postDb = require('../data/helpers/postDb')
 const server = express();
@@ -25,14 +28,9 @@ server.get('/', (req, res) => {
 });
 
 //can use as many middleware as desired before the homies.
-// server.get('/secret', gatekeeper, (req, res) => { 
-//   res.send(req.welcomeMessage);
-// });
-
-server.get( (req, res) => { 
+server.get('/secret', gatekeeper, (req, res) => { 
   res.send(req.welcomeMessage);
 });
-
 
 // USERS: GET ALL
 server.get('/api/users', (req, res) => {
@@ -67,18 +65,21 @@ server.get('/api/users/:id', (req, res) => {
 // USERS: GET USER POSTS -- getUserPosts 
 
 // USERS: POST -- insert
-server.post('/api/users', async (req, res) => {
-  console.log('body', req.body);
+server.post('/api/users', tooLong, async (req, res) => {
   try {
-    const userData = req.body;
-    const userId = await userDb.insert(userData);
+    const userName = req.body;
+    const userId = await userDb.insert(userName);
     const user = await userDb.get(userId.id);
     res.status(201).json(user);
   } catch (error) {
     let message = 'error creating the user';
 
     if (error.errno === 19) {
-      message = 'please provide both the name and the bio';
+      message = 'please provide a new name';
+    }
+
+    if (error.errno === 1) {
+      message = 'please provide name only';
     }
 
     res.status(500).json({ message, error });
@@ -113,64 +114,9 @@ server.delete('/api/users/:id', (req, res) => {
   })
 })
 
-// error !== exception
-// throw new Error('reason')
 
-/*
-server.post('/api/users', (req, res) => {
-  const userData = req.body;
-  db.insert(req.body)
-    .then(userId => {
-      res.status(201).json(userId);
-      db.getById(userId.id).then(user => {
 
-      })
-      .catch(err => {
-        // error getting one user by id
-      })
-    })
-    .catch(error => {
-      res.status(500).json({ message: 'error creating user', error });
-    });
-});
-*/
 
-// server.put('/api/users/:id', (req, res) => {
-//   const { id } = req.params;
-//   const changes = req.body;
-//   db.update(id, changes)
-//     .then(count => {
-//       if (count) {
-//         res.status(200).json({ message: `${count} users updated` });
-//       } else {
-//         res.status(404).json({ message: 'user not found' });
-//       }
-//     })
-//     .catch(err => {
-//       res.status(500).json({ message: 'error updating the user' });
-//     });
-// });
-
-// server.delete('/api/users/:id', (req, res) => {
-//   db.remove(req.params.id)
-//     .then(count => {
-//       res.status(200).json(count);
-//     })
-//     .catch(err => {
-//       res.status(500).json({ message: 'error deleting user' });
-//     });
-// });
-
-// server.get('/users', (req, res) => {
-//   console.dir(req, { depth: 1 });
-//   const { id } = req.query;
-
-//   if (id) {
-//     db.findById(id).then(users => res.send(users));
-//   } else {
-//     db.find().then(users => res.send(users));
-//   }
-// });
 
 // POSTS: GET ALL
 server.get('/api/posts', (req, res) => {
@@ -203,64 +149,17 @@ server.get('/api/posts/:id', (req, res) => {
     })
 })
 
-/*
-// import axios from 'axios'; ES2015 Modules
-const express = require('express'); // CommonJS
-// const bodyParser = require('body-parser');
-
-const greeter = require('./greeter.js');
-const db = require('./data/db.js');
-
-const server = express();
-
-// middleware
-server.use(express.json()); // teaches express how to parse the JSON request body
-
-server.get('/', (req, res) => {
-  res.json('alive');
-});
-
-server.get('/greet', (req, res) => {
-  res.json({ hello: 'stranger' });
-});
-
-server.get('/api/users', (req, res) => {
-  db.find()
-    .then(users => {
-      res.status(200).json(users);
-    })
-    .catch(err => {
-      res
-        .status(500)
-        .json({ message: "we failed you, can't get the users", error: err });
-    });
-});
-
-server.get('/api/users/:id', (req, res) => {
-  const { id } = req.params;
-
-  db.findById(id)
-    .then(user => {
-      if (user) {
-        res.status(200).json(user);
-      } else {
-        res.status(404).json({ message: 'user not found' });
-      }
-    })
-    .catch(err => {
-      res
-        .status(500)
-        .json({ message: "we failed you, can't get the user", error: err });
-    });
-});*/
-
-server.post('/api/posts', async (req, res) => {
+//POST: POST
+server.post('/api/posts', idMatcher, async (req, res) => {
   console.log('body', req.body);
   try {
     const userData = req.body;
     const userId = await postDb.insert(userData);
     const user = await postDb.get(userId.id);
-    // const user = await postDb.get(userId.id);
+    // text: 'blah', postedBy: 'nameOfPoster', tags: []
+    console.log('userData', userData);
+    console.log('userId', userId);
+    console.log('user', user);
     res.status(201).json(user);
   } catch (error) {
     let message = 'error creating the user';
@@ -273,35 +172,14 @@ server.post('/api/posts', async (req, res) => {
   }
 });
 
-// error !== exception
-// throw new Error('reason')
-
-
-// server.post('/api/users', (req, res) => {
-//   const userData = req.body;
-//   db.insert(req.body)
-//     .then(userId => {
-//       res.status(201).json(userId);
-//       db.getById(userId.id).then(user => {
-
-//       })
-//       .catch(err => {
-//         // error getting one user by id
-//       })
-//     })
-//     .catch(error => {
-//       res.status(500).json({ message: 'error creating user', error });
-//     });
-// });
-
-
-server.put('/api/users/:id', (req, res) => {
+// POSTS: PUT
+server.put('/api/posts/:id', (req, res) => {
   const { id } = req.params;
   const changes = req.body;
   postDb.update(id, changes)
     .then(count => {
       if (count) {
-        res.status(200).json({ message: `${count} users updated` });
+        res.status(200).json({ message: `${count} posts updated` });
       } else {
         res.status(404).json({ message: 'user not found' });
       }
@@ -311,7 +189,8 @@ server.put('/api/users/:id', (req, res) => {
     });
 });
 
-server.delete('/api/users/:id', (req, res) => {
+//POST: DELETE
+server.delete('/api/posts/:id', (req, res) => {
   postDb.remove(req.params.id)
     .then(count => {
       res.status(200).json(count);
@@ -320,48 +199,6 @@ server.delete('/api/users/:id', (req, res) => {
       res.status(500).json({ message: 'error deleting user' });
     });
 });
-
-// server.get('/users', (req, res) => {
-//   console.dir(req, { depth: 1 });
-//   const { id } = req.query;
-
-//   if (id) {
-//     db.findById(id).then(users => res.send(users));
-//   } else {
-//     db.find().then(users => res.send(users));
-//   }
-// });
-
-// server.get('/greet/:person', greeter);
-
-// google.com/search ? q = timer & tbs=qdr & tbo=1
-// server.listen(9000, () => console.log('\n== the server is alive! ==\n'));
-
-// http://localhost:9000/greet/carlos > { hello: 'carlos' }
-// http://localhost:9000/greet/kevin > { hello: 'kevin' }
-// http://localhost:9000/greet/chance > { hello: 'chance' }
-
-// listen EADDRINUSE :::9000 < it means another server is running on that port
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 module.exports = server;

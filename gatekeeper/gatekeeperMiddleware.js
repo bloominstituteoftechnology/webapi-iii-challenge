@@ -1,6 +1,6 @@
 module.exports = (req, res, next) => {
   // next points to the next middleware/route handler in the queue
-  if (req.query.pass === "Lambda's-best-weapon") {  
+  if (req.query.pass === "Lambdas-best-weapon" || req.query.pass === "Lambda's-best-weapon") {  
     //http://localhost:9000/secret/?pass=Lambda's-best-weapon
     console.log('welcome travelers');
 
