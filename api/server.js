@@ -164,6 +164,27 @@ server.get('/api/posts/:id', (req, res) => {
           .json({ error: "The post information could not be retrieved." });
       });
   });
+
+server.get('/api/singlepost/:id', (req, res) => {
+    const { id } = req.params; 
+    postDb.get(id)
+      .then(post => { 
+        console.log(post)
+        if (!post) { 
+        res.status(404).json({ message: "The user with the specified ID does not exist." });
+        return  
+        } else if (post){ 
+        res.status(200).json(post);
+        return  
+        }
+      })
+      .catch(err => {
+        res 
+          .status(500)
+          .json({ error: "The post information could not be retrieved." });
+      });
+  });
+
 //----- POST posts -----
 
 server.post('/api/posts', async (req, res) => {
@@ -185,8 +206,10 @@ server.post('/api/posts', async (req, res) => {
     res.status(201).json({message: "post was added blog" });
     return
 });
+
 //----- PUT posts -----
-server.put('/api/users/:id', makeUppercase, async (req, res) => {
+
+server.put('/api/singlepost/:id', async (req, res) => {
     const { id } = req.params;
     const userChanges = req.body;
     userDb.get(id)
@@ -216,7 +239,9 @@ server.put('/api/users/:id', makeUppercase, async (req, res) => {
       res.status(201).json({message: "user was updated" });
       return
       });
+
 //----- DELETE posts -----
+
 server.delete('/api/users/:id', (req, res) => {
     const id = req.params.id;
    // userDb.get(id)
