@@ -6,7 +6,7 @@ module.exports = {
 
     if (id) {
       query
-        .join('users as u', 'p.userId', 'u.id')
+        .leftOuterJoin('users as u', 'p.userId', 'u.id')
         .select('p.text', 'u.name as postedBy')
         .where('p.id', id);
 
