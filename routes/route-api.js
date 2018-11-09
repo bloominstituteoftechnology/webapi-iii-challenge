@@ -41,17 +41,17 @@ function validateSchema(validator){
 
 //-- Get all Posts -------------------------------
 async function getAll(request, response, next) {
-    // Retrieve all posts from database, then send to user
+    // Retrieve all items from database, then send to user
     try{
-        let posts = await this.get();
+        let items = await this.get();
         response.status(200);
-        response.json(posts);
+        response.json(items);
     }
     // Inform user of failure (database error)
     catch(error){
         response.status(500);
         response.json({
-            error: "The posts information could not be retrieved.",
+            error: "The item array could not be retrieved.",
         });
     }
     // Pass to next middleware
@@ -62,28 +62,28 @@ async function getAll(request, response, next) {
 
 //-- Get a Post by Id ----------------------------
 async function getById(request, response, next) {
-    // Attempt to find post-data in database
+    // Attempt to find item-data in database
     try{
-        const postId = request.params.id;
-        let postData = await this.get(postId);
+        const itemId = request.params.id;
+        let itemData = await this.get(itemId);
         // Inform the user if the requested data was not found
-        if(!postData){
+        if(!itemData){
             response.status(404);
             response.json({
-                message: "The post with the specified ID does not exist.",
+                message: "The item with the specified ID does not exist.",
             });
         }
         // Send the requested data
         else{
             response.status(200);
-            response.json(postData);
+            response.json(itemData);
         }
     }
     // Inform user of failure (database error)
     catch(error){
         response.status(500);
         response.json({
-            error: "The post information could not be retrieved.",
+            error: "The item information could not be retrieved.",
         });
     }
     // Pass to next middleware
@@ -95,10 +95,10 @@ async function getById(request, response, next) {
 //-- Create a Post -------------------------------
 async function create(request, response, next) {
     // Get data from request
-    let postData = request.entryData;
-    // Insert new post into database
+    let itemData = request.body.entryData;
+    // Insert new item into database
     try{
-        const result = await this.insert(postData);
+        const result = await this.insert(itemData);
         const newPost = await this.get(result.id);
         response.status(201);
         response.json(newPost);
@@ -107,7 +107,7 @@ async function create(request, response, next) {
     catch(error){
         response.status(500);
         response.json({
-            error: "There was an error while saving the post to the database"
+            error: "There was an error while saving the item to the database"
         });
     }
     // Pass to next middleware
@@ -118,15 +118,15 @@ async function create(request, response, next) {
 
 //-- Delete a Post -------------------------------
 async function deleteItem(request, response, next) {
-    // Attempt to remove identified post from database
+    // Attempt to remove identified item from database
     try{
-        const postId = request.params.id;
-        const success = await this.remove(postId);
-        // Handle situations where specified post does not exist
+        const itemId = request.params.id;
+        const success = await this.remove(itemId);
+        // Handle situations where specified item does not exist
         if(!success){
             response.status(404);
             response.json({
-                message: "The post with the specified ID does not exist.",
+                message: "The item with the specified ID does not exist.",
             });
         }
         // Respond successfully
@@ -139,7 +139,7 @@ async function deleteItem(request, response, next) {
     catch(error){
         response.status(500);
         response.json({
-            error: "The post could not be removed",
+            error: "The item could not be removed",
         });
     }
     // Pass to next middleware
@@ -151,21 +151,21 @@ async function deleteItem(request, response, next) {
 //-- Update a Post -------------------------------
 async function updateItem(request, response, next) {
     // Get data from request
-    let postData = request.entryData;
-    // Attempt to updated post data in database
+    let itemData = request.body.entryData;
+    // Attempt to updated item data in database
     try{
-        const postId = request.params.id;
-        const success = await this.update(postId, postData);
-    // Handle situations where specified post does not exist
+        const itemId = request.params.id;
+        const success = await this.update(itemId, itemData);
+    // Handle situations where specified item does not exist
         if(!success){
             response.status(404);
             response.json({
-                message: "The post with the specified ID does not exist.",
+                message: "The item with the specified ID does not exist.",
             });
         }
     // Inform of success
         else{
-            const updatedPostData = await this.get(postId);
+            const updatedPostData = await this.get(itemId);
             response.status(200);
             response.json(updatedPostData);
         }
@@ -174,7 +174,7 @@ async function updateItem(request, response, next) {
     catch(error){
         response.status(500);
         response.json({
-            error: "The post information could not be modified.",
+            error: "The item information could not be modified.",
         });
     }
     // Pass to next middleware
