@@ -5,7 +5,7 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "server": "nodemon index.js",
+    "start": "nodemon index.js",
     "build": "yarn --cwd ./client build",
     "postinstall": "yarn --cwd ./client install && yarn --cwd ./client build"
   },
