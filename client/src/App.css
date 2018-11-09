@@ -1,0 +1,55 @@
+.Nav {
+  background: #4268b2;
+  color: #fff;
+  height: 40px;
+}
+
+.Nav .Container {
+  display: flex;
+  align-items: center;
+  width: 1015px;
+  margin: 0 auto;
+  height: 100%;
+  /* justify-content: space-between; */
+}
+
+.Nav .Container i:not(:first-child),
+.Nav .Container div {
+  margin-left: 3rem;
+}
+
+.Nav .Container input {
+  width: 245px;
+  border: none;
+  border-radius: 5px;
+  padding: 5px;
+  margin-right: auto;
+  margin-left: 1rem;
+}
+
+.Posts {
+  width: 500px;
+  margin: 2rem auto 0;
+}
+
+.Post {
+  background: #fff;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 1.5rem;
+  border-radius: 5px;
+  border: 1px solid #e5e5e5;
+  margin-bottom: 2rem;
+}
+
+.Post .User {
+  margin-left: 1rem;
+  color: #4268b2;
+  font-weight: bold;
+}
+
+.Post .Text {
+  width: 100%;
+  margin: 1rem 0;
+}
