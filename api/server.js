@@ -1,15 +1,18 @@
 const express = require('express');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const cors = require('cors');
+
 const userDb = require('../data/helpers/userDb');
 const postDb = require('../data/helpers/postDb');
-const tagDb = require('../data/helpers/tagDb');
+// const tagDb = require('../data/helpers/tagDb');
 
 const server = express();
 
 
 
 // configure middleware
+server.use(cors());
 server.use(express.json());
 server.use(helmet());
 server.use(morgan('short'));
