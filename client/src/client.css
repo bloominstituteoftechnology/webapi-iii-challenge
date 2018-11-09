@@ -1,0 +1,35 @@
+
+
+/*== Application Styles ======================================================*/
+
+/*-- User List ---------------------------------*/
+h1 {
+    font-size: 4rem;
+    margin: 1em auto;
+    text-align: center;
+    font-weight: bold;
+}
+.user-list .list {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+}
+.user-list .list a {
+    margin: 1rem;
+    padding: 1rem;
+    border: 1px solid #ccc;
+}
+
+/*-- User Detailed View ------------------------*/
+/*
+.user-details {}
+.user-viewer {}
+*/
+.user-viewer .list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.post {
+    margin: 1rem;
+}
