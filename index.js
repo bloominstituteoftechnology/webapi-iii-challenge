@@ -8,7 +8,6 @@ const path = require('path');
 // ==============================================
 const userRouter = require('./routes/userRoutes');
 const postRouter = require('./routes/postRoutes');
-const port = process.env.PORT || 5000;
 
 const server = express();
 
@@ -25,7 +24,7 @@ server.use('/api/posts', postRouter);
 // HEROKU SETUP
 // ==============================================
 server.use(express.static(path.resolve(__dirname, './client/', 'build')));
-server.get('/*', (req, res) => {
+server.get('/*', (_, res) => {
   res.sendFile(path.join(__dirname, './client/', 'build/index.html'), err => {
     if (err) {
       res.status(500).send(err);
@@ -35,4 +34,4 @@ server.get('/*', (req, res) => {
 
 // START THE SERVER
 // ==============================================
-server.listen(port, () => console.log(`Server listening on port ${port}.`));
+server.listen(process.env.PORT || 5000);
