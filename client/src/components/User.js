@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { EventEmitter } from '../events';
+import { Link } from 'react-router-dom';
 
 class User extends Component {
 	constructor(props) {
@@ -37,7 +38,9 @@ class User extends Component {
     const { editingId, editedName } = this.state;
     return (
       <div className="user">
+      <Link to={`/user/${id}`}>
         <h3 className='name'>{name}</h3>
+      </Link>
         <div className='user-btns'>
           <div 
             className='user-btn' 

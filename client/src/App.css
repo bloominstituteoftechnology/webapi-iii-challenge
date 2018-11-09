@@ -4,6 +4,11 @@
   background-color: whitesmoke;
 }
 
+a {
+  text-decoration: none;
+  color: black;
+}
+
 .user {
   border: 1px solid black;
   padding: 10px;
@@ -68,7 +73,7 @@ ul {
 }
 
 .submit-add:hover {
-  background-color: #f6c4d2;
+  background-color: #d8d8eb;
 }
 
 .user-btns {
@@ -89,7 +94,7 @@ ul {
 }
 
 .user-btn:hover {
-  background-color: #f6c4d2;
+  background-color: #d8d8eb;
 }
 
 .editing-form {
@@ -118,9 +123,29 @@ ul {
 }
 
 .submit-edit:hover {
-  background-color: #f6c4d2;
+  background-color: #d8d8eb;
 }
 
 .hidden {
   display: none;
+}
+
+.user-page {
+  height: 100vh;
+  margin: 0;
+  padding: 50px;
+}
+
+.user-name {
+  font-size: 3rem;
+}
+
+.user-post {
+  font-size: 2rem;
+  border: 1px solid black;
+  padding: 10px;
+  width: 500px;
+  word-wrap: wrap;
+  margin: 10px auto;
+  background-color: white;
 }

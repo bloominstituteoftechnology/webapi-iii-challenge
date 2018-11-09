@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import './App.css';
 import axios from 'axios';
+import { Route } from 'react-router-dom';
 import { EventEmitter } from './events';
-import AddUser from './components/AddUser';
 import Users from './components/Users';
+import UserPage from './components/UserPage';
 
 class App extends Component {
   constructor(props) {
@@ -65,8 +66,8 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-	  	<AddUser />
-        <Users users={this.state.users} />
+	  	<Route path='/user/:id' render={ (props) => <UserPage {...props } />}/>
+		<Route exact path='/' render={ (props) => <Users {...props} users={this.state.users} /> } />
       </div>
     );
   }

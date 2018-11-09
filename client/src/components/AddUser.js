@@ -17,7 +17,6 @@ class AddUser extends Component {
     this.setState({
       name: ''
     });
-    alert(`User added!`)
   }
 
   handleInputChange = event => {

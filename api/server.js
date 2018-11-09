@@ -99,16 +99,16 @@ server.delete('/api/users/:id', (req, res) => {
         })
 })
 
-server.get('/api/users/post/:id', (req, res) => {
+server.get('/api/users/posts/:id', (req, res) => {
     const { id } = req.params;
-    userDb.getUserPosts(id)
-        .then(list => {
-            list.length > 0 ?
-            res.status(200).json(list) :
-            res.status(404).json({ error: "The user with the specified ID has no posts or does not exist." })
+    userDb.get(id)
+        .then(user => {
+            userDb.getUserPosts(id)
+            .then(list => res.status(200).json(list))
+            .catch(err => res.status(500).json({ error: "Posts for the specified user could not be retrieved.", err }))
         })
         .catch(err => {
-            res.status(500).json({ error: "Posts for the specified user could not be retrieved.", err })
+            res.status(500).json({ error: "The user information could not be retrieved.", err })
         })
 })
 
