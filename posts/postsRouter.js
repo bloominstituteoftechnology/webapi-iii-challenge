@@ -42,16 +42,18 @@ router.get('/:id', (req, res) => {
 
 // Create new post
 router.post('/', (req, res) => {
-    const { userId, text } = req.body;
+    const post = req.body;
+    const { userId, text} = post;
 
-    postDb.insert({userId, text})
-        .then(newPost => {
-            res.status(201).json(newPost);
-        })
-        .catch(error => {
-            res.status(500).json({ message: 'error to create post'})
-        })
-});
+     postDb.insert(post)
+      .then(newPost => {
+        res.status(201).json(newPost);
+      })
+      .catch(error => {
+        res.status(500).json({ message: error })
+      })
+  });
+  
 
 // Update post
 router.put('/:id', (req, res) => {
