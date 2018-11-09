@@ -8,16 +8,24 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      posts: []
+      posts: [],
+      users: []
     };
   }
 
   componentDidMount() {
-    const { posts } = this.state;
+    const { posts, users } = this.state;
     if (!posts.length) {
       axios
         .get('http://localhost:4000/api/posts')
         .then(res => this.setState({ posts: res.data }))
+        .catch(err => console.log(err));
+    }
+
+    if (!users.length) {
+      axios
+        .get('http://localhost:4000/api/users')
+        .then(res => this.setState({ users: res.data }))
         .catch(err => console.log(err));
     }
   }
@@ -30,14 +38,14 @@ class App extends Component {
   };
 
   render() {
-    const { posts } = this.state;
+    const { posts, users } = this.state;
     return (
       <div className="App">
         <Nav />
-        {!posts.length ? (
+        {!posts.length || !users.length ? (
           <div>Loading posts...</div>
         ) : (
-          <Posts posts={posts} getUserName={this.getUserName} />
+          <Posts posts={posts} users={users} getUserName={this.getUserName} />
         )}
       </div>
     );

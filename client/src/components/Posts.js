@@ -11,7 +11,7 @@ class Posts extends Component {
           <Post
             post={post}
             key={post.id}
-            getUserName={this.props.getUserName}
+            userName={this.props.users.find(user => user.id === post.userId)}
           />
         ))}
       </div>
