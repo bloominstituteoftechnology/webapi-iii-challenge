@@ -12,7 +12,7 @@ class User extends Component {
 
     componentDidMount() {
         const {id} = this.props.match.params;
-        axios.get(`http://localhost:9000/api/users/${id}`)
+        axios.get(`https://lotr-practice.herokuapp.com/api/users/${id}`)
              .then(res => {
                  this.setState({user: res.data});
              })
