@@ -32,11 +32,11 @@ const upperCase = (req, res, next) => {
 server.get("/api/users", (req, res) => {
     users
       .get()
-      .then(users => {
-        res.status(200).json(users);
+      .then(user => {
+        res.status(200).json(user);
       })
       .catch(err => {
-        res.status(500).json({ message: "the post info could not be received", err });
+        res.status(500).json({ message: "The post info could not be received", err });
       });
   });
 
@@ -51,15 +51,40 @@ server.get("/api/users", (req, res) => {
             if (users) {
                 res.status(200).json(users)
             } else {
-                res.status(404).json({ message: "the post with the specified ID does not exist" })
+                res.status(404).json({ message: "The post with the specified ID does not exist" })
             }
         })
         .catch(err => {
-            res.status(500).json({ message: "the post info could not be received", err });
+            res.status(500).json({ message: "The post info could not be received", err });
         });
   });
 
 
+  // create a new user 
+
+  server.post("/api/users", upperCase, (req, res) => [
+    users
+      .insert(req.body)
+      .then(user => {
+          res.status(201).json(user)
+      })
+      .catch(err => {
+         res.status(500).json({ message: "There was an error while saving the post to the database", err });
+      })
+  ])
+
+  // Delete a user
+
+  server.delete("/api/users/:id", (req, res) => {
+      users
+       .remove(req.params.id)
+       .then(count => {
+           res.status(200).json(count)
+       })
+       .catch(err => {
+           res.status(500).json({ message: "Error deleting the post", err })
+       })
+  })
 
 
 
