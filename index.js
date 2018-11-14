@@ -6,12 +6,12 @@ const postDB = require("./data/helpers/postDb.js");
 const userDB = require("./data/helpers/userDb.js");
 const tagDB = require("./data/helpers/tagDb.js");
 
-// r00t
+// # R00T
 server.get("/", (req, res) => {
   res.status(200).send("<h1>THIS IS THE <em>root directory</em></h1>");
 });
 
-// g3t @ll p0sts
+// # GET ALL POSTS
 server.get("/posts/all", (req, res) => {
   postDB
     .get()
@@ -22,7 +22,7 @@ server.get("/posts/all", (req, res) => {
   userDB;
 });
 
-// Get posts by userID
+// # GET POSTS BY USERID
 server.get("/posts/user/:id", (req, res) => {
   const { id } = req.params;
   userDB.getUserPosts(id).then(user => {
@@ -30,19 +30,26 @@ server.get("/posts/user/:id", (req, res) => {
   });
 });
 
-// Create Post
-server.post("/posts", async (req, res) => {
-  try {
-    const postData = req.body;
-    const postId = await postDB.insert(postData);
-    console.log("post:", postData.title);
-     res.status(201).json(postId);
-  } catch (error) {
-    res.status(500).json({ message: "error creating post" });
-  }
+// # GET POST BY ID
+server.get("/posts/:id", (req, res) => {
+  const { id } = req.params;
+  postDB.get(id).then(post => {
+    res.status(200).json(post);
+  });
 });
 
-// Get tagz by p0st ID
+// server.post("/posts", async (req, res) => {
+//   try {
+//     const postData = req.body;
+//     const postId = await postDB.insert(postData);
+//     console.log("post:", postData.title);
+//      res.status(201).json(postId);
+//   } catch (error) {
+//     res.status(500).json({ message: "error creating post" });
+//   }
+// });
+
+// # GET TAGS BY P0ST ID
 server.get("/posts/tags/:id", (req, res) => {
   const { id } = req.params;
   tagDB.getPostTags(id).then(posts => {
@@ -50,10 +57,12 @@ server.get("/posts/tags/:id", (req, res) => {
   });
 });
 
-
-
-
-
+// # DELETE POST BY ID
+server.delete("/posts/:id", (req, res) => {
+  postDB.remove(req.params.id).then(post => {
+    res.status(200).json({ message: "Post deleted successfully" });
+  });
+});
 
 
 
