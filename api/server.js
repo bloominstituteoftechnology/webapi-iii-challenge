@@ -40,6 +40,7 @@ server.post ('/post', (req, res) => {
           .catch(err => {
               res.status(500).json({error: "Can't recieve the post."})
           });
+          
 
 });
 
