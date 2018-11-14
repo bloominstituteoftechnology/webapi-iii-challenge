@@ -23,10 +23,10 @@ server.get("/posts/all", (req, res) => {
 });
 
 // Get posts by userID
-server.get("/posts/:id", (req, res) => {
+server.get("/posts/user/:id", (req, res) => {
   const { id } = req.params;
-  userDB.getUserPosts(id).then(posts => {
-    res.status(200).json(posts);
+  userDB.getUserPosts(id).then(user => {
+    res.status(200).json(user);
   });
 });
 
