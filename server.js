@@ -63,7 +63,7 @@ server.get("/users", (req, res) => {
 
   // create a new user 
 
-  server.post("/users",  (req, res) => {  
+  server.post("/users", (req, res) => {  
       const { name } = req.body;
     users
       .insert({ name })
