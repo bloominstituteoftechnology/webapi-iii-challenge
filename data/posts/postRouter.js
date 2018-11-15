@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const postDb = require('../helpers/postDb.js');
+const userDb = require('../helpers/userDb.js');
 
 //middleware
 
@@ -27,6 +28,15 @@ router.get('/:id', (req, res) => {
       res.status(500).json({ error: "The post information could not be retrieved."})
     })
 });
+
+// get post by user id
+router.get('/user/:id', (req, res) => {
+  const { id } = req.params;
+  userDb.getUserPosts(id)
+    .then(user => {
+      res.status(200).json(user);
+    })
+})
 
 //create post
 router.post('/', (req, res) => {
