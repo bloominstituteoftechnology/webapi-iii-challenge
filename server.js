@@ -4,7 +4,7 @@ const morgan = require("morgan");
 const cors = require("cors");
 const posts = require("./data/helpers/postDb");
 const users = require("./data/helpers/userDb");
-const port = 3000
+const port = 4000
 
 
 

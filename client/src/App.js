@@ -5,6 +5,7 @@ import axios from "axios";
 import { Route, NavLink, withRouter } from "react-router-dom";
 import HomePage from "./components/HomePage";
 
+
 class App extends Component {
   constructor() {
     super();
@@ -16,11 +17,11 @@ class App extends Component {
 
   componentDidMount() {
     axios
-      .get("http://localhost:3000/api/users/")
+      .get("http://localhost:3000/users/")
       .then(res => this.setState({ users: res.data }))
       .catch(err => console.log(err));
     axios
-      .get("http://localhost:3000/api/posts/")
+      .get("http://localhost:3000/posts/")
       .then(res => this.setState({ posts: res.data }))
       .catch(err => console.log(err));
   }
@@ -31,10 +32,12 @@ class App extends Component {
           <NavLink exact to="/">
             Home
           </NavLink>
+          
           </nav>
+       
       </div>
     );
   }
 }
 
-export default App;
+export default withRouter(App);
