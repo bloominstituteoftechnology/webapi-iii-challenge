@@ -94,7 +94,37 @@ server.get('/user/:id', (req, res) => {
         res.json({ message: err })
     })
 });
-
+server.post('/user', (req, res) => {
+    const { name } = req.body;
+    user.insert({ name })
+    .then(newUser => {
+        res.json(newUser)
+    })
+    .catch(err => {
+        res.json({ message: err })
+    })
+});
+server.put('/user/:id', (req, res) => {
+    const { id } = req.params;
+    const name = req.body;
+    user.update(id, name)
+    .then(count => {
+        res.json(count)
+    })
+    .catch(err => {
+        res.json({ message: err })
+    })
+});
+server.delete('/user/:id', (req, res) => {
+    const { id } = req.params;
+    user.remove(id)
+    .then(count => {
+        res.json(count)
+    })
+    .catch( err => {
+        res.json({ message: err })
+    })
+});
 
 
 module.exports = server;
