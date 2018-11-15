@@ -1,29 +1,17 @@
 //import node mods
 const express = require('express');
-const helmet = require('helmet');
-const morgan = require('morgan');
-
 const server = express();
 
-const postRouter = require('../posts/postRouter.js');
-const usersRouter = require('../users/usersRouter.js')
-
+const configureMiddleware = require('../config/middleware.js')
 
 //middleware
-server.use(express.json());
-server.use(helmet());
-server.use(morgan('dev'));
+configureMiddleware(server); //server passed as params
 
 //custom middleware here
 //global middleware
-//server.use(nameUpper);
+
 
 // configure endpoints (route handlers are middleware!!)
-
-//POSTS
-server.use('/api/posts', postRouter);
-
-//USERS
-server.use('/api/users', usersRouter);
+//currently in config/middleware, can be kept here or put in config/routes
 
 module.exports = server;

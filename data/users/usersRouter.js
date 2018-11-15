@@ -2,8 +2,11 @@ const express = require('express');
 const router = express.Router();
 const userDb = require('../helpers/userDb.js');
 
+const server = express();
+
 //middleware
 const nameUpper = require('../gatekeeper/middleware.js');
+server.use(nameUpper);
 
 // /api/users/
 
