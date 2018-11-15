@@ -6,7 +6,7 @@ const postDb = require('../helpers/postDb.js');
 //ENDPOINTS
 // /api/products/
 //all posts
-router.get('/all', (req, res) => {
+router.get('/', (req, res) => {
   postDb.get()
     .then(posts => {
       res.status(200).json(posts);
