@@ -19,17 +19,18 @@ server.use(cors({}));
 
 //custom middleware
 
-const upperCase = (req, res, next) => {
-  req.body.name = req.body.name.toUpperCase();
-  next();
-};
+// const upperCase = (req, res, next) => {
+//   req.body.name = req.body.name.toUpperCase();
+//   next();
+// };
 
 //endpoints
 
 
 
 // Get all users
-server.get("/api/users", (req, res) => {
+
+server.get("/users", (req, res) => {
     users
       .get()
       .then(user => {
@@ -43,7 +44,7 @@ server.get("/api/users", (req, res) => {
 
   // Get users by ID
 
-  server.get("/api/users/:id", (req, res) => {
+  server.get("/users/:id", (req, res) => {
       const { id } = req.params;
       users
         .get(id)
@@ -62,20 +63,21 @@ server.get("/api/users", (req, res) => {
 
   // create a new user 
 
-  server.post("/api/users", upperCase, (req, res) => [
+  server.post("/users",  (req, res) => {  
+      const { name } = req.body;
     users
-      .insert(req.body)
+      .insert({ name })
       .then(user => {
           res.status(201).json(user)
       })
       .catch(err => {
          res.status(500).json({ message: "There was an error while saving the post to the database", err });
       })
-  ])
+  })
 
   // Delete a user
 
-  server.delete("/api/users/:id", (req, res) => {
+  server.delete("/users/:id", (req, res) => {
       users
        .remove(req.params.id)
        .then(count => {
@@ -86,7 +88,88 @@ server.get("/api/users", (req, res) => {
        })
   })
 
+// Update a user
 
+server.put("/users/:id", (req, res) => {
+    const { id } = req.params
+    const changes = req.body
+    users
+     .update(id, changes)
+     .then(user => {
+         if (user) {
+             res.status(200).json({  message: `${user} posts updated` })
+         } else {
+             res.status(404).json({ message: "User not found "})
+         }
+     })
+     .catch(err => {
+        res.status(500).json({ message: "error updating the post", err });
+      });
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Get all posts
+
+  server.get("/posts", (req, res) => {
+    posts
+      .get()
+      .then(post => {
+        res.status(200).json(post);
+      })
+      .catch(err => {
+        res.status(500).json({ message: "The post info could not be received", err });
+      });
+  });
+
+
+  // Get post by ID
+
+  server.get("/posts/:id", (req, res) => {
+    const { id } = req.params;
+   posts
+      .get(id)
+      .then(posts => {
+          if (posts) {
+              res.status(200).json(posts)
+          } else {
+              res.status(404).json({ message: "The post with the specified ID does not exist" })
+          }
+      })
+      .catch(err => {
+          res.status(500).json({ message: "The post info could not be received", err });
+      });
+});
+
+ 
 
 
 
