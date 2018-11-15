@@ -5,7 +5,7 @@ const postDb = require('../helpers/postDb.js');
 //middleware
 
 //ENDPOINTS
-// /api/products/
+// /api/posts/
 //all posts
 router.get('/', (req, res) => {
   postDb.get()
@@ -61,7 +61,7 @@ router.put('/:id', (req, res) => {
 router.delete('/:id', (req, res) => {
   postDb.remove(req.params.id)
     .then(post => {
-      res.status(200).json(count)
+      res.status(200).json(post)
     }).catch (err => {
       res.status(500).json({ message: 'error deleting post' })
     });
