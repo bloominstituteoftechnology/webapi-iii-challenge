@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const postDb = require('../helpers/postDb.js');
+
 //middleware
 
 //ENDPOINTS
@@ -16,7 +17,7 @@ router.get('/', (req, res) => {
     })
 });
 
-//post by id
+// get post by id
 router.get('/:id', (req, res) => {
   const { id } = req.params;
   postDb.get(id)
@@ -29,12 +30,13 @@ router.get('/:id', (req, res) => {
 
 //create post
 router.post('/', (req, res) => {
+  console.log('body:', req.body);
   postDb.insert(req.body)
-    .then(post => {
-      res.status(200).json(post);
+    .then(postx => {
+      res.status(200).json(postx);
     })
     .catch(err => {
-      res.status(500).json({ message: "Post creation error "})
+      res.status(500).json({ message: "Post creation error ", err})
     })
 });
 

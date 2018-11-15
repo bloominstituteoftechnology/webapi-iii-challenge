@@ -6,12 +6,9 @@ const userDb = require('../helpers/userDb.js');
 const nameUpper = require('../gatekeeper/middleware.js');
 
 // /api/users/
-router.get('/', (req, res) => {
-  res.status(200).json({ api: 'running' });
-});
 
 //get list of users
-router.get('/api/users', (req, res) => {
+router.get('/', (req, res) => {
   userDb.get()
     .then(users => {
       res.status(200).json(users);
@@ -22,7 +19,7 @@ router.get('/api/users', (req, res) => {
 });
 
 //get user by id - not required
-router.get('/api/users/:id', (req, res) => {
+router.get('/:id', (req, res) => {
   const { id } = req.params; //id is a parameter
 
   userDb.get(id)
@@ -39,7 +36,7 @@ router.get('/api/users/:id', (req, res) => {
 });
 
 //add user
-router.post('/api/users', nameUpper, (req, res) => {
+router.post('/', nameUpper, (req, res) => {
   userDb.insert(req.body)
     .then(user => {
       res.status(200).json(user);
@@ -50,7 +47,7 @@ router.post('/api/users', nameUpper, (req, res) => {
 })
 
 //delete user
-router.delete('/api/users/:id', (req, res) => {
+router.delete('/:id', (req, res) => {
   userDb.remove(req.params.id)
     .then(count => {
       res.status(200).json(count)
