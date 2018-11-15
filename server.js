@@ -71,7 +71,7 @@ server.get("/users", (req, res) => {
           res.status(201).json(user)
       })
       .catch(err => {
-         res.status(500).json({ message: "There was an error while saving the post to the database", err });
+         res.status(500).json({ message: "There was an error while saving the user to the database", err });
       })
   })
 
@@ -84,9 +84,10 @@ server.get("/users", (req, res) => {
            res.status(200).json(count)
        })
        .catch(err => {
-           res.status(500).json({ message: "Error deleting the post", err })
+           res.status(500).json({ message: "Error deleting the user", err })
        })
   })
+
 
 // Update a user
 
@@ -103,38 +104,11 @@ server.put("/users/:id", (req, res) => {
          }
      })
      .catch(err => {
-        res.status(500).json({ message: "error updating the post", err });
+        res.status(500).json({ message: "error updating the user", err });
       });
 })
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//post endpoints
 
 
 // Get all posts
@@ -168,6 +142,82 @@ server.put("/users/:id", (req, res) => {
           res.status(500).json({ message: "The post info could not be received", err });
       });
 });
+
+
+// Create a new post
+
+server.post("/posts",  (req, res) => {  
+    const { userId, text } = req.body;
+  posts
+    .insert({ userId, text })
+    .then(post => {
+        res.status(201).json(post)
+    })
+    .catch(err => {
+       res.status(500).json({ message: "There was an error while saving the post to the database", err });
+    })
+})
+
+// Update a post 
+
+server.put("/posts/:id", (req, res) => {
+    const { id } = req.params
+    const changes = req.body
+    posts
+     .update(id, changes)
+     .then(post => {
+         if (post) {
+             res.status(200).json({  message: `${post} posts updated` })
+         } else {
+             res.status(404).json({ message: "Post not found "})
+         }
+     })
+     .catch(err => {
+        res.status(500).json({ message: "error updating the post", err });
+      });
+})
+
+// Delete a post
+
+erver.delete("/posts/:id", (req, res) => {
+    posts
+     .remove(req.params.id)
+     .then(post => {
+         res.status(200).json(post)
+        })
+        .catch(err => {
+            res.status(500).json({ message: "Error deleting the post", err })
+        })
+    })
+    
+    
+    
+    
+    server.listen(port, () => console.log(`Server listening on ${port}`));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
  
 
@@ -207,5 +257,3 @@ server.put("/users/:id", (req, res) => {
 
 
 
-
-server.listen(port, () => console.log(`Server listening on ${port}`));
