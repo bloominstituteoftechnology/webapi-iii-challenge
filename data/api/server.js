@@ -89,12 +89,9 @@ server.delete('/api/users/:id', (req, res) => {
     })
 }) */
 
-//POST
+//POSTS
 
-// server.get('/all', (req, res) => {
-//   res.json('the home server get!')
-// })
-
+//all posts
 server.get('/api/posts', (req, res) => {
   postDb.get()
     .then(posts => {
@@ -105,22 +102,19 @@ server.get('/api/posts', (req, res) => {
     })
 });
 
+//post by id
 server.get('/api/posts/:id', (req, res) => {
   const { id } = req.params;
 
-  postDb.findById(id)
+  postDb.get(id)
     .then(post => {
-      if (post) {
-        res.status(200).json(post);
-      } else {
-        res.status(404).json({ message: "The post with the specified ID does not exist."});
-      }
-    })
+        res.status(200).json(post); })
     .catch(err => {
       res.status(500).json({ error: "The post information could not be retrieved."})
     })
 });
 
+//create post
 server.post('/api/posts', async (req, res) => {
   console.log('body:', req.body);
   try {
@@ -138,6 +132,7 @@ server.post('/api/posts', async (req, res) => {
   }
 })
 
+//update post
 server.put('/api/posts/:id', (req, res) => {
   const { id } = req.params;
   const changes = req.body;
@@ -154,6 +149,7 @@ server.put('/api/posts/:id', (req, res) => {
     });
 });
 
+//delete post
 server.delete('/api/posts/:id', (req, res) => {
   postDb.remove(req.params.id)
     .then(count => {
