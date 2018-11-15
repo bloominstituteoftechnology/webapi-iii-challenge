@@ -3,13 +3,14 @@ const express = require('express');
 const helmet = require('helmet');
 const morgan = require('morgan');
 
-const userDb = require('../helpers/userDb.js');
-const postDb = require('../helpers/postDb.js');
+const server = express();
 
+const userDb = require('../helpers/userDb.js');
 
 const nameUpper = require('../gatekeeper/middleware.js');
 
-const server = express();
+const postRouter = require('../posts/postRouter.js')
+
 
 //middleware
 server.use(express.json());
@@ -24,6 +25,7 @@ server.use(morgan('dev'));
 server.get('/', (req, res) => {
   res.status(200).json({ api: 'running' });
 });
+
 
 //get list of users
 server.get('/api/users', (req, res) => {
@@ -90,73 +92,7 @@ server.delete('/api/users/:id', (req, res) => {
 }) */
 
 //POSTS
+server.use('/posts', postRouter);
 
-//all posts
-server.get('/api/posts', (req, res) => {
-  postDb.get()
-    .then(posts => {
-      res.status(200).json(posts);
-    })
-    .catch(err => {
-      res.status(500).json({ error: "The posts information could not be retrieved." })
-    })
-});
-
-//post by id
-server.get('/api/posts/:id', (req, res) => {
-  const { id } = req.params;
-
-  postDb.get(id)
-    .then(post => {
-        res.status(200).json(post); })
-    .catch(err => {
-      res.status(500).json({ error: "The post information could not be retrieved."})
-    })
-});
-
-//create post
-server.post('/api/posts', async (req, res) => {
-  console.log('body:', req.body);
-  try {
-    const postData = req.body;
-    const postId = await postDb.insert(postData);
-
-    res.status(201).json(postId);
-  }catch (error) {
-    let message = "error creating the post";
-
-    if(error.errno === 19) {
-      message = "you need both title and contents";
-    }
-    res.status(500).json({ message: "error creating post", error })
-  }
-})
-
-//update post
-server.put('/api/posts/:id', (req, res) => {
-  const { id } = req.params;
-  const changes = req.body;
-  postDb.update(id, changes)
-    .then(count => {
-      if(count) {
-        res.status(200).json({ message: `${count} post updated`})
-      } else {
-        res.status(404).json({ message: "post not found" })
-      }
-    })
-    .catch( err => {
-      res.status(500).json({ message: "error updating the post "})
-    });
-});
-
-//delete post
-server.delete('/api/posts/:id', (req, res) => {
-  postDb.remove(req.params.id)
-    .then(count => {
-      res.status(200).json(count)
-    }).catch (err => {
-      res.status(500).json({ message: 'error deleting post' })
-    })
-})
 
 module.exports = server;
