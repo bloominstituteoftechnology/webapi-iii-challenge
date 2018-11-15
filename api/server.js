@@ -12,13 +12,11 @@ server.use(morgan('dev'));
 server.use(express.json());
 
 const nameUppercase = (req, res, next) => {
-    const { name } = req.body;
-    if(!name) {
-        res.status(500).json({ message: "must have name"})
-    } else {
-        next();
-    }
-};
+    let { name } = req.body;
+    name = name.toUpperCase();
+    res.json(name);
+    next();
+}
 // POST DATA
 server.get('/', (req, res) => {
     res.status(200).json({ api: "it runs" });
@@ -94,7 +92,7 @@ server.get('/user/:id', (req, res) => {
         res.json({ message: err })
     })
 });
-server.post('/user', (req, res) => {
+server.post('/user', nameUppercase, (req, res) => {
     const { name } = req.body;
     user.insert({ name })
     .then(newUser => {
