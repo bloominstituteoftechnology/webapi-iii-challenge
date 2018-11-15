@@ -1,0 +1,50 @@
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.App {
+  text-align: center;
+}
+.user-list {
+  width: 70%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  border: 1px solid black;
+}
+.user-list a {
+    width: 30%;
+    min-width: 150px;
+
+}
+.user {
+  border: 1px solid black;
+  border-radius: 10px;
+  min-height: 75px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
+
+.user-view {
+
+}
+
+.user-view h3 {
+
+}
+
+.posts-list {
+  width: 80%;
+  border: 1px solid black;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+.post {
+  border: 1px dotted black;
+  padding: 10px;
+  margin: 5px;
+}
