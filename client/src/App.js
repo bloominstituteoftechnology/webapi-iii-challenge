@@ -1,25 +1,37 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import axios from "axios";
+import { Route, NavLink, withRouter } from "react-router-dom";
+import HomePage from "./components/HomePage";
 
 class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+      users: [],
+      posts: []
+    };
+  }
+
+  componentDidMount() {
+    axios
+      .get("http://localhost:3000/api/users/")
+      .then(res => this.setState({ users: res.data }))
+      .catch(err => console.log(err));
+    axios
+      .get("http://localhost:3000/api/posts/")
+      .then(res => this.setState({ posts: res.data }))
+      .catch(err => console.log(err));
+  }
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+        <nav>
+          <NavLink exact to="/">
+            Home
+          </NavLink>
+          </nav>
       </div>
     );
   }

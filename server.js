@@ -4,7 +4,7 @@ const morgan = require("morgan");
 const cors = require("cors");
 const posts = require("./data/helpers/postDb");
 const users = require("./data/helpers/userDb");
-const port = 9000
+const port = 3000
 
 
 
@@ -179,7 +179,7 @@ server.put("/posts/:id", (req, res) => {
 
 // Delete a post
 
-erver.delete("/posts/:id", (req, res) => {
+server.delete("/posts/:id", (req, res) => {
     posts
      .remove(req.params.id)
      .then(post => {
