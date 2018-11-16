@@ -2,8 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const users = require('./data/helpers/userDb');
 const posts = require('./data/helpers/postDb');
-const tags = require('./data/helpers/tagDb');
-const db = require('./data/helpers/userDb');
+const tag = require('./data/helpers/tagDb');
 const port = 8000;
 
 const server = express();
@@ -110,11 +109,69 @@ server.put('/api/users/:id', middlewareNameCheck, (req, res) => {
   })  
 })
 
+server.get('/api/posts', (req, res) => {
+  posts
+    .get()
+    .then(foundPosts => {
+      res.json(foundPosts);
+    })
+    .catch(err => {
+      return errorMsg(500, 'Try Again', res);
+    });
+});
 
+server.get('/api/posts/:id', (req, res) => {
+  const { id } = req.params;
+  posts
+    .get(id)
+    .then(post => {
+      if (post === 0) {
+        return errorMsg(404, 'Cannot find that post', res);
+      }
+      res.json(post);
+    })
+    .catch(err => {
+      return errorMsg(500, 'Try Again', res);
+    });
+});
 
+server.post('/api/posts', (req, res) => {
+  const { userId, text } = req.body;
+  posts
+    .insert({ userId, text })
+    .then(response => {
+      res.json(response);
+    })
+    .catch(err => {
+      return errorMsg(500, 'Try Again', res);
+    });
+});
 
+server.get('/api/posts/tags/:id', (req, res) => {
+  const { id } = req.params;
+  posts
+    .getPostTags(id)
+    .then(postTags => {
+      if (postTags === 0) {
+        return errorMsg(404, 'Post not found', res);
+      }
+      res.json(postTags);
+    })
+    .catch(err => {
+      return errorMsg(500, 'Try Again', res);
+    });
+});
 
-
+server.get('/api/tags', (req, res) => {
+  users
+    .get()
+    .then(foundTags => {
+      res.json({ foundTags });
+    })
+    .catch(err => {
+      return errorMsg(500, 'Try Again', res);
+    });
+});
 
 
 server.listen(port, () => console.log(`Server listening on ${port}`));
