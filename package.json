@@ -1,0 +1,29 @@
+{
+  "name": "Node-Blog",
+  "version": "1.0.0",
+  "description": "- Building RESTful APIs.\r - Performing CRUD Operations on Multiple Resources.\r - Configuring CORS.\r - Writing Custom Middleware.\r - Using Express Routers to Modularize Application.",
+  "main": "knexfile.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VaderSteve76/Node-Blog.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/VaderSteve76/Node-Blog/issues"
+  },
+  "homepage": "https://github.com/VaderSteve76/Node-Blog#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "knex": "^0.15.2",
+    "sqlite3": "^4.0.4"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.6"
+  }
+}
