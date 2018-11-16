@@ -7,7 +7,7 @@ const toUpperCase = require ('../middleware/toUpperCase.js');
 
 const server = express();
 
-// server.use(toUpperCase());
+
 server.use(express.json());
 server.use(helmet());
 server.use(morgan('dev'));
