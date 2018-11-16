@@ -1,6 +1,10 @@
 const db = require('../dbConfig.js');
 
 module.exports = {
+  find: function(){
+   return db('users'); 
+  },
+
   get: function(id) {
     let query = db('users');
     if (id) {
