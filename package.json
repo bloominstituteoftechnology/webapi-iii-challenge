@@ -1,0 +1,12 @@
+{
+  "name": "Node-Blog",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/cpdis/Node-Blog.git",
+  "author": "Colin Dismuke <colin.dismuke@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "knex": "^0.15.2",
+    "sqlite3": "^4.0.4"
+  }
+}
