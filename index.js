@@ -106,7 +106,7 @@ server.post('/api/posts', (req, res) => {
 // continue user server calls
 server.delete('/api/users/:id', (req, res) => {
     const {id} = req.params;
-    db.remove(id).then(count => {   //doc says remove() returns 'number' of users deleted
+    db.remove(id).then(count => {   //doc says remove() returns 'number' of users (resources) deleted
         if (count) {
             res.json({message: "successfully deleted user"});
         } else {
@@ -121,6 +121,26 @@ server.delete('/api/users/:id', (req, res) => {
     })
 })
 
+//post server call - DELETE
+server.delete('/api/posts/:id', (req, res) => {
+    const {id} = req.params;
+    db2.remove(id).then(count => {  //doc says remove() returns 'number' of post (resources) deleted
+        if (count) {
+            res.json({message: "successfully deleted post"})
+        } else {
+            res 
+                .status(404)
+                .json({message: "invalid id"});
+        }   
+    }).catch(err => {
+        res 
+            .status(500)
+            .json({message: "fail to delete post"});
+    })
+})
+
+
+// continue user server calls
 server.put('/api/users/:id', (req, res) => {
     const {id} = req.params;
     const user = req.body;
