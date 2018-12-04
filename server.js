@@ -9,8 +9,20 @@ const postDB = require('./data/helpers/postDb');
 const SERVER = express();
 const PORT = 3020;
 
-SERVER.use(cors(), helmet(), logger('dev'));
-SERVER.use(express.json());
+SERVER.use(express.json(), cors(), helmet(), logger('dev'));
+const uppercaseNames = (req, res, next) => {
+    const { name } = req.body;
+    let result = name.split(' ');
+
+    result = result.map(word => {
+        return word.charAt(0).toUpperCase() + word.slice(1)
+    })
+    result = result.join(' ');
+    req.body.name = result;
+    console.log(req.body)
+    next();
+};
+
 
 // ----------- SETUP USERS END POINTS ----------------
 
@@ -48,17 +60,17 @@ const getUsers = (id, req, res) => {
 }
 
 // ~~~~~~~~~~~ GET REQUEST USERS ~~~~~~~~~~~~~~~~~~~~
-SERVER.get('/users', (req,res) => {
+SERVER.get('/api/users', (req,res) => {
   return getUsers(null, req,res);
 })
 
 // ~~~~~~~~~~~ GET REQUEST FOR USER (ID) ~~~~~~~~~~~~~~~~~~~~
-SERVER.get('/users/:id', (req, res) => {
+SERVER.get('/api/users/:id', (req, res) => {
   const { id } = req.params;
   return getUsers(id, req, res);
 })
 // ~~~~~~~~~~~ GET REQUEST FOR USER POSTS ~~~~~~~~~~~~~~~~~~~~
-SERVER.get('/users/:id/posts', (req, res) => {
+SERVER.get('/api/users/:id/posts', (req, res) => {
   const { id } = req.params;
   userDB.getUserPosts(id)
         .then(posts => {
@@ -74,16 +86,19 @@ SERVER.get('/users/:id/posts', (req, res) => {
         })
 })
 // ~~~~~~~~~~~ POST REQUEST FOR NEW USER ~~~~~~~~~~~~~~~~~~~~
-SERVER.post('/users', (req, res, next) => {
+SERVER.post('/api/users', uppercaseNames, (req, res, next) => {
   const { name } = req.body;
   userDB.insert({name})
         .then(userID => {
           res.json(userID)
         })
+        .catch(err => {
+          res.status(500).json({error: err})
+        })
 })
 
 // ~~~~~~~~~~~ DELETE REQUEST FOR USER ~~~~~~~~~~~~~~~~~~~~
-SERVER.delete('/users/:id', (req, res) => {
+SERVER.delete('/api/users/:id', (req, res) => {
   const { id } = req.params
   userDB.remove(id)
         .then(deleted => {
@@ -96,8 +111,8 @@ SERVER.delete('/users/:id', (req, res) => {
         })
 })
 
-// ~~~~~~~~~~~ DELETE REQUEST FOR USER ~~~~~~~~~~~~~~~~~~~~
-SERVER.put('/users/:id', (req, res) => {
+// ~~~~~~~~~~~ UPDATEs REQUEST FOR USER ~~~~~~~~~~~~~~~~~~~~
+SERVER.put('/api/users/:id', uppercaseNames, (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
 
@@ -118,7 +133,7 @@ SERVER.put('/users/:id', (req, res) => {
 // ----------- SETUP POSTS END POINTS ----------------
 
 // ~~~~~~~~~~~ GET REQUEST POSTS ~~~~~~~~~~~~~~~~~~~~
-SERVER.get('/posts', (req, res) => {
+SERVER.get('/api/posts', (req, res) => {
   postDB.get()
         .then(posts => {
           if(posts) {
@@ -134,7 +149,7 @@ SERVER.get('/posts', (req, res) => {
 })
 
 // ~~~~~~~~~~~ GET REQUEST FOR POST (ID) ~~~~~~~~~~~~~~~~~~~~
-SERVER.get('/posts/:id', (req,res) => {
+SERVER.get('/api/posts/:id', (req,res) => {
   const { id } = req.params;
 
   postDB.get(id)
@@ -152,7 +167,7 @@ SERVER.get('/posts/:id', (req,res) => {
 })
 
 // ~~~~~~~~~~~ POST REQUEST FOR NEW POST ~~~~~~~~~~~~~~~~~~~~
-SERVER.post('/posts', (req, res) => {
+SERVER.post('/api/posts', (req, res) => {
   const { userId, text } = req.body;
   const newPost = {text, userId };
 
@@ -171,7 +186,7 @@ SERVER.post('/posts', (req, res) => {
 })
 
 // ~~~~~~~~~~~ DELETE REQUEST FOR POST ~~~~~~~~~~~~~~~~~~~~
-SERVER.delete('/posts/:id', (req, res) => {
+SERVER.delete('/api/posts/:id', (req, res) => {
   const { id } = req.params;
   postDB.remove(id)
         .then(deleted => {
@@ -185,7 +200,7 @@ SERVER.delete('/posts/:id', (req, res) => {
 })
 
 // ~~~~~~~~~~~ UPDATE REQUEST FOR POST ~~~~~~~~~~~~~~~~~~~~
-SERVER.put('/posts/:id', (req, res) => {
+SERVER.put('/api/posts/:id', (req, res) => {
   const { id } = req.params;
   const { text } = req.body;
   postDB.update(id, {text})
