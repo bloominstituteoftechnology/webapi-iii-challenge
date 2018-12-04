@@ -79,6 +79,31 @@ server.post('/api/users', (req, res) => {
     }
 });
 
+//post server call - POST
+server.post('/api/posts', (req, res) => {
+    const post = req.body;
+    console.log('posts from body', post)
+
+    if (post.userId && post.text) {
+
+        db2.insert(post).then(idInfo => {   // there's id vs userId per Post
+            db2.get(idInfo.id).then(post => {
+                res.status(201).json(post);
+            });
+        }).catch(err => {
+                res 
+                .status(500)
+                .json({message: "failed to insert post in database"})
+        });
+
+    } else {
+        //added layer of assurance that a more specific error message is provided
+        res.status(400).json({message: "status 400: missing post userId and text"})
+    }
+});
+
+
+// continue user server calls
 server.delete('/api/users/:id', (req, res) => {
     const {id} = req.params;
     db.remove(id).then(count => {   //doc says remove() returns 'number' of users deleted
