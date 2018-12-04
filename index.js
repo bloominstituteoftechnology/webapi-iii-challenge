@@ -10,6 +10,8 @@ server.use(express.json());
 
 
 //route handlers
+
+//GET
 server.get('/users', (req, res) => {
     userDb.get()
         .then((users) => {
@@ -40,9 +42,10 @@ server.get('/posts', (req, res) => {
 
 server.get('/posts/:id', (req, res) => {
     const {id} = req.params;
-    userDb.getUserPosts(id)
+    postDb.get(id)
         .then(posts => {
             if(posts) {
+                console.log("get posts by id", posts);
                 res.json(posts)
             } else {
                 res
@@ -83,6 +86,35 @@ server.get('/users/:id', (req, res) => {
             })
         })
 })
+
+//POST
+
+server.post('/users', (req, res) => {
+    const user = req.body;
+    if (user.name) {
+        userDb.insert(user)
+            .then(userId => {
+                userDb.get()
+                    .then(users => {
+                        res.json(users[0])
+                    })
+            })
+            .catch(err => {
+                res
+                .status(500)
+                .json({
+                    message: "Could not create a new Hobbit."
+                })
+            })
+    } else {
+        res
+        .status(400)
+        .json({
+            message: "A new Hobbit needs a name. How else can we call for it?"
+        })
+    }
+})
+
 
 
 //listening
