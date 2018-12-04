@@ -63,6 +63,22 @@ server.post('/api/users', (req, res) => {
     }
 });
 
+server.delete('/api/users/:id', (req, res) => {
+    const {id} = req.params;
+    db.remove(id).then(count => {   //doc says remove() returns 'number' of users deleted
+        if (count) {
+            res.json({message: "successfully deleted user"});
+        } else {
+            res 
+                .status(404)
+                .json({message: "invalid id"});
+        }
+    }).catch(err => {
+        res 
+            .status(500)
+            .json({message: "fail to delete user"});
+    })
+})
 
 
 
