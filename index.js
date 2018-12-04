@@ -18,6 +18,8 @@ server.use(
 //custom middleware
 
 //requests
+
+//retrieves a list of users
 server.get('/api/users', (req, res) => {
   userDb.get()
     .then(users => {
@@ -28,6 +30,7 @@ server.get('/api/users', (req, res) => {
     })
 });
 
+//retrieves a list of posts from a user
 server.get('/api/users/:id', (req, res) => {
   const { id } = req.params;
   userDb.getUserPosts(id)
@@ -38,6 +41,18 @@ server.get('/api/users/:id', (req, res) => {
       res.status(500).json({message: `Couldn't retrieve posts`})
     })
 });
+
+//creates a post
+server.post('/api/users', (req, res) => {
+  const user = req.body;
+  userDb.insert(user)
+    .then(userId => {
+      res.json(userId)
+    })
+    .catch(err => {
+      res.status(500).json({message: `Couldn't add user`})
+    })
+})
 
 server.listen(PORT, () => {
   console.log(`Server is listening on PORT ${PORT}`)
