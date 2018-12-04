@@ -7,6 +7,9 @@ const postDB = require("./data/helpers/postDb");
 const server = express();
 const PORT = 4050;
 const badDataRetreival = { message: "That data could not be retreived" };
+const badDataInsert = {
+  message: "That information could not be added to the database"
+};
 
 server.use(express.json(), helmet(), logger("dev"));
 
@@ -73,6 +76,23 @@ server.get("/users/:id/posts", (req, res) => {
 
 // - `insert()`: calling insert passing it a resource object will add it to the database and return an object with the id of the inserted resource. The object looks like this: `{ id: 123 }`.
 
+server.post("/users", (req, res) => {
+  const newUser = req.body;
+  if (newUser.name) {
+    userDB
+      .insert(newUser)
+      .then(id => {
+        userDB.get(id.id).then(user => {
+          res.status(201).json(user);
+        });
+      })
+      .catch(err => {
+        res.status(500).json(badDataInsert);
+      });
+  } else {
+    res.status(400).json({ message: "missing user name" });
+  }
+});
 
 // - `update()`: accepts two arguments, the first is the `id` of the resource to update and the second is an object with the `changes` to apply. It returns the count of updated records. If the count is 1 it means the record was updated correctly.
 // - `remove()`: the remove method accepts an `id` as it's first parameter and, upon successfully deleting the resource from the database, returns the number of records deleted.
