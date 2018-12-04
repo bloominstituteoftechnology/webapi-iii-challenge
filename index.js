@@ -87,6 +87,35 @@ server.get('/users/:id', (req, res) => {
         })
 })
 
+
+server.get('/users/:id/posts', (req, res) => {
+    const {id} = req.params;
+    userDb.get(id)
+        .then(user => {
+            if (user) {
+                userDb.getUserPosts(id)
+                    .then(user => {
+                        console.log('user from getUserPosts', user)
+                        res.json(user);
+                    })
+            } else {
+                res
+                .status(404)
+                .json({
+                    message: "This Hobbit does not exist so we cannot quote it."
+                })
+            }
+        })
+        .catch(err=>{
+            //500
+            res
+            .status(500)
+            .json({
+                message: "Failed to find this Hobbit or its quotes."
+            })
+        })
+})
+
 //POST
 
 server.post('/users', (req, res) => {
