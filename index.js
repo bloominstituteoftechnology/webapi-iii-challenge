@@ -19,7 +19,7 @@ server.get('/users', (req, res) => {
             res
             .status(500)
             .json({
-                message: "Could not fetch the users. They're hiding."
+                message: "Could not fetch the Hobbits. They're hiding."
             })
         })
 })
@@ -33,7 +33,7 @@ server.get('/posts', (req, res) => {
         res
         .status(500)
         .json({
-            message: "Could not fetch the posts. They're hiding."
+            message: "Could not fetch those quotes. They're hiding."
         })
     })
 })
@@ -48,7 +48,7 @@ server.get('/posts/:id', (req, res) => {
                 res
                 .status(404)
                 .json({
-                    message: "This hobbit does not exist. Perhaps search for another."
+                    message: "This hobbit does not have any notable quotes. Perhaps search for a better one."
                 })
             }
         })
@@ -56,11 +56,33 @@ server.get('/posts/:id', (req, res) => {
             res
             .status(500)
             .json({
-                message: "Failed to find those posts."
+                message: "Failed to find those quotes."
             })
         })
 })
 
+server.get('/users/:id', (req, res) => {
+    const {id} = req.params;
+    userDb.get(id)
+        .then(user => {
+            if(user) {
+                res.json(user)
+            } else {
+                res
+                .status(404)
+                .json({
+                    message: "This hobbit does not exist."
+                })
+            }
+        })
+        .catch(err => {
+            res
+            .status(500)
+            .json({
+                message: "Failed to find this hobbit"
+            })
+        })
+})
 
 
 //listening
