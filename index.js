@@ -37,8 +37,7 @@ server.get( '/user', (req, res) => {
 
 server.get( '/user/:id', (req, res) => {
   const { id } = req.params;
-  users
-    .get(id)
+  users.get(id)
     .then( listUser => {
       // Check for empty result
       if( listUser ){
@@ -60,10 +59,12 @@ server.post( '/user', (req, res) => {
   if( !user.name ){
     res.status(400).json({ error: "Please provide the name for the user."});
   } else {
-    users
-    .insert(user)
+    users.insert(user)
     .then( userId => {
-      res.json({ message: `User ID ${userId.id} added.`});
+      users.get(userId.id)
+        .then( showUser => {
+          res.json(showUser);
+        });
     })
     .catch( err => {
       res.status(500).json({ error: "There was an error adding the user."});
@@ -71,6 +72,28 @@ server.post( '/user', (req, res) => {
 
   }
 });
+
+// PUT:
+server.put( '/user/:id', (req, res) => {
+  const user = req.body;
+  const { id } = req.params;
+
+  if( user.name ){
+    users.update(id, user)
+      .then( () => {
+        users.get(id)
+          .then( showUser => {
+            res.json(showUser);
+          });
+      })
+      .catch( err => {
+        res.status(500).json( {error: "There was an error updating the user."} );
+      });
+  } else {
+    res.status(400).json({ error: "Please provide the name for the user." });
+  }
+});
+
 
 
 // Listen for incoming requests. Must always be last in file.
