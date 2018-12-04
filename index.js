@@ -94,6 +94,25 @@ server.post("/users", (req, res) => {
   }
 });
 
+server.post("/posts", (req, res) => {
+  const newPost = req.body;
+  if (newPost.userId && newPost.text) {
+    postDB
+      .insert(newPost)
+      .then(id => {
+        console.log(id);
+        postDB.get(id.id).then(post => {
+          res.status(201).json(post);
+        });
+      })
+      .catch(err => {
+        res.status(500).json(badDataInsert);
+      });
+  } else {
+    res.status(400).json({ message: "missing user name" });
+  }
+});
+
 // - `update()`: accepts two arguments, the first is the `id` of the resource to update and the second is an object with the `changes` to apply. It returns the count of updated records. If the count is 1 it means the record was updated correctly.
 // - `remove()`: the remove method accepts an `id` as it's first parameter and, upon successfully deleting the resource from the database, returns the number of records deleted.
 
