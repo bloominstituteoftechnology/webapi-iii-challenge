@@ -94,6 +94,19 @@ server.put( '/user/:id', (req, res) => {
   }
 });
 
+// DELETE:
+server.delete( '/user/:id', (req, res) => {
+  const { id } = req.params;
+
+  users.remove(id)
+    .then( () => {
+      res.json({ message: `User ID ${id} deleted.`});
+    })
+    .catch( err => {
+      res.status(500).json({error: "There was an error deleting the user."});
+    });
+});
+
 
 
 // Listen for incoming requests. Must always be last in file.
