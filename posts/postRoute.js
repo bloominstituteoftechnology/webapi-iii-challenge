@@ -46,6 +46,23 @@ router.post("/", (req, res) => {
     });
 });
 
+router.delete("/:postId", (req, res) => {
+  const { postId } = req.params;
+  db.remove(postId)
+    .then(deleted => {
+      if (postId) {
+        res.json(deleted);
+      } else {
+        res
+          .status(404)
+          .json({ message: "The post with the specified ID does not exist." });
+      }
+    })
+    .catch(err => {
+      res.status(409).json({ message: `Problem deleting post ${postId}.` });
+    });
+});
+
 module.exports = router;
 
 // get(): calling find returns a promise that resolves to an array of all the resources contained in the database. If you pass an id to this method it will return the resource with that id if found.
