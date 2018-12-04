@@ -174,7 +174,39 @@ server.put('/api/users/:id', (req, res) => {
     }
 });
 
+//post server call - DELETE
+server.put('/api/posts/:id', (req, res) => {
+    const {id} = req.params;
+    const post = req.body;
+    // combination of GET, POST, DELETE
+    if (post.userId && post.text) {
 
+    db2.update(id, post)    //accepts two arguments, id of resource to update & object with changes to apply
+    .then(count => {
+        if(count){
+            //200 successfully update (send back updated post)
+            db2.get(id).then(post => {
+                res.json(post);
+            });
+        } else {
+            //404 invalid id
+            res 
+            .status(404)
+            .json({message: "invalid id"});
+        }
+    })
+    .catch(err => {
+        //500 catch-all, something else went wrong
+        res 
+        .status(500)
+        .json({message: "something went wrong, fail to update post"})
+    })
+
+    } else {
+        //400 error userId & text are missing
+        res.status(400).json({message: "status 400: missing userId and text"})
+    }
+});
 
 
 // listen
