@@ -63,6 +63,39 @@ router.delete("/:postId", (req, res) => {
     });
 });
 
+router.put("/:postId", (req, res) => {
+  const { postId } = req.params;
+  const { text, userId } = req.body;
+  const newPost = { text, userId };
+
+  console.log(postId);
+  console.log(newPost);
+
+  if (newPost) {
+    db.update(postId, newPost)
+      .then(post => {
+        if (postId) {
+          res.json({ message: "Sucessfully updated." });
+        } else {
+          res
+            .status(404)
+            .json({
+              message: "The post with the specified ID does not exist."
+            });
+        }
+      })
+      .catch(err => {
+        res
+          .status(500)
+          .json({ message: "The post information could not be modified." });
+      });
+  } else {
+    res
+      .status(400)
+      .json({ message: "Please provide the text and user ID for the post." });
+  }
+});
+
 module.exports = router;
 
 // get(): calling find returns a promise that resolves to an array of all the resources contained in the database. If you pass an id to this method it will return the resource with that id if found.
