@@ -25,7 +25,7 @@ server.get( '/', (req, res) => {
 
 //-------- User Info: --------//
 // GET:
-server.get( '/users', (req, res) => {
+server.get( '/user', (req, res) => {
   users.get()
     .then( listUsers => {
       res.json(listUsers);
@@ -35,7 +35,7 @@ server.get( '/users', (req, res) => {
     });
 });
 
-server.get( '/users/:id', (req, res) => {
+server.get( '/user/:id', (req, res) => {
   const { id } = req.params;
   users
     .get(id)
@@ -51,6 +51,27 @@ server.get( '/users/:id', (req, res) => {
       res.status(500).json({ error: "The user information could not be retrieved."});
     });
 });
+
+// POST:
+server.post( '/user', (req, res) => {
+  const user = req.body;
+
+  // Check for empty name:
+  if( !user.name ){
+    res.status(400).json({ error: "Please provide the name for the user."});
+  } else {
+    users
+    .insert(user)
+    .then( userId => {
+      res.json({ message: `User ID ${userId.id} added.`});
+    })
+    .catch( err => {
+      res.status(500).json({ error: "There was an error adding the user."});
+    });
+
+  }
+});
+
 
 // Listen for incoming requests. Must always be last in file.
 server.listen( PORT, () => {
