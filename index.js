@@ -47,7 +47,7 @@ server.get('/api/users/:id', (req, res) => {
 //creates a user
 server.post('/api/users', (req, res) => {
   const user = req.body;
-  
+
   if (user.name) {
     userDb.insert(user)
       .then(userId => {
@@ -77,7 +77,7 @@ server.delete('/api/users/:id', (req, res) => {
       } else {
         res
           .status(404)
-          .json({message: 'User with specified ID does not exist'})
+          .json({message: 'The user with the specified ID does not exist'})
       }
     })
     .catch(err => {
@@ -88,6 +88,32 @@ server.delete('/api/users/:id', (req, res) => {
 });
 
 //updates a user
+server.put('/api/users/:id', (req, res) => {
+  const { id } = req.params;
+  const user = req.body;
+
+  if (user.name) {
+    userDb.update(id, user)
+      .then(count => {
+        if (count) {
+          res.json({message: 'Successfully updated'})
+        } else {
+          res
+            .status(404)
+            .json({message: 'The user with the specified ID does not exist'})
+        }
+      })
+      .catch(err => {
+        res
+          .status(500)
+          .json({error: 'User could not updated'})
+      })
+  } else {
+    res
+      .status(400)
+      .json({errorMessage: 'Please provide a username to update'})
+  }
+})
 
 server.listen(PORT, () => {
   console.log(`Server is listening on PORT ${PORT}`)
