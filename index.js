@@ -1,12 +1,14 @@
 const express = require("express");
-const postDb = require("./data/helpers/postDb");
-const userDb = require("./data/helpers/userDb");
-const cors = require("cors");
 
-const app = express();
-app.use(cors());
-app.use(express.json());
+const configureMiddleware = require("./config/middleware.js");
+const usersRoute = require("./users/usersRoute.js");
+const postRoute = require("./posts/postRoute.js");
 
+// Server
+const server = express();
 const PORT = 3000;
 
-app.listen(PORT, () => console.log(`Server started on port ${PORT}...`));
+// Middleware
+configureMiddleware(server);
+
+server.listen(PORT, () => console.log(`Server started on port ${PORT}...`));
