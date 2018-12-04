@@ -43,5 +43,5 @@ module.exports = {
     return db('posts')
       .where('id', id)
       .del();
-  },
+  }
 };
