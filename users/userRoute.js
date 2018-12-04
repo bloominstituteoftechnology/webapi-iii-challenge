@@ -28,4 +28,24 @@ router.get("/:userId", (req, res) => {
     });
 });
 
+router.post("/", (req, res) => {
+  const { name } = req.body;
+  const newUser = { name };
+
+  db.insert(newUser)
+    .then(userId => {
+      const { id } = userId;
+      db.get(id).then(user => {
+        if (user) {
+          res.status(201).json(user);
+        } else {
+          res.status(400).json({ message: "Missing name of user." });
+        }
+      });
+    })
+    .catch(err => {
+      res.status(500).json({ message: "Failed to create user." });
+    });
+});
+
 module.exports = router;
