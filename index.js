@@ -1,7 +1,10 @@
-// Base Requirements:
+// Base Requirement:
 const express = require('express');
+
+// Middleware requires
 const morgan = require('morgan');
 const helmet = require('helmet');
+const customMW = require('./middleware.js');
 
 // App Requirements:
 const users = require('./data/helpers/userDb');
@@ -14,8 +17,10 @@ const PORT = 5454;
 server.use( 
   express.json(),
   morgan('dev'),
-  helmet()
+  helmet(),
+  customMW.fixCase
 );
+
 
 // Route handler endpoint for GET - barebones for now,
 // will customize after server is operational.
