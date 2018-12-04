@@ -77,11 +77,9 @@ router.put("/:postId", (req, res) => {
         if (postId) {
           res.json({ message: "Sucessfully updated." });
         } else {
-          res
-            .status(404)
-            .json({
-              message: "The post with the specified ID does not exist."
-            });
+          res.status(404).json({
+            message: "The post with the specified ID does not exist."
+          });
         }
       })
       .catch(err => {
@@ -97,8 +95,3 @@ router.put("/:postId", (req, res) => {
 });
 
 module.exports = router;
-
-// get(): calling find returns a promise that resolves to an array of all the resources contained in the database. If you pass an id to this method it will return the resource with that id if found.
-// insert(): calling insert passing it a resource object will add it to the database and return an object with the id of the inserted resource. The object looks like this: { id: 123 }.
-// update(): accepts two arguments, the first is the id of the resource to update and the second is an object with the changes to apply. It returns the count of updated records. If the count is 1 it means the record was updated correctly.
-// remove(): the remove method accepts an id as it's first parameter and, upon successfully deleting the resource from the database, returns the number of records deleted.
