@@ -80,6 +80,38 @@ server.delete('/api/users/:id', (req, res) => {
     })
 })
 
+server.put('/api/users/:id', (req, res) => {
+    const {id} = req.params;
+    const user = req.body;
+    //combination of GET, POST, DELETE
+    if (user.name) {
+
+    db.update(id, user)   //accepts two arguments, id of resource to update & object with changes to apply
+    .then(count => {
+        if (count) {
+            //200 successfully updated (send back updated user)
+            db.get(id).then(user => {
+                res.json(user);
+            });
+        } else {
+            //404 invalid id
+            res 
+            .status(404)
+            .json({message: "invalid id"});
+        }
+    })
+    .catch(err => {
+        //500 catch-all, something else went wrong
+        res 
+        .status(500)
+        .json({message: 'something went wrong, fail to update user'})
+    })
+
+    } else {
+        //400 error name is missing
+        res.status(400).json({message: "status 400: missing user name"})
+    }
+});
 
 
 // listen
