@@ -48,4 +48,22 @@ router.post("/", (req, res) => {
     });
 });
 
+router.delete("/:userId", (req, res) => {
+  const { userId } = req.params;
+
+  db.remove(userId)
+    .then(deleted => {
+      if (userId) {
+        res.json(deleted);
+      } else {
+        res
+          .status(404)
+          .json({ message: "The user with the specified ID does not exist." });
+      }
+    })
+    .catch(err => {
+      res.status(409).json({ message: `Problem deleting user ${userId}.` });
+    });
+});
+
 module.exports = router;
