@@ -4,7 +4,7 @@ const helmet = require('helmet');
 const logger = require('morgan');
 
 const db = require('./data/helpers/userDb.js')
-
+const db2 = require('./data/helpers/postDb.js')
 
 // manage persistence of users and posts data
 
@@ -41,6 +41,22 @@ server.get('/api/users', (req, res) => {
     });
 });
 
+//post server call - GET
+server.get('/api/posts', (req, res) => {
+    db2.get() 
+    .then((posts) => {
+        res.json(posts);
+    })
+    .catch(err => {
+        res 
+        .status(500)
+        .json({error: "Posts information could not be retrieved."})
+    });
+});
+
+
+
+// continue user server calls
 server.post('/api/users', (req, res) => {
     const user = req.body;
     console.log('users from body', user)
@@ -112,6 +128,8 @@ server.put('/api/users/:id', (req, res) => {
         res.status(400).json({message: "status 400: missing user name"})
     }
 });
+
+
 
 
 // listen
