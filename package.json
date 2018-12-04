@@ -1,0 +1,8 @@
+{
+  "name": "Node-Blog",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/mitchellr92/Node-Blog.git",
+  "author": "<mitchellr92@live.com>",
+  "license": "MIT"
+}
