@@ -18,11 +18,28 @@ server.get('/api/users', (req, res) =>{
         res.json({error: "Unable to retrieve users"})
     })
 });
+
 server.get('/api/users/:id', (req, res) =>{
     const id = req.params.id;
     userdb.get(id)
     .then(user =>{
         res.json(user)
+    })
+    .catch(err =>{
+        res.status(500)
+        res.json({error: "Unable to retrieve user"})
+    })
+});
+
+server.post('/api/users', (req,res) =>{
+    const user = req.body;
+    userdb.insert(user)
+    .then(id =>{
+        res.json(id)
+    })
+    .catch(err =>{
+        res.status(500)
+        res.json({error: "Unable to add new user"})
     })
 });
 
