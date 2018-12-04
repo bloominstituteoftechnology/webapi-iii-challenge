@@ -17,13 +17,17 @@ router.get("/", (req, res) => {
 router.get("/:postId", (req, res) => {
   const { postId } = req.params;
   console.log(req.params);
-  db.get(postId).then(post => {
-    if (post) {
-      res.json(post);
-    } else {
-      res.status(404).json({ message: "Failed to get post." });
-    }
-  });
+  db.get(postId)
+    .then(post => {
+      if (post) {
+        res.json(post);
+      } else {
+        res.status(404).json({ message: "Failed to get post." });
+      }
+    })
+    .catch(err => {
+      res.status(404).json({ message: `Post ${postId} does not exist.` });
+    });
 });
 
 router.post("/", (req, res) => {
