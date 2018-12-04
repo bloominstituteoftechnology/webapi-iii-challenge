@@ -26,6 +26,26 @@ router.get("/:postId", (req, res) => {
   });
 });
 
+router.post("/", (req, res) => {
+  const { text, userId } = req.body;
+  const newPost = { text, userId };
+
+  db.insert(newPost)
+    .then(postId => {
+      const { id } = postId;
+      db.get(id).then(post => {
+        if (post) {
+          res.status(201).json(post);
+        } else {
+          res.status(400).json({ message: "Missing text or author." });
+        }
+      });
+    })
+    .catch(err => {
+      res.status(500).json({ message: "Failed to create post." });
+    });
+});
+
 module.exports = router;
 
 // get(): calling find returns a promise that resolves to an array of all the resources contained in the database. If you pass an id to this method it will return the resource with that id if found.
