@@ -72,9 +72,6 @@ router.put("/:postId", (req, res) => {
   const { text, userId } = req.body;
   const newPost = { text, userId };
 
-  console.log(postId);
-  console.log(newPost);
-
   if (newPost) {
     db.update(postId, newPost)
       .then(post => {
