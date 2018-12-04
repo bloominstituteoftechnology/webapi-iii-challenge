@@ -1,4 +1,13 @@
 {
+  "name": "node-middleware",
+	"version": "1.0.0",
+	"description": "Lab for Middleware",
+	"private": true,
+	"main": "index.js",
+	"scripts": {
+		"server": "nodemon index.js"
+	},
+	"license": "ISC",
   "dependencies": {
     "express": "^4.16.4",
     "helmet": "^3.15.0",
