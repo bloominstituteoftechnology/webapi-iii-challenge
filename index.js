@@ -20,5 +20,9 @@ const upperCase = (req, res, next) => {
   next();
 };
 
+server.get("/", (req, res) => {
+  res.send("Blog...");
+});
+
 // Listen
 server.listen(PORT, () => console.log(`Server started on port ${PORT}...`));
