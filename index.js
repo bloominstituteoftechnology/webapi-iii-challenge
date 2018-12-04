@@ -14,7 +14,9 @@ server.use(
 )
 
 
-
+server.get(`/`, (req , res) => {
+    res.send("This is working");
+})
 
 
 
