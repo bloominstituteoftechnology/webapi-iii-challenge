@@ -20,6 +20,8 @@ const upperCase = (req, res, next) => {
   next();
 };
 
+server.use(upperCase);
+
 server.get("/", (req, res) => {
   res.send("Blog...");
 });
