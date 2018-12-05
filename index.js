@@ -8,14 +8,23 @@ const postDb = require('./data/helpers/postDb');
 const server = express();
 const PORT = 3000;
 
+//custom middleware
+const uppercaseMiddleware = (req, res, next) => {
+  if (req.body.name) {
+    req.body.name = req.body.name.charAt(0).toUpperCase() + req.body.name.slice(1);
+    next();
+  } else {
+    next();
+  }
+}
+
 //middleware
 server.use(
   express.json(),
   logger('tiny'),
   helmet(),
+  uppercaseMiddleware
 );
-
-//custom middleware
 
 //requests
 
@@ -45,7 +54,7 @@ server.get('/api/users/:id', (req, res) => {
 });
 
 //creates a user
-server.post('/api/users', (req, res) => {
+server.post('/api/users', uppercaseMiddleware, (req, res) => {
   const user = req.body;
 
   if (user.name) {
