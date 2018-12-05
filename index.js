@@ -3,6 +3,8 @@ const express = require('express'); //inside package.json dependencies
 const helmet = require('helmet');
 const logger = require('morgan');
 
+//const customMW = require('./custom_middleware')
+
 const db = require('./data/helpers/userDb.js')
 const db2 = require('./data/helpers/postDb.js')
 
@@ -10,14 +12,14 @@ const db2 = require('./data/helpers/postDb.js')
 
 
 const server = express();
-const PORT = 6000;
+const PORT = 3000;
 
 // middleware
 server.use(
     express.json(),
     logger('dev'),
     helmet(),
-
+    //customMW.gatekeeper
 );
 
 // route handlers - users
