@@ -35,6 +35,27 @@ server.get("/user/:id", (req, res) => {
       });
   });
 
+  server.post("/user", (req, res) => {
+    const newUser = req.body;
+    if (newUser.name) {
+      userDB.insert(newUser)
+        .then(idInfo => {
+          userDB.get(idInfo.id).then(user => {
+            res.status(201).json(user);
+          });
+        })
+        .catch(err => {
+          res
+            .status(500)
+            .json({ message: "There was an error saving the new user." });
+        });
+    } else {
+      res
+        .status(400)
+        .json({ message: "Please provide the name of the new user." });
+    }
+  });
+
 
 server.listen(PORT, err => {
     console.log(`Server listening on port ${PORT}`);
