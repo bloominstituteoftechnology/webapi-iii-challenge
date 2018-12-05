@@ -2,11 +2,15 @@ const express = require('express');
 const userDb = require('./data/helpers/userDb');
 const postDb = require('./data/helpers/postDb');
 
+const customMiddleware = require('./Custom_Middleware');
+
 const server = express();
 const PORT = 4100;
 
 //middleware
-server.use(express.json());
+server.use(
+    express.json()
+);
 
 
 //route handlers
@@ -26,6 +30,8 @@ server.get('/users', (req, res) => {
         })
 })
 
+//check users and post for .length > 0 scenario to ensure posts/users exist.
+
 server.get('/posts', (req, res) => {
     postDb.get()
     .then((posts)=>{
@@ -44,8 +50,8 @@ server.get('/posts/:id', (req, res) => {
     const {id} = req.params;
     postDb.get(id)
         .then(posts => {
+            console.log("get posts by id", posts);
             if(posts) {
-                console.log("get posts by id", posts);
                 res.json(posts)
             } else {
                 res
@@ -63,6 +69,8 @@ server.get('/posts/:id', (req, res) => {
             })
         })
 })
+
+//this ^ goes straight to .catch if id is invalid. change to 404?
 
 server.get('/users/:id', (req, res) => {
     const {id} = req.params;
@@ -95,7 +103,6 @@ server.get('/users/:id/posts', (req, res) => {
             if (user) {
                 userDb.getUserPosts(id)
                     .then(user => {
-                        console.log('user from getUserPosts', user)
                         res.json(user);
                     })
             } else {
@@ -107,7 +114,6 @@ server.get('/users/:id/posts', (req, res) => {
             }
         })
         .catch(err=>{
-            //500
             res
             .status(500)
             .json({
@@ -118,14 +124,14 @@ server.get('/users/:id/posts', (req, res) => {
 
 //POST
 
-server.post('/users', (req, res) => {
-    const user = req.body;
-    if (user.name) {
+server.post('/users', customMiddleware.uppercase, (req, res) => {
+    const user = customMiddleware.upperName;
+    if (user) {
         userDb.insert(user)
             .then(userId => {
-                userDb.get()
-                    .then(users => {
-                        res.json(users[0])
+                userDb.get(userId.id)
+                    .then(user => {
+                        res.json(user)
                     })
             })
             .catch(err => {
