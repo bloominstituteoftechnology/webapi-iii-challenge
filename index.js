@@ -37,7 +37,43 @@ server.get('/users/:id', (req, res) => {
     .catch(err => {
         res.status(500).json({message: 'Error finding that Users Posts'})
     })
-})
+});
+
+server.post('/users', (req, res) => {
+    const user = req.body;
+    
+    if(user) {
+        userDB.insert(user)
+        .then(idInfo => {
+            console.log(idInfo)
+            userDB.get(idInfo)
+            .then(user => {
+                res.status(201).json(user)
+            })
+        })
+        .catch(err => {
+            res.status(500).json({message: 'Error creating new User'})
+        })
+    }
+});
+
+server.delete('/users/:id', (req, res) => {
+    const {id} = req.params;
+
+    userDB.remove(id)
+    .then(count => {
+        if (count) {
+            res.json({message: 'User Deleted'})
+        } else {
+            res.status(404).json({message: 'User does not exist'})
+        }
+    })
+    .catch(err => {
+        res.status(500).json({message: 'Error deleting user'})
+    })
+});
+
+
 //listener
 
 server.listen(PORT, () => {
