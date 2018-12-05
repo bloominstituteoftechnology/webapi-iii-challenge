@@ -6,7 +6,8 @@
   "author": "Lee Lichtsinn <lee.lichtsinn@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "nodemon index.js",
+    "knex": "knex"
   },
   "dependencies": {
     "express": "^4.16.4",
