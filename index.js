@@ -14,10 +14,13 @@ server.use(express.json());
 
 // Custom middleware
 server.use((req, res, next) => {
-    if(req.body.name.length) {
+    if(req.body.name !== undefined) {
         req.body.name = req.body.name.toUpperCase();
+        next();
     }
-    next();
+    else {
+        next();
+    }
 })
 
 /* User CRUD Functions */
@@ -48,7 +51,7 @@ server.get('/users/:id', (req, res) => {
 })
 
 server.post('/users', (req, res) => {
-    const user = res.body;
+    const user = req.body;
     if (user.name) {
         userDB.insert(user)
         .then((data) => {
@@ -60,17 +63,30 @@ server.post('/users', (req, res) => {
         })
     }
 })
+
 server.put('/users/:id', (req, res) => {
     const {id} = req.params;
-    const user = res.body;
+    const user = req.body;
+    
     if(user.name) {
-        userDB.update(id, user)
-        .then((data) => {
-            console.log(data);
-            res.json(data);
+        userDB.get(id)
+        .then((oldUser) => {
+            if (oldUser) {
+                userDB.update(id, user)
+                .then((data) => {
+                    console.log(data);
+                    res.json(data);
+                })
+                .catch(() => {
+                    res.status(500).json({errorMessage: 'Server error updating user'});
+                })
+            }
+            else {
+                res.status(404).json({errorMessage: 'User does not exist'});
+            }
         })
         .catch(() => {
-            res.status(500).json({errorMessage: 'Server error updating user'});
+            res.status(500).json({errorMessage: 'Server error getting user by id'});
         })
     }
 })
