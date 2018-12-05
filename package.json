@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "nodemon"
   },
   "repository": "https://github.com/kellymanahan/Node-Blog.git",
   "author": "kammagik <kammagik@yahoo.com>",
