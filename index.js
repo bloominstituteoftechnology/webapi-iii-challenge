@@ -56,6 +56,23 @@ server.get("/user/:id", (req, res) => {
     }
   });
 
+  server.delete("/user/:id", (req, res) => {
+    const { id } = req.params;
+    userDB.remove(id)
+      .then(count => {
+        if (count) {
+          res.json({ message: "The user was deleted." });
+        } else {
+          res
+            .status(404)
+            .json({ message: "The user with the specified ID does not exist." });
+        }
+      })
+      .catch(err => {
+        res.status(500).json({ message: "The user could not be removed." });
+      });
+  });
+
 
 server.listen(PORT, err => {
     console.log(`Server listening on port ${PORT}`);
