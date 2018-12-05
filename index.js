@@ -7,13 +7,8 @@ const dbPosts = require('./data/helpers/postDb');
 const server = express();
 const PORT = 5050;
 
-server.use(express.json(), cors(),(req, res, next) => {
-    const name = req.body.name;
-    if(name) {
-        req.body.name = name.toLowerCase().split(' ').map(x => x.replace(/\b\w/g, I => I.toUpperCase())).join(' ');
-    }
-    next();
-});
+const MW = require('./middleware');
+server.use(express.json(), cors(), MW.toTitleCase);
 
 server.get('/api/users', (req, res)=>{
     dbUsers.get()
