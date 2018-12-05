@@ -6,7 +6,14 @@ const dbPosts = require('./data/helpers/postDb');
 
 const server = express();
 const PORT = 5050;
-server.use(express.json(), cors());
+
+server.use(express.json(), cors(),(req, res, next) => {
+    const name = req.body.name;
+    if(name) {
+        req.body.name = name.toLowerCase().split(' ').map(x => x.replace(/\b\w/g, I => I.toUpperCase())).join(' ');
+    }
+    next();
+});
 
 server.get('/api/users', (req, res)=>{
     dbUsers.get()
@@ -31,8 +38,7 @@ server.get('/api/posts/:id', (req, res) => {
     const { id } = req.params;
     dbPosts.get(id)
         .then(post => post ? res.json(post) : res.status(404).json({error: "There is no post with the specified ID"}))
-        .catch(err => res.status(500).json({error: 'Something went wrong retrieving your post!'}))
-        
+        .catch(err => res.status(500).json({error: 'Something went wrong retrieving your post!'}))        
 })
 
 server.get('/api/users/:id/posts', (req, res) => {
