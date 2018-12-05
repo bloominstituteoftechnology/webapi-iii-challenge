@@ -150,7 +150,7 @@ server.get('/api/posts/:id', (req, res) => {
     posts.get(id)
         .then(posts => {
             posts ?
-                res.json(id)
+                res.json(posts)
                 :
                 res
                     .status(404)
