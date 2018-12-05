@@ -16,6 +16,24 @@ server.use(
 
 // Server calls
  server.get('/', (req, res) => res.json({message: "hello!"}))
+
+ server.get('/user/', (req, res) => {
+     userDb.find()
+        .then(users => res.json(users))
+        .catch(err =>
+        res.status(500)
+        .json({error: "The users info could not be retreived."}))
+ })
+
+ server.get('/posts', (req, res) => {
+    postDb.find()
+        .then(posts => res.json(posts))
+        .catch(err => 
+        res.status(500)
+        .json({error: "The posts information could not be retrieved."})
+        )
+})
+
 // Listening
 server.listen(PORT, () => {
     console.log(`Server is running and listening to ${PORT}`);
