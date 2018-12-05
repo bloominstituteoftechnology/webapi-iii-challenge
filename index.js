@@ -1,12 +1,11 @@
 const userDb = require('./data/helpers/userDb.js');
-
 const express = require('express');
+const middleware = require('./middleware.js')
 
 const PORT = 4001;
 const server = express();
 
-const parser = express.json();
-server.use(parser);
+server.use(express.json(), middleware.capitalizeFirstLetter)
 
 server.get('/users', (req, res) => {
     userDb.get()
@@ -45,7 +44,6 @@ server.get('/users/:id', (req, res) => {
 
 server.post('/users', (req, res) => {
     const newUser = req.body;
-    console.log(req)
     if (newUser.name) {
         userDb.insert(newUser)
             .then(idInfo => {
