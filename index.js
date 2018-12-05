@@ -27,6 +27,8 @@ server.use(
 //     res.status(404).json({message: 'request receive, welcome Paul 2!', id: null, name: 'Paul Hans'});
 // });
 
+/////////////// USER //////////////////
+
 
 //If you pass an id to db.get() it will return the resource with that id if found.
 server.get('/api/users', (req, res) => {
@@ -41,22 +43,30 @@ server.get('/api/users', (req, res) => {
     });
 });
 
-//post server call - GET
-server.get('/api/posts', (req, res) => {
-    db2.get() 
-    .then((posts) => {
-        res.json(posts);
+// get all USER POSTSs
+
+
+server.get('/api/users/:id', (req, res) => {
+    const {id} = req.params;     //define user id
+    db.getUserPosts(id)         //getUserPosts takes in user id as argument
+    .then((user) => {
+        if(user){
+            res.json(user);
+        } else {
+            res 
+            .status(404)
+            .json({message: "The user with the specified ID cannot be found."})
+        }
     })
     .catch(err => {
         res 
         .status(500)
-        .json({error: "Posts information could not be retrieved."})
-    });
-});
+        .json({error: "User's posts could not be retrieved."})
+    })
+})
 
 
-
-// continue user server calls
+// continue USER server calls
 server.post('/api/users', (req, res) => {
     const user = req.body;
     console.log('users from body', user)
@@ -79,31 +89,8 @@ server.post('/api/users', (req, res) => {
     }
 });
 
-//post server call - POST
-server.post('/api/posts', (req, res) => {
-    const post = req.body;
-    console.log('posts from body', post)
 
-    if (post.userId && post.text) {
-
-        db2.insert(post).then(idInfo => {   // there's id vs userId per Post
-            db2.get(idInfo.id).then(post => {
-                res.status(201).json(post);
-            });
-        }).catch(err => {
-                res 
-                .status(500)
-                .json({message: "failed to insert post in database"})
-        });
-
-    } else {
-        //added layer of assurance that a more specific error message is provided
-        res.status(400).json({message: "status 400: missing post userId and text"})
-    }
-});
-
-
-// continue user server calls
+// continue USER server calls
 server.delete('/api/users/:id', (req, res) => {
     const {id} = req.params;
     db.remove(id).then(count => {   //doc says remove() returns 'number' of users (resources) deleted
@@ -121,26 +108,9 @@ server.delete('/api/users/:id', (req, res) => {
     })
 })
 
-//post server call - DELETE
-server.delete('/api/posts/:id', (req, res) => {
-    const {id} = req.params;
-    db2.remove(id).then(count => {  //doc says remove() returns 'number' of post (resources) deleted
-        if (count) {
-            res.json({message: "successfully deleted post"})
-        } else {
-            res 
-                .status(404)
-                .json({message: "invalid id"});
-        }   
-    }).catch(err => {
-        res 
-            .status(500)
-            .json({message: "fail to delete post"});
-    })
-})
 
 
-// continue user server calls
+// continue USER server calls
 server.put('/api/users/:id', (req, res) => {
     const {id} = req.params;
     const user = req.body;
@@ -174,7 +144,64 @@ server.put('/api/users/:id', (req, res) => {
     }
 });
 
-//post server call - DELETE
+/////////////// POST //////////////////
+
+
+//POST server call - GET
+server.get('/api/posts', (req, res) => {
+    db2.get() 
+    .then((posts) => {
+        res.json(posts);
+    })
+    .catch(err => {
+        res 
+        .status(500)
+        .json({error: "Posts information could not be retrieved."})
+    });
+});
+
+//POST server call - POST
+server.post('/api/posts', (req, res) => {
+    const post = req.body;
+    console.log('posts from body', post)
+
+    if (post.userId && post.text) {
+
+        db2.insert(post).then(idInfo => {   // there's id vs userId per Post
+            db2.get(idInfo.id).then(post => {
+                res.status(201).json(post);
+            });
+        }).catch(err => {
+                res 
+                .status(500)
+                .json({message: "failed to insert post in database"})
+        });
+
+    } else {
+        //added layer of assurance that a more specific error message is provided
+        res.status(400).json({message: "status 400: missing post userId and text"})
+    }
+});
+
+//POST server call - DELETE
+server.delete('/api/posts/:id', (req, res) => {
+    const {id} = req.params;
+    db2.remove(id).then(count => {  //doc says remove() returns 'number' of post (resources) deleted
+        if (count) {
+            res.json({message: "successfully deleted post"})
+        } else {
+            res 
+                .status(404)
+                .json({message: "invalid id"});
+        }   
+    }).catch(err => {
+        res 
+            .status(500)
+            .json({message: "fail to delete post"});
+    })
+})
+
+//POST server call - UPDATE
 server.put('/api/posts/:id', (req, res) => {
     const {id} = req.params;
     const post = req.body;
@@ -207,6 +234,9 @@ server.put('/api/posts/:id', (req, res) => {
         res.status(400).json({message: "status 400: missing userId and text"})
     }
 });
+
+
+
 
 
 // listen
