@@ -41,7 +41,26 @@ server.get('/users/:id', (req, res) => {
         })
 })
 
+server.post('/users', (req, res) => {
+    
+    const user = req.body;
 
+    if (user.name) {
+        userDb.insert(user)
+            .then(idInfo => {
+                userDb.get(idInfo.id).then(user => {
+                    res.status(201).json(user)
+                })
+            })
+            .catch(err => {
+                res.status(500).json({ message: 'Failed to insert user' })
+            })
+    } else {
+        res.status(400).json({
+            message: 'missing name'
+        })
+    }
+})
 
 server.get('/posts', (req, res) => {
     postDb.get()
