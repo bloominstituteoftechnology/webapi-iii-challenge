@@ -81,13 +81,41 @@ server.get('/api/users/:id', (req, res) => {
         })
 })
 
-
 //--------------- /READ -----------------
 
 //--------------- UPDATE ----------------
+
+server.put('/api/users/:id', (req, res) => {
+    const user = req.body;
+    const { id } = req.params;
+
+    if(user.name){
+        userDb.update(id, user)
+            .then(updatedUser => {
+                if(updatedUser){
+                    res.json(updatedUser)
+                } else {
+                    res.status(404)
+                        .json({message: "User with specified ID does not exist"})
+                }
+            })
+            .catch(err => {
+                res
+                    .status(500)
+                    .json({message: "The user info could not be modified"})
+            })
+    } else {
+        res
+            .status(400)
+            .json({message: "Please provide the correct info to update User"})
+    }
+})
+
 //--------------- /UPDTE ----------------
 
 //--------------- DELETE ----------------
+
+// Delete user
 
 server.delete('/api/users/:id', (req, res) => {
     const { id } = req.params;
