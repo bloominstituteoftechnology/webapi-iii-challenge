@@ -111,16 +111,23 @@ server.put('/api/users/:id', middleware.nametoUpper,(req, res) =>{
 });
 
 //***GET USER POSTS */
-// server.get('/api/users/posts/:userId', (req, res) =>{
-//     const userId = req.params.userId;
+server.get('/api/users/posts/:id', (req, res) =>{
+    const userId = req.params.id;
 
-//     userDb.getUserPosts(userId)
-//     .then(response =>{console.log(response);})
-//     .catch(err =>{
-//         res.status(500)
-//         res.json({err: "Unable to retrieve user's posts"})
-//     })
-// });
+    userDb.getUserPosts(userId)
+    .then(posts =>{
+        if(posts[0]){
+            res.json(posts)
+        }else {
+            res.status(404)
+            res.json({error: "No posts were found for the specified user"})
+        }
+    })
+    .catch(err =>{
+        res.status(500)
+        res.json({error: "Unable to retrieve user's posts"})
+    })
+});
 
 
 
