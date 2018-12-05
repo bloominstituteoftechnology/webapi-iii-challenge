@@ -34,7 +34,7 @@ server.get("/api/users", (req, res) => {
 
 server.post("/api/users", (req, res) => {
     console.log(req.body)
-    if (req.body.name) {
+    if (req.body && req.body.name && typeof req.body.name === "string") {
         users.insert(req.body).then(id => {
             res.status(201).json(id);
         }).catch(err => {
@@ -57,7 +57,7 @@ server.get("/api/users/:id", (req, res) => {
 });
 
 server.put("/api/users/:id", (req, res) => {
-    if (req.body.name) {
+    if (req.body && req.body.name && typeof req.body.name === "string") {
         users.update(req.params.id, req.body).then(data => {
             res.status(200).json(data);
         }).catch(err => {
