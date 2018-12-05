@@ -23,7 +23,7 @@ server.get('/api/users', (req, res) => {
 })
 
 server.get('/api/users/:id', (req, res) => {
-    const id = req.params;
+    const {id} = req.params;
     users.get(id)
     .then(user => {
         if(user[0]){
