@@ -73,6 +73,30 @@ server.delete('/users/:id', (req, res) => {
     })
 });
 
+server.put('/users/:id', (req, res) => {
+    const user = req.body;
+    const {id} = req.params;
+
+    if(user) {
+        userDB.update(id, user)
+        .then(count => {
+            if(count) {
+                userDB.get(id)
+                .then(user => {
+                    res.json(user)
+                })
+            } else {
+                res.status(404).json({message: 'That user ID does not exist'})
+            }
+         })
+        .catch(err => {
+            res.status(500).json({message: 'error updating user'})
+        })
+    } else {
+        res.status(400).json({message: 'Please provide a name'})
+    }
+})
+
 
 //listener
 
