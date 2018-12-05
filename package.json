@@ -1,0 +1,11 @@
+{
+  "name": "Node-Blog",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/kmonique/Node-Blog.git",
+  "author": "Kendra Williams <kmonique.williams@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "sqlite3": "^4.0.4"
+  }
+}
