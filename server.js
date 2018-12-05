@@ -33,7 +33,7 @@ const getUsers = (id, req, res) => {
         userDB.get(id)
           .then(user => {
             if (user) {
-            res.json({user: user})
+            res.json({user})
             }
             else {
               res.status(404).json({error: "The user you are looking for does not exist"})
@@ -66,6 +66,7 @@ SERVER.get('/api/users', (req,res) => {
 
 // ~~~~~~~~~~~ GET REQUEST FOR USER (ID) ~~~~~~~~~~~~~~~~~~~~
 SERVER.get('/api/users/:id', (req, res) => {
+  console.log(req.params)
   const { id } = req.params;
   return getUsers(id, req, res);
 })
