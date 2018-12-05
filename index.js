@@ -76,4 +76,18 @@ server.put('/api/posts/:id', (req, res) => {
         .catch(err => res.status(500).json({error: "Something went wrong updating your post's info"}))
 })
 
+server.delete('/api/users/:id', (req, res) => {
+    const { id } = req.params;
+    dbUsers.remove(id)
+        .then(count => count ? res.json({message: "User successfully deleted!"}) : res.status(404).json({error: "We couldn't find any user with th specified ID!"}))
+        .catch(err => res.status(500).json({error: "Something went wrong deleting that user!"}))
+})
+
+server.delete('/api/posts/:id', (req, res) => {
+    const { id } = req.params;
+    dbPosts.remove(id)
+        .then(count => count ? res.json({message: "Post successfully deleted!"}) : res.status(404).json({error: "We couldn't find any post with the specified ID!"}))
+        .catch( err => res.status(500).json({error: "Something went wrong deleting that post!"}))
+})
+
 server.listen(PORT, () => console.log(`Server up and running on port: ${PORT}`))
