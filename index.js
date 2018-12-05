@@ -3,10 +3,14 @@ const express = require("express");
 const userDb = require("./data/helpers/userDb.js");
 const postDb = require("./data/helpers/postDb.js");
 const tagDB = require("./data/helpers/tagDb.js");
+const uppercase = require("./custom_middleware.js");
 
 //set up server, parser and port
 const server = express();
-server.use(express.json());
+server.use(
+   express.json(),
+   uppercase.gatekeeper 
+);
 
 const PORT = 5000;
 
@@ -69,7 +73,6 @@ server.delete("/api/users/:id", (req, res) => {
 server.put("/api/users/:id", (req, res) => {
    const { id } = req.params;
    const user = req.body;
-
    if (user.name) {
       userDb.update(id, user)
          .then(count => {
