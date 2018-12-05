@@ -1,5 +1,5 @@
 //grab database methods
-const userdb = require('./data/helpers/userDb')
+const userDb = require('./data/helpers/userDb')
 const postdb = require('./data/helpers/postDb')
 
 //create server
@@ -7,10 +7,14 @@ const express = require('express');
 const server = express();
 server.use(express.json());
 
+//********MIDDLEWARE**********
+//includes middleware.nameToUpper()
+const middleware = require('./middleware');
+
 //****USER ROUTE HANDLERS*************
 //get all users
 server.get('/api/users', (req, res) =>{
-    userdb.get()
+ userDb.get()
     .then(users =>{
         res.json(users)
     })
@@ -23,7 +27,7 @@ server.get('/api/users', (req, res) =>{
 //get specific user
 server.get('/api/users/:id', (req, res) =>{
     const id = req.params.id;
-    userdb.get(id)
+    userDb.get(id)
     .then(user =>{
         if(user){
             res.json(user)
@@ -39,10 +43,10 @@ server.get('/api/users/:id', (req, res) =>{
 });
 
 //add user
-server.post('/api/users', (req,res) =>{
+server.post('/api/users', middleware.nametoUpper,(req,res) =>{
     const user = req.body;
     if(user.name){
-        userdb.insert(user)
+     userDb.insert(user)
         .then(id =>{
             res.json(id)
         })
@@ -59,10 +63,10 @@ server.post('/api/users', (req,res) =>{
 //delete user
 server.delete('/api/users/:id', (req, res) =>{
     const id = req.params.id;
-    userdb.get(id)
+    userDb.get(id)
     .then(user =>{
         if(user){
-            userdb.remove(id)
+         userDb.remove(id)
             .then(count =>{
                 if(count){
                     res.status(200)
@@ -85,13 +89,13 @@ server.delete('/api/users/:id', (req, res) =>{
 });
 
 //update user
-server.put('/api/users/:id', (req, res) =>{
+server.put('/api/users/:id', middleware.nametoUpper,(req, res) =>{
     const id = req.params.id;
     const user = req.body;
-    userdb.update(id, user) //returns count of updated
+    userDb.update(id, user) //returns count of updated
     .then(count => {
         if(count){
-            userdb.get(user.id)
+         userDb.get(user.id)
             .then(user =>{
                 res.json(user)
             })
@@ -105,6 +109,18 @@ server.put('/api/users/:id', (req, res) =>{
         res.json({error: "Unable to update user"})
     })
 });
+
+//***GET USER POSTS */
+// server.get('/api/users/posts/:userId', (req, res) =>{
+//     const userId = req.params.userId;
+
+//     userDb.getUserPosts(userId)
+//     .then(response =>{console.log(response);})
+//     .catch(err =>{
+//         res.status(500)
+//         res.json({err: "Unable to retrieve user's posts"})
+//     })
+// });
 
 
 
