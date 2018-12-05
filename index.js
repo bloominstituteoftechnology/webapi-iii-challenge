@@ -39,7 +39,17 @@ server.get('/user/:id', (req,res) => {
     });
 });
 
-
+server.get('/user/:id/post',(req, res) => {
+    const id = req.params.id;
+    userDb.getUserPosts(id)
+    .then(user =>{
+        res.status(201).json(user)
+    })
+    .catch(err => {
+        res.status(500).json({error: "please work"})
+    });
+    
+});
 server.get('/post/:id', (req, res) => {
     const id = req.params.id;
     postDb.get(id)
@@ -48,6 +58,17 @@ server.get('/post/:id', (req, res) => {
           })
           .catch(err => {
               res.status(500).json({error: "Can't recieve the post with id."})
+          });
+
+});
+server.get('/user', (req, res) => {
+
+    userDb.getPostTags()
+          .then (post => {
+            res.status(200).json(post)
+          })
+          .catch(err => {
+              res.status(500).json({error: "Can't recieve the post."})
           });
 
 });
