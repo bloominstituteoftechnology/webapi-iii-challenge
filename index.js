@@ -1,6 +1,7 @@
 const express = require('express');
 const helmet = require('helmet');
 const logger = require('morgan');
+const customMW = require('./customMW')
 
 const server = express();
 
@@ -11,7 +12,10 @@ server.use(
     express.json(),
     helmet(),
     logger('dev'),
-)
+    customMW.uppercaser
+);
+
+server.use('/users/:id', customMW.uppercaser)
 
 //endpoints
 server.get('/users', (req, res) => {
