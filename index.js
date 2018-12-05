@@ -25,12 +25,43 @@ server.get('/api/users', (req, res) =>{
     .catch(err=>{
         res
         .status(500)
-        .json({error: "The posts information could not be retrieved." })
+        .json({error: "The users information could not be retrieved." })
     });
 
 });
 
+server.get('/api/users/:id', (req, res) =>{
+    const { id }  = req.params
+    userdb.get(id)
+    .then(user =>{
+        console.log(user)
+        res
+        .json(user);
+    })
+    .catch(err =>{
+        res
+        .status(500)
+        .json({ error: "The users information could not be retrieved." })
+    })
+});
+
 //POST
+server.put('/api/users', (req, res) =>{
+    const user = req.body
+    console.log(user)
+    userdb.insert(user)
+    .then(id =>{
+        res
+        .status(200)
+        .json(id);
+    })
+    .catch(err =>{
+        res
+        .status(500)
+        .json({error: "There was an error while saving the user to the database"})
+    })
+})
+
 
 //PUT
 
