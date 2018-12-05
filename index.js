@@ -37,8 +37,12 @@ server.get("/user/:id", (req, res) => {
 
   server.post("/user", (req, res) => {
     const newUser = req.body;
-    if (newUser.name) {
-      userDB.insert(newUser)
+    if (newUser.name === "") {
+      res.status(400).json({ error: "name must include characters" });
+    } else if (newUser.name.length > 128) {
+      res.status(400).json({ error: "name must not exceed 128 characters" });
+    } else {
+        userDB.insert(newUser)
         .then(idInfo => {
           userDB.get(idInfo.id).then(user => {
             res.status(201).json(user);
@@ -49,10 +53,6 @@ server.get("/user/:id", (req, res) => {
             .status(500)
             .json({ message: "There was an error saving the new user." });
         });
-    } else {
-      res
-        .status(400)
-        .json({ message: "Please provide the name of the new user." });
     }
   });
 
