@@ -28,6 +28,21 @@ router.get("/:userId", (req, res) => {
     });
 });
 
+router.get("/:userId/posts", (req, res) => {
+  const { userId } = req.params;
+  db.getUserPosts(userId)
+    .then(userPosts => {
+      if (userPosts) {
+        res.json(userPosts);
+      } else {
+        res.status(404).json({ message: "Failed to gets posts for user." });
+      }
+    })
+    .catch(err => {
+      res.status(404).json({ message: `User ${userId} does not exist.` });
+    });
+});
+
 router.post("/", (req, res) => {
   const { name } = req.body;
   const newUser = { name };
