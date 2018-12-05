@@ -4,6 +4,23 @@ const PORT = 4000;
 
 server.use(express.json());
 
+server.use((req, res, next) => {
+    if (req.body && req.body.name && typeof req.body.name === "string") {
+        let name = req.body.name;
+        console.log(name[0]);
+        if (name[0].toLowerCase() === name[0]) {
+            console.log("in if");
+            name = name.split("");
+            console.log(name);
+            name[0] = name[0].toUpperCase();
+            name = name.join("");
+            console.log(name);
+            req.body.name = name;
+        }
+    }
+    next();
+});
+
 const users = require("./data/helpers/userDb");
 const posts = require("./data/helpers/postDb");
 
