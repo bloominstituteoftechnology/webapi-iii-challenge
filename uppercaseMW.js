@@ -1,11 +1,11 @@
 
-module.exports.uppercase = (req, res, next) => {
-  const password = req.query.password;
-  if (password === 'ferret') {
+const uppercased = (req, res, next) => {
+  const user = req.body;
+  user.body.name.toUppercase();
       next();
-  } else {
-      res.status(400).json({
-          message: "Your password is incorrect"
-      })
-  }
+  } 
+
+module.exports = {
+  uppercased: uppercased,
+
 }

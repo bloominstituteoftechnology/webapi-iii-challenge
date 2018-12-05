@@ -3,9 +3,10 @@ const db = require("./data/helpers/userDb");
 const logger = require("morgan");
 const helmet = require('helmet')
 const cors = require('cors')
+const uppercaseMW = require('./uppercaseMW.js');
 const server = express();
 
-server.use(express.json(), logger('tiny'), helmet(), cors());
+server.use(express.json(), logger('tiny'), helmet(), cors(), uppercaseMW.uppercased);
 
 const PORT = 5050;
 
@@ -43,7 +44,7 @@ server.get('/api/users/:id', (req, res) => {
 });
 
 
-server.post('/api/users', (req, res) => {
+server.post( '/api/users', (req, res) => {
   const user = req.body;
   if (user.name) {
     db.insert(user).then(idInfo => {
