@@ -53,12 +53,89 @@ server.get('/users/:id', (req, res) => {
 
 })
 
+
+server.post("/users", (req, res) => {
+
+    const user = req.body
+
+    if (user.name) {
+        users.insert(user)
+            .then(resp => {
+                users.get(resp.id).then(user => {
+                    res
+                        .status(201)
+                        .json(user)
+                })
+            })
+            .catch(err => {
+                res
+                    .status(500)
+                    .json({ error: "There was an error while saving the post to the database" })
+            })
+
+    }else {
+        res
+            .status(400)
+            .json({errorMessage: "Please provide username for the user"})
+    }
+})
+
+
 server.delete('/users/:id', (req, res) => {
     const { id } = req.params
-    users.remove(id).then().catch()
+    users.remove(id)
+        .then(count => {
+            count ?
+                users.get()
+                    .then(users => {
+                        res
+                            .status(200)
+                            .json(users)
+                    })
+                :
+                res.status(404).json({error: "Invalid id"})
+        })
+        .catch(err => {
+            res
+                .status(500)
+                .json({ error: "Failed to delete user" })
+        })
 
 })
 
+
+server.put('/users/:id', (req, res) => {
+    const user = req.body
+    const { id } = req.params
+
+    if (user.name) {
+
+        users.update(id, user)
+            .then(count => {
+                count ?
+                    users.get(id).then(user => {
+                        res.json(user)
+                    })
+                    :
+                    res
+                        .status(404)
+                        .json({ error: "The user with specified ID does not exist." })
+            })
+            .catch( err => {
+                res
+                    .status(500)
+                    .json({ error: "The username could not be update" })
+            })
+
+    } else {
+        res
+            .status(400)
+            .json({ errorMessage: "Please provide username for the user" })
+
+    }
+
+
+})
 
 
 server.listen(PORT, () => {
