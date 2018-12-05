@@ -1,0 +1,17 @@
+{
+  "name": "Node-Blog",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "server": "nodemon index.js"
+  },
+  "repository": "https://github.com/BrandonMoll/Node-Blog.git",
+  "author": "BrandonMoll <brandonmoll85@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.4",
+    "helmet": "^3.15.0",
+    "morgan": "^1.9.1",
+    "nodemon": "^1.18.7"
+  }
+}
