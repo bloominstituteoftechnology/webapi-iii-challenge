@@ -1,7 +1,7 @@
 // Import Node Modules
 const express = require('express');
-const postDb = require('./data/helpers/postDb.js');
-const userDb = require('./data/helpers/userDb.js');
+const postDb = require('./data/helpers/postDb');
+const userDb = require('./data/helpers/userDb');
 
 const helmet = require('helmet')
 const logger = require('morgan')
@@ -15,18 +15,38 @@ server.use(
     );
 
 // Server calls
- server.get('/', (req, res) => res.json({message: "hello!"}))
+//  server.get('/', (req, res) => res.json({message: "hello!"}))
 
- server.get('/user/', (req, res) => {
-     userDb.find()
+// Users section
+ server.get('/users', (req, res) => {
+     userDb.get()
         .then(users => res.json(users))
         .catch(err =>
         res.status(500)
-        .json({error: "The users info could not be retreived."}))
+        .json({error: "The users info could not be retrieved."}))
  })
 
+ server.get('/users/:id', (req, res) => {
+     const {id} = req.params
+     userDb.findById(id)
+        .then((user) => {
+            if (user) {
+                res.json(user);
+            } else {
+                res.status(400)
+                .json({message: "The user with this id does not exist."})
+            }
+            res.json(user);
+        })
+        .catch(err =>
+            res.status(500)
+            .json({ error: "The user info could not be retrieved."})
+            )
+ })
+
+//  Post section
  server.get('/posts', (req, res) => {
-    postDb.find()
+    postDb.get()
         .then(posts => res.json(posts))
         .catch(err => 
         res.status(500)
