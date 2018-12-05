@@ -20,6 +20,21 @@ server.get("/users", (req, res) => {
       });
 });
 
+server.get("/user/:id", (req, res) => {
+    const { id } = req.params;
+    userDB.get(id)
+      .then(user => {
+        if (user) {
+          res.json(user);
+        } else {
+          res.status(404).json({ message: "User with specified ID is not found" });
+        }
+      })
+      .catch(err => {
+        res.status(500).json({ error: "Could not get user" });
+      });
+  });
+
 
 server.listen(PORT, err => {
     console.log(`Server listening on port ${PORT}`);
