@@ -32,7 +32,7 @@ server.get('/api/users/:id', (req, res) => {
         res.status(404).json({ message: "User Not Found" })
       }
     })
-    .catch(error => {
+    .catch(error =>  {
       res.status(500).json({ message: error })
     })
 });
