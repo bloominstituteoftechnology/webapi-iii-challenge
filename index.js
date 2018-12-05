@@ -30,8 +30,9 @@ server.get('/api/users/:id', (req, res) => {
 server.get('/api/posts/:id', (req, res) => {
     const { id } = req.params;
     dbPosts.get(id)
-        .then(post => post ? res.json(post) : res.status(404).json({error: 'There is no post with the specified ID!'}))
-        .catch(err => res.status(500).json({error: 'We have an unexpected error while retrieving your post!'}))
+        .then(post => post ? res.json(post) : res.status(404).json({error: "There is no post with the specified ID"}))
+        .catch(err => res.status(500).json({error: 'Something went wrong retrieving your post!'}))
+        
 })
 
 server.get('/api/users/:id/posts', (req, res) => {
@@ -45,16 +46,34 @@ server.post('/api/users', (req, res) => {
     const { name } = req.body;
     if(!name){res.status(400).json({error: 'Add a valid Name!'})}
     dbUsers.insert({ name })
-        .then(idInfo => dbUsers.get(idInfo.id).then(user => resstatus(201).json(user)))
+        .then(idInfo => dbUsers.get(idInfo.id).then(user => res.status(201).json(user)))
         .catch(err => res.status(500).json({error: 'Something went wrong trying to add the new user!'}))
+})
+
+server.post('/api/posts', (req, res) => {
+    const post  = req.body;
+    dbPosts.insert(post)
+        .then(idInfo => dbPosts.get(idInfo.id)
+            .then(post => post ? res.json(post) : res.status(404).json({error: "There is no post with the specified ID"})))
+        .catch(err => res.status(500).json({error: 'Something went wrong adding your post!'}))
 })
 
 server.put('/api/users/:id', (req, res) => {
     const { id } = req.params;
     const user = req.body;
     dbUsers.update(id, user)
-        .then(count => count ? dbUsers.get(id).then(user => res.json(user)) : res.status(404).json({error: 'There is no user with the specified ID!'}))
+        .then(count => count ? dbUsers.get(id)
+            .then(user => res.json(user)) : res.status(404).json({error: 'There is no user with the specified ID!'}))
         .catch(err => res.status(500).json({error: "Something went wrong updating your user's info"}))
+})
+
+server.put('/api/posts/:id', (req, res) => {
+    const { id } = req.params;
+    const post = req.body;
+    dbPosts.update(id, post)
+        .then(count => count ? dbPosts.get(id)
+            .then(post => res.json(post)) : res.status(404).json({error: "There is no post with the specified ID!"}))
+        .catch(err => res.status(500).json({error: "Something went wrong updating your post's info"}))
 })
 
 server.listen(PORT, () => console.log(`Server up and running on port: ${PORT}`))
