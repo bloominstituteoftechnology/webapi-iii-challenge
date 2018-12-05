@@ -45,13 +45,13 @@ server.get("/api/users/:id", (req, res) => {
   users
     .get(id)
     .then(user => {
-      if (user) {
-        res.json(user);
-      } else {
+      user ?
+        res.json(user)
+      :
         res.status(400).json({
           message: "The user with the id does not exist"
         });
-      }
+
     })
     .catch(err => {
       res.status(500).json({
@@ -144,8 +144,29 @@ server.get('/api/posts', (req, res) => {
         })
 })
 
+server.get('/api/posts/:id', (req, res) => {
+    const { id } = req.params
+
+    posts.get(id)
+        .then(posts => {
+            posts ?
+                res.json(id)
+                :
+                res
+                    .status(404)
+                    .json({ error: "The post with the specified ID does not exist" })
+
+        })
+        .catch(err => {
+            res
+                .status(500)
+                .json({error: "This post information could not be retrieved"})
+        })
+
+})
+
 
 
 server.listen(PORT, () => {
-  console.log(`server is up and running on port ${PORT}`);
+console.log(`server is up and running on port ${PORT}`);
 });
