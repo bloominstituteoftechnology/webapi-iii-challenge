@@ -72,7 +72,56 @@ server.post('/user', (req,res) =>{
         res.status(500).json({message: "here we go again "})
     })
 })
+server.put('/user/:id', (req, res) => {
+    const id = req.params.id;
+    const post = req.body;
+    userDb.update(id, post)
+          .then (update => {
+            res.json(update)
+          })
+          .catch(err => {
+              res.status(500).json({error: "Can't be modified."})
+          });
 
+});
+server.put('/post/:id', (req, res) => {
+    const id = req.params.id;
+    const post = req.body;
+    postDb.update(id, post)
+          .then (update => {
+            res.json(update)
+          })
+          .catch(err => {
+              res.status(500).json({error: "Can't be modified."})
+          });
+
+});
+
+server.delete('/post/:id', (req, res) => {
+    const id = req.params.id;
+
+    postDb.remove(id)
+          .then (remove => {
+            res.status(200).json(remove)
+          })
+          .catch(err => {
+              res.status(500).json({error: "Can't remove the post."})
+          });
+
+});
+
+server.delete('/user/:id', (req, res) => {
+    const id = req.params.id;
+
+    userDb.remove(id)
+          .then (remove => {
+            res.status(200).json(remove)
+          })
+          .catch(err => {
+              res.status(500).json({error: "Can't remove the post."})
+          });
+
+});
 
 
 server.listen(PORT, () => {
