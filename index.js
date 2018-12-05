@@ -30,8 +30,6 @@ server.get('/users', (req, res) => {
         })
 })
 
-//check users and post for .length > 0 scenario to ensure posts/users exist.
-
 server.get('/posts', (req, res) => {
     postDb.get()
     .then((posts)=>{
@@ -69,8 +67,6 @@ server.get('/posts/:id', (req, res) => {
             })
         })
 })
-
-//this ^ goes straight to .catch if id is invalid. change to 404?
 
 server.get('/users/:id', (req, res) => {
     const {id} = req.params;
