@@ -22,6 +22,22 @@ server.get('/api/users', (req, res) => {
     })
 })
 
+server.get('/api/users/:id', (req, res) => {
+    const id = req.params;
+    users.get(id)
+    .then(user => {
+        if(user[0]){
+            res.json(user);
+        }
+        else {
+            res.status(404).json({message:"user does not exist"});
+        }
+    })
+    .catch(err => {
+        res.status(500).json({message:"user could not be retrieved"})
+    })
+})
+
 server.listen(PORT, err => {
     console.log(`server is listening on port ${PORT}`)
 });
