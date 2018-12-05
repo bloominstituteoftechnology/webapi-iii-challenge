@@ -5,7 +5,6 @@ const userDB = require("./data/helpers/userDb");
 const postDB = require("./data/helpers/postDb");
 
 const customMiddleware = require("./middleware");
-const capUser = require("./middleware");
 
 const server = express();
 const PORT = 4050;
@@ -85,10 +84,10 @@ server.get("/users/:id/posts", (req, res) => {
 // - `insert()`: calling insert passing it a resource object will add it to the database and return an object with the id of the inserted resource. The object looks like this: `{ id: 123 }`.
 
 server.post("/users", (req, res) => {
-  console.log(capUser.capUser)
-  if (capUser.capUser.name) {
+  console.log(customMiddleware.capUser)
+  if (customMiddleware.capUser.name) {
     userDB
-      .insert(capUser)
+      .insert(customMiddleware.capUser)
       .then(id => {
         userDB.get(id.id).then(user => {
           res.status(201).json(user);
