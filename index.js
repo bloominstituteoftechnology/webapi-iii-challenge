@@ -43,7 +43,7 @@ server.get('/api/users/:id', (req, res) => {
 });
 
 
-server.put('/api/users', (req, res) => {
+server.post('/api/users', (req, res) => {
   const user = req.body;
   if (user.name) {
     db.insert(user).then(idInfo => {
@@ -59,6 +59,54 @@ server.put('/api/users', (req, res) => {
     res.status(400).json({message: "missing info, try again"})
   }
 });
+
+server.put('/api/users/:id', (req, res) => {
+  const user = req.body;
+  const { id } = req.params;
+
+  if (user.name) {
+    db.update(id, user).then(count => {
+      if (count) {
+        db.getUserPosts(id).then(user => {
+          res.json(user);
+        });
+      } else {
+        res
+          .status(404)
+          .json({ message: 'invalid id'});
+      }
+    }).catch(err => {
+      res
+        .status(500)
+        .json({message: "failed"});
+    });
+  } else {
+    res
+      .status(400)
+      .json({message: "missing info!"})  
+  }
+});
+
+server.delete('/api/users/:id', (req, res) => {
+  const {id} = req.params;
+  db.remove(id).then(count => {
+    if (count) {
+      // we would like to send back the user
+      res.json({message: "successfully deleted"});
+    } else {
+      res
+        .status(404)
+        .json({ message: "invalid id"});
+    }
+  }).catch(err => {
+    res
+      .status(500)
+      .json({message: "failed to delete user"});
+  });
+
+});
+
+
 
 
 server.listen(PORT, () => {
