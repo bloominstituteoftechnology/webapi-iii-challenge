@@ -19,12 +19,12 @@ server.get('/api/users', (req, res) => {
     })
     .catch (err => {
         res.status(500).json({message: "user not found"})
-    })
-})
+    });
+});
 
 server.get('/api/users/:id', (req, res) => {
     const {id} = req.params;
-    users.get(id)
+    users.getUserPosts(id)
     .then(user => {
         if(user[0]){
             res.json(user);
