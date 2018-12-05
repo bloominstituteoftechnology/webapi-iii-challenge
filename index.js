@@ -42,11 +42,51 @@ server.use(express.json())
         })
  })
 
+ if (user.name) {
+    users.insert(user)
+        .then(resp => {
+            users.get(resp.id).then(user => {
+                res
+                    .status(201)
+                    .json(user)
+            })
+        })
+        .catch(err => {
+            res
+                .status(500)
+                .json({ error: "There was an error while saving the post to the database" })
+        })
+
+}else {
+    res
+        .status(400)
+        .json({errorMessage: "Please provide username for the user"})
+}
+})
+
+
+
  server.delete('/users/:id', (req, res) => {
     const { id } = req.params
-    users.remove(id).then().catch()
+    users.remove(id)
+      .then(count => {
+          count ?
+            users.get()
+               .then(users => {
+                   res
+                     .status(200)
+                     .json(users)
+               })
+            :
+            res.status(404).json({error:"Invalid id"})
+      })
+    .catch( err => {
+        res
+          .status(500)
+          .json({error: "Failed to delete user"})
+    })
  })
- 
+
  server.listen(PORT, () => {
     console.log(`server is up and running on port ${PORT}`)
 }) 
