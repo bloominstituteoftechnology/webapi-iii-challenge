@@ -51,7 +51,7 @@ server.get('/posts/:id', (req, res) => {
     postDb.get(id)
         .then(posts => {
             console.log("get posts by id", posts);
-            if(posts) {
+            if(posts.length > 0) {
                 res.json(posts)
             } else {
                 res
@@ -102,8 +102,16 @@ server.get('/users/:id/posts', (req, res) => {
         .then(user => {
             if (user) {
                 userDb.getUserPosts(id)
-                    .then(user => {
-                        res.json(user);
+                    .then(posts => {
+                        if (posts.length > 0) {
+                            res.json(posts);
+                        } else {
+                            res
+                            .status(404)
+                            .json({
+                                message: "This Hobbit has said nothing worth writing down."
+                            })
+                        }
                     })
             } else {
                 res
