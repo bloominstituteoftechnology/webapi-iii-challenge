@@ -8,4 +8,12 @@ module.exports = server => {
   server.use(express.json());
   server.use(logger(`combined`));
   server.use(cors());
+  server.use((req, res, next) => {
+    if (req.body.name !== undefined) {
+      req.body.name = req.body.name.toUpperCase();
+      next();
+    } else {
+      next();
+    }
+  });
 };

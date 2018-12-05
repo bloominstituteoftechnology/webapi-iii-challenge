@@ -14,14 +14,6 @@ configureMiddleware(server);
 server.use("/api/posts", postRoute);
 server.use("/api/users", userRoute);
 
-// Custom middleware
-const upperCase = (req, res, next) => {
-  req.body.name = req.body.name.toUpperCase();
-  next();
-};
-
-server.use(upperCase);
-
 server.get("/", (req, res) => {
   res.send("Blog...");
 });
