@@ -19,7 +19,15 @@ server.use(
 server.get('/users', (req, res) => {
     userDb.get()
         .then((users) => {
-            res.json(users)
+            if (users.length > 0) {
+                res.json(users)
+            } else {
+                res
+                .status(404)
+                .json({
+                    message: "There are currently no Hobbits in the Shire. Check back later or go create a new one."
+                })
+            }
         })
         .catch(err => {
             res
@@ -33,7 +41,15 @@ server.get('/users', (req, res) => {
 server.get('/posts', (req, res) => {
     postDb.get()
     .then((posts)=>{
-        res.json(posts)
+        if (posts.length > 0) {
+            res.json(posts)
+        } else {
+            res
+            .status(404)
+            .json({
+                message: "There are no quotes. The Hobbits appear to be mute right now."
+            })
+        }
     })
     .catch(err => {
         res
