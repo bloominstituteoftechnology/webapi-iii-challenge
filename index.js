@@ -11,15 +11,30 @@ const postDB = require('./data/helpers/postDb');
 const server = express();
 const port = 5050;
 
+// ================= CUSTOM MIDDLEWARE =================
+const upperCaseName = (req, res, next) => {
+  if (req.method === 'POST' || req.method === 'PUT') {
+    const { name } = req.body;
+    if (name[0] === name[0].toUpperCase()) {
+      next();
+    } else {
+      res.status(400).json({ message: 'Name must be capitalized' });
+    }
+  } else {
+    next();
+  }
+};
+
 // Middleware
 server.use(express.json());
 server.use(logger('dev'));
 server.use(helmet());
+server.use(upperCaseName);
 
 // Endpoints
 
 // GET
-server.get('/user', (req, res) => {
+server.get('/users', (req, res) => {
   userDB
     .get()
     .then(users => {
@@ -30,7 +45,7 @@ server.get('/user', (req, res) => {
     });
 });
 
-server.get('/user/:id', (req, res) => {
+server.get('/users/:id', (req, res) => {
   const { id } = req.params;
   userDB
     .get(id)
@@ -45,6 +60,42 @@ server.get('/user/:id', (req, res) => {
     })
     .catch(err => {
       res.status(500).json({ error: 'Could not get user' });
+    });
+});
+
+// POST
+server.post('/users', (req, res) => {
+  const user = req.body;
+  if (user.name) {
+    userDB
+      .insert(user)
+      .then(user => {
+        res.json(user);
+      })
+      .catch(err => {
+        res.status(500).json({ error: 'Could not add user' });
+      });
+  } else {
+    res.status(400).json({ message: 'Please make sure a name is entered' });
+  }
+});
+
+//DELETE
+server.delete('/users/:id', (req, res) => {
+  const { id } = req.params;
+  userDB
+    .remove(id)
+    .then(count => {
+      if (count) {
+        res.json(count);
+      } else {
+        res
+          .status(404)
+          .json({ error: 'user with specified ID does not exist' });
+      }
+    })
+    .catch(err => {
+      res.status(500).json({ error: 'Could not delete' });
     });
 });
 
