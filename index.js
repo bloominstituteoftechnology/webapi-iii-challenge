@@ -32,6 +32,21 @@ server.get('/api/posts', (req, res) => {
     })
 })
 
+server.get('/api/posts/:id', (req, res) => {
+  const { id } = req.params;
+  postDb.get(id)
+    .then(post => {
+      if (post) {
+        res.json(post)
+      } else {
+        res.status(404).json({message: 'The post with the specified ID does not exist'})
+      }
+    })
+    .catch(err => {
+      res.status(500).json({error: "Error with database"})
+    })
+})
+
 server.listen(PORT, () => {
   console.log(`Server is listening on PORT ${PORT}`)
 });
