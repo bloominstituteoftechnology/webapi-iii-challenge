@@ -81,12 +81,35 @@ server.delete('/api/posts/:id', (req, res) => {
   .catch(err => {
     res
       .status(500)
-      .json({message: "Database Error"})
+      .json({error: "Database Error"})
   })
 })
 
-server.put('api/posts/:id', (req, res) => {
+server.put('/api/posts/:id', (req, res) => {
+  const { id } = req.params;
+  const body = req.body;
   
+  if (body.text) {
+    postDb.update(id, body)
+      .then(count => {
+        if (count) {
+          res.json({ count })
+        } else {
+          res
+            .status(404)
+            .json({message: "Post with the specified ID does not exist"})
+        }
+      })
+      .catch(err => {
+        res
+          .status(500)
+          .json({error: "Database go boom"})
+      })
+  } else {
+    res
+      .status(400)
+      .json({ message: "Please include a user ID and text to update"})
+  }
 })
 
 server.listen(PORT, () => {
