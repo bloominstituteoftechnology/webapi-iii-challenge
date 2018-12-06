@@ -6,7 +6,8 @@
   "author": "mglittleton <michaelglittleton@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon"
+    "start": "node index.js",
+    "server": "nodemon"
   },
   "dependencies": {
     "express": "^4.16.4",
