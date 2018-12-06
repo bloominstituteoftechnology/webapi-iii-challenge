@@ -10,6 +10,18 @@ const PORT = 3000;
 server.use(express.json());
 server.use(morgan('dev'));
 
+server.use((req, res, next) => {
+    const name = req.body.name;
+
+    if (!name) {
+      res.status(400).json({ error: "name is required" });
+    } else {
+        const capitalizedString = name.toUpperCase();
+        req.body.name = capitalizedString;
+        next();
+      } 
+});
+
 server.get("/users", (req, res) => {
     userDB.get()
       .then(users => {
@@ -49,9 +61,7 @@ server.get("/user/:id", (req, res) => {
           });
         })
         .catch(err => {
-          res
-            .status(500)
-            .json({ message: "There was an error saving the new user." });
+          res.status(500).json({ message: "There was an error saving the new user." });
         });
     }
   });
@@ -71,6 +81,30 @@ server.get("/user/:id", (req, res) => {
       .catch(err => {
         res.status(500).json({ message: "The user could not be removed." });
       });
+  });
+
+  server.put("/user/:id", (req, res) => {
+    const { id } = req.params;
+    const updatedUser = req.body;
+
+    if (updatedUser.name) {
+        userDB.update(id, updatedUser)
+        .then(count => {
+            if (count) {
+                db.findById(id)
+                    .then(post => {
+                        res.json(post);
+                })
+            } else {
+                res.status(404).json({ message: "The user with the specified ID does not exist." })
+            }
+        })
+        .catch(err => {
+            res.status(500).json({ error: "The user information could not be modified." })
+        });
+    } else {
+        res.status(400).json({ errorMessage: "Please provide your name" })
+    }
   });
 
 
