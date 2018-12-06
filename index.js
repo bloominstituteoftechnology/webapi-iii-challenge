@@ -18,8 +18,19 @@ server.use(
 );
 
 //requests
-
 server.use('/api/users', userRouter);
+
+server.get('/api/posts', (req, res) => {
+  postDb.get()
+    .then(posts => {
+      res.json(posts)
+    })
+    .catch(err => {
+      res
+        .status(500)
+        .json({ error: "Couldn't find any posts" })
+    })
+})
 
 server.listen(PORT, () => {
   console.log(`Server is listening on PORT ${PORT}`)
