@@ -9,12 +9,15 @@ const server = express();
 server.use(express.json())
 const PORT = 4000;
 
-const gatekeeper = (req, res, next) =>{
-    req.body.name.toUpperCase();
+const middleware = (req, res, next) =>{
+    const name = req.body.name;
+    if(name){
+        req.body.name = req.body.name.toUpperCase();
+    }
     next();
 }
 
-server.use(gatekeeper)
+server.use(middleware)
 
 server.get('/post', (req, res) =>{
     postDb.get()
@@ -88,7 +91,7 @@ server.post('/post', (req, res) =>{
     })
 })
 
-server.post('/user', gatekeeper, (req, res) =>{
+server.post('/user', middleware, (req, res) =>{
     const data = req.body;
     if(!data.name){res.status(400).json({message:"Please provide a name"})}
     userDb.insert(data)
@@ -122,7 +125,7 @@ server.put('/post/:id', (req, res)=>{
     }
 })
 
-server.put('/user/:id', gatekeeper, (req, res)=>{
+server.put('/user/:id', middleware, (req, res)=>{
     const { id } = req.params;
     const data = req.body;
     if(data.name){
