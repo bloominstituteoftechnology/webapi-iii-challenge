@@ -1,12 +1,27 @@
 const express = require('express');
 const users = require('./data/helpers/userDb');
-
+const nameMW = require('./middleware/capName');
 const server = express();
 const PORT = 3333;
 
-server.use(express.json());
+server.use(
+    express.json(),
+    nameMW.capName
+    );
 
-
+server.post('/api/users', (req, res) => {
+    const {name} = req.body;
+    if(!name){
+        res.status(401).json({message:"could not add name"})
+    }
+    users.insert({name})
+    .then(response => {
+        res.status(201).json(response)
+    })
+    .catch(err => {
+        res.status(500).json({message:"error posting"})
+    })
+})
 
 server.get('/', (req, res) => {
     res.json({message: "success"})
