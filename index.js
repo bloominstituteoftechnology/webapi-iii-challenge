@@ -1,10 +1,14 @@
 const express = require('express');
+const cors = require('cors')
+
 const server = express();
 
-const cors = require('cors')
 
 const postDb = require('./data/helpers/postDb')
 const userDB = require('./data/helpers/userDb')
+const customMW = require('./customMW.js')
+
+const UPPERCASE = customMW.toUpperCase
 
 const PORT = 5000;
 
@@ -135,7 +139,7 @@ server.get('/api/users/posts/:userId', (req, res) => {
 })
 
 //creating a new user
-server.post('/api/users', (req, res) => {
+server.post('/api/users', UPPERCASE, (req, res) => {
   const user = req.body;
 
   userDB.insert(user)
@@ -150,7 +154,7 @@ server.post('/api/users', (req, res) => {
 })
 
 //updating a user
-server.put('/api/users/:id', (req, res) => {
+server.put('/api/users/:id', UPPERCASE, (req, res) => {
   const {id} = req.params;
   const changes = req.body;
 
@@ -168,7 +172,7 @@ server.put('/api/users/:id', (req, res) => {
 
 server.delete('/api/users/:id', (req, res) => {
   const { id } = req.params;
-  
+
   userDB.remove(id)
     .then( count => {
       if (count) {
