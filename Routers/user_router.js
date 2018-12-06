@@ -1,6 +1,7 @@
 //import requires for router
 const express = require("express");
 const router = express.Router();
+const userDb = require("../data/helpers/userDb.js");
 
 //user db gets
 //get all users

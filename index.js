@@ -13,7 +13,7 @@ server.use(
    gatekeeper.uppercase
 );
 
-server.use("./user_router.js", userRouter);
+server.use("/api/users", userRouter);
 
 // set port to 5000 or the enviornment port
 const PORT = process.env.PORT || 5000;
