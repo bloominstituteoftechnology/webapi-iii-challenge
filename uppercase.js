@@ -1,4 +1,4 @@
-const gatekeeper = (req, res, next) => {
+const uppercase = (req, res, next) => {
    if(req.body.name) {
       if (req.body.name != req.body.name.toUpperCase()){
          req.body.name = req.body.name.toUpperCase();
@@ -12,5 +12,5 @@ const gatekeeper = (req, res, next) => {
 }
 
 module.exports = {
-   gatekeeper: gatekeeper
+   uppercase: uppercase
 };
