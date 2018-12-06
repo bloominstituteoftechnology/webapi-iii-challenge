@@ -13,14 +13,21 @@ server.get('/',(req,res) => {
 	res.send("Blogggy stuff");
 });
 
-//Insert
-
-//update
-
-//remove
+// Uppercase names
+const uppercase = (req,res,next) => {
+	const name = req.body.name;
+	if(name){
+		req.body.name = name.toUpperCase();
+	}
+	next();
+};
 
 /* START LISTENING */
 
 server.listen(PORT, () => {
 	console.log("Listening on port:\t",PORT);
 });
+
+module.exports = {
+	uppercase : uppercase
+}
