@@ -3,7 +3,6 @@ const router = express.Router();
 
 // App Requirements:
 const posts = require('./data/helpers/postDb');
-const user = require('./data/helpers/userDb');
 const customMW = require('./middleware.js');
 
 // Middleware:
@@ -58,12 +57,12 @@ router.post( '/', customMW.checkValidUser, (req, res) => {
 
   }
 });
-/*
+
 // PUT:
-router.put( '/:id', (req, res) => {
+router.put( '/:id', customMW.checkValidUser, (req, res) => {
   const postBody = req.body;
   const { id } = req.params;
-
+  
   if( postBody.text || postBody.userId ){
     posts.update(id, postBody)
       .then( () => {
@@ -79,6 +78,7 @@ router.put( '/:id', (req, res) => {
     res.status(400).json({ error: "Please provide the text for the post and the userId." });
   }
 });
+/*
 // DELETE:
 router.delete( '/:id', (req, res) => {
   const { id } = req.params;
