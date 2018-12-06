@@ -78,18 +78,18 @@ router.put( '/:id', customMW.checkValidUser, (req, res) => {
     res.status(400).json({ error: "Please provide the text for the post and the userId." });
   }
 });
-/*
+
 // DELETE:
 router.delete( '/:id', (req, res) => {
   const { id } = req.params;
 
-  users.remove(id)
+  posts.remove(id)
     .then( () => {
-      res.json({ message: `User ID ${id} deleted.`});
+      res.json({ message: `Post ID ${id} deleted.`});
     })
     .catch( err => {
-      res.status(500).json({error: "There was an error deleting the user."});
+      res.status(500).json({error: "There was an error deleting the post."});
     });
 });
-*/
+
 module.exports = router;
