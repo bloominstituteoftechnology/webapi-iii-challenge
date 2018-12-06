@@ -3,10 +3,10 @@ const db = require("./data/helpers/userDb");
 const logger = require("morgan");
 const helmet = require('helmet')
 const cors = require('cors')
-const uppercaseMW = require('./uppercaseMW.js');
+const middleware = require('./middleware.js');
 const server = express();
 
-server.use(express.json(), logger('tiny'), helmet(), cors(), uppercaseMW.uppercased);
+server.use(express.json(), logger('tiny'), helmet(), cors(), middleware.uppercase);
 
 const PORT = 5050;
 
