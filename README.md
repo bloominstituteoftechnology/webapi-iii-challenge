@@ -49,7 +49,7 @@ The _schemas_ (properties and data type of each property) used to store and retr
 - userId: number, required, must be the id of an existing user.
 - text: string, no size limit, required.
 
-We have provided test data for the resources.
+We have provided test data for the resouryarces.
 
 Now that we have a way to add, update, remove and retrieve data from the provided database, it is time to work on the API.
 
