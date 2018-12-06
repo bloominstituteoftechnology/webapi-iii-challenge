@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-const posts = require('./data/helpers/postDb');
+const posts = require('../data/helpers/postDb');
+
+
 //endpoints
 router.get('/', (req, res) => {
     posts.get()
@@ -15,7 +17,7 @@ router.get('/', (req, res) => {
 
 router.get('/:id', (req, res) => {
     const {id} = req.params;
-    posts.getUserPosts(id)
+    posts.getPostTags(id)
     .then(post => {
         if(post[0]){
             res.json(post);
