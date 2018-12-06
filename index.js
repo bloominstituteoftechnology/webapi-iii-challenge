@@ -46,7 +46,7 @@ server.get('/api/users/:id', (req, res) =>{
 });
 
 //POST
-server.put('/api/users', (req, res) =>{
+server.post('/api/users', (req, res) =>{
     const user = req.body
     console.log(user)
     userdb.insert(user)
@@ -65,7 +65,25 @@ server.put('/api/users', (req, res) =>{
 
 //PUT
 
+server.put('/api/users/:id', (req, res) =>{
+    const { id } = req.params;
+    const userName = req.body
+    userdb.update(id, userName)
+    .then( count =>{
+        res
+        .status(200)
+        .json(userName)
+    })
+    .catch(err =>{
+        res
+        .status(500)
+        .json({error: "The post information could not be modified."})
+    })
+})
+
 //DELETE
+
+
 
 server.listen(PORT, () =>{
     console.log(`server is running on port ${PORT}`);
