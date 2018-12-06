@@ -1,0 +1,17 @@
+{
+ "name": "Node-Blog",
+ "version": "0.5",
+ "main": "index.js",
+ "private": "true",
+ "scripts": {
+  "server": "nodemon index.js"
+ },
+ "dependencies": {
+  "express": "^4.16.4",
+  "helmet": "^3.15.0",
+  "knex": "^0.15.2",
+  "nodemon": "^1.18.7",
+  "server": "^1.0.18",
+  "sqlite3": "^4.0.4"
+ }
+}
