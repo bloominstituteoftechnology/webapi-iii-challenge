@@ -4,7 +4,9 @@ const express = require('express');
 // Middleware requires
 const morgan = require('morgan');
 const helmet = require('helmet');
-const userRouter = require('userRouter.js');
+const cors = require('cors');
+
+const userRouter = require('./userRouter');
 
 // Server:
 const server = express();
@@ -15,8 +17,7 @@ server.use(
   express.json(),
   morgan('dev'),
   helmet(),
-  cors(),
-  customMW.fixCase
+  cors()
 );
 server.use('/api/user', userRouter);
 

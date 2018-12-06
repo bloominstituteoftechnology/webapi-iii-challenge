@@ -6,7 +6,7 @@ const users = require('./data/helpers/userDb');
 const customMW = require('./middleware.js');
 
 // Middleware:
-server.use(customMW.fixCase);
+router.use(customMW.fixCase);
 
 //-------- User Info: --------//
 // GET:
