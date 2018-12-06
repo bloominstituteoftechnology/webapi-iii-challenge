@@ -1,5 +1,6 @@
 import { FETCHING_USERS, FETCHED_USERS, CREATING_USER, CREATED_USER,
-         FETCH_USER, FETCHED_USER } from '../../actions/users';
+         FETCH_USER, FETCHED_USER, FETCHING_USER_POSTS,
+         FETCHED_USER_POSTS, ERROR } from '../../actions/users';
 
 const inititalState = {
   fetchingUsers: false,
@@ -12,10 +13,14 @@ const inititalState = {
   updatedUser: false,
   deletingUser: false,
   deletedUser: false,
+  fetchingUserPosts: false,
+  fetchedUserPosts: false,
   users: [],
-  error: null,
+  error: false,
+  errorMessage: null,
   profile: {},
-  currentProfileView: {}
+  currentProfileView: {},
+  currentUserPosts: []
 }
 
 const usersReducer = (state = inititalState, action) => {
@@ -35,6 +40,12 @@ const usersReducer = (state = inititalState, action) => {
     case FETCHED_USER:
       return Object.assign({}, state, {fetchUser: false, fetchedUser: true,
                                        currentProfileView: action.payload})
+    case FETCHING_USER_POSTS:
+      return Object.assign({}, state, {fetchingUserPosts: true, fetchedUserPosts: false })
+    case FETCHED_USER_POSTS:
+      return Object.assign({}, state, {fetchingUserPosts: false, fetchedUserPosts: true, currentUserPosts: action.payload})
+    case ERROR:
+      return Object.assign({}, state, {error: true, errorMessage: action.payload})
     default:
       return state
   }

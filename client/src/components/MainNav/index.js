@@ -7,7 +7,7 @@ const MainNav = (props) => {
     <Nav horizontal='true' className='row'>
       {props.buttons.map(button => {
         return (
-          <NavItem>
+          <NavItem key={button}>
             <NavLink className='col-sm-3' to={`/${button.toLowerCase()}`}>{button}</NavLink>
           </NavItem>
         );

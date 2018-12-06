@@ -6,6 +6,7 @@ import { Route } from 'react-router-dom';
 import UsersView from './View/UsersView/';
 import ProfileView from './View/ProfileView/';
 import MainNav from './components/MainNav/';
+import PostsView from './View/PostsView/';
 
 class App extends Component {
   constructor() {
@@ -28,6 +29,7 @@ class App extends Component {
         </header>
         <Route path='/users' exact component={UsersView} />
         <Route path='/users/:id' exact component={ProfileView} />
+        <Route path='/posts' exact component={PostsView} />
       </div>
     );
   }

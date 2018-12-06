@@ -48,7 +48,7 @@ class UsersView extends React.Component {
          {this.props.fetchingUser ? <LoaderStar /> : null}
        {this.props.users.map(user => {
          return (
-             <Col md="3" style={{color: 'purple', backgroundColor: 'lightblue', padding: '10px', margin: '10px'}}>
+             <Col key={user.id+Math.random()} md="3" style={{color: 'purple', backgroundColor: 'lightblue', padding: '10px', margin: '10px'}}>
                <Link to={`/users/${user.id}`} style={{textDecoration: 'none'}}>
                  <UserCard {...user} />
                </Link>
