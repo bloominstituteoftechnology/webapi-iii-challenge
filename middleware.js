@@ -5,11 +5,8 @@ const fixCase = (req, res, next) => {
 
   if( name ){
     req.body.name = name.charAt(0).toUpperCase() + name.slice(1);
-    // console.log( "name", req.body.name );
-    next();
-  } else {
-    next();
   }
+  next();
 };
 
 module.exports.fixCase = fixCase;
