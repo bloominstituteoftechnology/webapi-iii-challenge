@@ -3,6 +3,7 @@
 const express = require('express');
 const helmet = require('helmet');
 const logger = require('morgan');
+const cors = require('cors');
 
 const middleware = require('./middleware');
 const userRouter = require('./routers/user_router');
@@ -14,6 +15,7 @@ const PORT = 5050;
 server.use(express.json());
 server.use(helmet());
 server.use(logger('tiny'));
+server.use(cors());
 
 server.use(middleware.capitalizeFirstLetter);
 server.use('/api/users', userRouter);

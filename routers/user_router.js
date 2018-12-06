@@ -29,7 +29,7 @@ router.get('/:id', (req, res) => {
           } else {
               res
                   .status(404)
-                  .json({error: "The user with the specified ID does not exist"});
+                  .json({error: "The user with the specified ID does not exist."});
           }
       })
       .catch(err => {
@@ -75,7 +75,7 @@ userDB
     } else {
       res
         .status(404)
-        .json({message: "The user with the specified ID doens not exist."})
+        .json({message: "The user with the specified ID does not exist."})
     }
   })
   .catch(err => {
