@@ -1,3 +1,12 @@
+// constants for export
+const badDataRetreival = { message: "That data could not be retreived" };
+const badDataInsert = {
+    message: "That information could not be added to the database"
+};
+const badDataRemoval = { message: "That data could not be deleted" };
+const badID = { message: "That data does not exist" };
+
+// capitalize
 const capUser = {};
 
 const capitalize = (req, res, next) => {
@@ -14,5 +23,11 @@ const capitalize = (req, res, next) => {
 };
 
 
-module.exports.capitalize = capitalize;
-module.exports.capUser = capUser;
+module.exports = {
+    capitalize: capitalize,
+    capUser: capUser,
+    badDataRetreival: badDataRetreival,
+    badDataInsert: badDataInsert,
+    badDataRemoval: badDataRemoval,
+    badID: badID
+}
