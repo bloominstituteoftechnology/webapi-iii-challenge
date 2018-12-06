@@ -10,7 +10,15 @@ const PORT = 9000;
 
 server.use(cors());
 server.use(express.json());
-
+server.use((req, res, next) => {
+    const name = req.body.name;
+    if (name) {
+        req.body.name = name.toUpperCase();
+        next();
+    } else {
+        next();
+    }
+})
 
 // Endpoints
 
@@ -90,16 +98,16 @@ server.put('/users/:id', (req, res) => {
         userDb.update(id, user)
             .then(user => {
                 if (id) {
-                    res.json({ message: 'User has been updated'})
+                    res.json({ message: 'User has been updated' })
                 } else {
-                    res.status(404) .json({ message: 'The user with the specified ID does not exist'})
+                    res.status(404).json({ message: 'The user with the specified ID does not exist' })
                 }
             })
             .catch(err => {
                 res.status(500).json({ message: 'Failed to update user' })
             })
     } else {
-        res.status(400).json({ messgae: 'missing name'})
+        res.status(400).json({ messgae: 'missing name' })
     }
 })
 
