@@ -1,7 +1,7 @@
 const express = require('express');
 const db = require('./data/dbConfig');
 const server = express();
-const PORT = 4000;
+const PORT = process.env.PORT4000 || 4000;
 const posts = require('./data/helpers/postDb');
 const users = require('./data/helpers/userDb');
 const cors = require('cors')
