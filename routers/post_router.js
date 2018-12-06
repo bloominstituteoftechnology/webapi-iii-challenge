@@ -95,7 +95,7 @@ router.put('/:id', (req, res) => {
     })
   } else {
     res.status(400)
-    .json({message: "Provide post's userId and text."})
+    .json({message: "Provide post's text or userId."})
   }
 })
 

@@ -10,7 +10,7 @@ const userRouter = require('./routers/user_router');
 const postRouter = require('./routers/post_router');
 
 const server = express();
-const PORT = 5050;
+const PORT = process.env.PORT || 5050;
 
 server.use(express.json());
 server.use(helmet());
