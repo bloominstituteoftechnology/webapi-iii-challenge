@@ -10,10 +10,10 @@
 
 ## Assignment
 
-- Use Node.js and Express to **design and build** an API that performs CRUD operations on `users` and `posts`.
-- Write custom middleware to ensure that the user's `name` is uppercased before the request reaches the `POST` or `PUT` route handler.
-- **You will work on this assignment over the course of TWO days**
-- **The endpoints for managing users and the middleware to uppercase the user's name are due on Wednesday, the posts endpoints are due on Thursday**.
+- [x] Use Node.js and Express to **design and build** an API that performs CRUD operations on `users` and `posts`.
+- [x] Write custom middleware to ensure that the user's `name` is uppercased before the request reaches the `POST` or `PUT` route handler.
+- [x] **You will work on this assignment over the course of TWO days**
+- [x] **The endpoints for managing users and the middleware to uppercase the user's name are due on Wednesday, the posts endpoints are due on Thursday**.
 
 ### Download Project Files and Install Dependencies
 

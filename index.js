@@ -3,11 +3,12 @@ const helmet = require('helmet');
 const logger = require('morgan');
 const postDb = require('./data/helpers/postDb');
 const userDb = require('./data/helpers/userDb');
+const middleware = require('./middleware/uppercaseName');
 
 const server = express();
 const PORT = 5000;
 
-server.use(express.json(), helmet(), logger('tiny'));
+server.use(express.json(), helmet(), logger('tiny'), middleware.uppercaseUserName);
 
 /*
     CRUD API Endpoints for Posts data
