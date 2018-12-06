@@ -88,20 +88,26 @@ server.get("/user/:id", (req, res) => {
     const updatedUser = req.body;
 
     if (updatedUser.name) {
-        userDB.update(id, updatedUser)
-        .then(count => {
-            if (count) {
-                db.findById(id)
-                    .then(post => {
-                        res.json(post);
-                })
-            } else {
-                res.status(404).json({ message: "The user with the specified ID does not exist." })
-            }
-        })
-        .catch(err => {
-            res.status(500).json({ error: "The user information could not be modified." })
-        });
+        if (updatedUserBody.name === "") {
+            res.status(400).json({ error: "name must include characters" });
+          } else if (updatedUserBody.name.length > 128) {
+            res.status(400).json({ error: "name must not exceed 128 characters" });
+          } else {
+            userDB.update(id, updatedUser)
+            .then(count => {
+                if (count) {
+                    db.findById(id)
+                        .then(post => {
+                            res.json(post);
+                    })
+                } else {
+                    res.status(404).json({ message: "The user with the specified ID does not exist." })
+                }
+            })
+            .catch(err => {
+                res.status(500).json({ error: "The user information could not be modified." })
+            });
+        }
     } else {
         res.status(400).json({ errorMessage: "Please provide your name" })
     }
