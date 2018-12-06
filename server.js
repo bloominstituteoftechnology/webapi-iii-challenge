@@ -53,6 +53,45 @@ server.get('/api/users/:id', (req, res) => {
     })
 })
 
+server.delete('/api/users/:id', (req, res) => {
+    const {id} = req.params;
+    users.remove(id)
+    .then(count => {
+        if (count) {
+            res.json({message: "success"});
+        } else {
+            res.status(404).json({message:"could not delete"})
+        }
+    })
+    .catch(err => {
+        res.status(500).json({message:"user could not be retrieved"})
+    })
+})
+
+server.put('/api/users/:id', (req, res) => {
+    const { id } = req.params;
+    const { name } = req.body;
+    
+    if(name){
+        users.update(id, {name})
+        .then(name => {
+            if (name) {
+                users.getUserPosts(id)
+                .then(name => {
+                    res.json(name);
+                });
+            }
+            else {
+                res.status(404).json({ message: "The user with the specified ID does not exist." });
+            }
+        })
+        .catch( err => {
+            res
+            .status(500)
+            .json({errorMessage : 'user could not be retrieved'});
+        });
+}});
+
 server.listen(PORT, err => {
     console.log(`server is listening on port ${PORT}`)
 });
