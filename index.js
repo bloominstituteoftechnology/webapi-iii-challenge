@@ -72,6 +72,15 @@ server.get('/user', (req, res) => {
           });
 
 });
+server.use((req, res, next) => {
+    const name = req.body.name;
+    if(name) {
+        name.toUpperCase();
+        req.body.name = name.toUpperCase();
+    
+    }
+    next();
+})
 
 server.post('/post', (req,res) =>{
     const data = req.body;
