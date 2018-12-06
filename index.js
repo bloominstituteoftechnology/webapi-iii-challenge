@@ -1,12 +1,19 @@
 //Modules require 
 const express = require('express');
 const db = require('./data/helpers/userDb');
+const helmet = require('helmet');
+const morgan = require('morgan')
 const server = express();
+const nameUppercase = require('./middleware');
 const parser = express.json()
 
 const PORT = 5050;
 
-server.use(parser);
+server.use( parser,
+            helmet(),
+            morgan('dev')
+          );
+
 
 //endpoints
 server.get('/api/users',(req,res) =>{
@@ -39,6 +46,8 @@ server.get('/api/users/:id', (req, res)=>{
       .json({message:"The user information cannot be retrieved"});
     })
 })
+
+server.use(middleware.nameUppercase)
 
 server.post('/api/users',(req, res) =>{
   const user = req.body 
