@@ -1,6 +1,10 @@
 const express = require('express');
+
 const users = require('./data/helpers/userDb');
+
 const nameMW = require('./middleware/capName');
+const postRouter = require('./posts/postRouter');
+
 const server = express();
 const PORT = 3333;
 
@@ -91,6 +95,8 @@ server.put('/api/users/:id', (req, res) => {
             .json({errorMessage : 'user could not be retrieved'});
         });
 }});
+
+server.use('/api/posts', postRouter);
 
 server.listen(PORT, err => {
     console.log(`server is listening on port ${PORT}`)
