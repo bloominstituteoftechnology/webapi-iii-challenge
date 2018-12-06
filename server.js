@@ -1,136 +1,17 @@
-//grab database methods
-const userDb = require('./data/helpers/userDb')
-const postdb = require('./data/helpers/postDb')
-
 //create server
 const express = require('express');
 const server = express();
+
+//********GLOBAL MIDDLEWARE**********
 server.use(express.json());
 
-//********MIDDLEWARE**********
-//includes middleware.nameToUpper()
-const middleware = require('./middleware');
 
-//****USER ROUTE HANDLERS*************
-//get all users
-server.get('/api/users', (req, res) =>{
- userDb.get()
-    .then(users =>{
-        res.json(users)
-    })
-    .catch(err =>{
-        res.status(500)
-        res.json({error: "Unable to retrieve users"})
-    })
-});
+//*****ROUTER MIDDLEWARE***** */
+const usersRouter = require('./routers/usersRouter')
+const postsRouter = require('./routers/postsRouter')
 
-//get specific user
-server.get('/api/users/:id', (req, res) =>{
-    const id = req.params.id;
-    userDb.get(id)
-    .then(user =>{
-        if(user){
-            res.json(user)
-        }else{
-            res.status(404)
-            res.json({message: "The user with the specified id does not exist"})
-        }
-    })
-    .catch(err =>{
-        res.status(500)
-        res.json({error: "Unable to retrieve user"})
-    })
-});
-
-//add user
-server.post('/api/users', middleware.nametoUpper,(req,res) =>{
-    const user = req.body;
-    if(user.name){
-     userDb.insert(user)
-        .then(id =>{
-            res.json(id)
-        })
-        .catch(err =>{
-            res.status(500)
-            res.json({error: "Unable to add new user"})
-        })
-    }else{
-        res.status(400)
-        res.json({error: "missing name of user"})
-    }
-});
-
-//delete user
-server.delete('/api/users/:id', (req, res) =>{
-    const id = req.params.id;
-    userDb.get(id)
-    .then(user =>{
-        if(user){
-         userDb.remove(id)
-            .then(count =>{
-                if(count){
-                    res.status(200)
-                    res.json(user)
-                }else{
-                    res.status(404)
-                    res.json({message: "The user with the specified id does not exist"})
-                }
-        
-            })
-        }else{
-            res.status(404)
-            res.json({message: "The user with the specified id does not exist"})
-        }
-    })
-    .catch(err =>{
-        res.status(500)
-        res.json({error: "Unable to delete user"})
-    })
-});
-
-//update user
-server.put('/api/users/:id', middleware.nametoUpper,(req, res) =>{
-    const id = req.params.id;
-    const user = req.body;
-    userDb.update(id, user) //returns count of updated
-    .then(count => {
-        if(count){
-         userDb.get(user.id)
-            .then(user =>{
-                res.json(user)
-            })
-        }else{
-            res.status(404)
-            res.json({error: "The user with the specified ID does not exist."})
-        }
-    })
-    .catch(err =>{
-        res.status(500)
-        res.json({error: "Unable to update user"})
-    })
-});
-
-//***GET USER POSTS */
-server.get('/api/users/posts/:id', (req, res) =>{
-    const userId = req.params.id;
-
-    userDb.getUserPosts(userId)
-    .then(posts =>{
-        if(posts[0]){
-            res.json(posts)
-        }else {
-            res.status(404)
-            res.json({error: "No posts were found for the specified user"})
-        }
-    })
-    .catch(err =>{
-        res.status(500)
-        res.json({error: "Unable to retrieve user's posts"})
-    })
-});
-
-
-
+server.use('/api/users', usersRouter)
+server.use('/api/posts', postsRouter)
 
 
 //listener
