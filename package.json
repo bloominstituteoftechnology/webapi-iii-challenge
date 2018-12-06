@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon"
+    "start": "node index.js",
+    "server": "nodemon"
   },
   "repository": "https://github.com/kmonique/Node-Blog.git",
   "author": "Kendra Williams <kmonique.williams@gmail.com>",
