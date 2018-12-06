@@ -115,6 +115,20 @@ router.put("/:id", upperCassed, (req, res) => {
 });
 
 
+router.get("/posts/:id", (req, res) => {
+    const { id } = req.params
+
+    users.get(id)
+        .then(user => {
+            users.getUserPosts(id)
+                .then(list => res.status(200).json(list))
+                .catch(err => res.status(404).json({error: 'Not found'}))
+        })
+        .catch(err => {
+            res.status(500).json({
+                error:"Can not find user information"})
+        })
+});
 
 
 
