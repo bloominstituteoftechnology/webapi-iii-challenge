@@ -6,6 +6,7 @@
   "author": "<willieino@hotmail.com>",
   "license": "MIT",
   "scripts": {
+    "start": "node index.js",
     "server": "nodemon index.js"
   },
   "dependencies": {
