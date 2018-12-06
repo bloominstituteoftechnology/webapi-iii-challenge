@@ -33,6 +33,17 @@ router.get('/:id', (req, res)=>{
     })
 });
 
+router.get('/:id/posts', (req, res)=>{
+    const {id} = req.params;
+    userDB.getUserPosts(id)
+    .then(userPosts=>{
+        res.json(userPosts);
+    })
+    .catch(error=>{
+        res.status(500).json({error: 'The information could not be retrieved.'})
+    })
+});
+
 router.post('/', customMW.upperCase, (req, res)=>{
     const newUser = req.body
     if(newUser.name){
@@ -76,7 +87,7 @@ router.delete('/:id', (req, res)=>{
     })
 });
 
-router.put('/:id', (req, res)=>{
+router.put('/:id', customMW.upperCase, (req, res)=>{
     const {id} = req.params;
     const user = req.body;
     if(user.name){
