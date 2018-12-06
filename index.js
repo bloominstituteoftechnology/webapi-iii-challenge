@@ -11,6 +11,7 @@ const PORT = 9000;
 server.use(cors());
 server.use(express.json());
 
+
 // Endpoints
 
 server.get('/users', (req, res) => {
@@ -33,7 +34,7 @@ server.get('/users/:id', (req, res) => {
             if (user) {
                 res.json(user)
             } else {
-                res.status(404).json({ message: 'The user with specified ID does not exist'})
+                res.status(404).json({ message: 'The user with specified ID does not exist' })
             }
         })
         .catch(err => {
@@ -42,7 +43,7 @@ server.get('/users/:id', (req, res) => {
 })
 
 server.post('/users', (req, res) => {
-    
+
     const user = req.body;
 
     if (user.name) {
@@ -59,6 +60,46 @@ server.post('/users', (req, res) => {
         res.status(400).json({
             message: 'missing name'
         })
+    }
+})
+
+server.delete('/users/:id', (req, res) => {
+
+    const { id } = req.params;
+    const user = req.body;
+
+    userDb.remove(id)
+        .then(count => {
+            if (count) {
+                res.json(user)
+            } else {
+                res.status(404).json({ message: 'The user with specified ID does not exist' })
+            }
+        })
+        .catch(err => {
+            res.status(500).json({ message: 'Failed to delete user' })
+        })
+})
+
+server.put('/users/:id', (req, res) => {
+
+    const { id } = req.params;
+    const user = req.body;
+
+    if (user.name) {
+        userDb.update(id, user)
+            .then(user => {
+                if (id) {
+                    res.json({ message: 'User has been updated'})
+                } else {
+                    res.status(404) .json({ message: 'The user with the specified ID does not exist'})
+                }
+            })
+            .catch(err => {
+                res.status(500).json({ message: 'Failed to update user' })
+            })
+    } else {
+        res.status(400).json({ messgae: 'missing name'})
     }
 })
 
