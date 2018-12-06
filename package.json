@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "node index.js",
+    "server": "nodemon"
   },
   "repository": "https://github.com/phinehas90/Node-Blog.git",
   "author": "Phinehas <kohler.nai@gmail.com>",

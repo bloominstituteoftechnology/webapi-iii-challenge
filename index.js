@@ -12,7 +12,7 @@ const logger = require('morgan');
 const toUpper = (req, res, next) => {
     var userName = req.body.name
     if(userName){
-        userName = userName.toUpperCase();
+        req.body.name = userName.toUpperCase();
         console.log(userName);
         next();
     } else {
@@ -85,7 +85,7 @@ server.get('/api/users/:id', (req, res) => {
 
 //--------------- UPDATE ----------------
 
-server.put('/api/users/:id', (req, res) => {
+server.put('/api/users/:id', toUpper, (req, res) => {
     const user = req.body;
     const { id } = req.params;
 
@@ -93,7 +93,7 @@ server.put('/api/users/:id', (req, res) => {
         userDb.update(id, user)
             .then(updatedUser => {
                 if(updatedUser){
-                    res.json(updatedUser)
+                    res.json(`Successfully updated ${updatedUser} user`)
                 } else {
                     res.status(404)
                         .json({message: "User with specified ID does not exist"})
