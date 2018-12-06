@@ -4,6 +4,8 @@ module.exports = {
 
 function upperCase(req, res, next){
     const user = req.body;
-    user.name = user.name.toUpperCase();
+    if(user.name){
+        user.name = user.name.toUpperCase();
+    }
     next();
 }
