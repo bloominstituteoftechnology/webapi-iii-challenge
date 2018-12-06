@@ -10,7 +10,7 @@ const PORT = 5000;
 server.use(express.json(), helmet(), logger('tiny'));
 
 /*
-    CRUD API for Posts data
+    CRUD API Endpoints for Posts data
 */
 server.delete('/api/posts/:id', (req, res) => {
     postDb.remove(req.params.id)
@@ -87,7 +87,7 @@ server.put('/api/posts/:id', (req, res) => {
 });
 
 /*
-    CRUD API for Users data
+    CRUD API Endpoints for Users data
 */
 server.delete('/api/users/:id', (req, res) => {
     userDb.remove(req.params.id)
@@ -161,6 +161,30 @@ server.put('/api/users/:id', (req, res) => {
     } else {
         res.status(400).json({errorMessage: "Please provide 'name' for the user."});
     }
+});
+
+/*
+    API Endpoint for getting posts by user
+*/
+server.get('/api/users/:id/posts', (req, res) => {
+    console.log(req.params.id);
+    userDb.get(req.params.id)
+        .then((user) => {
+            if (user) {
+                userDb.getUserPosts(req.params.id)
+                    .then((posts) => {
+                        res.json(posts);
+                    })
+                    .catch((err) => {
+                        res.status(500).json({error: `The posts information could not be retrieved for userid ${req.params.id}.`});
+                    });
+            } else {
+                res.status(404).json({message: "The user with the specified ID does not exist."});
+            }
+        })
+        .catch((err) => {
+            res.status(500).json({error: "The user information could not be retrieved."});
+        });
 });
 
 server.listen(PORT, () => {
