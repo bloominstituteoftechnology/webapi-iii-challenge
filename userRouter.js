@@ -36,6 +36,23 @@ router.get( '/:id', (req, res) => {
     });
 });
 
+// Get posts for userId. Using slightly different path here:
+router.get( '/posts/:id', customMW.checkValidUser, (req, res) => {
+  const { id } = req.params;
+  users.getUserPosts(id)
+    .then( listPosts => {
+      // Check for empty result
+      if( listPosts.length > 0 ){
+        res.json(listPosts);
+      } else {
+        res.status(404).json({ message: "There are no posts found for user."});
+      }
+    })
+    .catch( err => {
+      res.status(500).json({ error: "Could not retrieve posts by userId."});
+    });
+});
+
 // POST:
 router.post( '/', (req, res) => {
   const user = req.body;

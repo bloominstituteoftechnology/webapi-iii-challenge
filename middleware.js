@@ -11,7 +11,9 @@ const fixCase = (req, res, next) => {
 
 const checkValidUser = (req, res, next) => {
   const user = require('./data/helpers/userDb');
-  user.get(req.body.userId)
+  const id = req.body.userId ? req.body.userId : req.params;
+
+  user.get(id)
     .then( users => {
       if( users ){
         next();
