@@ -34,7 +34,6 @@ server.get('/api/users/:id', (req, res) =>{
     const { id }  = req.params
     userdb.get(id)
     .then(user =>{
-        console.log(user)
         res
         .json(user);
     })
@@ -48,7 +47,6 @@ server.get('/api/users/:id', (req, res) =>{
 //POST
 server.post('/api/users', (req, res) =>{
     const user = req.body
-    console.log(user)
     userdb.insert(user)
     .then(id =>{
         res
@@ -77,13 +75,26 @@ server.put('/api/users/:id', (req, res) =>{
     .catch(err =>{
         res
         .status(500)
-        .json({error: "The post information could not be modified."})
+        .json({error: "The user information could not be modified."})
     })
 })
 
 //DELETE
 
-
+server.delete('/api/users/:id', (req, res) =>{
+    const { id } = req.params;
+    userdb.remove(id)
+    .then( count =>{
+        res
+        .status(200)
+        .json(count)
+    })
+    .catch( err =>{
+        res
+        .status(500)
+        .json({error: "The user could not be removed"})
+    })
+})
 
 server.listen(PORT, () =>{
     console.log(`server is running on port ${PORT}`);
