@@ -47,6 +47,26 @@ server.get('/api/posts/:id', (req, res) => {
     })
 })
 
+server.post('/api/posts', (req, res) => {
+  const body = req.body;
+
+  if  (body.text && body.userId) {
+    postDb.insert(body)
+      .then(postId => {
+        res.json(postId)
+      })
+      .catch(err => {
+        res
+          .status(500)
+          .json({error: "Problem with the database"})
+      })
+  } else {
+    res
+      .status(400)
+      .json({message: ' Please include a user ID and text'})
+  }
+})
+
 server.listen(PORT, () => {
   console.log(`Server is listening on PORT ${PORT}`)
 });
