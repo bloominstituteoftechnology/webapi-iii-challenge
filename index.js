@@ -49,7 +49,6 @@ server.get('/api/posts/:id', (req, res) => {
 
 server.post('/api/posts', (req, res) => {
   const body = req.body;
-
   if  (body.text && body.userId) {
     postDb.insert(body)
       .then(postId => {
@@ -65,6 +64,29 @@ server.post('/api/posts', (req, res) => {
       .status(400)
       .json({message: ' Please include a user ID and text'})
   }
+})
+
+server.delete('/api/posts/:id', (req, res) => {
+  const { id } = req.params;
+  postDb.remove(id)
+  .then(count => {
+    if (count) {
+      res.json({count})
+    } else {
+      res
+        .status(404)
+        .json({ error: "Post with specified ID does not exist"})
+    }
+  })
+  .catch(err => {
+    res
+      .status(500)
+      .json({message: "Database Error"})
+  })
+})
+
+server.put('api/posts/:id', (req, res) => {
+  
 })
 
 server.listen(PORT, () => {
