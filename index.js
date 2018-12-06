@@ -13,13 +13,11 @@ server.use(morgan('dev'));
 server.use((req, res, next) => {
     const name = req.body.name;
 
-    if (!name) {
-      res.status(400).json({ error: "name is required" });
-    } else {
+    if (name) {
         const capitalizedString = name.toUpperCase();
         req.body.name = capitalizedString;
-        next();
-      } 
+    } 
+    next();
 });
 
 server.get("/users", (req, res) => {
