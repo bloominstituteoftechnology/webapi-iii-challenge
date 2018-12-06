@@ -7,6 +7,7 @@ const helmet = require('helmet');
 const cors = require('cors');
 
 const userRouter = require('./userRouter');
+const postRouter = require('./postRouter');
 
 // Server:
 const server = express();
@@ -20,6 +21,7 @@ server.use(
   cors()
 );
 server.use('/api/user', userRouter);
+server.use('/api/post', postRouter);
 
 // Route handler endpoint for GET - barebones for now,
 // will customize after server is operational.

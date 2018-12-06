@@ -9,4 +9,22 @@ const fixCase = (req, res, next) => {
   next();
 };
 
-module.exports.fixCase = fixCase;
+const checkValidUser = (req, res, next) => {
+  const user = require('./data/helpers/userDb');
+  user.get(req.body.userId)
+    .then( users => {
+      if( users ){
+        next();
+      } else {
+        res.status(404).json({ error: "Invalid user."});
+      }
+    })
+    .catch( err => {
+      res.status(500).json({ error: "Could not retrieve user."});
+    });
+};
+
+module.exports = {
+  fixCase: fixCase,
+  checkValidUser: checkValidUser
+}
