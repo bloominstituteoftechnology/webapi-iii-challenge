@@ -2,6 +2,8 @@ const express = require('express');
 const helmet = require('helmet');
 const logger = require('morgan');
 
+const dbUsers = require('./data/helpers/userDb');
+
 const server = express();
 const PORT = '4500';
 
@@ -12,9 +14,16 @@ server.use(logger('dev'));
 
 
 server.get('/', (req,res) => {
-     res.status(404)
-        .send({errorMessage: "Not able to get it"})
-     console.log('server is running now');
+     res.json({Message: "Working now"});
+});
+
+server.get('/users', (req,res) => {
+    dbUsers.get()
+           .then(users => {
+                console.log(users);
+                res.send(users);
+           })
+           .catch();
 });
 
 server.listen(PORT, () => {
