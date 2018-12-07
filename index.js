@@ -15,9 +15,8 @@ server.use(
 server.use('/api/posts', postRouter);
 server.use('/api/users', userRouter);
 
-
-
-
 server.listen(PORT, () => {
   console.log(`Server is listenening on port ${PORT}`)
 });
+
+
