@@ -61,7 +61,7 @@ server.post('/api/users', (req, res) =>{
             .then(newUser=>{
                 res
                 .status(201)
-                .json(newUser);
+                .json({message:`User ${newUser} created`});
             })
         })
         .catch(err=>{
@@ -88,7 +88,7 @@ server.put('/api/users/:id', (req, res) =>{
             if(userName.name){
                 res
                 .status(200)
-                .json(userName)
+                .json({message: `User updated to ${userName.name}`})
             } else{
                 res
                 .status(400)
@@ -113,9 +113,15 @@ server.delete('/api/users/:id', (req, res) =>{
     const { id } = req.params;
     userdb.remove(id)
     .then( count =>{
-        res
-        .status(200)
-        .json(count)
+        if(count === 1){
+            res
+            .status(200)
+            .json({message:`Post ID:${id} deleted`})
+        } else {
+            res
+            .status(404)
+            .json({message: "The post with the specified ID does not exist"})
+        }
     })
     .catch( err =>{
         res
