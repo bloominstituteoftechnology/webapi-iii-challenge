@@ -18,7 +18,7 @@ router.get("/", (req, res) => {
 //get user by userid
 router.get("/:id", (req, res) => {
    const { id } = req.params;
-   userDb.get(id)
+   userDb.getUserPosts(id)
       .then(user => {
          user ? res.json(user) : res.status(500).json({error: "User does not exist"})
       })
