@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import './App.css';
 
 import { Route } from 'react-router-dom';
-
+import { Container, Row, Col } from 'reactstrap';
 import UsersView from './View/UsersView/';
 import ProfileView from './View/ProfileView/';
 import MainNav from './components/MainNav/';
 import PostsView from './View/PostsView/';
+import PostView from './View/PostView';
+import CreatePost from './View/CreatePost';
 
 class App extends Component {
   constructor() {
@@ -29,8 +31,11 @@ class App extends Component {
         </header>
         <Route path='/users' exact component={UsersView} />
         <Route path='/users/:id' exact component={ProfileView} />
-        <Route path='/posts' exact component={PostsView} />
-      </div>
+        <Route path='/posts/' exact component={PostsView} />
+      <Route path='/create/post' exact component={CreatePost} />
+        <Route path='/posts/:id' exact render={post => <PostView {...post}/>} />
+
+    </div>
     );
   }
 }

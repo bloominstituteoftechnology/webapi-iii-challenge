@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 
 import { getPosts } from '../../actions/posts/';
 import { fetchUsers } from '../../actions/users/';
+import PostsSettingsContainer from '../../containers/PostsSettingsContainer/';
 
 class PostsView extends React.Component {
   constructor() {
@@ -41,11 +42,15 @@ class PostsView extends React.Component {
 
                   return results = Object.assign({}, post, {postedBy: user.name})
                 }
+                else {
+                  return null;
+                }
               })
-              console.log(results)
-
               return <PostCard {...results} key={Math.random()}/>
             }) : null }
+          </Col>
+          <Col md='3'>
+            <PostsSettingsContainer />
           </Col>
         </Row>
       </Container>
