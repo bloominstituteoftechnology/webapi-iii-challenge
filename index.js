@@ -12,7 +12,14 @@ server.use(express.json());
 //custom middleware
 
 server.use((req, res, next) => {
-    
+    const pass = req.query.pass;
+    if (pass === 'brock') {
+        next();
+    } else {
+        res
+        .status(400)
+        .json({ message: 'invalid password' })
+    }
 })
 
 //endpoints
