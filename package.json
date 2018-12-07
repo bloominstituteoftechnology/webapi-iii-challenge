@@ -15,5 +15,8 @@
   },
   "scripts": {
     "start": "nodemon"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.7"
   }
 }
