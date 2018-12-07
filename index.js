@@ -1,10 +1,11 @@
 //Modules require 
 const express = require('express');
-const db = require('./data/helpers/userDb');
+const userDb = require('./data/helpers/userDb');
 const helmet = require('helmet');
 const morgan = require('morgan')
 const server = express();
 const middleware = require('./middleware');
+const postsRouter = require('./Router/posts_router');
 const parser = express.json()
 
 const PORT = 5050;
@@ -12,13 +13,14 @@ const PORT = 5050;
 server.use( parser,
             helmet(),
             morgan('dev'),
-            middleware.nameUppercase
+            //middleware.nameUppercase
           );
+server.use('/api/posts',postsRouter);
 
 
 //endpoints
 server.get('/api/users',(req,res) =>{
-  db.get()
+  userDb.get()
   .then(users =>{
     res.json(users)
   })
@@ -31,7 +33,7 @@ server.get('/api/users',(req,res) =>{
 
 server.get('/api/users/:id', (req, res)=>{
   const { id } = req.params;
-    db.get(id)
+    userDb.get(id)
     .then(user =>{
       if(user){
         res.json(user)
@@ -53,9 +55,9 @@ server.get('/api/users/:id', (req, res)=>{
 server.post('/api/users',(req, res) =>{
   const user = req.body 
   if(user.name){
-    db.insert(user)
+    userDb.insert(user)
     .then(userInfo =>{
-      db.get(userInfo.id)
+      userDb.get(userInfo.id)
         .then(user =>{
         res.status(201).json(user)
       })
@@ -75,7 +77,7 @@ server.post('/api/users',(req, res) =>{
 
 server.delete('/api/users/:id', (req, res)=>{
   const { id } = req.params
-  db.remove(id)
+  userDb.remove(id)
   .then( count =>{
     if(count){
       res.json({message:"The user has been successfully deleted"})
@@ -96,10 +98,10 @@ server.put('/api/users/:id',(req,res) =>{
   const { id } = req.params
   const user = req.body
   if(user.name){
-    db.update(id, user)
+    userDb.update(id, user)
     .then(count =>{
       if(count){
-        db.get(id).then(user =>{
+        userDb.get(id).then(user =>{
           res.json(user)
         })
       }
@@ -122,6 +124,7 @@ server.put('/api/users/:id',(req,res) =>{
   }
   
 })
+
 
 //listen
 server.listen(PORT, () =>{
