@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import './App.css';
 
 import { Route } from 'react-router-dom';
-import { Container, Row, Col } from 'reactstrap';
 import UsersView from './View/UsersView/';
 import ProfileView from './View/ProfileView/';
 import MainNav from './components/MainNav/';

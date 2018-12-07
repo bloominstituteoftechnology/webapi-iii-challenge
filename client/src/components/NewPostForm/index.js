@@ -1,5 +1,5 @@
 import React from 'react';
-import {Container, Row, Col, Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+import {Container, Row, Col, Button, Form, FormGroup, Input } from 'reactstrap';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { createPost } from '../../actions/posts/';
