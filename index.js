@@ -3,12 +3,14 @@ const express = require("express");
 const gatekeeper = require("./uppercase.js");
 const userRouter = require("./Routers/user_router");
 const postRouter = require("./Routers/post_router");
+const cors = require('cors');
 
 //set up server, parser and routes
 const server = express();
 server.use(
    express.json(),
-   gatekeeper.uppercase
+   gatekeeper.uppercase,
+   cors()
 );
 
 server.use("/api/users", userRouter);
