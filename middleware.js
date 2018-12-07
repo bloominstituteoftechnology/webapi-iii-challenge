@@ -3,6 +3,8 @@ const capitalize = (req, res, next) => {
   if (user) {
     req.body.name = user.toUpperCase();
     next();
+  } else {
+    next();
   }
 };
 

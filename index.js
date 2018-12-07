@@ -13,7 +13,6 @@ server.use(
   helmet()
 )
 
-server.use(capitalize);
 server.use('/api/posts', postRouter);
 server.use('api/users', userRouter);
 
