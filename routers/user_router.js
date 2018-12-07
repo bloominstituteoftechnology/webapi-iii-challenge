@@ -121,6 +121,7 @@ router.get('/:id/posts', (req, res) => {
       .then(posts => {
           if (posts.length > 0) {
               res.json(posts);
+              // console.log(posts);
           } else {
               res
                   .status(404)
