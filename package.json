@@ -3,7 +3,7 @@
   "version": "y",
   "main": "y",
   "scripts": {
-    "start": "node index.js"
+    "start": "nodemon index.js"
   },
   "repository": "y",
   "author": "y",
