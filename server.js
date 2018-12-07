@@ -66,39 +66,37 @@ server.post('/api/users', (req, res) => {
                         .json({ error: "The user could not be added" })
                 })
         })
-    })
+})
 
-    server.put('/api/users/:id', (req, res) => {
-        const user = req.body;
-        const { id } = req.params;
-        console.log(user, id)
-        userDB.update(id, user)
-            .then(count => {
-                console.log(count)
-                if (count) {
-                    userDB.get(id)
-                        .then(user => {
-                            res
-                                .status(200)
-                                .json(user);
-                        })
-                } else {
-                    res
-                        .status(404)
-                        .json({ message: "The user with the specified ID does not exist." })
-                }
-            }).catch(err => {
-                console.log(err)
+server.put('/api/users/:id', (req, res) => {
+    const user = req.body;
+    const { id } = req.params;
+    userDB.update(id, user)
+        .then(count => {
+            if (count) {
+                userDB.get(id)
+                    .then(user => {
+                        res
+                            .status(200)
+                            .json(user);
+                    })
+            } else {
                 res
-                    .status(500)
-                    .json({ error: "The user could not be updated" })
-            })
-    })
+                    .status(404)
+                    .json({ message: "The user with the specified ID does not exist." })
+            }
+        }).catch(err => {
+            res
+                .status(500)
+                .json({ error: "The user could not be updated" })
+        })
+})
 
-    server.delete('/api/users/:id', (req, res) => {
-        const { id } = req.params;
-        let foundUser;
-        userDB.get(id).then(user => { foundUser = user });
+server.delete('/api/users/:id', (req, res) => {
+    const { id } = req.params;
+    let foundUser;
+    userDB.get(id).then(user => {
+        foundUser = user;
         userDB.remove(id)
             .then(count => {
                 if (count) {
@@ -115,8 +113,121 @@ server.post('/api/users', (req, res) => {
                     .status(500)
                     .json({ error: "The user could not be removed" })
             })
-    })
-    server.listen(PORT, err => {
-        if (err) console.log(err);
-        console.log(`server is listening on port ${PORT}`);
+    }).catch(err => {
+        res
+            .status(500)
+            .json({ error: "The post could not be found" })
     });
+
+})
+
+server.get('/api/posts/:id', (req, res) => {
+    const { id } = req.params
+    postDB.get(id)
+        .then(post => {
+            res
+                .status(200)
+                .json(post);
+        })
+        .catch(err => {
+            res
+                .status(500)
+                .json({ error: err })
+        })
+})
+server.get('/api/posts/', (req, res) => {
+    postDB.get()
+        .then(post => {
+            res
+                .status(200)
+                .json(post);
+        })
+        .catch(err => {
+            res
+                .status(500)
+                .json({ error: err })
+        })
+})
+
+server.post('/api/posts/', (req, res) => {
+
+    const post = req.body;
+    if (!post) {
+        res.status(404)
+            .json({ message: "Please provide post text." })
+        return
+    }
+    postDB.insert(post)
+        .then(obj => {
+            postDB.get(obj.id)
+                .then(post => {
+                    res
+                        .status(200)
+                        .json(post);
+                }).catch(err => {
+                    res
+                        .status(500)
+                        .json({ error: "The post could not be added : ", err })
+                })
+        })
+})
+
+server.put('/api/posts/:id', (req, res) => {
+    const post = req.body;
+    const { id } = req.params;
+    postDB.update(id, post)
+        .then(count => {
+            if (count) {
+                postDB.get(id)
+                    .then(post => {
+                        res
+                            .status(200)
+                            .json(post);
+                    })
+            } else {
+                res
+                    .status(404)
+                    .json({ message: "The post with the specified ID does not exist." })
+            }
+        }).catch(err => {
+            res
+                .status(500)
+                .json({ error: "The post could not be updated: ", err })
+        })
+})
+
+server.delete('/api/posts/:id', (req, res) => {
+    const { id } = req.params;
+    let foundPost;
+    postDB.get(id).then(post => {
+        foundPost = post;
+        postDB.remove(id)
+            .then(count => {
+                if (count) {
+                    res
+                        .status(200)
+                        .json(foundPost);
+                } else {
+                    res
+                        .status(404)
+                        .json({ message: "The user with the specified ID does not exist." })
+                }
+            }).catch(err => {
+                res
+                    .status(500)
+                    .json({ error: "The user could not be removed" })
+            })
+    }).catch(err => {
+        res
+            .status(500)
+            .json({ error: "The post could not be found" })
+    });
+
+
+
+
+})
+server.listen(PORT, err => {
+    if (err) console.log(err);
+    console.log(`server is listening on port ${PORT}`);
+});
