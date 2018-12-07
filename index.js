@@ -5,13 +5,20 @@ const express = require('express');
 const userdb = require('./data/helpers/userDb');
 
 
+
 //server code
 
 const server = express();
 const parser = express.json()
+const helmet = require('helmet')
+const logger = require('morga')
 const PORT = 8000;
 
-server.use(parser);
+server.use(
+    parser(),
+    helmet(),
+    logger('tiny')
+)
 
 //GET
 
