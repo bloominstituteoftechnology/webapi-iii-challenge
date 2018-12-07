@@ -1,5 +1,6 @@
 /***** Global Requires *****/
 const express = require('express');
+const cors = require('cors');
 
 const userRouter = require('./routers/user_router');
 const postRouter = require('./routers/post_router');
@@ -8,6 +9,7 @@ const postRouter = require('./routers/post_router');
 const server = express();
 const PORT = 4000;
 
+server.use(cors());
 server.use(express.json());
 
 // Custom middleware
