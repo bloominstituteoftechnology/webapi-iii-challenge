@@ -60,6 +60,31 @@ server.post('/api/users', nameCap, async (req, res) => {
     }
 })
 
+//UPDATE
+server.put('/api/users/:id', nameCap, (req, res) => {
+    const {id} = req.params;
+    const changes = req.body;
+    if (!changes.name) {
+        res.status(400)
+        .json({error: "Please provide the updated user's name."})
+    } else {
+        userdb.update(id, changes)
+        .then(count => {
+            if (count) {
+            res.status(200)
+            .json(count);
+        } else {
+            res.status(404)
+            .json({message: "The user with the specified ID does not exist."})
+        }
+    })
+    .catch(error => {
+        res.status(500)
+        .json({error: "The user info could not be modified."})
+    })
+    }
+})
+
 
 
 server.listen(PORT, ()=>console.log('Server is listening on port 5555')); 
