@@ -124,4 +124,25 @@ router.put('/:id', (req, res) => {
     }
 });
 
+router.get('/:id/posts', (req, res) => {
+    const { id } = req.params;
+    userDb.getUserPosts(id)
+        .then(posts => {
+            if (posts) {
+                res
+                    .json(posts);
+            }
+            else {
+                res
+                    .status(404)
+                    .json({message: 'The user with the specified ID does not exist.'});
+            }
+        })
+        .catch(err => {
+            res
+                .status(500)
+                .json({message: `The user's posts could not be retrieved.`});
+        });
+});
+
 module.exports = router;

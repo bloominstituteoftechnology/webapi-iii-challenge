@@ -7,7 +7,7 @@ const express = require('express');
 
 const router = express.Router();
 
-// respond with full array of posts
+//respond with full array of posts
 
 router.get('/', (req, res) => {
     postDb.get()
@@ -68,7 +68,7 @@ router.post('/', (req, res) => {
     else {
         res
             .status(400)
-            .json({message: 'Please provide the text for the new post.'})
+            .json({message: 'Please provide the text and user ID for the new post.'})
     }
 });
 
