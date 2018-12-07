@@ -78,4 +78,29 @@ router.delete('/:id', (req, res) => {
     });
 });
 
+// UPDATE /api/users/:id
+router.put('/:id', (req, res) => {
+  const user = req.body;
+  const { id } = req.params;
+  if (user.name) {
+    userDb.update(id, user)
+      .then(count => {
+        userDb.get(id)
+          .then(user => {
+            res
+              .json(user);
+          })
+      })
+      .catch(err => {
+        res
+          .status(400)
+          .json({ message: 'please provide new name for user' });
+      });
+  } else {
+    res
+    .status(500)
+    .json({ error: 'user information could not be modified.' });
+  }
+});
+
 module.exports = router;
