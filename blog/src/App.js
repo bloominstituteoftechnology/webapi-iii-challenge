@@ -12,6 +12,25 @@ const Container = styled.div`
   background: rgb(184, 167, 204);
 `;
 
+const UserContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  flex-wrap: wrap;
+  max-width: 880px;
+  width: 100%;
+  margin: 0 auto;
+  margin-top: 10px;
+`;
+
+const User = styled.div`
+  text-align: center;
+  color: rgb(250, 233, 91);
+  border: 3px soild rgb(250, 233, 91);
+  padding: 10px;
+  width: 200px;
+`;
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -46,6 +65,11 @@ class App extends Component {
     return (
       <Container>
         <Nav />
+        <UserContainer>
+          {this.state.users.map(user => {
+            return <User>{user.name}</User>;
+          })}
+        </UserContainer>
         <Route
           exact
           path="/"

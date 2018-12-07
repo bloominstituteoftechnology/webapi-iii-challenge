@@ -17,6 +17,7 @@ const NavBar = styled.div`
   margin: 0 auto;
   max-width: 880px;
   width: 100%;
+  color: rgb(250, 233, 91);
 `;
 
 const SiteName = styled.div`
@@ -26,13 +27,14 @@ const SiteName = styled.div`
   font-family: "IBM Plex Sans", sans-serif;
   font-weight: 700;
   font-size: 24px;
-  color: rgb(250, 233, 91);
 `;
 
 const NavLinks = styled.div`
   display: flex;
   justify-content: space-around;
   width: 33%;
+  font-size: 16px;
+  color: rgb(250, 233, 91);
 `;
 
 const Nav = () => {
@@ -43,7 +45,12 @@ const Nav = () => {
           <h1>Node Blog</h1>
         </SiteName>
         <NavLinks>
-          <Link to="/">Home</Link>
+          <Link to="/" style={{ textDecoration: "none" }}>
+            Home
+          </Link>
+          <Link to="/users" style={{ textDecoration: "none" }}>
+            Users
+          </Link>
         </NavLinks>
       </NavBar>
     </Container>

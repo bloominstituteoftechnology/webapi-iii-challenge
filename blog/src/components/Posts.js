@@ -18,13 +18,14 @@ const PostContainer = styled.div`
   background-color: rgb(250, 233, 91);
   border: 0;
   border-radius: 0px;
-  box-shadow: 5px 10px rgb(0, 0, 0, 0.12);
+  box-shadow: 5px 7px rgb(0, 0, 0, 0.12);
   cursor: pointer;
   margin: 10px;
   padding: 15px;
   font-family: "IBM Plex Sans", sans-serif;
   font-size: 20px;
   color: rgb(184, 167, 204);
+  text-align: center;
 `;
 
 class Posts extends Component {
