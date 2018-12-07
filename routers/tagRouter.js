@@ -1,6 +1,4 @@
 const tagDb = require("../data/helpers/tagDb");
-// const postDb = require("../data/helpers/postDb.js");
-// const userDb = require("../data/helpers/userDb.js");
 const express = require("express");
 const router = express.Router();
 
