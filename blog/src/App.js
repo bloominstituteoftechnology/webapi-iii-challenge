@@ -60,6 +60,32 @@ class App extends Component {
       });
   }
 
+  addPost = newPost => {
+    axios
+      .post("http://localhost:3000/api/posts", newPost)
+      .then(res => {
+        this.setState({ posts: res.data });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+
+    this.props.history.push("/");
+  };
+
+  deletePost = id => {
+    axios
+      .delete(`http://localhost:3000/api/posts/${id}`)
+      .then(res => {
+        this.setState({ posts: res.data });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+
+    this.props.history.push("/");
+  };
+
   render() {
     console.log(this.state.users);
     return (
