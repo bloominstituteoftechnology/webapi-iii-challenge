@@ -1,0 +1,21 @@
+{
+  "name": "y",
+  "version": "y",
+  "main": "y",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "repository": "y",
+  "author": "y",
+  "license": "y",
+  "dependencies": {
+    "express": "^4.16.4",
+    "knex": "^0.15.2",
+    "sqlite3": "^4.0.4"
+  },
+  "description": "y",
+  "private": true,
+  "devDependencies": {
+    "nodemon": "^1.18.7"
+  }
+}
