@@ -1,6 +1,29 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 import {Link} from 'react-router-dom';
+import styled from 'styled-components';
+
+const UserPostsContainer = styled.div`
+    display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  align-items: center;
+
+  h2{
+    font-size: 2.6rem;
+    margin: 20px 0;
+  }
+
+  p{
+      font-size: 1.8rem;
+      margin: 8px;
+  }
+
+  a{
+      font-size: 1.6rem;
+      margin-top: 15px;
+  }
+`;
 
 class UserPosts extends Component{
     constructor(props){
@@ -28,7 +51,7 @@ class UserPosts extends Component{
         })
         .catch(error=>{
             this.setState({
-                error: 'Please check that you entered a valid ID'
+                error: 'Please check that you entered a valid ID and that the user has posted'
             })
         });
     }
@@ -36,16 +59,19 @@ class UserPosts extends Component{
     render(){
         if(this.state.error){
             return(
-                <h2>{this.state.error}</h2>
+                <div>
+                    <h2>{this.state.error}</h2>
+                    <Link to="/">Home</Link>
+                </div>
             )
         }
 
         return(
-            <div>
+            <UserPostsContainer>
                 <h2>{this.state.user}</h2>
                 {this.state.posts.map(post=><p key={post.id}>{post.text}</p>)}
                 <Link to="/">Home</Link>
-            </div>
+            </UserPostsContainer>
         )
     }
 }
