@@ -13,10 +13,8 @@ module.exports = {
       const promises = [query, this.getPostTags(id)]; // [ posts, tags ]
 
       return Promise.all(promises).then(function(results) {
-        let [posts, tags] = results;
+        let [posts] = results;
         let post = posts[0];
-        post.tags = tags.map(t => t.tag);
-
         return post;
       });
     }
