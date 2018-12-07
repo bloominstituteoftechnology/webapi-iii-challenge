@@ -23,6 +23,10 @@ const SiteName = styled.div`
   display: flex;
   justify-content: flex-start;
   width: 66%;
+  font-family: "IBM Plex Sans", sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  color: rgb(250, 233, 91);
 `;
 
 const NavLinks = styled.div`
