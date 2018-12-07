@@ -54,17 +54,26 @@ server.get('/api/users/:id', (req, res) =>{
 //POST
 server.post('/api/users', (req, res) =>{
     const user = req.body
-    userdb.insert(user)
-    .then(id =>{
+    if(user.name){
+        userdb.insert(user)
+        .then(idInfo =>{
+            userdb.get(idInfo.id)
+            .then(newUser=>{
+                res
+                .status(201)
+                .json(newUser);
+            })
+        })
+        .catch(err=>{
+            res
+            .status(500)
+            .json({ error: "There was an error while saving the user to the database" })
+        })
+    } else {
         res
-        .status(200)
-        .json(id);
-    })
-    .catch(err =>{
-        res
-        .status(500)
-        .json({error: "There was an error while saving the user to the database"})
-    })
+        .status(400)
+        .json({errorMessage: "Please provide a name for the user." })
+    }
 })
 
 
