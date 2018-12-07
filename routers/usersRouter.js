@@ -46,6 +46,7 @@ router.post('/', middleware.nametoUpper,(req,res) =>{
     if(user.name){
     userDb.insert(user)
         .then(id =>{
+            res.status(201)
             res.json(id)
         })
         .catch(err =>{
