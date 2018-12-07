@@ -1,5 +1,5 @@
 const capUser = (req, res, next)    =>  {
-    const user = req.body.user;
+    const user = req.body.name;
     if(user === undefined)  {
         next();
     }   else {
