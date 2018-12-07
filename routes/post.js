@@ -41,7 +41,11 @@ router.post('/:id', (req, res) => {
                     .then(idInfo => {
                         userDB.getUserPosts(id)
                             .then(posts => {
-                                res.json(posts);
+                                const post = posts.filter(post => {
+                                    return post.id === idInfo.id
+                                });
+
+                                res.json(post);
                             })
                             .catch(err => {
                                 res.status(500).json({ error: "Error getting posts" });
@@ -59,6 +63,8 @@ router.post('/:id', (req, res) => {
         });
     }
 });
+
+//router.remove('')
 
 
 module.exports = router;
