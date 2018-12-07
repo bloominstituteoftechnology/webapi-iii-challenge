@@ -74,9 +74,11 @@ alert("function is unavailable at this time...")
       <div className="container">
         <div className="header-container">
           <div className="create-button">
-            <button className="create">Create Note</button>
+            <button className="create">Create Post</button>
           </div>
-          <h2>Node "Blog" Express Lab</h2>
+          <h2>Node "Blog" Express Lab</h2> <div className="create-button">
+            <button className="create">Create User</button>
+          </div>
         </div>
         <ul>{this.state.posts.map(post => {
           return (

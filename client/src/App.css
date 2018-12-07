@@ -64,7 +64,9 @@ border: 2px solid white;
  margin-top: 10px;
 }
 
-.create-button {}
+.create-button {
+  color: black;
+}
 
 .post-data {
   /* border: 2px solid red; */
@@ -112,10 +114,11 @@ font-weight: 500;
 
 .create {
 background-color:  rgb(137, 195, 235);
-color: white;
+color: black;
 border: 0px solid gray;
 margin-top: 20px;
 margin-left: 10px;
+font-weight: 500;
 }
 
 h2 {
