@@ -1,6 +1,7 @@
 const express = require('express');
 const userDB = require('./data/helpers/userDb');
-const postDB = require('./data/helpers/postDb')
+const postDB = require('./data/helpers/postDb');
+const middleware = require('./custom_middleware');
 
 
 const server = express();
@@ -9,13 +10,6 @@ server.use(parser);
 
 
 //User Endpoints
-
-
-//   update: function(id, user) {
-//     return db('users')
-//       .where('id', id)
-//       .update(user);
-//   },
 
 server.get('/users', (req, res) => {
     userDB.get()
@@ -42,7 +36,7 @@ server.get('/users/:id', (req, res) => {
         })
 })
 
-server.post('/users', (req, res) => {
+server.post('/users', middleware.uppercase, (req, res) => {
     const user = req.body;
     if (user.name) {
     userDB.insert(user)
