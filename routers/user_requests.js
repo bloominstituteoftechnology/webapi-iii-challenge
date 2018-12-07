@@ -88,7 +88,6 @@ router.get('/:id/posts', (req, res) => {
 
 router.post('/', customMiddleware.uppercase, (req, res) => {
     const user = customMiddleware.upperName;
-    //add if user is longer than 128 characters, return error
     if (user) {
         userDb.insert(user)
             .then(userId => {
