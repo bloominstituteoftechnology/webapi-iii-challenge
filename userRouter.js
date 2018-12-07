@@ -19,25 +19,14 @@ router.get('/', (req, res)=>{
 
 router.get('/:id', (req, res)=>{
     const {id} = req.params;
-    userDB.get(id)
-    .then(user=>{
-        if(user){
-            res.json(user);
-        }
-        else{
-            res.status(404).json({message: 'User not found.'})
-        }
-    })
-    .catch(error=>{
-        res.status(500).json({error: 'The information could not be retrieved.'});
-    })
-});
-
-router.get('/:id/posts', (req, res)=>{
-    const {id} = req.params;
     userDB.getUserPosts(id)
     .then(userPosts=>{
-        res.json(userPosts);
+        if(userPosts.length){
+            res.json(userPosts);
+        }
+        else{
+            res.status(404).json({message: 'User not found.'});
+        }
     })
     .catch(error=>{
         res.status(500).json({error: 'The information could not be retrieved.'})

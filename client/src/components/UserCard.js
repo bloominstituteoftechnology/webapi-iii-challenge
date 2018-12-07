@@ -1,8 +1,9 @@
 import React from 'react';
+import {Link} from 'react-router-dom';
 
 const UserCard = props=>{
     return(
-        <h2>{props.user.name}</h2>
+        <Link to={`/${props.user.id}`}>{props.user.name}</Link>
     )
 }
 
