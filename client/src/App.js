@@ -1,25 +1,37 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import axios from 'axios';
 
 class App extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      posts: [],
+      loading: true
+    }
+  }
+  
+  componentDidMount() {
+    axios
+      .get('http://localhost:4001/posts')
+      .then(response => {
+        this.setState({
+          posts: response.data
+        })
+      })
+      .catch(err => {
+        console.log(err)
+      });
+  }
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+      <div>
+        {this.state.posts.map(post => 
+          <div key={post.id}>
+            <h1>{post.text}</h1> 
+          </div>
+        )}
       </div>
     );
   }

@@ -1,6 +1,7 @@
 //dependencies 
 
 const express = require('express');
+const cors = require('cors');
 const middleware = require('./middleware.js');
 const userRouter = require('./userRouter.js');
 const postRouter = require('./postRouter.js');
@@ -12,7 +13,11 @@ const server = express();
 
 //use middleware
 
-server.use(express.json(), middleware.capitalizeFirstLetter);
+server.use(
+    express.json(), 
+    cors(), 
+    middleware.capitalizeFirstLetter
+);
 
 //use routers
 
