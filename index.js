@@ -12,6 +12,10 @@ const postRouter = require('./routes/post_router.js');
 const server = express();
 const PORT = 3000;
 
+// CORS stuff
+const cors = require('cors')
+server.use(cors())
+
 // middleware
 server.use(
     express.json(),
