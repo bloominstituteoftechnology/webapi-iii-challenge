@@ -18,12 +18,12 @@ class UserPosts extends React.Component {
   };
 
   getUserAndPosts = id => {
-    MyApiClient.get(`users/${this.props.match.params.id}`)
+    MyApiClient.get(`/users/${this.props.match.params.id}`)
       .then(response => {
         this.setState({ user: response.data });
       })
       .then(
-        MyApiClient.get(`users/${this.props.match.params.id}/posts`).then(
+        MyApiClient.get(`/users/${this.props.match.params.id}/posts`).then(
           response => this.setState({ posts: response.data })
         )
       )
