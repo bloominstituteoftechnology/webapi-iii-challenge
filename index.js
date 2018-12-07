@@ -6,6 +6,7 @@ const morgan = require("morgan");
 
 const userRouter = require("./routers/userRouter");
 const postRouter = require("./routers/postRouter");
+const tagRouter = require("./routers/tagRouter");
 
 const PORT = process.env.PORT || 4000;
 
@@ -16,6 +17,7 @@ server.use(morgan("dev"));
 
 server.use("/api/users", userRouter);
 server.use("/api/posts", postRouter);
+server.use("/api/tags", tagRouter);
 
 server.listen(PORT, err => {
   console.log(`server is now running on port ${PORT}`);
