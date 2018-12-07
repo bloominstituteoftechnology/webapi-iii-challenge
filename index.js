@@ -13,7 +13,7 @@ server.use(helmet());
 server.use(logger('dev'));
 
 
-//Get method for users/posts
+//CRUD METHODS FOR ALL USERS
 server.get('/', (req,res) => {
      res.json({Message: "Working now"});
 });
@@ -29,16 +29,7 @@ server.get('/users', (req,res) => {
            });
 });
 
-server.get('/posts', (req,res) => {
-     dbPosts.get()
-            .then( posts => {
-                 console.log(posts);
-                 res.json(posts);
-            })
-            .catch(err => {
-                 res.status(500).json({errorMessage: ""})
-            });
- });
+
 //Get the users and posts by ID
 server.get('/users/:id', (req,res) => {
      const {id} = req.params;
@@ -58,23 +49,6 @@ server.get('/users/:id', (req,res) => {
           });
 });
 
-server.get('/posts/:id', (req,res) => {
-     const {id} = req.params;
-     console.log(id);
-     dbPosts.get(id)
-            .then( post => {
-                if(post) { 
-                res.json(post);
-                }
-                 else {
-                 // 404 invalid ID.
-                     res.status(404).json({ message: "The post with the specified ID does not exist."});
-                }
-            })
-            .catch(err => {
-               res.status(500).json({errorMessage: "The user information could not be retrieved."})
-          });
-})
 
 //Server put
 server.put('/users/:id', (req,res) => {
@@ -109,15 +83,66 @@ server.post('/users', (req,res)=> {
                        console.log(userId)
                     dbUsers.get(userId.id)
                            .then(newUser => {
-                                res.status(201).json(newUser);
+                                if(newUser) {
+                                    res.status(201).json(newUser);
+                                } else {
+                                    res.status(404).json({errorMessage:"There is no user with that ID"})
+                                }
                            })
 
                   })
-                  .catch();
+                  .catch(err => {
+                       res.status(500).json({errorMessage: "Could not create user at this time"});
+                  });
        } else {
           
        }    
 });
+
+server.delete('/users/:id', (req,res)=> {
+      const {id} = req.params;
+      dbUsers.remove(id)
+             .then(count => {
+                  if(count) {
+                       res.json({Message: "Successfully deleted"});
+                  } else {
+                      res.status(404).json({errorMessage:"Could not find the user with that ID"});
+                  }
+             }).catch(err => {
+                  res.status(500).json({errorMessage:"Something went wrong deleting the user"});
+             });
+});
+
+//CRUD METHODS FOR ALL POSTS
+server.get('/posts', (req,res) => {
+     dbPosts.get()
+            .then( posts => {
+                 console.log(posts);
+                 res.json(posts);
+            })
+            .catch(err => {
+                 res.status(500).json({errorMessage: ""})
+            });
+ });
+
+server.get('/posts/:id', (req,res) => {
+     const {id} = req.params;
+     console.log(id);
+     dbPosts.get(id)
+            .then( post => {
+                if(post) { 
+                res.json(post);
+                }
+                 else {
+                 // 404 invalid ID.
+                     res.status(404).json({ message: "The post with the specified ID does not exist."});
+                }
+            })
+            .catch(err => {
+               res.status(500).json({errorMessage: "The user information could not be retrieved."})
+          });
+})
+
 server.listen(PORT, () => {
      console.log(`Server is running at ${PORT}`);
 })
