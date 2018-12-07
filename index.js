@@ -84,9 +84,21 @@ server.put('/api/users/:id', (req, res) =>{
     const userName = req.body
     userdb.update(id, userName)
     .then( count =>{
-        res
-        .status(200)
-        .json(userName)
+        if(count === 1){
+            if(userName.name){
+                res
+                .status(200)
+                .json(userName)
+            } else{
+                res
+                .status(400)
+                .json({errorMessage: "Please provide the name for the user." })
+            }
+        } else {
+            res
+            .status(404)
+            .json({message: "The user with the specified id does not exist"})
+        }
     })
     .catch(err =>{
         res
