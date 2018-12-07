@@ -1,9 +1,9 @@
 const express = require('express');
-const userDB = require('./data/helpers/userDb');
+const userDB = require('../data/helpers/userDb.js');
 const router = express.Router();
 
 
-router.get('/api/users', (req, res) =>{
+router.get('/', (req, res) =>{
     userDB.get()
         .then(user =>{
             res.status(200).json(user)
@@ -13,7 +13,7 @@ router.get('/api/users', (req, res) =>{
         })
 })
 
-router.get('api/users/:id', (req, res) =>{
+router.get('/:id', (req, res) =>{
     const {id} = req.params;
     userDB.getUserPosts(id)
       .then(user =>{
@@ -24,12 +24,15 @@ router.get('api/users/:id', (req, res) =>{
       })
 })
 
-router.post('api/users', (req ,res) =>{
+router.post('/', (req ,res) =>{
     const newUser = req.body
     if(newUser.name){
         userDB.insert(newUser)
-        .then(user =>{
-            res.status(201).json(user)
+        .then(userId =>{
+            userDB.get(userId.id)
+                .then(user =>{
+                    res.status(201).json(user)
+                })
         })
         .catch(err =>{
             res.status(404).json({error: 'Missing name for new user'})
@@ -40,7 +43,7 @@ router.post('api/users', (req ,res) =>{
     }
 })
 
-router.delete('api/users/:id', (req, res) =>{
+router.delete('/:id', (req, res) =>{
     const {id} = req.params;
     let searchedUser;
     userDB.get(id)
@@ -60,7 +63,7 @@ router.delete('api/users/:id', (req, res) =>{
         })    
 })
 
-router.put('api/users/:id', (req, res) =>{
+router.put('/:id', (req, res) =>{
     const {id} = req.params;
     const user = req.body;
     if(user.name){
@@ -80,3 +83,5 @@ router.put('api/users/:id', (req, res) =>{
             })
     }
 })
+
+module.exports = router
