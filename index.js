@@ -1,8 +1,11 @@
-//dependencies 
+//require dependencies 
 
 const express = require('express');
 const cors = require('cors');
 const middleware = require('./middleware.js');
+
+// require routers
+
 const userRouter = require('./userRouter.js');
 const postRouter = require('./postRouter.js');
 

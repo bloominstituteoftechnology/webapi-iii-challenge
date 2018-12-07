@@ -124,11 +124,13 @@ router.put('/:id', (req, res) => {
     }
 });
 
+// get posts by user ID
+
 router.get('/:id/posts', (req, res) => {
     const { id } = req.params;
     userDb.getUserPosts(id)
         .then(posts => {
-            if (posts) {
+            if (posts.length > 0) {
                 res
                     .json(posts);
             }
