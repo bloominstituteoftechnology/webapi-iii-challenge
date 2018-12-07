@@ -55,4 +55,19 @@ server.get('/api/users/:id/posts', (req, res) => {
     });
 });
 
+server.delete('/api/users/:id', (req, res) => {
+  const { id } = req.params;
+  userDb
+    .remove(id)
+    .then((deleted) => {
+      if (deleted) res.json({ message: 'User deleted.' });
+      else {
+        res.status(404).json({ message: 'The user with the specified ID does not exist.' });
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({ error: 'User could not be deleted.' });
+    });
+});
+
 module.exports = server;
