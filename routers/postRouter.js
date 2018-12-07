@@ -31,9 +31,9 @@ router.get('/', (req, res) => {
 
 router.get('/:id', (req, res) => {
     const {id} = req.params;
-    posts.getPostTags(id)
+    posts.get(id)
     .then(post => {
-        if(post[0]){
+        if(post){
             res.json(post);
         }
         else {
@@ -44,6 +44,14 @@ router.get('/:id', (req, res) => {
         res.status(500).json({message:"post could not be retrieved"})
     })
 })
+
+// router.get('/:id', (req, res) => {
+//     const { id } = req.params;
+//     posts
+//       .get(id)
+//       .then(post => post ? res.json(post) : res.status(404).json({ error: 'There is no post with the specified ID' }))
+//       .catch(err => res.status(500).json({ error: 'Something went wrong retrieving your post!' }));
+//   });
 
 router.delete('/:id', (req, res) => {
     const {id} = req.params;
