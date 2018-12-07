@@ -1,25 +1,10 @@
 const express = require('express');
-const helmet = require('helmet');
-const logger = require('morgan');
-const customMW = require('./customMW')
+const router = express.Router();
+const userDB = require('../data/helpers/userDb')
 
-const userRouter = require('./routers/user_router')
-const server = express();
+router.use(express.json());
 
-const PORT = 4000;
-const userDB = require('./data/helpers/userDb')
-
-server.use(
-    express.json(),
-    helmet(),
-    logger('dev'),
-    customMW.uppercaser
-);
-
-server.use('/api/users', userRouter)
-
-//endpoints
-server.get('/users', (req, res) => {
+router.get('/', (req, res) => {
     userDB.get()
     .then(users => {
         res.json(users)
@@ -29,7 +14,7 @@ server.get('/users', (req, res) => {
     })
 });
 
-server.get('/users/:id', (req, res) => {
+router.get('/:id', (req, res) => {
     const {id} = req.params;
     userDB.get(id)
     .then(user => {
@@ -44,7 +29,7 @@ server.get('/users/:id', (req, res) => {
     })
 });
 
-server.post('/users', (req, res) => {
+router.post('/', (req, res) => {
     const user = req.body;
     
     if(user) {
@@ -62,7 +47,7 @@ server.post('/users', (req, res) => {
     }
 });
 
-server.delete('/users/:id', (req, res) => {
+router.delete('/:id', (req, res) => {
     const {id} = req.params;
 
     userDB.remove(id)
@@ -78,7 +63,7 @@ server.delete('/users/:id', (req, res) => {
     })
 });
 
-server.put('/users/:id', (req, res) => {
+router.put('/:id', (req, res) => {
     const user = req.body;
     const {id} = req.params;
 
@@ -103,8 +88,4 @@ server.put('/users/:id', (req, res) => {
 })
 
 
-//listener
-
-server.listen(PORT, () => {
-    console.log(`server is listening on port ${PORT}`)
-})
+module.exports = router;
