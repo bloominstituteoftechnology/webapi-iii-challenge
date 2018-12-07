@@ -2,7 +2,7 @@ const express = require('express');
 const helmet = require('helmet');
 const logger = require('morgan');
 
-const userDB = require('./data/helpers/userDb');
+// const userDB = require('./data/helpers/userDb');
 // console.log(userDB);
 
 const postDB = require('./data/helpers/postDb');
