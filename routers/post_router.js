@@ -65,4 +65,31 @@ router.delete('/:id', (req, res) => {
     } )
 })
 
+// Working on this still 
+router.put('/:id', (req, res) => {
+    const post = req.body;
+    const {id} = req.params;
+
+    if (post.text && post.userId){
+        postDb.update(id, post)
+        .then(count => {
+            if (count) {
+                postDb.get(id).then(post => {
+                    res.json(post);
+                })
+            }else {
+                res.status(404).json({error: `The user with the specified ${ID} does not exist.`})
+            }
+        })
+        .catch(err => {
+            res.status(500)
+            .json({error: "The user information could not be modified."})
+        })
+
+    }else {
+        res.status(400).json({error: "Please provide name for user."})
+    }
+})
+
+
 module.exports = router; 

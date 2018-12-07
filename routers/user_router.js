@@ -69,22 +69,23 @@ router.put('/:id', (req, res) => {
     const {id} = req.params;
 
     if (user.name){
-        userDb.update(id, user).then(count => {
+        userDb.update(id, user)
+        .then(count => {
             if (count) {
-                userDb.findById(id).then(user => {
+                userDb.get(id).then(user => {
                     res.json(user);
                 })
             }else {
-                res.status(404).json({message: "The user with the specified ID does not exist."})
+                res.status(404).json({error: `The user with the specified ${ID} does not exist.`})
             }
         })
         .catch(err => {
             res.status(500)
-            .json({error: "The post information could not be modified."})
+            .json({error: "The user information could not be modified."})
         })
 
     }else {
-        res.status(400).json({errorMessage: "Please provide title and contents for the post."})
+        res.status(400).json({error: "Please provide name for user."})
     }
 })
 
