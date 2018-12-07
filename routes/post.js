@@ -26,5 +26,39 @@ router.get('/:id', (req, res) => {
         });
 });
 
+router.post('/:id', (req, res) => {
+    const { id } = req.params;
+    const newPost = req.body;
+    newPost.userId = id;
+
+    if(newPost.text === '') {
+        res.status(400).json({ error: "You must include text on the post" });
+    } else {
+        userDB.get(id)
+        .then(user => {
+            if (user) {
+                postDB.insert(newPost)
+                    .then(idInfo => {
+                        userDB.getUserPosts(id)
+                            .then(posts => {
+                                res.json(posts);
+                            })
+                            .catch(err => {
+                                res.status(500).json({ error: "Error getting posts" });
+                            });
+                    })
+                    .catch(err => {
+                        res.status(500).json({ message: "There was an error saving the new post." });
+                    });
+            } else {
+            res.status(404).json({ message: "User with specified ID is not found" });
+            }
+        })
+        .catch(err => {
+            res.status(500).json({ error: "Could not get user" });
+        });
+    }
+});
+
 
 module.exports = router;
