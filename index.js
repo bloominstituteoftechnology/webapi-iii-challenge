@@ -11,6 +11,8 @@ server.get('/', (req, res) => {
     res.send(`hi there from inside an initial get function, on port ${PORT}`)
 })
 
+// get a list of all our users
+
 server.get('/api/users', (req, res) => {
     userDb.get()
     .then(users => {
@@ -19,6 +21,40 @@ server.get('/api/users', (req, res) => {
     .catch(err => {
         res.status(500)
         res.json(`Huh, can't find those`)
+    })
+})
+
+// get a specific user 
+
+server.get('/api/users/:id', (req, res) => {
+    const {id} = req.params;
+    userDb.get(id)
+    .then(user => {
+        if(user){
+            res.json(user);
+        } else {
+            status(404)
+            res.json(`Huh, don't know that user`)
+        }
+    })
+    .catch(err => {
+        res.status(500)
+        res.json('Error 500: Idk that user')
+    })
+})
+
+// add user
+
+server.post('/api/users', (req, res) => {
+    const user = req.body;
+    console.log('user from body:', user)
+    userDb.insert(user).then(user => {
+        console.log('user from insert method:', user);
+        res.json(user);
+    }).catch(err => {
+        res
+        .status(500)
+        .json('Error: failed to add user')
     })
 })
 
