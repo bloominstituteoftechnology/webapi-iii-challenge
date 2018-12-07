@@ -2,7 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 const userDb = require('../data/helpers/userDb');
-
+const customMiddleware = require('../Custom_Middleware');
 
 
 router.get('/', (req, res) => {
@@ -83,6 +83,35 @@ router.get('/:id/posts', (req, res) => {
             })
         })
 });
+
+//POST
+
+router.post('/', customMiddleware.uppercase, (req, res) => {
+    const user = customMiddleware.upperName;
+    //add if user is longer than 128 characters, return error
+    if (user) {
+        userDb.insert(user)
+            .then(userId => {
+                userDb.get(userId.id)
+                    .then(user => {
+                        res.json(user)
+                    })
+            })
+            .catch(err => {
+                res
+                .status(500)
+                .json({
+                    message: "Could not create a new Hobbit."
+                })
+            })
+    } else {
+        res
+        .status(400)
+        .json({
+            message: "A new Hobbit needs a name. How else can we call for it?"
+        })
+    }
+})
 
 
 
