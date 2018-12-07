@@ -1,4 +1,6 @@
 const express = require('express');
+const userDb = require('../data/helpers/userDb');
+const postDb = require('../data/helpers/postDb');
 
 const router = express.Router();
 
@@ -18,6 +20,21 @@ router.get('/:id', (req, res) => {
     .catch(err => {
       res.status(500)
       .json({ message: 'unable to fullfill request' });
+    });
+});
+
+// /api/users/:userId
+router.get('/:userId/posts', (req, res) => {
+  const { userId } = req.params;
+  console.log(userId);
+  userDb
+    .getUserPosts(userId)
+    .then(posts => {
+      res.send(posts);
+    })
+    .catch(err => {
+      res.status(500)
+      .json({ message: 'unable to get user posts' });
     });
 });
 
