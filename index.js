@@ -4,14 +4,15 @@ const db = require('./data/helpers/userDb');
 const helmet = require('helmet');
 const morgan = require('morgan')
 const server = express();
-const nameUppercase = require('./middleware');
+const middleware = require('./middleware');
 const parser = express.json()
 
 const PORT = 5050;
 
 server.use( parser,
             helmet(),
-            morgan('dev')
+            morgan('dev'),
+            middleware.nameUppercase
           );
 
 
@@ -47,7 +48,7 @@ server.get('/api/users/:id', (req, res)=>{
     })
 })
 
-server.use(middleware.nameUppercase)
+// server.use(middleware.nameUppercase)
 
 server.post('/api/users',(req, res) =>{
   const user = req.body 
