@@ -32,7 +32,8 @@ router.get('/:id', (req, res) => {
 router.post('/', (req, res) => {
     const user = req.body;
     
-    if(user) {
+    if(user && user.name.length < 128 ) {
+        console.log(user.name.length)
         userDB.insert(user)
         .then(idInfo => {
             userDB.get(idInfo)
@@ -43,6 +44,8 @@ router.post('/', (req, res) => {
         .catch(err => {
             res.status(500).json({message: 'Error creating new User'})
         })
+    } else {
+        res.status(500).json({message: 'No user name, or user name too long'})
     }
 });
 

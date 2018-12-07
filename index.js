@@ -13,7 +13,7 @@ server.use(
     express.json(),
     helmet(),
     logger('dev'),
-    // customMW.uppercaser
+    customMW.uppercaser
 );
 
 server.use('/api/users', userRouter)
