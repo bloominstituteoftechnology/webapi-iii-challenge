@@ -8,12 +8,17 @@ import {
   DropdownItem
 }
 from 'reactstrap';
+
+import { Link } from 'react-router-dom';
+import EditProfile from '../../components/EditProfile/';
+
 class UserSettingsContainer extends React.Component {
     constructor() {
       super();
 
       this.state = {
-        isOpen: false
+        isOpen: false,
+        modal: false
       }
     }
     toggle = () => {
@@ -22,11 +27,20 @@ class UserSettingsContainer extends React.Component {
       })
     }
 
+    toggleEditProfile = () => {
+      return this.setState({
+        modal: !this.state.modal
+      })
+    }
+
   render () {
     return (
-      <ButtonGroup vertical color='light' style={{width: '100%', position: 'sticky', top: '50px'}}>
-        <Button>Edit Profile Information</Button>
-        <Button>Create New Post</Button>
+      <ButtonGroup vertical style={{width: '100%', position: 'sticky', top: '50px'}}>
+        <h3>Profile Settings</h3>
+    <EditProfile isOpen={this.state.modal}></EditProfile>
+        <Link to='/create/post/' style={{width: '100%'}}>
+          <Button outline color='info'>Create New Post</Button>
+        </Link>
         <ButtonDropdown
           isOpen={this.state.isOpen}
           toggle={this.toggle}
