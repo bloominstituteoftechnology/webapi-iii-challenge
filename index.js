@@ -6,36 +6,23 @@ const postRouter = require('./data/Routers/postRouter.js');
 const tagRouter = require('./data/Routers/tagRouter.js');
 const PORT = process.env.PORT || 4000;
 const posts = require('./data/helpers/postDb');
-//const users = require('./data/helpers/userDb');
+const users = require('./data/helpers/userDb');
 const cors = require('cors')
 const parser = express.json();
 const logger = require('morgan');
 const helmet = require('helmet');
 //const Joi = require('joi');
-
-//const customMW = require('./customMiddleware');
+const customMW = require('./customMiddleware');
 //const schema = Joi.string().lowercase();
 
 server.use(cors())
-
 server.use(parser);
 server.use('api/users', userRouter);
 server.use('api/posts', postRouter);
 server.use('api/tags', tagRouter);
 server.use(logger('tiny'));
 server.use(helmet());
-//server.use(customMW.userUppercase)
-/* server.use((req, res, next) => {
-    const name = req.query.name;
-    if (name) {
-        next();
-    } else {
-        res.status(400).json({
-            message: "Your password is incorrect"
-        })
-    }
- });
-  */
+//server.use(customMW.upperCase);
 
 const sendUserError = (status, msg, res) => {
     res
@@ -44,7 +31,7 @@ const sendUserError = (status, msg, res) => {
 };
 
 /********* Get Users *************/
-/* server.get('/api/users', (req, res) => {
+ server.get('/api/users', (req, res) => {
     users.get()
         .then((userDb) => {
             res.json(userDb);
@@ -52,7 +39,7 @@ const sendUserError = (status, msg, res) => {
         .catch(err => {
             return sendUserError(500, 'Database Error', res);
         });
-}); */
+}); 
 
 /********* Get Single User *************/
 /* server.get('/api/users/:id', (req, res) => {
@@ -74,7 +61,7 @@ const sendUserError = (status, msg, res) => {
 
 
 /************** Create User *************/
- /* server.post('/api/users', (req, res) => {
+ server.post('/api/users', customMW.upperCase,(req, res) => {
     const { name } = req.body;
     users
         .insert({ name })
@@ -85,7 +72,7 @@ const sendUserError = (status, msg, res) => {
             return sendUserError(500, 'Failed to insert into db', res);
         });
 });
- */
+ 
 
 /************* Get Single User's Posts *************/
 /* server.get('/api/users/posts/:id', (req, res) => {
@@ -121,7 +108,7 @@ const sendUserError = (status, msg, res) => {
 }); */
 
 /************* Update Single User *************/
-/* server.put('/api/users/:id', (req, res) => {
+ server.put('/api/users/:id', (req, res) => {
     const { id } = req.params;
     const { name } = req.body;
     users
@@ -130,7 +117,9 @@ const sendUserError = (status, msg, res) => {
             if (response === 0) {
                 return sendUserError(404, 'No user by that id');
             } else {
-                db.find(id).then(user => {
+                users
+                .find(id)
+                .then(user => {
                     res.json(user);
                 });
             }
@@ -138,7 +127,7 @@ const sendUserError = (status, msg, res) => {
         .catch(err => {
             return sendUserError(500, 'Db unavailable', res);
         });
-}); */
+}); 
  
 //******************* Get Posts ***************************
 server.get('/api/posts', (req, res) => {

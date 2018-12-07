@@ -1,14 +1,20 @@
-module.exports.gatekeeper = (req, res, next) => {
-    const password = req.query.password;
-    if (password === 'ferret') {
-        next();
-    } else {
-        res.status(400).json({
-            message: "Your password is incorrect"
-        })
-    }
+const upperCase = (req, res, next) => {
+
+    const name = req.body.name;
+
+    if (name) {
+        req.body.name = name.toUpperCase();
+    };
+
+    next();
+
 }
 
- 
- 
- 
+const otherMW = (req, res, next) => {
+
+}
+
+module.exports = {
+    upperCase: upperCase,
+    otherMW: otherMW
+};
