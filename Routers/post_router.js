@@ -67,9 +67,7 @@ router.put("/:id", (req, res) => {
          .then(count => {
             if(count) {
                postDb.get(id)
-               console.log(id)
                   .then(post => {
-                     console.log(post)
                      res.json(post);
                   })
             } else {
@@ -77,7 +75,7 @@ router.put("/:id", (req, res) => {
             }
          })
          .catch(err => {
-            res.status(500).json({error: "error updating post", err})
+            res.status(500).json({error: "error updating post"})
          });
    } else {
       res.status(400).json({error: "please provide post text and author"});
