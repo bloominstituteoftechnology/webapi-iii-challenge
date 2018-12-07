@@ -75,6 +75,44 @@ server.get('/posts/:id', (req,res) => {
                res.status(500).json({errorMessage: "The user information could not be retrieved."})
           });
 })
+
+//Server put
+server.put('/users/:id', (req,res) => {
+       const {id} = req.params;
+       const user = req.body;
+       if(user.name) {
+            dbUsers.update(id, user)
+                   .then( count => {
+                    
+                       res.status(201).json({Message: "Updated successfully"})
+                    
+
+                                           })
+                   .catch( err => { // 500 error
+                        res.status(500).json({errorMessage: "User could not be modified"});
+                   });
+       } else {
+            res.status(400).json({Message:"User name required"});
+       }
+});
+
+server.post('/users', (req,res)=> {
+       const user = req.body;
+       if(user.name) {
+           dbUsers.insert(user)
+                  .then(userId => {
+                       console.log(userId)
+                    dbUsers.get(userId.id)
+                           .then(newUser => {
+                                res.status(201).json(newUser);
+                           })
+
+                  })
+                  .catch();
+       } else {
+
+       }    
+});
 server.listen(PORT, () => {
      console.log(`Server is running at ${PORT}`);
 })
