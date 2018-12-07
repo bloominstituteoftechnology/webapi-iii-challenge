@@ -35,8 +35,8 @@ router.get('/:id', (req, res) => {
 
 router.get('/posts/:id', (req, res) => {
   const { id } = req.params;
-  userDB.getUserPosts(id).then(posts => {
-    res.json(posts);
+  userDB.getUserPosts(id).then(userPosts => {
+    res.json(userPosts);
   });
 });
 
