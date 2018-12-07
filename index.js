@@ -50,6 +50,23 @@ server.get('/users/:id', (req, res) => {
         })
 })
 
+server.get('/users/:id/posts', (req, res) => {
+
+    const { id } = req.params;
+
+    userDb.getUserPosts(id)
+        .then(userPosts => {
+            if (userPosts) {
+                res.json(userPosts)
+            } else {
+                res.status(404).json({ message: 'User with specified ID does not exist'})
+            }
+        })
+        .catch(err => {
+        res.status(500).json({ message: 'Failed to load users posts'})
+    })
+})
+
 server.post('/users', (req, res) => {
 
     const user = req.body;
