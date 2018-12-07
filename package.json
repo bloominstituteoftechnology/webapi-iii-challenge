@@ -14,5 +14,8 @@
     "sqlite3": "^4.0.4"
   },
   "description": "y",
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "nodemon": "^1.18.7"
+  }
 }
