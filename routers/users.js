@@ -4,7 +4,7 @@ const postDb = require('../data/helpers/postDb');
 
 const router = express.Router();
 
-// /api/user/:id
+// GET /api/user/:id
 router.get('/:id', (req, res) => {
   const { id } = req.params;
   console.log(id);
@@ -23,7 +23,7 @@ router.get('/:id', (req, res) => {
     });
 });
 
-// /api/users/:userId
+// GET /api/users/:userId
 router.get('/:userId/posts', (req, res) => {
   const { userId } = req.params;
   console.log(userId);
@@ -38,7 +38,7 @@ router.get('/:userId/posts', (req, res) => {
     });
 });
 
-// /api/users/create
+// CREATE /api/users/create
 router.post('/create', (req, res) => {
   const user = req.body;
   if (user.name) {
@@ -55,6 +55,27 @@ router.post('/create', (req, res) => {
         .json({ message: 'failed to insert user into db'});
       });
   }
-})
+});
+
+// DELETE /api/users/:id
+router.delete('/:id', (req, res) => {
+  const { id } = req.params;
+  userDb
+    .remove(id)
+    .then(count => {
+      if (count) {
+        res.json({ message: 'user successfully deleted' });
+      } else {
+        res
+          .status(404)
+          .json({ message: 'the user with the specified id does not exist' });
+      }
+    })
+    .catch(err => {
+      res
+        .status(500)
+        .json({ error: 'user could not be deleted' });
+    });
+});
 
 module.exports = router;
