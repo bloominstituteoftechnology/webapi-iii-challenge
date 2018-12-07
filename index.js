@@ -1,9 +1,9 @@
 //dependencies 
 
-const userDb = require('./data/helpers/userDb.js');
 const express = require('express');
 const middleware = require('./middleware.js');
 const userRouter = require('./userRouter.js');
+const postRouter = require('./postRouter.js');
 
 //define port and server
 
@@ -14,9 +14,10 @@ const server = express();
 
 server.use(express.json(), middleware.capitalizeFirstLetter);
 
-//use user router
+//use routers
 
 server.use('/users', userRouter)
+server.use('/posts', postRouter)
 
 //initiate listening
 
