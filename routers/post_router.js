@@ -59,16 +59,25 @@ router.put('/:id', (req, res) => {
     const {id} = req.params;
     const updatedPost = req.body;
 
-    if (updatedPost.userId && newPost.text) {
+    if (updatedPost.text) {
         postDB.get(id)
         .then((post) => {
-            console.log(post)
-            console.log(post.length);
-            postDB
+            if (post) {
+                postDB.update(id, updatedPost)
+                .then((postId) => {
+                    res.status(200).json(postId);
+                })
+                .catch((error) => {
+                    res.status(500).json(error);
+                })
+            }
+        })
+        .catch((error) => {
+            res.status(500).json(error);
         })
     }
     else {
-        res.status(400).json({message: `Updated posts must contain 'userId' and 'text' parameters.`})
+        res.status(400).json({message: `Updated posts must contain a 'text' parameter.`})
     }
 })
 
