@@ -3,6 +3,7 @@ const userDb = require('./data/helpers/userDb');
 const postDb = require('./data/helpers/postDb');
 
 const customMiddleware = require('./Custom_Middleware');
+const userRouter = require('./routers/user_requests');
 
 const server = express();
 const PORT = 4100;
@@ -146,6 +147,7 @@ server.get('/users/:id/posts', (req, res) => {
 
 server.post('/users', customMiddleware.uppercase, (req, res) => {
     const user = customMiddleware.upperName;
+    //add if user is longer than 128 characters, return error
     if (user) {
         userDb.insert(user)
             .then(userId => {
