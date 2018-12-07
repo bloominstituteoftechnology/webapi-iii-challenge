@@ -1,21 +1,29 @@
 const express = require('express');
 const db = require('./data/dbConfig');
 const server = express();
-const PORT = process.env.PORT4000 || 4000;
+const userRouter = require('./data/Routers/userRouter.js');
+const postRouter = require('./data/Routers/postRouter.js');
+const tagRouter = require('./data/Routers/tagRouter.js');
+const PORT = process.env.PORT || 4000;
 const posts = require('./data/helpers/postDb');
-const users = require('./data/helpers/userDb');
+//const users = require('./data/helpers/userDb');
 const cors = require('cors')
 const parser = express.json();
 const logger = require('morgan');
 const helmet = require('helmet');
-const Joi = require('joi');
+//const Joi = require('joi');
+
 //const customMW = require('./customMiddleware');
-const schema = Joi.string().lowercase();
+//const schema = Joi.string().lowercase();
 
 server.use(cors())
+
+server.use(parser);
+server.use('api/users', userRouter);
+server.use('api/posts', postRouter);
+server.use('api/tags', tagRouter);
 server.use(logger('tiny'));
 server.use(helmet());
-server.use(parser);
 //server.use(customMW.userUppercase)
 /* server.use((req, res, next) => {
     const name = req.query.name;
@@ -36,7 +44,7 @@ const sendUserError = (status, msg, res) => {
 };
 
 /********* Get Users *************/
-server.get('/api/users', (req, res) => {
+/* server.get('/api/users', (req, res) => {
     users.get()
         .then((userDb) => {
             res.json(userDb);
@@ -44,10 +52,10 @@ server.get('/api/users', (req, res) => {
         .catch(err => {
             return sendUserError(500, 'Database Error', res);
         });
-});
+}); */
 
 /********* Get Single User *************/
-server.get('/api/users/:id', (req, res) => {
+/* server.get('/api/users/:id', (req, res) => {
     const { id } = req.params
     users.get(id)
         .then(user => {
@@ -62,11 +70,11 @@ server.get('/api/users/:id', (req, res) => {
         .catch(err => {
             return sendUserError(500, 'The user information could not be found', res);
         });
-});
+}); */
 
 
-/************* Create User *************/
-server.post('/api/users', (req, res) => {
+/************** Create User *************/
+ /* server.post('/api/users', (req, res) => {
     const { name } = req.body;
     users
         .insert({ name })
@@ -74,13 +82,13 @@ server.post('/api/users', (req, res) => {
             res.json(response);
         })
         .catch(err => {
-            return sendUserError(500, 'Failed to insert user in db', res);
+            return sendUserError(500, 'Failed to insert into db', res);
         });
 });
-
+ */
 
 /************* Get Single User's Posts *************/
-server.get('/api/users/posts/:id', (req, res) => {
+/* server.get('/api/users/posts/:id', (req, res) => {
     const { id } = req.params;
     users
         .getUserPosts(id)
@@ -93,10 +101,10 @@ server.get('/api/users/posts/:id', (req, res) => {
         .catch(err => {
             return sendUserError(500, 'Unable to access db', res);
         });
-});
+}); */
 
 /************* Delete Single User *************/
-server.delete('/api/users/:id', (req, res) => {
+/* server.delete('/api/users/:id', (req, res) => {
     const { id } = req.params;
     users
         .remove(id)
@@ -110,10 +118,10 @@ server.delete('/api/users/:id', (req, res) => {
         .catch(err => {
             return sendUserError(500, 'Db unavailable...', res);
         });
-});
+}); */
 
 /************* Update Single User *************/
-server.put('/api/users/:id',/*  customMW, */(req, res) => {
+/* server.put('/api/users/:id', (req, res) => {
     const { id } = req.params;
     const { name } = req.body;
     users
@@ -130,8 +138,8 @@ server.put('/api/users/:id',/*  customMW, */(req, res) => {
         .catch(err => {
             return sendUserError(500, 'Db unavailable', res);
         });
-});
-
+}); */
+ 
 //******************* Get Posts ***************************
 server.get('/api/posts', (req, res) => {
     posts
@@ -163,9 +171,9 @@ server.get('/api/posts/:id', (req, res) => {
 
 /********************* Create new post ******************/
 server.post('/api/posts', (req, res) => {
-    const { id, text } = req.body;
+    const { text, userId } = req.body;
     posts
-        .insert({ id, text })
+        .insert({ text, userId })
         .then(response => {
             res.json(response);
         })
@@ -192,16 +200,16 @@ server.get('/api/posts/tags/:id', (req, res) => {
 
 // *****************  Get Tags  *************************
 
-server.get('/api/tags', (req, res) => {
+/* server.get('/api/tags', (req, res) => {
     users
         .get()
         .then(tags => {
             res.json({ tags });
         })
         .catch(err => {
-            return sendUserError(500, 'Database boof', res);
+            return sendUserError(500, 'Db unavailable', res);
         });
-});
+}); */
 
 
 
