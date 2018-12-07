@@ -2,6 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 
 const user = require('./routes/user');
+const post = require('./routes/post');
 
 const server = express();
 const PORT = 3000;
@@ -20,6 +21,7 @@ server.use((req, res, next) => {
 });
 
 server.use('/users', user);
+server.use('/posts', post);
 
 
 server.listen(PORT, err => {
