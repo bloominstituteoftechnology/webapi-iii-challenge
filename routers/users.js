@@ -38,4 +38,23 @@ router.get('/:userId/posts', (req, res) => {
     });
 });
 
+// /api/users/create
+router.post('/create', (req, res) => {
+  const user = req.body;
+  if (user.name) {
+    userDb
+      .insert(user)
+      .then(idInfo => {
+        userDb.get(idInfo.id)
+        .then(user => {
+          res.status(201).json(idInfo);
+        });
+      })
+      .catch(err => {
+        res.status(500)
+        .json({ message: 'failed to insert user into db'});
+      });
+  }
+})
+
 module.exports = router;
