@@ -71,7 +71,9 @@ router.put('/:id', (req, res) => {
 
     if(newPost.text === '') {
         res.status(400).json({ error: "You must include text on the post" });
-    } else {
+    } else if(newPost.id === undefined) {
+        res.status(400).json({ error: "You must include an id on the post" });
+    }else {
         userDB.get(id)
         .then(user => {
             if (user) {
