@@ -42,7 +42,7 @@ const upperCaseName = (req, res, next) => {
 server.use(express.json());
 server.use(logger('dev'));
 server.use(helmet());
-server.use(upperCaseName);
+// server.use(upperCaseName);
 
 // Routes
 
