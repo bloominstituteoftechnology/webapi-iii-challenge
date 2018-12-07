@@ -1,29 +1,14 @@
 const express = require('express');
 const posts = require('../data/helpers/postDb');
 const router = express.Router();
-//const db = require('../helpers/postDb');
-//const posts = require('./data/helpers/postDb');
+
 const sendUserError = (status, msg, res) => {
     res
         .status(status)
         .json({ Error: msg });
 };
 
-
-
-
 //******************* Get Posts ***************************
-/* router.get('/', (req, res) => {
-    posts
-        .get()
-        .then(allPosts => {
-            res.json(allPosts);
-        })
-        .catch(err => {
-            return sendUserError(500, 'Db unavailable', res);
-        });
-});
- */
 router.get('/', (req, res) => {
     posts
         .get()
@@ -35,7 +20,7 @@ router.get('/', (req, res) => {
         });
 });
 //******************* Get Single Users Posts ***************************
-/* router.get('/:id', (req, res) => {
+ router.get('/:id', (req, res) => {
     const { id } = req.params;
     posts
         .get(id)
@@ -49,9 +34,9 @@ router.get('/', (req, res) => {
             return sendUserError(500, 'Db unavailable', res);
         });
 });
- */
+ 
 /********************* Create new post ******************/
-/* router.post('/', (req, res) => {
+ router.post('/', (req, res) => {
     const { text, userId } = req.body;
     posts
         .insert({ text, userId })
@@ -61,10 +46,10 @@ router.get('/', (req, res) => {
         .catch(err => {
             return sendUserError(500, 'Db unavailable', res);
         });
-}); */
+}); 
 
 /***************** Get all tags from single user *******/
-/* router.get('/tags/:id', (req, res) => {
+ router.get('/tags/:id', (req, res) => {
     const { id } = req.params;
     posts
         .getPostTags(id)
@@ -77,6 +62,6 @@ router.get('/', (req, res) => {
         .catch(err => {
             return sendUserError(500, 'Db unavailable', res);
         });
-}); */
+}); 
 
 module.exports = router;

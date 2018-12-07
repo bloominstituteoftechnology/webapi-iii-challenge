@@ -1,13 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const tags = require('../data/helpers/tagDb');
-//const db = require('../dbConfig');
-/* const sendUserError = (status, msg, res) => {
-    res
-        .status(status)
-        .json({ Error: msg });
-};
- */
 
 const sendUserError = (status, msg, res) => {
     res
@@ -16,12 +9,11 @@ const sendUserError = (status, msg, res) => {
 };
 
 // *****************  Get Tags  *************************
-
 router.get('/', (req, res) => {
-    users
+    tags
         .get()
-        .then(tags => {
-            res.json({ tags });
+        .then(tag => {
+            res.json({ tag });
         })
         .catch(err => {
             return sendUserError(500, 'Db unavailable', res);

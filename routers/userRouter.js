@@ -1,8 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const users = require('../data/helpers/userDb');
-//const users = require('../helpers/userDb');
-//const db = require('../dbConfig');
 
 const sendUserError = (status, msg, res) => {
     res
@@ -10,11 +8,10 @@ const sendUserError = (status, msg, res) => {
         .json({ Error: msg });
 };
 
-
 /********* Get Users *************/
 router.get('/', (req, res) => {
     users.get()
-        .then((userDb) => {
+        .then(userDb => {
             res.json(userDb);
         })
         .catch(err => {
@@ -56,7 +53,6 @@ router.get('/:id', (req, res) => {
         });
 });
 
-
 /************* Create User *************/
 router.post('/', (req, res) => {
     const { name } = req.body;
@@ -72,7 +68,7 @@ router.post('/', (req, res) => {
 
 /************* Delete Single User *************/
 router.delete('/:id', (req, res) => {
-    const { id } = req.params.id;
+    const { id } = req.params;
     users
         .remove(id)
         .then(userRemoved => {
@@ -88,25 +84,45 @@ router.delete('/:id', (req, res) => {
 });
 
 /************* Update Single User *************/
-router.put('/:id',/*  customMW, */(req, res) => {
+router.put('/:id', (req, res) => {
     const { id } = req.params;
     const { name } = req.body;
-    users
-        .update(id, { name })
-        .then(response => {
-            if (response === 0) {
-                return sendUserError(404, 'No user by that id');
-            } else {
-                db.find(id).then(user => {
-                    res.json(user);
+
+    if (!id || !name) {
+        res
+            .status(400)
+            .json({ message: "Please provide name and id for the post." });
+    } else {
+        const user = users.get({ id })
+        if (user) {
+            users.update(id, { name })
+                .then(user => {
+                    if (user) {
+                        users.get({ id });
+                        if (user) {
+                            res
+                                .status(201)
+                                .json(user);
+                        } else {
+                            res
+                                .status(404)
+                                .json({ message: "The user with the specified ID does not exist." })
+                        }
+                    } else {
+                        // nothing here
+                    }
+                })
+                .catch(err => {
+                    res
+                        .status(500)
+                        .json({ error: "The user could not be modified." });
                 });
-            }
-        })
-        .catch(err => {
-            return sendUserError(500, 'Db unavailable', res);
-        });
-});
-
-
+        } else {
+            res
+                .status(404)
+                .json({ message: "The user with the specified ID does not exist." })
+        }
+    }
+})
 
 module.exports = router;
