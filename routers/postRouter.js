@@ -45,14 +45,6 @@ router.get('/:id', (req, res) => {
     })
 })
 
-// router.get('/:id', (req, res) => {
-//     const { id } = req.params;
-//     posts
-//       .get(id)
-//       .then(post => post ? res.json(post) : res.status(404).json({ error: 'There is no post with the specified ID' }))
-//       .catch(err => res.status(500).json({ error: 'Something went wrong retrieving your post!' }));
-//   });
-
 router.delete('/:id', (req, res) => {
     const {id} = req.params;
     posts.remove(id)
