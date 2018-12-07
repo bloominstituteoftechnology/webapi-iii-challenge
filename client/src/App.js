@@ -76,10 +76,14 @@ alert("function is unavailable at this time...")
           <div className="create-button">
             <button className="create">Create Post</button>
           </div>
-          <h2>Node "Blog" Express Lab</h2> <div className="create-button">
+          <h2>Node "Blog" Express Lab</h2> 
+          <div className="create-button">
             <button className="create">Create User</button>
           </div>
         </div>
+        <div className="container-lower">
+        <div className="container-left"><h3>Users</h3></div>
+        <div className="container-right"><h3>Posts</h3>
         <ul>{this.state.posts.map(post => {
           return (
             <Post
@@ -93,6 +97,10 @@ alert("function is unavailable at this time...")
             />);
         })}
         </ul>
+       
+        </div>
+        <div className="container-middle"><h3>Tags</h3></div>
+        </div>
       </div>
     );
   }
