@@ -12,6 +12,7 @@ const PORT = "4000";
 server.use(parser);
 server.use(helmet());
 server.use(custom.capUser);
+server.use(custom.manNameLength);
 
 server.get('/api/users', (req, res) =>  {
     userDB.get()
@@ -30,7 +31,6 @@ server.get('/api/users/:id', (req, res) =>  {
     const { id }    =   req.params;
     userDB.get(id)
         .then((users)   =>  {
-            console.log(users.length);
             res
             .json(users);
         })

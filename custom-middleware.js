@@ -17,4 +17,15 @@ const capUser = (req, res, next)    =>  {
     }
 }
 
+const maxNameLength = (req, res, next)  =>  {
+    const user = req.body.user;
+    if(user === undefined)  {
+        next()
+    }   else if(user.length > 128)   {
+        res.status(422).json({ message: "User name is too long. Please submit a shorter name."});
+    }   else {
+        next();
+    }
+}
+module.exports.manNameLength = maxNameLength;
 module.exports.capUser = capUser;
