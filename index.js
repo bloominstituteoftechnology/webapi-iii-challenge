@@ -29,4 +29,37 @@ server.get('/api/users', (req, res) =>{
     })
 })
 
+//GET by id
+server.get('/api/users/:id', (req, res) => {
+    const {id} = req.params;
+    userdb.get(id)
+    .then(user => {
+        res.status(200)
+        .json(user);
+    })
+    .catch(error => {
+        res.status(500)
+        .json({message: "The user info could not be retrieved."})
+    })
+})
+
+//POST
+server.post('/api/users', nameCap, async (req, res) => {
+    const {name} = req.body;
+    if (!name) {
+        res.status(400)
+        .json({message: "Please provide a name for the new user."})
+    } else {
+        try {
+            const userInfo = req.body;
+            const userId  =await userdb.insert(userInfo);
+            res.status(201).json(userId);
+        } catch (error) {
+            res.status(500).json({error: "An error occurred while saving this user."})
+        }
+    }
+})
+
+
+
 server.listen(PORT, ()=>console.log('Server is listening on port 5555')); 
