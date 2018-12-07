@@ -54,9 +54,7 @@ router.get("/:id", (req, res) => {
         if (count) {
           res.json({ message: "The user was deleted." });
         } else {
-          res
-            .status(404)
-            .json({ message: "The user with the specified ID does not exist." });
+          res.status(404).json({ message: "The user with the specified ID does not exist." });
         }
       })
       .catch(err => {
