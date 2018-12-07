@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const nameMiddleware = require('./nameMiddleware');
 const userDb = require('./data/helpers/userDb');
 
 const server = express();
