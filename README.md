@@ -15,6 +15,9 @@
 - **You will work on this assignment over the course of TWO days**
 - **The endpoints for managing users and the middleware to uppercase the user's name are due on Wednesday, the posts endpoints are due on Thursday**.
 
+- do users and middleware `toUppercase` first
+- then posts
+
 ### Download Project Files and Install Dependencies
 
 - **Fork** and **Clone** this repository.
