@@ -3,6 +3,8 @@ const userDb = require("../data/helpers/userDb.js");
 const express = require("express");
 const router = express.Router();
 
+// Brendon Kutz, Jason Hedrick, Kelly Manahan
+
 router.get("/", (req, res) => {
   postDb
     .get()
