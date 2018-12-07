@@ -5,7 +5,7 @@ const logger = require('morgan');
 // const userDB = require('./data/helpers/userDb');
 // console.log(userDB);
 
-const postDB = require('./data/helpers/postDb');
+// const postDB = require('./data/helpers/postDb');
 // console.log(postDB);
 
 const server = express();
@@ -49,6 +49,12 @@ server.use(upperCaseName);
 server.use('/users', userRoutes);
 server.use('/posts', postRoutes);
 
+// LISTENING
+server.listen(port, () => {
+  console.log(`Server is up and running on port ${port}`);
+});
+
+// ALL CODE BELOW WAS COMMENTED OUT WHEN I STARTED USING ROUTES. BELOW ARE THE USER ENDPOINTS WITHOUT USING ROUTES
 // Endpoints
 
 // GET
@@ -144,8 +150,3 @@ server.use('/posts', postRoutes);
 //     res.status(400).json({ message: 'Please provide a name' });
 //   }
 // });
-
-// LISTENING
-server.listen(port, () => {
-  console.log(`Server is up and running on port ${port}`);
-});

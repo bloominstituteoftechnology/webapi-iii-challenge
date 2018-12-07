@@ -33,6 +33,13 @@ router.get('/:id', (req, res) => {
     });
 });
 
+router.get('/posts/:id', (req, res) => {
+  const { id } = req.params;
+  userDB.getUserPosts(id).then(posts => {
+    res.json(posts);
+  });
+});
+
 router.post('/', (req, res) => {
   const user = req.body;
   if (user.name) {
