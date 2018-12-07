@@ -35,7 +35,6 @@ router.post('/', (req, res) => {
     if(user) {
         userDB.insert(user)
         .then(idInfo => {
-            console.log(idInfo)
             userDB.get(idInfo)
             .then(user => {
                 res.status(201).json(user)
