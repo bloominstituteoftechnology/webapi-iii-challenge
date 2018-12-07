@@ -152,6 +152,25 @@ server.get('/posts/:id', (req,res) => {
           });
 });
 
+server.post('/posts', (req,res) => {
+        const post = req.body;
+        const {text, userId} = req.body;
+        console.log('Line number 157:', post)
+        if(text && userId) {
+             dbPosts.insert(post)
+                    .then(postId => {
+                        dbPosts.get(postId.id)
+                               .then(newPost => {
+                                    res.status(201).json(newPost);
+                               })
+                               .catch(err => {
+                                    res.status(500).json({errorMessage: "Could not create the post"});
+                               })
+                    })
+        } else {
+             res.status(400).json({errorMessage: "Please enter the text-- text is required."})
+        }
+});
 
 
 server.listen(PORT, () => {
