@@ -5,7 +5,7 @@ const Users = props => {
   return (
     <div>
       {props.users.map(user => {
-        <h3><Link to={`/${user.id}`}>{user.name}</Link></h3>
+        return <h3 key={user.id}><Link to={`/${user.id}`}>{user.name}</Link></h3>
     })}
     </div>
     

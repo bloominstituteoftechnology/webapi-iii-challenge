@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import { Route } from "react-router-dom";
+import axios from "axios";
 // import logo from './logo.svg';
 // import './App.css';
 
-import { MyApiClient } from "./my-api-clint";
+// import { MyApiClient } from "./my-api-clint";
 
-import Users from "./components/Users";
-import UserPosts from "./components/User";
+import Users from "./components/Users.js";
+import UserPosts from "./components/UserPosts.js";
 
 class App extends Component {
   constructor() {
@@ -17,7 +18,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    MyApiClient.get("/users")
+    axios.get("http://localhost:4000/api/users/")
       .then(response => this.setState({ users: response.data }))
       .catch(err => console.log(err));
   }
