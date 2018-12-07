@@ -34,13 +34,23 @@ router.get('/:id', (req, res) => {
     })
 })
 
+router.get('/:id/posts', (req, res) => {
+    const {id} = req.params;
+    userDB.getUserPosts(id)
+    .then((posts => {
+        res.status(200).json(posts);
+    }))
+    .catch((error) => {
+        res.status(500).json({errorMessage: error});
+    })
+})
+
 router.post('/', (req, res) => {
     const user = req.body;
     if (user.name) {
         userDB.insert(user)
         .then(data => {
-            console.log(data);
-            res.json(data);
+            res.status(201).json(data);
         })
         .catch(() => {
             res.status(500).json({errorMessage: 'Server error adding user'});
@@ -51,7 +61,6 @@ router.post('/', (req, res) => {
 router.put('/:id', (req, res) => {
     const {id} = req.params;
     const userToUpdate = req.body;
-    
     if(userToUpdate.name) {
         userDB.get(id)
         .then((user) => {
@@ -72,11 +81,13 @@ router.put('/:id', (req, res) => {
             res.status(500).json({errorMessage: 'Server error getting user by id'});
         })
     }
+    else {
+        res.status(400).json({message: `User must contain a 'name' field.`});
+    }
 })
 
 router.delete('/:id', (req, res) => {
     const {id} = req.params;
-
     userDB.get(id)
     .then((user) => {
         if (user) {
