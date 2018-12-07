@@ -7,6 +7,9 @@ router.get('/', (req,res) => {
     .then((posts) => {
       console.log(posts);
     })
+    .catch(err => {
+      res.status(500).json({error: "error getting posts"})
+    })
 })
 
 
