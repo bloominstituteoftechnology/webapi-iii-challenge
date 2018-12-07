@@ -49,7 +49,6 @@ router.get("/:id/posts", (req, res) => {
 });
 // // create
 router.post("/", (req, res) => {
-  console.log(custMW.capUser);
   if (custMW.capUser.name) {
     userDB
       .insert(custMW.capUser)
@@ -84,6 +83,27 @@ router.delete("/:id", (req, res) => {
 });
 
 // // update
+router.put("/:id", (req, res) => {
+  const { id } = req.params;
+  if (custMW.capUser.name) {
+    userDB
+      .update(id, custMW.capUser)
+      .then(num => {
+        if (!num) {
+          res.status(404).json(custMW.badID);
+        } else {
+          userDB.get(id).then(user => {
+            res.json(user);
+          });
+        }
+      })
+      .catch(err => {
+        res.status(500).json(custMW.badDataUpdate);
+      });
+  } else {
+    res.status(400).json({ message: "missing user name" });
+  }
+});
 
 // exports
 module.exports = router;

@@ -53,7 +53,7 @@ router.post("/", (req, res) => {
         res.status(500).json(custMW.badDataInsert);
       });
   } else {
-    res.status(400).json({ message: "missing user name" });
+    res.status(400).json({ message: "missing user name or post text" });
   }
 });
 
@@ -76,6 +76,28 @@ router.delete("/:id", (req, res) => {
 });
 
 // // update
-
+router.put("/:id", (req, res) => {
+    const { id } = req.params;
+    const newPost = req.body;
+    if (newPost.userId && newPost.text) {
+      postDB
+        .update(id, newPost)
+        .then(num => {
+          if (!num) {
+            res.status(404).json(custMW.badID);
+          } else {
+            postDB.get(id).then(post => {
+              res.json(post);
+            });
+          }
+        })
+        .catch(err => {
+          res.status(500).json(custMW.badDataUpdate);
+        });
+    } else {
+      res.status(400).json({ message: "missing user name or post text" });
+    }
+  });
+  
 // exports
 module.exports = router;

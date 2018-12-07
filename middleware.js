@@ -5,6 +5,7 @@ const badDataInsert = {
 };
 const badDataRemoval = { message: "That data could not be deleted" };
 const badID = { message: "That data does not exist" };
+const badDataUpdate = {message: "The data did not update"}
 
 // capitalize
 const capUser = {};
@@ -28,5 +29,6 @@ module.exports = {
   badDataRetreival: badDataRetreival,
   badDataInsert: badDataInsert,
   badDataRemoval: badDataRemoval,
-  badID: badID
+  badID: badID,
+  badDataUpdate: badDataUpdate
 };
