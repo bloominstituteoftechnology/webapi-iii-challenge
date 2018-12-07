@@ -18,9 +18,21 @@ router.get("/", (req, res) => {
 //get user by userid
 router.get("/:id", (req, res) => {
    const { id } = req.params;
-   userDb.getUserPosts(id)
+   userDb.get(id)
       .then(user => {
          user ? res.json(user) : res.status(500).json({error: "User does not exist"})
+      })
+      .catch(err => {
+         res.status(404).json({error: "User does not exist"})
+      })
+});
+
+//get all post by userid
+router.get("/posts/:id", (req, res) => {
+   const { id } = req.params;
+   userDb.getUserPosts(id)
+      .then(user => {
+         user.length > 0 ? res.json(user) : res.status(500).json({error: "User does not exist"})
       })
       .catch(err => {
          res.status(404).json({error: "User does not exist"})
