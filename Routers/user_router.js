@@ -23,7 +23,7 @@ router.get("/:id", (req, res) => {
          user ? res.json(user) : res.status(500).json({error: "User does not exist"})
       })
       .catch(err => {
-         res.status(404).json({error: "User does not exist"})
+         res.status(404).json({error: "User does not found"})
       })
 });
 
@@ -35,7 +35,7 @@ router.get("/posts/:id", (req, res) => {
          user.length > 0 ? res.json(user) : res.status(500).json({error: "User does not exist"})
       })
       .catch(err => {
-         res.status(404).json({error: "User does not exist"})
+         res.status(404).json({error: "User does not found"})
       })
 });
 
