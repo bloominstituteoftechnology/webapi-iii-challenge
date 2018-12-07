@@ -1,6 +1,6 @@
 const express = require('express');
 const server = express();
-const PORT = 5000;
+const PORT = 5050;
 const helmet = require('helmet');
 const morgan = require('morgan');
 const capitalize = require('./middleware.js');
