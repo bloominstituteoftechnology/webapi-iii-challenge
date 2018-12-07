@@ -8,6 +8,8 @@ export const FETCH_POST = 'FETCH_POST';
 export const FETCHED_POST = 'FETCHED_POST';
 export const DELETING_POST = 'DELETING_POST';
 export const DELETED_POST = 'DELETED_POST';
+export const UPDATING_POST = 'UPDATING_POST';
+export const UPDATED_POST = 'UPDATED_POST';
 
 export const ERROR = 'ERROR';
 
@@ -60,6 +62,20 @@ export const deletePost = (id) => {
     axios.delete(`http://localhost:3020/api/posts/${id}`)
          .then(res => {
            dispatch({type:DELETED_POST, payload: res.data})
+         })
+         .catch(err => {
+           dispatch({type: ERROR, payload: err})
+         })
+  }
+}
+
+export const updatePost = (id, obj) => {
+  return dispatch => {
+    dispatch({type: UPDATING_POST, payload: obj})
+
+    axios.put(`http://localhost:3020/api/posts/${id}`, obj)
+         .then(res => {
+           dispatch({type: UPDATED_POST, payload: res.data})
          })
          .catch(err => {
            dispatch({type: ERROR, payload: err})

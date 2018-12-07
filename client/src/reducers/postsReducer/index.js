@@ -1,5 +1,5 @@
 import { FETCHING_POSTS, FETCHED_POSTS, FETCH_POST, FETCHED_POST,
-         CREATED_POST, CREATE_POST, DELETED_POST, DELETING_POST, ERROR} from '../../actions/posts';
+         CREATED_POST, CREATE_POST, DELETED_POST, DELETING_POST, UPDATING_POST, UPDATED_POST, ERROR} from '../../actions/posts';
 
 const inititalState = {
   fetchingPosts: false,
@@ -8,6 +8,8 @@ const inititalState = {
   fetchedPost: false,
   creatingPost: false,
   createdPost: false,
+  updatingPost: false,
+  updatedPost: false,
   posts: [],
   error: false,
   errorMessage: null,
@@ -17,7 +19,7 @@ const inititalState = {
 const postsReducer = (state = inititalState, action) => {
   switch (action.type) {
     case FETCHING_POSTS:
-      return Object.assign({}, state, {fetchingPosts: true, fetchedPosts: false, createdPost: false, deletedPost: false})
+      return Object.assign({}, state, {fetchingPosts: true, fetchedPosts: false, createdPost: false, deletedPost: false, updatedPost: false})
     case FETCHED_POSTS:
       return Object.assign({}, state, {fetchingPosts: false, fetchedPosts: true, posts: action.payload.reverse(), createdPost: false})
     case FETCH_POST:
@@ -35,6 +37,10 @@ const postsReducer = (state = inititalState, action) => {
       return Object.assign({}, state, {deletingPost: false, deletedPost: true})
     case ERROR:
       return Object.assign({}, state, {error: true, errorMessage: action.paylaod})
+    case UPDATING_POST:
+      return Object.assign({}, state, {updatingPost: true, updatedPost: false})
+    case UPDATED_POST:
+      return Object.assign({}, state, {updatingPost: false, updatedPost: true, currentPost: action.payload})
     default:
       return state
   }

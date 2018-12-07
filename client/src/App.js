@@ -31,7 +31,7 @@ class App extends Component {
         <Route path='/users' exact component={UsersView} />
         <Route path='/users/:id' exact component={ProfileView} />
         <Route path='/posts/' exact component={PostsView} />
-      <Route path='/create/post' exact component={CreatePost} />
+        <Route path='/create/post' exact component={CreatePost} />
         <Route path='/posts/:id' exact render={post => <PostView {...post}/>} />
 
     </div>
