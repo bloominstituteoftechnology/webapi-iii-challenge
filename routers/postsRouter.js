@@ -48,6 +48,25 @@ router.post('/', (req,res) =>{
 
 });
 
-
+//Delete specified post
+router.delete('/:id', (req,res) =>{
+    const id = req.params.id;
+    postdb.get(id)
+    .then(post =>{
+        if(post){
+            postdb.remove(id)
+            .then(count =>{
+                res.json(post)
+            })
+        }else{
+            res.status(404)
+            res.json({error: "There is no post associated with the specified id"})
+        }
+    })
+    .catch(err =>{
+        res.status(500)
+        res.json({error: "Unable to delete specified post"})
+    })
+});
 
 module.exports = router;
