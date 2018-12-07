@@ -121,6 +121,81 @@ server.get('/posts', (req, res) => {
         })
 })
 
+server.get('/posts/:id', (req, res) => {
+
+    const { id } = req.params;
+
+    postDb.get(id)
+        .then(post => {
+            if (post) {
+                res.json(post)
+            } else {
+                res.status(404).json({ message: 'The post with the specified ID does not exist' })
+            }
+        })
+        .catch(err => {
+            res.status(500).json({ message: 'Failed to load post' })
+        })
+})
+
+server.post('/posts', (req, res) => {
+
+    const post = req.body;
+
+    if (post.userId && post.text) {
+        postDb.insert(post)
+            .then(idInfo => {
+                postDb.get(idInfo.id).then(post => {
+                    res.status(201).json(post);
+                })
+            })
+            .catch(err => {
+                res.status(500).json({ message: 'Failed to insert post' })
+            })
+    } else {
+        res.status(400).json({ message: 'Missing user ID or text' })
+    }
+})
+
+server.delete('/posts/:id', (req, res) => {
+
+    const { id } = req.params;
+    const post = req.body;
+
+    postDb.remove(id)
+        .then(count => {
+            if (count) {
+                res.json(post)
+            } else {
+                res.status(404).json({ message: 'Post with specified ID does not exist'})
+            }
+        })
+        .catch(err => {
+            res.status(500).json({ message: 'Failed to delete post' })
+        })
+})
+
+server.put('/posts/:id', (req, res) => {
+    const { id } = req.params;
+    const post = req.body;
+
+    if (post.userId && post.text) {
+        postDb.update(id, post)
+            .then(post => {
+                if (id) {
+                    res.json({ message: 'Post has been updated'})
+                } else {
+                    res.status(404).json({ message: 'Post with specified ID does not exist'})
+                }
+            })
+            .catch(err => {
+            res.status(500).json({ message: 'Failed to update post'})
+        })
+    } else {
+        res.status(400).json({ message: 'Missing user ID or text'})
+    }
+})
+
 // Listen
 
 server.listen(PORT, () => {
