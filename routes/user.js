@@ -69,15 +69,15 @@ router.get("/:id", (req, res) => {
     const updatedUser = req.body;
 
     if (updatedUser.name) {
-        if (updatedUserBody.name === "") {
+        if (updatedUser.name === "") {
             res.status(400).json({ error: "name must include characters" });
-          } else if (updatedUserBody.name.length > 128) {
+          } else if (updatedUser.name.length > 128) {
             res.status(400).json({ error: "name must not exceed 128 characters" });
           } else {
             userDB.update(id, updatedUser)
             .then(count => {
                 if (count) {
-                    db.findById(id)
+                    userDB.get(id)
                         .then(post => {
                             res.json(post);
                     })
