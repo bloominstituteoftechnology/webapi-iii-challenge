@@ -10,16 +10,16 @@
 
 ## Assignment
 
-- Use Node.js and Express to **design and build** an API that performs CRUD operations on `users` and `posts`.
-- Write custom middleware to ensure that the user's `name` is uppercased before the request reaches the `POST` or `PUT` route handler.
-- **You will work on this assignment over the course of TWO days**
-- **The endpoints for managing users and the middleware to uppercase the user's name are due on Wednesday, the posts endpoints are due on Thursday**.
+- [x] Use Node.js and Express to **design and build** an API that performs CRUD operations on `users` and `posts`.
+- [x] Write custom middleware to ensure that the user's `name` is uppercased before the request reaches the `POST` or `PUT` route handler.
+- [x] **You will work on this assignment over the course of TWO days**
+- [x] **The endpoints for managing users and the middleware to uppercase the user's name are due on Wednesday, the posts endpoints are due on Thursday**.
 
 ### Download Project Files and Install Dependencies
 
-- **Fork** and **Clone** this repository.
-- **CD into the folder** where you cloned the repository.
-- Do your magic!
+- [x] **Fork** and **Clone** this repository.
+- [x] **CD into the folder** where you cloned the repository.
+- [x] Do your magic!
 
 ### Database Persistence Helpers
 
@@ -55,13 +55,13 @@ Now that we have a way to add, update, remove and retrieve data from the provide
 
 ### Implementation Requirements
 
-- Take the steps necessary to create a `package.json` to keep a record of our dependencies.
-- use _yarn_ or _npm_ to add **knex** and **sqlite3** as dependencies to the project. **This is required for database access**.
-- Configure an _npm script_ named _"start"_ that will execute your code using _nodemon_ so that the server restarts on changes. Make _nodemon_ be a development time dependency only, it shouldn't be deployed to production.
-- Design and build the necessary endpoints to:
-  - perform CRUD operations on _users_ and _posts_.
-  - retrieve the list of posts for a user.
-- **Use _Postman_ to test the API as you work through the exercises.**
+- [x] Take the steps necessary to create a `package.json` to keep a record of our dependencies.
+- [x] use _yarn_ or _npm_ to add **knex** and **sqlite3** as dependencies to the project. **This is required for database access**.
+- [x] Configure an _npm script_ named _"start"_ that will execute your code using _nodemon_ so that the server restarts on changes. Make _nodemon_ be a development time dependency only, it shouldn't be deployed to production.
+- [x] Design and build the necessary endpoints to:
+  - [x] perform CRUD operations on _users_ and _posts_.
+  - [x] retrieve the list of posts for a user.
+- [x] **Use _Postman_ to test the API as you work through the exercises.**
 
 
 
