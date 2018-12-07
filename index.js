@@ -49,6 +49,15 @@ server.get('/users/:id', (req,res) => {
           });
 });
 
+server.get('/users/:id/posts', (req,res) => {
+     const {id} = req.params;
+     dbUsers.getUserPosts(id)
+            .then(userPosts => {
+                userPosts ? res.status(201).json(userPosts) : res.status(404).json({errorMessage: "Does not exist"})
+            }). catch(err => {
+                 res.status(500).json({errorMessage:"Could not get the user posts--something wrong"})
+            })
+})
 
 //Server put
 server.put('/users/:id', (req,res) => {
@@ -141,7 +150,9 @@ server.get('/posts/:id', (req,res) => {
             .catch(err => {
                res.status(500).json({errorMessage: "The user information could not be retrieved."})
           });
-})
+});
+
+
 
 server.listen(PORT, () => {
      console.log(`Server is running at ${PORT}`);
