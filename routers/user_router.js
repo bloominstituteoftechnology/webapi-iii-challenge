@@ -115,22 +115,22 @@ if (editUser) {
 // get user posts (or user's post)
 // this doesn't give back correct error messages some of the time. Sometimes it's just an empty array.
 router.get('/:id/posts', (req, res) => {
-  const {id} = req.params;
+  const { id } = req.params;
   userDB
       .getUserPosts(id)
       .then(posts => {
-          if (posts) {
+          if (posts.length > 0) {
               res.json(posts);
           } else {
               res
                   .status(404)
-                  .json({error: "The user with the specified ID does not exist."});
+                  .json({message: "The user with the specified ID does not exist."});
           }
       })
       .catch(err => {
           res
               .status(500)
-              .json({message: "The user's posts could not be retrieved."})
+              .json({message: "The user's posts could not be retrieved."});
       })
   });
 
