@@ -83,11 +83,16 @@ server.put('/users/:id', (req,res) => {
        if(user.name) {
             dbUsers.update(id, user)
                    .then( count => {
-                    
-                       res.status(201).json({Message: "Updated successfully"})
-                    
+                       if(count) {
+                           dbUsers.get(id)
+                                   .then(user => {
+                                        res.status(201).json({Message: "Updated successfully"})
+                                   })
+                        } else {
+                           res.status(404).json({errorMessage: "There is no user with that ID"});
+                       }
 
-                                           })
+                    })
                    .catch( err => { // 500 error
                         res.status(500).json({errorMessage: "User could not be modified"});
                    });
@@ -110,7 +115,7 @@ server.post('/users', (req,res)=> {
                   })
                   .catch();
        } else {
-
+          
        }    
 });
 server.listen(PORT, () => {
