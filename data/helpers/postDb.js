@@ -1,5 +1,5 @@
 const db = require('../dbConfig.js');
-
+// PR
 module.exports = {
   get: function(id) {
     let query = db('posts as p');
