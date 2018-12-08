@@ -112,6 +112,37 @@ router.post('/', customMiddleware.uppercase, (req, res) => {
     }
 })
 
+//DELETE
+
+router.delete('/:id', (req, res) => {
+    const {id} = req.params;
+    userDb.get(id)
+        .then(user => {
+            if (user) {
+                const theUser = user;
+                userDb.remove(id)
+                    .then(count => {
+                        if (count){
+                            res
+                            .json(theUser)
+                        }
+                    })
+            } else {
+                res
+                .status(404)
+                .json({
+                    message: "That id doesn't correspond to any Hobbits here. Are you sure that was the right one?"
+                })
+            }
+        })
+        .catch(err => {
+            res
+            .status(500)
+            .json({
+                message: "This Hobbit is stronger than you, puny human. You cannot vanquish it with a mere click."
+            })
+        })
+})
 
 
 module.exports = router;
