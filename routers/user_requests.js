@@ -142,7 +142,36 @@ router.delete('/:id', (req, res) => {
                 message: "This Hobbit is stronger than you, puny human. You cannot vanquish it with a mere click."
             })
         })
-})
+});
+
+//PUT
+
+router.put('/:id', customMiddleware.uppercase, (req, res) => {
+    const {id} = req.params;
+    const user = customMiddleware.upperName;
+    userDb.update(id, user)
+        .then(count => {
+            if(count){
+                userDb.get(id)
+                    .then(user => {
+                        res.json(user)
+                    })
+            } else {
+                res
+                .status(404)
+                .json({
+                    message: "Invalid ID. Are you sure that Hobbit exists?"
+                })
+            }
+        })
+        .catch(err => {
+            res
+            .status(500)
+            .json({
+                message: "There was an error updating this Hobbit. It didn't like your new suggested name very much. Try again."
+            })
+        })
+});
 
 
 module.exports = router;
