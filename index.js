@@ -11,13 +11,15 @@ const userdb = require('./data/helpers/userDb');
 const server = express();
 const parser = express.json()
 const helmet = require('helmet')
-const logger = require('morga')
+const logger = require('morgan')
+const customMW = require('./custom_middleware.js')
 const PORT = 8000;
 
 server.use(
     parser(),
     helmet(),
-    logger('tiny')
+    logger('tiny'),
+    customMW.capitalizer
 )
 
 //GET
@@ -59,7 +61,7 @@ server.get('/api/users/:id', (req, res) =>{
 });
 
 //POST
-server.post('/api/users', (req, res) =>{
+server.post('/api/users',  (req, res) =>{
     const user = req.body
     if(user.name){
         userdb.insert(user)
@@ -127,7 +129,7 @@ server.delete('/api/users/:id', (req, res) =>{
         } else {
             res
             .status(404)
-            .json({message: "The post with the specified ID does not exist"})
+            .json({message: "The user with the specified ID does not exist"})
         }
     })
     .catch( err =>{
