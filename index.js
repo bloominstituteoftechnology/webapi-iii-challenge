@@ -4,6 +4,7 @@ const logger = require('morgan');
 
 const dbUsers = require('./data/helpers/userDb');
 const dbPosts = require('./data/helpers/postDb');
+const middleware = require('./custom_middleware');
 
 const server = express();
 const PORT = '4500';
@@ -11,11 +12,7 @@ const PORT = '4500';
 server.use(express.json());
 server.use(helmet());
 server.use(logger('dev'));
-const uppercaseMiddleware = (req,res,next) => {
-     const newName  = req.body.name.toUpperCase();
-     req.body.name = newName;
-     next();
-};
+// server.use(middleware.uppercaseMiddleware)
 
 //CRUD METHODS FOR ALL USERS
 server.get('/', (req,res) => {
@@ -64,7 +61,7 @@ server.get('/users/:id/posts', (req,res) => {
 })
 
 //Server put
-server.put('/users/:id', uppercaseMiddleware, (req,res) => {
+server.put('/users/:id', middleware.uppercase, (req,res) => {
        const {id} = req.params;
        const user = req.body;
        
@@ -89,7 +86,7 @@ server.put('/users/:id', uppercaseMiddleware, (req,res) => {
        }
 });
 
-server.post('/users', uppercaseMiddleware, (req,res)=> {
+server.post('/users', middleware.uppercase,(req,res)=> {
        const user = req.body;
        if(user.name) {
            dbUsers.insert(user)
