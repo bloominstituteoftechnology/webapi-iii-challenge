@@ -38,6 +38,47 @@ server.get('/api/posts', (req, res) => {
         })
 })
 
+server.get('/api/users', (req, res) => {
+    userDB.get()
+        .then(response => {
+            res
+                .status(200)
+                .json(response);
+        })
+        .catch(error => {
+            res
+                .status(500)
+                .json({ error: "Users could not be retreived." })
+        })
+})
+
+server.get('/api/posts/:id', (req, res) => {
+    postDB.getPostTags(req.params.id)
+        .then(response => {
+            res
+                .status(200)
+                .json(response);
+        })
+        .catch(error => {
+            res
+                .status(500)
+                .json({ error: "The specified post could not be retreived." })
+        })
+})
+
+server.get('/api/users/:id', (req, res) => {
+    userDB.getUserPosts(req.params.id)
+        .then(response => {
+            res
+                .status(200)
+                .json(response);
+        })
+        .catch(error => {
+            res
+                .status(500)
+                .json({ error: "The specified users information could not be retreived." })
+        })
+})
 
 
 //listen
