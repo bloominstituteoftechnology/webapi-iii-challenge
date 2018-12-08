@@ -118,7 +118,7 @@ server.put('/api/posts/:id', (req, res) => {
         .catch(error => {
             res
                 .status(500)
-                .json({ error: "The post could not be updated "})
+                .json({ error: "The post could not be updated." })
         })
 })
 
@@ -132,7 +132,35 @@ server.put('/api/users/:id', (req, res) => {
         .catch(error => {
             res
                 .status(500)
-                .json({ error: "The user could not be updated "})
+                .json({ error: "The user could not be updated." })
+        })
+})
+
+server.delete('/api/posts/:id', (req, res) => {
+    postDB.remove(req.params.id)
+        .then(response => {
+            res
+                .status(200)
+                .json(response)
+        })
+        .catch(error => {
+            res
+                .status(500)
+                .json({ error: "The post could not be deleted." })
+        })
+})
+
+server.delete('/api/users/:id', (req, res) => {
+    userDB.remove(req.params.id)
+        .then(response => {
+            res
+                .status(200)
+                .json(response)
+        })
+        .catch(error => {
+            res
+                .status(500)
+                .json({ error: "The user could not be deleted." })
         })
 })
 
