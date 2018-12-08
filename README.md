@@ -63,8 +63,6 @@ Now that we have a way to add, update, remove and retrieve data from the provide
   - retrieve the list of posts for a user.
 - **Use _Postman_ to test the API as you work through the exercises.**
 
-
-
 ## Stretch Goal
 
 - Use `create-react-app` to create an application inside the root folder, name it `client`.
