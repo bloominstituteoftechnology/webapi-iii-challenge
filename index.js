@@ -11,30 +11,9 @@ server.use('/users', userRouter);
 server.use('/posts', postRouter);
 
 
-//User Endpoints
-
-
-
-
-// get: function(id) {
-
-//   insert: function(post) {
-//     return db('posts')
-//       .insert(post)
-//       .then(ids => ({ id: ids[0] }));
-//   },
-//   update: function(id, post) {
-//     return db('posts')
-//       .where('id', id)
-//       .update(post);
-//   },
-//   remove: function(id) {
-//     return db('posts')
-//       .where('id', id)
-//       .del();
-//   },
-
-//Post Endpoints
+server.get('/', (req, res) => {
+    res.send('We are live');
+})
 
 
 const PORT = 5050;
