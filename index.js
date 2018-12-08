@@ -15,7 +15,7 @@ server.use(logger('dev'));
 
 //CRUD METHODS FOR ALL USERS
 server.get('/', (req,res) => {
-     res.json({Message: "Working now"});
+     res.json({Message: "Server is up and Working now"});
 });
 
 server.get('/users', (req,res) => {
@@ -104,7 +104,7 @@ server.post('/users', (req,res)=> {
                        res.status(500).json({errorMessage: "Could not create user at this time"});
                   });
        } else {
-          
+          res.status(400).json({errorMessage: "User name is required"})
        }    
 });
 
@@ -161,17 +161,53 @@ server.post('/posts', (req,res) => {
                     .then(postId => {
                         dbPosts.get(postId.id)
                                .then(newPost => {
+                                    console.log('Line 164:', newPost)
                                     res.status(201).json(newPost);
                                })
                                .catch(err => {
-                                    res.status(500).json({errorMessage: "Could not create the post"});
+                                    res.status(404).json({errorMessage: "There is not post with the specific ID"});
                                })
-                    })
+                    }).catch(err => {
+                          res.status(500).json({errorMessage:"Something went wrong adding the post to the server"});
+                    });
         } else {
              res.status(400).json({errorMessage: "Please enter the text-- text is required."})
         }
 });
 
+server.put('/posts/:id', (req,res) => {
+     const { id } = req.params;
+     const post = req.body;
+     dbPosts.update(id, post)
+            .then(count => {
+                 if(count) {
+                      dbUsers.get(id)
+                             .then( newPost => {
+                                  res.status(201).json(newPost);
+                             })
+                 } else {
+                     res.status(404).json({errorMessage:"Cannot update post with this ID"})
+                 }
+            })
+             .catch(err => {
+                  res.status(500).json({errorMessage: "Could not update the post"})
+             });
+});
+
+server.delete('/posts/:id', (req,res)=> {
+       const {id} = req.params;
+       dbPosts.remove(id)
+              .then(count => {
+                   if(count) {
+                        res.json({errorMessage:"Successfully deleted the post"});
+                   } else {
+                        res.status(404).json({errorMessage:"Could not find the post with this ID"});
+                   }
+              })
+              .catch(err => {
+                   res.status(500).json({errorMessage:"Something went wrong--could not delete the post "});
+              });
+})
 
 server.listen(PORT, () => {
      console.log(`Server is running at ${PORT}`);
