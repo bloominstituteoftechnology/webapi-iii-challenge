@@ -5,6 +5,10 @@ import axios from 'axios';
 
 import UserList from './components/UserList'
 
+import { Link, Route } from 'react-router-dom';
+
+import UserView from './components/UserView'
+
 class App extends Component {
   constructor(){
     super();
@@ -25,18 +29,25 @@ class App extends Component {
     })
   }
 
+
   render() {
     return (
       <div className="App">
         <header className="App-header">
-          
+          <Link to="/users/">Main List</Link>
+
           <h1>
             Users List
           </h1>
           <UserList users={this.state.users}/>
 
-
         </header>
+
+        <div className="container">
+          <Route exact path="/users/:id"
+            render={props => <UserView {...props} users={this.state.users} posts={this.state.posts}/>}
+          />
+        </div>
 
       </div>
     );

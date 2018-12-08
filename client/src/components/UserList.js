@@ -1,5 +1,6 @@
 import React from 'react'
-import UserView from './UserView'
+//import UserView from './UserView'
+import { Link } from 'react-router-dom';
 
 class UserList extends React.Component {
     constructor(props){
@@ -16,7 +17,11 @@ class UserList extends React.Component {
                 Users go here
                 {this.props.users.map(user => {
                     return (
-                        <UserView user={user}/>
+                        <div key={user.id}>
+                    {/*Link to UserView which shows each user list of post*/}
+                           <Link to={`/users/${user.id}`}> <p>{user.name}</p> </Link>
+                            {/* <UserView user={user}/> */}
+                        </div>
                     )
                 })}
             </div>

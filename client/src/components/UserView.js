@@ -5,28 +5,47 @@ class UserView extends React.Component {
     constructor(){
         super();
         this.state = {
-            name: '',
+            // name: '',
+            posts: [],
         }
     }
 
     componentDidMount(){
-        const id = this.props.user.id
+        const id = this.props.match.params.id
         axios 
         .get(`http://localhost:3000/api/users/${id}`)
         .then(response => {
-            const {name} = response.data[0]
-            this.setState({ name })
+            console.log(response.data)
+            this.setState({ posts: response.data })
         })
         .catch(err => {
             console.log("Fail to get individual user", err)
         })
     }
 
+    // componentDidMount(){
+    //     axios 
+    //     .get(`http://localhost:3000/api/posts`)
+    //     .then(response => {
+    //       this.setState({ posts: response.data })
+    //     })
+    //     .catch(err => {
+    //       console.log("Fail to GET posts from local server", err)
+    //     })
+    //   }
+
+    //this needs to render LIST of EACH USER posts
     render(){
-        console.log(this.props)
+        console.log(this.state.posts)
         return (
             <div>
-                <p>{this.props.user.name}</p>
+                {this.state.posts.map(post => {
+                    return(
+                        <div key={post.id}>
+                            {post.text}
+                        </div>
+                    )
+                })}
             </div>
         )
     }
