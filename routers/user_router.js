@@ -4,6 +4,10 @@ const router = express.Router();
 //Database
 const dbUsers = require('../data/helpers/userDb');
 
+//Middleware
+const middleware = require('../custom_middleware');
+// router.use(middleware.uppercase);
+
 router.get('/', (req,res) => {
    dbUsers.get()
           .then(users => {
@@ -46,7 +50,7 @@ router.get('/:id/posts', (req,res) => {
 })
 
 //Server put
-router.put('/:id', (req,res) => {
+router.put('/:id', middleware.uppercase, (req,res) => {
       const {id} = req.params;
       const user = req.body;
       
@@ -71,7 +75,7 @@ router.put('/:id', (req,res) => {
       }
 });
 
-router.post('/',(req,res)=> {
+router.post('/', middleware.uppercase, (req,res)=> {
       const user = req.body;
       if(user.name) {
           dbUsers.insert(user)
