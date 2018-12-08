@@ -9,6 +9,21 @@ const server = express();
 
 server.use(express.json(), cors(), helmet(), morgan('dev'));
 
+server.post('/api/users', nameMiddleware, (req, res) => {
+  const { name } = req.body;
+  if (!name) res.status(400).json({ message: 'The user must have a name.' });
+  else {
+    userDb
+      .insert({ name })
+      .then((userId) => {
+        res.status(201).json(userId);
+      })
+      .catch((err) => {
+        res.status(500).json({ error: 'User could not be added.' });
+      });
+  }
+});
+
 server.get('/api/users', (req, res) => {
   userDb
     .get()
