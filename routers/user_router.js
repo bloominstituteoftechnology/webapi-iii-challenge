@@ -119,6 +119,7 @@ router.get('/:id/posts', (req, res) => {
   userDB
       .getUserPosts(id)
       .then(posts => {
+        // posts is an empty array if no ID and an empty array is truthy not falsey so it goes into the if statement and never reaches the else. In order to get it working correctly, it needs to be posts.length > 0 for the if statement
           if (posts.length > 0) {
               res.json(posts);
               // console.log(posts);
