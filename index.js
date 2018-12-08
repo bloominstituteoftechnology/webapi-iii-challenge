@@ -11,7 +11,11 @@ const PORT = '4500';
 server.use(express.json());
 server.use(helmet());
 server.use(logger('dev'));
-
+const uppercaseMiddleware = (req,res,next) => {
+     const newName  = req.body.name.toUpperCase();
+     req.body.name = newName;
+     next();
+};
 
 //CRUD METHODS FOR ALL USERS
 server.get('/', (req,res) => {
@@ -21,7 +25,7 @@ server.get('/', (req,res) => {
 server.get('/users', (req,res) => {
     dbUsers.get()
            .then(users => {
-                console.log(users);
+               //  console.log(users);
                 res.json(users);
            })
            .catch(err => {
@@ -60,9 +64,10 @@ server.get('/users/:id/posts', (req,res) => {
 })
 
 //Server put
-server.put('/users/:id', (req,res) => {
+server.put('/users/:id', uppercaseMiddleware, (req,res) => {
        const {id} = req.params;
        const user = req.body;
+       
        if(user.name) {
             dbUsers.update(id, user)
                    .then( count => {
@@ -84,7 +89,7 @@ server.put('/users/:id', (req,res) => {
        }
 });
 
-server.post('/users', (req,res)=> {
+server.post('/users', uppercaseMiddleware, (req,res)=> {
        const user = req.body;
        if(user.name) {
            dbUsers.insert(user)
