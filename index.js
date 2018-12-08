@@ -108,6 +108,33 @@ server.post('/api/users', (req, res) => {
         })
 })
 
+server.put('/api/posts/:id', (req, res) => {
+    postDB.update(req.params.id, req.body)
+        .then(response => {
+            res 
+                .status(200)
+                .json(response)
+        })
+        .catch(error => {
+            res
+                .status(500)
+                .json({ error: "The post could not be updated "})
+        })
+})
+
+server.put('/api/users/:id', (req, res) => {
+    userDB.update(req.params.id, req.body)
+        .then(response => {
+            res 
+                .status(200)
+                .json(response)
+        })
+        .catch(error => {
+            res
+                .status(500)
+                .json({ error: "The user could not be updated "})
+        })
+})
 
 //listen
 
