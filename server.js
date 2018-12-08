@@ -4,6 +4,7 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const nameMiddleware = require('./nameMiddleware');
 const userDb = require('./data/helpers/userDb');
+const postDb = require('./data/helpers/postDb');
 
 const server = express();
 
@@ -15,10 +16,10 @@ server.post('/api/users', nameMiddleware, (req, res) => {
   else {
     userDb
       .insert({ name })
-      .then((userId) => {
+      .then(userId => {
         res.status(201).json(userId);
       })
-      .catch((err) => {
+      .catch(err => {
         res.status(500).json({ error: 'User could not be added.' });
       });
   }
@@ -28,7 +29,7 @@ server.get('/api/users', (req, res) => {
   userDb
     .get()
     .then(users => res.json(users))
-    .catch((err) => {
+    .catch(err => {
       res.status(500).json({ error: 'Users could not be retrieved.' });
     });
 });
@@ -37,14 +38,16 @@ server.get('/api/users/:id', (req, res) => {
   const { id } = req.params;
   userDb
     .get(id)
-    .then((user) => {
+    .then(user => {
       if (user) {
         res.json(user);
       } else {
-        res.status(404).json({ message: 'The user with the specified ID does not exist.' });
+        res
+          .status(404)
+          .json({ message: 'The user with the specified ID does not exist.' });
       }
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(500).json({ error: 'User could not be retrieved.' });
     });
 });
@@ -53,20 +56,24 @@ server.get('/api/users/:id/posts', (req, res) => {
   const { id } = req.params;
   userDb
     .get(id)
-    .then((user) => {
+    .then(user => {
       if (user) {
-        userDb.getUserPosts(id).then((posts) => {
+        userDb.getUserPosts(id).then(posts => {
           if (posts.length) {
             res.json(posts);
           } else {
-            res.status(404).json({ message: 'The user does not have any posts.' });
+            res
+              .status(404)
+              .json({ message: 'The user does not have any posts.' });
           }
         });
       } else {
-        res.status(404).json({ message: 'The user with the specified ID does not exist.' });
+        res
+          .status(404)
+          .json({ message: 'The user with the specified ID does not exist.' });
       }
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(500).json({ error: 'User posts could not be retrieved.' });
     });
 });
@@ -76,14 +83,17 @@ server.put('/api/users/:id', nameMiddleware, (req, res) => {
   const { name } = req.body;
   userDb
     .update(id, { name })
-    .then((updated) => {
+    .then(updated => {
       if (updated) {
-        userDb.get(id).then((user) => {
+        userDb.get(id).then(user => {
           res.json(user);
         });
-      } else res.status(404).json({ message: 'The user with the specified ID does not exist.' });
+      } else
+        res
+          .status(404)
+          .json({ message: 'The user with the specified ID does not exist.' });
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(500).json({ error: 'User could not be updated.' });
     });
 });
@@ -92,14 +102,43 @@ server.delete('/api/users/:id', (req, res) => {
   const { id } = req.params;
   userDb
     .remove(id)
-    .then((deleted) => {
+    .then(deleted => {
       if (deleted) res.json({ message: 'User deleted.' });
       else {
-        res.status(404).json({ message: 'The user with the specified ID does not exist.' });
+        res
+          .status(404)
+          .json({ message: 'The user with the specified ID does not exist.' });
       }
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(500).json({ error: 'User could not be deleted.' });
+    });
+});
+
+server.get('/api/posts/', (req, res) => {
+  postDb
+    .get()
+    .then(posts => res.json(posts))
+    .catch(err =>
+      res.status(500).json({ error: 'Posts could not be retrieved.' })
+    );
+});
+
+server.get('/api/posts/:id', (req, res) => {
+  const { id } = req.params;
+  postDb
+    .get(id)
+    .then(post => {
+      if (post) {
+        res.json(post);
+      } else {
+        res
+          .status(404)
+          .json({ message: 'The post with the specified ID does not exist.' });
+      }
+    })
+    .catch(err => {
+      res.status(500).json({ error: 'Posts could not be retrieved.' });
     });
 });
 
