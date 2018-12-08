@@ -41,22 +41,24 @@ class App extends Component {
   }
 
   closeHandler = (id) => {
-alert("function is unavailable at this time...")
+alert("CLOSE function is disabled in BLOG LITE version, Please purchase the full version to enable this feature.")
 
   }
+
+  closeUserHandler = (id) => {
+    alert("function is unavailable at this time...")
+    
+      }
 
   editHandler = id => {
-    alert("function is unavailable at this time...")
-/* axios
-      .get('http://localhost:4000/api/posts')
-      .then(response => {
-        this.setState(() => ({ posts: response.data }));
-      })
-      .catch(error => {
-        console.error('Server Error', error);
-      }); */
+    alert("Function EDIT is disabled in BLOG LITE version, Please purchase the FULL version to enable this feature.")
+
   }
 
+  editUserHandler = id => {
+    alert("Function EDIT is disabled in BLOG LITE version, Please purchase the FULL version to enable this feature.")
+
+  }
   getUserPosts = id => {
     axios
     .get(`http://localhost:5050/api/users/posts/${id}`)
@@ -71,13 +73,15 @@ alert("function is unavailable at this time...")
 
   }
 
-  deleteHandler = id => {
+  deleteHandler = (id) => {
     console.log("id:", id)
     axios
     .delete(`http://localhost:5050/api/posts/${id}`)
     .then(response => {
       console.log("response:", response)
-      window.location.reload();
+      this.getHandler();
+      
+     // window.location.reload();
       //getHandler;
      /*  this.setState(() => ({ posts: response.data })); */
     })
@@ -101,7 +105,7 @@ alert("function is unavailable at this time...")
     });
   }
 
-  getHandler = e => {
+  getHandler = (e) => {
     axios
     .get('http://localhost:5050/api/posts')
     .then(response => {

@@ -6,7 +6,8 @@ const Post = props => {
     <div className="posts" onSubmit={props.submitHandler}><div className="post-data">
       <h4>Text: {props.text}</h4>
       <strong>UserId: {props.userId} </strong><br />
-      <strong>Posted By: {props.postedBy} </strong>
+      <strong>Posted By: {props.postedBy} </strong><br />
+      <strong>Id: {props.id} </strong>
       <p></p></div>
       <div className="post-controls">
         <div className="close-button" onClick={() => props.closeHandler(props.id)}>X</div>

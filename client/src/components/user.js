@@ -5,8 +5,8 @@ const User = props => {
   return (
     <div className="users" onSubmit={props.submitHandler} onClick={() => props.getUserPosts(props.id)}><div className="user-data">
       <h4>{props.name}</h4>
-      <strong>{props.id} </strong>
-      
+      <strong>Id: {props.id} </strong><br />
+      <strong>Click to view Posts</strong>
      
       <p></p></div>
       <div className="user-controls">

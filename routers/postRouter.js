@@ -64,4 +64,22 @@ router.get('/', (req, res) => {
         });
 }); 
 
+/************* Delete Single Post *************/
+router.delete('/:id', (req, res) => {
+    const { id } = req.params;
+    posts
+        .remove(id)
+        .then(userRemoved => {
+            if (userRemoved === 0) {
+                return sendUserError(404, 'The user could not be found');
+            } else {
+                res.json({ success: 'Post Removed' });
+            }
+        })
+        .catch(err => {
+            return sendUserError(500, 'Db unavailable...', res);
+        });
+});
+
+
 module.exports = router;
