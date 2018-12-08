@@ -8,7 +8,7 @@ body {
 
 .App-header {
     background-color: #282c34;
-    min-height: 100vh;
+    /* min-height: 100vh; */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -31,7 +31,7 @@ h3 {
 }
 
 .container {
-    border: 2px solid green;
+   /*  border: 2px solid green; */
 }
 
 .posts {
@@ -42,7 +42,30 @@ h3 {
     margin-bottom: 10px;
     padding-left: 6px;
     background-color: rgb(137, 195, 235);
-    width: 90%;
+    width: 94%;
+}
+
+.posts:hover {
+    background-color: rgb(30, 96, 139);
+    color: white;
+}
+
+.users {
+    display: flex;
+    flex-direction: row;
+    border: 2px solid white;
+    border-radius: 15px;
+    margin-bottom: 10px;
+    padding-left: 6px;
+    background-color: rgb(137, 195, 235);
+    width: 94%;
+    /* margin-left: auto; */
+    /* margin-right: 5px; */
+}
+
+.users:hover {
+    background-color: rgb(30, 93, 136);
+    color: white;
 }
 
 .close-button {
@@ -58,25 +81,25 @@ h3 {
     border: 2px solid black;
 }
 
-.container-right {
+.container-middle {
     width: 50%;
-    border: 2px solid purple;
+    /* border: 2px solid purple; */
 }
 
-.container-middle {
+.container-right {
     width: 20%;
-    border: 2px solid blue;
+   /*  border: 2px solid blue; */
 }
 
 .container-left {
     width: 30%;
-    border: 2px solid orange;
+    /* border: 2px solid orange; */
 }
 
 .container-lower {
     display: flex;
     flex-direction: row;
-    border: 2px solid red;
+    /* border: 2px solid red; */
 }
 
 .close-button:hover {
@@ -94,7 +117,7 @@ h3 {
     color: white;
     display: flex;
     flex-direction: row;
-    margin-bottom: 10px;
+   /*  margin-bottom: 10px; */
     margin-top: 10px;
 }
 
@@ -107,7 +130,17 @@ h3 {
     width: 90%;
 }
 
+.user-data {
+    /* border: 2px solid red; */
+    width: 90%;
+}
 .post-controls {
+    display: flex;
+    flex-direction: column;
+    /* border: 2px solid green; */
+}
+
+.user-controls {
     display: flex;
     flex-direction: column;
     /* border: 2px solid green; */
