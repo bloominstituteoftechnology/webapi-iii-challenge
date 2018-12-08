@@ -80,6 +80,34 @@ server.get('/api/users/:id', (req, res) => {
         })
 })
 
+server.post('/api/posts', (req, res) => {
+    postDB.insert(req.body)
+        .then(response => {
+            res
+                .status(200)
+                .json({response})
+        })
+        .catch(error => {
+            res
+                .status(500)
+                .json({ error: "The post could not be added." })
+        })
+})
+
+server.post('/api/users', (req, res) => {
+    userDB.insert(req.body)
+        .then(response => {
+            res
+                .status(200)
+                .json({response})
+        })
+        .catch(error => {
+            res
+                .status(500)
+                .json({ error: "The user could not be added." })
+        })
+})
+
 
 //listen
 
