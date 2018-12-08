@@ -115,7 +115,19 @@ server.delete('/api/users/:id', (req, res) => {
     });
 });
 
-server.get('/api/posts/', (req, res) => {
+server.post('/api/posts', (req, res) => {
+  const { userId, text } = req.body;
+  postDb
+    .insert({ userId, text })
+    .then(postId => {
+      res.json(postId);
+    })
+    .catch(err => {
+      res.status(500).json({ error: 'Posts could not be created.' });
+    });
+});
+
+server.get('/api/posts', (req, res) => {
   postDb
     .get()
     .then(posts => res.json(posts))
