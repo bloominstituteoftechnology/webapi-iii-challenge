@@ -1,39 +1,25 @@
-const express = require("express");
-const db = require("./data/helpers/userDb");
-const logger = require("morgan");
-const helmet = require("helmet");
-const cors = require("cors");
-const middleware = require("./middleware.js");
-const server = express();
-const postRouter = require('./routers/post_router');
+const express = require('express');
+const router = express.Router();
+const db = require('../data/helpers/postDb');
 
-server.use(
-  express.json(),
-  logger("tiny"),
-  helmet(),
-  cors(),
-  middleware.uppercase
-);
-server.use('/api/posts', postRouter);
 
-const PORT = 5050;
 
-server.get("/api/users", (req, res) => {
+router.get("/", (req, res) => {
   db.get()
-    .then(users => {
-      res.json(users);
+    .then(posts => {
+      res.json(posts);
     })
     .catch(err => {
-      res.status(500).json({ message: "failed to get users" });
+      res.status(500).json({ message: "failed to get posts" });
     });
 });
 
-server.get("/api/users/:id", (req, res) => {
+router.get("/:id", (req, res) => {
   const { id } = req.params;
-  db.getUserPosts(id)
-    .then(user => {
-      if (user) {
-        res.json(user);
+  db.get(id)
+    .then(post => {
+      if (post) {
+        res.json(post);
       } else {
         res.status(404).json({ message: "user does not exist" });
       }
@@ -42,7 +28,7 @@ server.get("/api/users/:id", (req, res) => {
       res.status(500).json({ message: "failed to get user" });
     });
 });
-server.post("/api/users", (req, res) => {
+router.post("/", (req, res) => {
   const user = req.body;
   if (user.name) {
     db.insert(user)
@@ -59,7 +45,7 @@ server.post("/api/users", (req, res) => {
   }
 });
 
-server.put("/api/users/:id", (req, res) => {
+router.put("/:id", (req, res) => {
   const user = req.body;
   const { id } = req.params;
 
@@ -82,7 +68,7 @@ server.put("/api/users/:id", (req, res) => {
   }
 });
 
-server.delete("/api/users/:id", (req, res) => {
+router.delete("/:id", (req, res) => {
   const { id } = req.params;
   db.remove(id)
     .then(count => {
@@ -98,6 +84,5 @@ server.delete("/api/users/:id", (req, res) => {
     });
 });
 
-server.listen(PORT, () => {
-  console.log(`server is up and running on port ${PORT}`);
-});
+
+module.exports = router;
