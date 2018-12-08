@@ -14,7 +14,7 @@ router.get('/', (req, res) => {
 
         .catch(err => {
             res.status(500)
-                .json({ error: "User information could not be retrieved." })
+                .json({ error: "User information could not be retrieved." });
         })
 })
 
@@ -65,6 +65,7 @@ router.post('/', middleware.uppercase, (req, res) => {
                     res.status(201).json(user);
                 });
         })
+
             .catch(err => {
                 res.status(500)
                     .json({ error: "There was an error adding user to the database. " })
@@ -86,23 +87,23 @@ router.delete('/:id', (req, res) => {
             }
             else {
                 res.status(404)
-                    .json({ message: "The user with the specified ID does not exist. "});
+                    .json({ message: "The user with the specified ID does not exist. " });
             }
         })
 
         .catch(err => {
             res.status(500)
-                .json({ error: "The user could not be removed. "});
+                .json({ error: "The user could not be removed. " });
         })
 });
 
 router.put('/:id', middleware.uppercase, (req, res) => {
     const user = req.body;
     const { id } = req.params;
-    if(user.name) {
+    if (user.name) {
         usersDB.update(id, user)
             .then(count => {
-                if(count) {
+                if (count) {
                     usersDB.get(id)
                         .then(user => {
                             res.json(user);
@@ -110,7 +111,7 @@ router.put('/:id', middleware.uppercase, (req, res) => {
                 }
                 else {
                     res.status(404)
-                        .json({ message: "The user with the specified ID does not exist. "});
+                        .json({ message: "The user with the specified ID does not exist. " });
                 }
             })
 
