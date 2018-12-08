@@ -2,6 +2,9 @@
 
 const express = require('express');
 
+const postDB = require('./data/helpers/postDb');
+const userDB = require('./data/helpers/userDb');
+
 const server = express();
 const PORT = 4000;
 
@@ -12,20 +15,27 @@ server.use(express.json());
 //custom middleware
 
 server.use((req, res, next) => {
-    const pass = req.query.pass;
-    if (pass === 'brock') {
-        next();
-    } else {
-        res
-        .status(400)
-        .json({ message: 'invalid password' })
-    }
+    const name = req.body.name;
+    if(name) {
+        req.body.name = name.toUpperCase();
+    } 
+    next();
 })
 
 //endpoints
 
-server.get('', (req, res) => {
-    res.json({ message: "request received" });
+server.get('/api/posts', (req, res) => {
+    postDB.get()
+        .then(response => {
+            res
+                .status(200)
+                .json(response);
+        })
+        .catch(error => {
+            res
+                .status(500)
+                .json({ error: "Posts could not be retreived." })
+        })
 })
 
 
