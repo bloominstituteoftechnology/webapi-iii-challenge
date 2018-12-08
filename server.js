@@ -174,4 +174,21 @@ server.put('/api/posts/:id', (req, res) => {
     });
 });
 
+server.delete('/api/posts/:id', (req, res) => {
+  const { id } = req.params;
+  postDb
+    .remove(id)
+    .then(deleted => {
+      if (deleted) res.json({ message: 'Post deleted.' });
+      else {
+        res
+          .status(404)
+          .json({ message: 'The post with the specified ID does not exist.' });
+      }
+    })
+    .catch(err => {
+      res.status(500).json({ error: 'Post could not be deleted.' });
+    });
+});
+
 module.exports = server;
