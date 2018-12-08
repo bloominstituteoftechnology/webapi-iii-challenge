@@ -21,24 +21,25 @@ router.get("/:id", (req, res) => {
       if (post) {
         res.json(post);
       } else {
-        res.status(404).json({ message: "user does not exist" });
+        res.status(404).json({ message: "post does not exist" });
       }
     })
     .catch(err => {
-      res.status(500).json({ message: "failed to get user" });
+      res.status(500).json({ message: "failed to get post" });
     });
 });
+
 router.post("/", (req, res) => {
-  const user = req.body;
-  if (user.name) {
-    db.insert(user)
+  const post = req.body;
+  if (post.text && post.userId) {
+    db.insert(post)
       .then(idInfo => {
-        db.getUserPosts(idInfo.id).then(user => {
-          res.status(201).json(user);
+        db.get(idInfo.id).then(post => {
+          res.status(201).json(post);
         });
       })
       .catch(err => {
-        res.status(500).json({ message: "failed insert user in db" });
+        res.status(500).json({ message: "failed to create post" });
       });
   } else {
     res.status(400).json({ message: "missing info, try again" });
@@ -46,15 +47,15 @@ router.post("/", (req, res) => {
 });
 
 router.put("/:id", (req, res) => {
-  const user = req.body;
+  const post = req.body;
   const { id } = req.params;
 
-  if (user.name) {
-    db.update(id, user)
+  if (post.text && post.postId) {
+    db.update(id, post)
       .then(count => {
         if (count) {
-          db.getUserPosts(id).then(user => {
-            res.json(user);
+          db.get(id).then(post => {
+            res.json(post);
           });
         } else {
           res.status(404).json({ message: "invalid id" });
@@ -80,7 +81,7 @@ router.delete("/:id", (req, res) => {
       }
     })
     .catch(err => {
-      res.status(500).json({ message: "failed to delete user" });
+      res.status(500).json({ message: "failed to delete post" });
     });
 });
 
