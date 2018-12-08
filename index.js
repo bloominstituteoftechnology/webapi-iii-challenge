@@ -1,11 +1,14 @@
 const express = require('express');
 const postDB = require('./data/helpers/postDb.js');
 const userDB = require('./data/helpers/userDb.js');
-
+const middleware = require('./middleware.js')
 const server = express();
 const NUM = 4444;
 
-server.use(express.json());
+server.use(
+    express.json(),
+    middleware.UPPERCASE
+);
 
 
 server.get('/api/users', (req,res) => {
