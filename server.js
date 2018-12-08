@@ -71,6 +71,23 @@ server.get('/api/users/:id/posts', (req, res) => {
     });
 });
 
+server.put('/api/users/:id', nameMiddleware, (req, res) => {
+  const { id } = req.params;
+  const { name } = req.body;
+  userDb
+    .update(id, { name })
+    .then((updated) => {
+      if (updated) {
+        userDb.get(id).then((user) => {
+          res.json(user);
+        });
+      } else res.status(404).json({ message: 'The user with the specified ID does not exist.' });
+    })
+    .catch((err) => {
+      res.status(500).json({ error: 'User could not be updated.' });
+    });
+});
+
 server.delete('/api/users/:id', (req, res) => {
   const { id } = req.params;
   userDb
