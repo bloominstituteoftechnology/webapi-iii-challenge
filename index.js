@@ -29,8 +29,6 @@ server.get('/api/posts', (req,res) => {
 
 server.get('/api/users/:id', (req,res) => {
     const {id} = req.params;
-    console.log (req.Route)
-
 
     userDB.get(id)
     .then( user => {
@@ -50,15 +48,11 @@ server.get('/api/users/:id', (req,res) => {
 
 server.get('/api/posts/:id', (req,res) => {
     const {id} = req.params;
-    console.log(req)
-    postDB.get(id)
-    .then( user => {
-        if (user) {res.json(user)}
 
-        else { 
-            res
-            .status(404)
-            .json({message:"The post with the specified ID does not exist."})}
+    postDB.get(id)
+    .then( post => {
+        res.json(post)
+
     })
     .catch(err => {
         res
@@ -94,6 +88,32 @@ server.post('/api/users', (req,res) => {
     
 })
 
+server.post('/api/posts', (req,res) => {
+    const post = req.body;
+    if (post.text && post.userID){
+        postDB.insert(post)
+    .then(info => {
+        postDB.get(info.id).then(response => {
+            res
+            .status(201)
+            .json(response)})
+        })
+        
+    .catch(err => {
+        res
+        .status(500)
+        .json({message: "failed to get post"})
+    })
+    }
+
+    else {
+        res
+        .status(400)
+        .json({message: "missing text or user id"})
+    }
+    
+})
+
 server.delete('/api/users/:id', (req,res) => {
     const {id} = req.params;
     userDB.remove(id)
@@ -112,6 +132,27 @@ server.delete('/api/users/:id', (req,res) => {
         res
         .status(500)
         .json({message: "User could not be deleted"})
+    })
+})
+
+server.delete('/api/posts/:id', (req,res) => {
+    const {id} = req.params;
+    postDB.remove(id)
+    .then(count => {
+        if (count) {
+            res.json({message: "Post deleted"})}
+
+        else {
+            res
+            .status(404)
+            .json({message: "Post with this ID does not exist."})
+        }
+
+    })
+    .catch(err => {
+        res
+        .status(500)
+        .json({message: "Post could not be deleted"})
     })
 })
 
@@ -145,6 +186,41 @@ server.put('/api/users/:id', (req,res) => {
         res
         .status(400)
         .json({message: "missing name"})
+    }
+
+})
+
+server.put('/api/posts/:id', (req,res) => {
+    const post = req.body;
+    const {id} = req.params;
+    console.log(id)
+    if (post.text) {
+        postDB.update(id, post)
+        .then(count => {
+            if (count) {
+                postDB.get(id).then( data => {
+                    res.json(data)}
+                )
+            }
+
+            else { res
+                .status(404)
+                .json({message:"The post with the specified ID does not exist."})}
+        })
+        .catch(
+            err => {
+                res
+                .status(500)
+                .json({error: "The post could not be updated"})
+            }
+        )
+
+    }
+
+    else {
+        res
+        .status(400)
+        .json({message: "missing text"})
     }
 
 })
