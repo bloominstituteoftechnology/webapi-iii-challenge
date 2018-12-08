@@ -88,10 +88,11 @@ server.put('/api/users/:id', nameMiddleware, (req, res) => {
         userDb.get(id).then(user => {
           res.json(user);
         });
-      } else
+      } else {
         res
           .status(404)
           .json({ message: 'The user with the specified ID does not exist.' });
+      }
     })
     .catch(err => {
       res.status(500).json({ error: 'User could not be updated.' });
@@ -131,9 +132,9 @@ server.get('/api/posts', (req, res) => {
   postDb
     .get()
     .then(posts => res.json(posts))
-    .catch(err =>
-      res.status(500).json({ error: 'Posts could not be retrieved.' })
-    );
+    .catch(err => {
+      res.status(500).json({ error: 'Posts could not be retrieved.' });
+    });
 });
 
 server.get('/api/posts/:id', (req, res) => {
@@ -151,6 +152,25 @@ server.get('/api/posts/:id', (req, res) => {
     })
     .catch(err => {
       res.status(500).json({ error: 'Posts could not be retrieved.' });
+    });
+});
+
+server.put('/api/posts/:id', (req, res) => {
+  const { id } = req.params;
+  const { text } = req.body;
+  postDb
+    .update(id, { text })
+    .then(updated => {
+      if (updated) {
+        postDb.get(id).then(post => res.json(post));
+      } else {
+        res
+          .status(404)
+          .json({ message: 'The post with the specified ID does not exist.' });
+      }
+    })
+    .catch(err => {
+      res.status(500).json({ error: 'Post could not be updated.' });
     });
 });
 
