@@ -2,9 +2,9 @@ import React from 'react'
 
 import axios from 'axios'
 
-//import CreateUser from './CreateUser'
-
 import CreatePost from './CreatePost'
+
+import { Card, CardBody, CardTitle, CardText } from 'reactstrap'
 
 class PostList extends React.Component {
     constructor(){
@@ -52,15 +52,18 @@ class PostList extends React.Component {
                     {this.state.posts.map(post => {
                         return(
                             <div key={post.id}>
-                                <h3>Text: {post.text} </h3>
-                                <h2>User Id: {post.userId} </h2>
+                                <Card>
+                                    <CardBody>
+                                        <CardTitle>User Id: {post.userId} </CardTitle>
+                                        <CardText>Text: {post.text} </CardText>
+                                    </CardBody>
+                                </Card>
                             </div>
                         )
                     })}
                 </div>
 
                 <div>
-                    {/* <CreateUser handleAddNewPost={this.handleAddNewPost} /> */}
                     <CreatePost handleAddNewPost={this.handleAddNewPost}/>
                 </div>
             </div>
