@@ -11,6 +11,26 @@ class UserView extends React.Component {
     }
 
     componentDidMount(){
+        this.getPost()
+        // const id = this.props.match.params.id
+        // axios 
+        // .get(`http://localhost:3000/api/users/${id}`)
+        // .then(response => {
+        //     console.log(response.data)
+        //     this.setState({ posts: response.data })
+        // })
+        // .catch(err => {
+        //     console.log("Fail to get individual user", err)
+        // })
+    }
+
+    componentDidUpdate(prevProps){
+        if(prevProps.match.params.id !== this.props.match.params.id){
+            this.getPost();
+        } 
+    }
+
+    getPost = () => {
         const id = this.props.match.params.id
         axios 
         .get(`http://localhost:3000/api/users/${id}`)
@@ -23,16 +43,7 @@ class UserView extends React.Component {
         })
     }
 
-    // componentDidMount(){
-    //     axios 
-    //     .get(`http://localhost:3000/api/posts`)
-    //     .then(response => {
-    //       this.setState({ posts: response.data })
-    //     })
-    //     .catch(err => {
-    //       console.log("Fail to GET posts from local server", err)
-    //     })
-    //   }
+  
 
     //this needs to render LIST of EACH USER posts
     render(){
