@@ -1,0 +1,31 @@
+{
+  "name": "Node-Blog",
+  "version": "1.0.0",
+  "description": "- Building RESTful APIs.\r - Performing CRUD Operations on Multiple Resources.\r - Configuring CORS.\r - Writing Custom Middleware.\r - Using Express Routers to Modularize Application.",
+  "main": "knexfile.js",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "knex": "^0.16.2",
+    "sqlite3": "^4.0.4"
+  },
+  "devDependencies": {
+    "create-react-app": "^2.1.1",
+    "nodemon": "^1.18.8"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/belzy/Node-Blog.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/belzy/Node-Blog/issues"
+  },
+  "homepage": "https://github.com/belzy/Node-Blog#readme"
+}
