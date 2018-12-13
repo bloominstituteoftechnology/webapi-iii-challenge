@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/cocoitali/Node-Blog#readme",
   "dependencies": {
+    "express": "^4.16.4",
     "knex": "^0.16.2",
     "nodemon": "^1.18.8",
     "sqlite3": "^4.0.4"
