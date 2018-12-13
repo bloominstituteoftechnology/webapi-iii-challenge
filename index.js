@@ -104,7 +104,7 @@ server.put('/api/users/:id', (req, res) => {
             .then(user => {
               res
                 .status(204)
-                .json({message: `${user.name} uPDATED`})
+                .json({message: `${user.name} Updated`})
             })
         }
       })
@@ -157,6 +157,40 @@ server.get('/api/posts/:id', (req, res) => {
         .status(500)
         .json({message: "Failed to get Post"})
     })
+})
+
+  //Update Post
+server.put('/api/posts/:id', (req, res) => {
+  const {id} = req.params;
+  const post = req.body;
+
+  if(post.text) {
+    postDb.update(id, post)
+      .then(count  => {
+        if(count) {
+          postDb.get(id)
+            .then(post => {
+              res
+                .status(202)
+                .json(post)
+              }
+            )
+        } else {
+          res
+            .status(404)
+            .json({message: "Invalid Post id"})
+        }
+      })
+        .catch(err => {
+          res
+            .status(500)
+            .json({message: "Failed to Update Post"})
+        })
+    } else {
+      res 
+        .status(400)
+        .catch({message: "Missing Post text"})
+    }
 })
 
 //Listening 
