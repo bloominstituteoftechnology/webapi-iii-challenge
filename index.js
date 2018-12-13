@@ -79,6 +79,8 @@ server.delete('/api/users/:id', (req, res) => {
   const {id} = req.params;
   userDb.remove(id)
     .then(count => {
+      // count = id
+      // get(id) promise to return a message that includes the user deleted
       res
         .status(200)
         .json(count)
@@ -89,7 +91,33 @@ server.delete('/api/users/:id', (req, res) => {
         .catch({message: "Failed to delete user"})
     })
 })
-
+  // Update
+server.put('/api/users/:id', (req, res) => {
+  const user = req.body;
+  const {id} = req.params;
+  if(user.name) {
+    userDb.update(id, user)
+      .then(count => {
+        if(count){
+          userDb.get(id)
+            .then(user => {
+              res
+                .status(204)
+                .json({message: `${user.name} uPDATED`})
+            })
+        }
+      })
+      .catch(err => {
+        res
+          .status(500)
+          .json({message: "Failed to update user"})
+      })
+  }else{
+    res
+      .status()
+      .json({message: "New User name missing"})
+  }
+})
 
 //Listening 
 server.listen(PORT, () => {
