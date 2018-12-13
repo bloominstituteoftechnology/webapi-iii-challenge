@@ -4,7 +4,12 @@ import axios from 'axios'
 
 import CreatePost from './CreatePost'
 
+//send handleAddNewPost -> CreateUser -> CreatePost
+import CreateUser from './CreateUser'
+
 import { Card, CardBody, CardTitle, CardText } from 'reactstrap'
+
+
 
 class PostList extends React.Component {
     constructor(){

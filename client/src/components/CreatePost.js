@@ -18,7 +18,8 @@ class CreatePost extends React.Component {
         })
     }
 
-    handleSubmit = event => {
+    handleSubmit2 = event => {
+        console.log(this.props)
         event.preventDefault();
         this.props.handleAddNewPost(this.state)
     }
@@ -44,7 +45,7 @@ class CreatePost extends React.Component {
                             onChange={this.handleChange}
                         />
                     </form>
-                <div className="button" onClick={this.handleSubmit}><Link to="/posts/">Save</Link></div>
+                <div className="button" onClick={this.handleSubmit2}><Link to="/posts/">Save</Link></div>
             </div>
         )
     }

@@ -1,16 +1,50 @@
 import React from 'react'
 
 import { Link } from 'react-router-dom'
+//import axios from 'axios'
+
+import CreatePost from './CreatePost'
+
 
 class CreateUser extends React.Component {
     constructor(props){
         super(props);
         this.state = {
             name: '',
+            // posts: [],
             // userId: '',     //can't just add Post attributes here?
             // text: '',
         }
     }
+
+    // componentDidMount(){
+    //     axios 
+    //     .get(`http://localhost:3000/api/posts`)
+    //     .then(response => {
+    //         this.setState({ posts: response.data })
+    //     })
+    //     .catch(err => {
+    //         console.log("Fail to GET posts from local server", err)
+    //     })
+    // }
+
+    // handleAddNewPost = post => {
+    //     axios 
+    //     .post(`http://localhost:3000/api/posts`, post)
+    //     .then(response => {
+    //             axios 
+    //             .get(`http://localhost:3000/api/posts`)
+    //             .then(response => {
+    //             this.setState({ posts: response.data })
+    //             })
+    //             .catch(err => {
+    //             console.log("Fail to GET posts from local server", err)
+    //             })
+    //     })
+    //     .catch(err => {
+    //         console.log("Fail to add a new Post to the server", err)
+    //     })
+    // }
 
     handleChange = event => {
         event.preventDefault();
@@ -27,18 +61,23 @@ class CreateUser extends React.Component {
 
     render(){
         return(
-            <div className="user-container">
-                <h2>Create New User</h2>
-                    <form>
-                        <input 
-                            placeholder="user name (required)"
-                            type="text"
-                            name="name"
-                            value={this.state.name}
-                            onChange={this.handleChange}
-                        />
-                    </form>
-                    <div className="button" onClick={this.handleSubmit}><Link to="/users/">Save</Link></div>
+            <div>
+                <div className="user-container">
+                    <h2>Create New User</h2>
+                        <form>
+                            <input 
+                                placeholder="user name (required)"
+                                type="text"
+                                name="name"
+                                value={this.state.name}
+                                onChange={this.handleChange}
+                            />
+                        </form>
+                        <div className="button" onClick={this.handleSubmit}><Link to="/users/">Save</Link></div>
+                </div>
+                <div>
+                    <CreatePost handleAddNewPost={this.handleAddNewPost}/>
+                </div>
             </div>
         )
     }
