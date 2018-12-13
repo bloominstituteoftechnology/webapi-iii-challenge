@@ -3,7 +3,8 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 //import axios from 'axios'
 
-import CreatePost from './CreatePost'
+import UserList from './UserList'
+
 
 
 class CreateUser extends React.Component {
@@ -62,6 +63,10 @@ class CreateUser extends React.Component {
     render(){
         return(
             <div>
+                <div>
+                    <UserList users={this.props.users}/>
+                </div>
+
                 <div className="user-container">
                     <h2>Create New User</h2>
                         <form>
@@ -73,10 +78,7 @@ class CreateUser extends React.Component {
                                 onChange={this.handleChange}
                             />
                         </form>
-                        <div className="button" onClick={this.handleSubmit}><Link to="/users/">Save</Link></div>
-                </div>
-                <div>
-                    <CreatePost handleAddNewPost={this.handleAddNewPost}/>
+                        <div className="button" onClick={this.handleSubmit}><Link to="/users/create">Save</Link></div>
                 </div>
             </div>
         )

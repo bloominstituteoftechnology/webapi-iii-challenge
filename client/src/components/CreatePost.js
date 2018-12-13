@@ -37,7 +37,7 @@ class CreatePost extends React.Component {
                             value={this.state.userId}
                             onChange={this.handleChange}
                         />
-                         <input 
+                        <input 
                             placeholder="post's text (required)"
                             type="text"
                             name="text"

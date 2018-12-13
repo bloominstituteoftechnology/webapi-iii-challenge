@@ -3,7 +3,7 @@ import './App.css';
 
 import axios from 'axios';
 
-import UserList from './components/UserList'
+
 
 import { Link, Route } from 'react-router-dom';
 
@@ -64,14 +64,13 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <StyledLink to="/users/">User List</StyledLink>
+          <StyledLink to="/">Home</StyledLink>
           <StyledLink to="/users/create">Create User</StyledLink>
           <StyledLink to="/posts/">Post List</StyledLink>
 
           <h1>
             Users List
           </h1>
-          <UserList users={this.state.users}/>
 
         </header>
 
@@ -81,7 +80,7 @@ class App extends Component {
           />
 
           <Route path="/users/create"
-            render={props => <CreateUser {...props} handleAddNewUser={this.handleAddNewUser} />}
+            render={props => <CreateUser {...props} handleAddNewUser={this.handleAddNewUser} users={this.state.users}/>}
           />
 
           <Route path="/posts"

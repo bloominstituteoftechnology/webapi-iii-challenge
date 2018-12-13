@@ -4,10 +4,10 @@ import axios from 'axios'
 
 import CreatePost from './CreatePost'
 
-//send handleAddNewPost -> CreateUser -> CreatePost
-import CreateUser from './CreateUser'
 
 import { Card, CardBody, CardTitle, CardText } from 'reactstrap'
+
+import '../styles/PostList.css'
 
 
 
@@ -54,13 +54,16 @@ class PostList extends React.Component {
         return(
             <div>
                 <div>
+                    <CreatePost handleAddNewPost={this.handleAddNewPost}/>
+                </div>
+                <div className="post-card-container">
                     {this.state.posts.map(post => {
                         return(
-                            <div key={post.id}>
+                            <div key={post.id} className="post-card">
                                 <Card>
-                                    <CardBody>
+                                    <CardBody background-color="red">
                                         <CardTitle>User Id: {post.userId} </CardTitle>
-                                        <CardText>Text: {post.text} </CardText>
+                                        <CardText>Text: {post.text.slice(0, 50) + (post.text.length > 50 ? "..." : "")} </CardText>
                                     </CardBody>
                                 </Card>
                             </div>
@@ -68,9 +71,7 @@ class PostList extends React.Component {
                     })}
                 </div>
 
-                <div>
-                    <CreatePost handleAddNewPost={this.handleAddNewPost}/>
-                </div>
+              
             </div>
         )
     }
