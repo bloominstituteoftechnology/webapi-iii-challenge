@@ -1,0 +1,18 @@
+.post-card-container {
+    border: 5px solid green;
+    background-color: green;
+    max-width: 900px;
+    width: 100%;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap-reverse;
+}
+
+.post-card {
+    border: 1px solid pink;
+    /* background-color: dodgerblue; */
+    width: 30%;
+    margin-top: 20px;
+}
