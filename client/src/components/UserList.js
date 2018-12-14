@@ -1,6 +1,9 @@
 import React from 'react'
 //import UserView from './UserView'
 import { Link } from 'react-router-dom';
+import { Card, CardBody } from 'reactstrap'
+
+import '../styles/UserList.css';
 
 import styled from 'styled-components';
 
@@ -20,14 +23,16 @@ class UserList extends React.Component {
     render(){
         console.log(this.props)
         return (
-            <div>
+            <div className="user-card-container">
                 Users go here...
                 {this.props.users.map(user => {
                     return (
-                        <div key={user.id}>
-                            {/*Link to UserView which shows each user list of post*/}
-                            <StyledLink to={`/users/${user.id}`}> <p>{user.name}</p> </StyledLink>
-                            {/* <UserView user={user}/> */}
+                        <div key={user.id} className="user-card">
+                            <Card>
+                                <CardBody>
+                                    <StyledLink to={`/users/${user.id}`}> <p>{user.name}</p> </StyledLink>
+                                </CardBody>
+                            </Card>
                         </div>
                     )
                 })}

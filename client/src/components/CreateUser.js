@@ -63,10 +63,6 @@ class CreateUser extends React.Component {
     render(){
         return(
             <div>
-                <div>
-                    <UserList users={this.props.users}/>
-                </div>
-
                 <div className="user-container">
                     <h2>Create New User</h2>
                         <form>
@@ -79,6 +75,9 @@ class CreateUser extends React.Component {
                             />
                         </form>
                         <div className="button" onClick={this.handleSubmit}><Link to="/users/create">Save</Link></div>
+                </div>
+                <div>
+                    <UserList users={this.props.users}/>
                 </div>
             </div>
         )

@@ -61,7 +61,7 @@ class PostList extends React.Component {
                         return(
                             <div key={post.id} className="post-card">
                                 <Card>
-                                    <CardBody background-color="red">
+                                    <CardBody>
                                         <CardTitle>User Id: {post.userId} </CardTitle>
                                         <CardText>Text: {post.text.slice(0, 50) + (post.text.length > 50 ? "..." : "")} </CardText>
                                     </CardBody>
