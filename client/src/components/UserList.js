@@ -5,6 +5,8 @@ import { Card, CardBody } from 'reactstrap'
 
 import '../styles/UserList.css';
 
+import axios from 'axios'
+
 import styled from 'styled-components';
 
 const StyledLink = styled(Link)`
@@ -19,6 +21,9 @@ class UserList extends React.Component {
         //     users: [],
         // }
     }
+
+
+
 
     render(){
         console.log(this.props)

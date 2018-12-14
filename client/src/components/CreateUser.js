@@ -77,7 +77,7 @@ class CreateUser extends React.Component {
                         <div className="button" onClick={this.handleSubmit}><Link to="/users/create">Save</Link></div>
                 </div>
                 <div>
-                    <UserList users={this.props.users}/>
+                    <UserList users={this.props.users} handleDeleteUser={this.props.handleDeleteUser}/>
                 </div>
             </div>
         )

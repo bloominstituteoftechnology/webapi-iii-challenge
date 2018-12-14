@@ -59,6 +59,23 @@ class App extends Component {
     })
   }
 
+  handleDeleteUser = id => {
+    axios 
+    .delete(`http://localhost:3000/api/users/${id}`)
+    .then(response => {
+          axios 
+          .get(`http://localhost:3000/api/users`)
+          .then(response => {
+            this.setState({ users: response.data })
+          })
+          .catch(err => {
+            console.log("Fail to GET users from local server", err)
+          })
+    })
+    .catch(err => {
+      console.log("Fail to delete a user from the server", err)
+    })
+  }
 
   render() {
     return (
@@ -76,11 +93,11 @@ class App extends Component {
 
         <div className="container">
           <Route exact path="/users/:id"
-            render={props => <UserView {...props} users={this.state.users} posts={this.state.posts}/>}
+            render={props => <UserView {...props} users={this.state.users} posts={this.state.posts} handleDeleteUser={this.handleDeleteUser}/>}
           />
 
           <Route path="/users/create"
-            render={props => <CreateUser {...props} handleAddNewUser={this.handleAddNewUser} users={this.state.users}/>}
+            render={props => <CreateUser {...props} handleAddNewUser={this.handleAddNewUser} handleDeleteUser={this.handleDeleteUser} users={this.state.users}/>}
           />
 
           <Route path="/posts"
