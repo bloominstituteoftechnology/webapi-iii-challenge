@@ -193,6 +193,26 @@ server.put('/api/posts/:id', (req, res) => {
     }
 })
 
+  //Delete Post
+server.delete('/api/posts/:id', (req, res)=> {
+  const {id} = req.params;
+  console.log(id);
+  postDb.remove(id)
+  //deletes the post but get catch message as the reponse
+  .then(count => {
+    console.log(count)
+    res
+      .status(200)
+      .json(count)
+  })
+    .catch(
+      res
+        .status(500)
+        .json({message: "Failed to delete Post"})
+    )
+})
+
+
 //Listening 
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
