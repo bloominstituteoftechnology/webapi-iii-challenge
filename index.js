@@ -1,12 +1,22 @@
 const express = require('express');
 const userDb = require('./data/helpers/userDb');
 const postDb = require('./data/helpers/postDb');
+const helmet = require('helmet')
+const logger = require('morgan');
+const customMiddleware = require('./data/middleware/middleware')
 
 const server = express();
 const parser = express.json();
 const PORT = 4000;
 
-server.use(express.json())
+//Midleware
+server.use(
+  express.json(),
+  helmet(),
+  logger('dev')
+);
+
+
 //User Endpoints
   // Get all users
 server.get('/api/users', (req,res) => {
@@ -24,7 +34,7 @@ server.get('/api/users', (req,res) => {
 })
 
   //Get user by id
-server.get('/api/users/:id', (req,res) => {
+server.get('/api/users/:id',  (req,res) => {
   const {id} = req.params;
   console.log(id);
   userDb.getUserPosts(id) 
@@ -46,10 +56,8 @@ server.get('/api/users/:id', (req,res) => {
       })
 })
 
-  //Get user posts Endpoint
-server.eventNames
   // Add user
-server.post('/api/users', (req,res) => {
+server.post('/api/users',customMiddleware.uppercase, (req,res) => {
   const user = req.body;
   console.log(user);
     //logs undefined
@@ -60,6 +68,9 @@ server.post('/api/users', (req,res) => {
       userDb.get(userId)
         .then(user => {
             console.log(user)
+            res
+              .status(200)
+              .json({message: `User Added`})
       })
     })
       .catch(err => {
@@ -198,7 +209,7 @@ server.delete('/api/posts/:id', (req, res)=> {
   const {id} = req.params;
   console.log(id);
   postDb.remove(id)
-  //deletes the post but get catch message as the reponse
+  //deletes the post but get catch message as the reponse - works now
   .then(count => {
     console.log(count)
     res
