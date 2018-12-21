@@ -11,7 +11,8 @@ const dbUsers = require('../data/helpers/userDb.js');
 const dbPosts=require('../data/helpers/postDb.js')
 
 function capitalizeNames(req, res, next) {
-    req.body.name=req.body.name.charAt(0).toUpperCase() + req.body.name.slice(1);
+    if(req.body.name){req.body.name=req.body.name.charAt(0).toUpperCase() + req.body.name.slice(1);}
+    
   
     next();
   }
@@ -47,16 +48,14 @@ server.get('/api/users/:id', (req, res)=>{
     dbUsers.get(id).then(user=>
         {
 			if (user) {
-				res.json(user);
+				res.status(200).json(user);
 			} else {
 				res
 					.status(404)
 					.json({ message: 'The user with the specified ID does not exist.' });
 			}
-			res.status(200).json(user);
+			
 		}
-        
-        
         ).catch(
             err => {
                 res
@@ -133,20 +132,64 @@ server.delete('/api/users/:id', (req, res) => {
         });
     });
     
-
-
-//make and implement middleware so that every user is capitalized
-
-
-
 //get all posts
 
-
-
-
-
+server.get('/api/posts', (req, res) => {
+    dbPosts.get()
+    .then(posts=>{
+        res.status(200).json(posts);
+    })		
+    .catch(err => {
+        res
+            .status(500)
+            .json({ error: 'The users information could not be retrieved.' });
+    });
+})
 
 //get individual post
+server.get('/api/posts/:id', (req, res)=>{
+    const id=parseInt(req.params.id);
+    console.log("type of id"+typeof id);
+
+    dbPosts.get().then(postsList=>
+        {
+            const foundPost=
+            postsList.filter(
+                post => post.id === id
+            )
+            res.status(200).json(foundPost)
+		}
+        
+        ).catch(
+            err => {
+                res
+                    .status(500)
+                    .json({ error: 'The post information could not be retrieved.' });
+            }
+        )}
+)
+
+server.get('/api/posts/userid/:id', (req, res)=>{
+    const id=parseInt(req.params.id);
+
+    dbPosts.get().then(postsList=>
+        {
+            const foundPost=
+            postsList.filter(
+                post => post.userId === id
+            )
+            res.status(200).json(foundPost)
+		}
+        
+        ).catch(
+            err => {
+                res
+                    .status(500)
+                    .json({ error: 'The post information could not be retrieved.' });
+            }
+        )}
+)
+
 
 //create post
 
