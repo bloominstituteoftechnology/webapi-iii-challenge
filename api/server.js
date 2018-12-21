@@ -68,7 +68,7 @@ server.get('/api/users/:id', (req, res)=>{
 //create user
 
 server.post('/api/users', (req, res) => {
-	const user = req.body;
+	let user = req.body;
 
 	if (user.name) {
 		dbUsers.insert(user)
@@ -92,7 +92,7 @@ server.post('/api/users', (req, res) => {
 
 //update user, 
 server.put('/api/users/:id', (req, res) => {
-	const updatedUser = req.body;
+	let updatedUser = req.body;
 	let { id } = req.params;
 
 	if (updatedUser.name) {
@@ -148,12 +148,12 @@ server.get('/api/posts', (req, res) => {
 
 //get individual post
 server.get('/api/posts/:id', (req, res)=>{
-    const id=parseInt(req.params.id);
+    let id=parseInt(req.params.id);
     console.log("type of id"+typeof id);
 
     dbPosts.get().then(postsList=>
         {
-            const foundPost=
+            let foundPost=
             postsList.filter(
                 post => post.id === id
             )
@@ -171,11 +171,11 @@ server.get('/api/posts/:id', (req, res)=>{
 //get posts by user id instead
 
 server.get('/api/posts/userid/:id', (req, res)=>{
-    const id=parseInt(req.params.id);
+    let id=parseInt(req.params.id);
 
     dbPosts.get().then(postsList=>
         {
-            const foundPost=
+            let foundPost=
             postsList.filter(
                 post => post.userId === id
             )
@@ -195,7 +195,7 @@ server.get('/api/posts/userid/:id', (req, res)=>{
 //create post
 
 server.post('/api/posts', (req, res) => {
-	const post = req.body;
+	let post = req.body;
 
 	if (post.userId && post.text) {
 		dbPosts.insert(post)
@@ -218,5 +218,33 @@ server.post('/api/posts', (req, res) => {
 });
 
 //update post
+
+server.put('/api/posts/:id', (req, res) => {
+	let updatedPost = req.body;
+    let id = parseInt(req.params.id);
+    console.log(updatedPost,id)
+
+	if (updatedPost.text) {
+		//
+		console.log('id' + id);
+		console.log('updated post' + updatedPost.text);
+		dbPosts.update(id, updatedPost).then(number => {
+			console.log(number);
+			if (!number) {
+				res.status(404).json({
+					error: 'The post with the specified ID does not exist'
+				});
+			} else {
+				dbPosts.get(id).then(successfullyUpdatedPost => {
+					res.status(200).json(successfullyUpdatedPost);
+				});
+			}
+		});
+	} else {
+		res.status(400).json({
+			errorMessage: 'Please provide text for the post.'
+		});
+	}
+});
 
 //delete post
