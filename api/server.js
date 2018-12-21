@@ -168,6 +168,7 @@ server.get('/api/posts/:id', (req, res)=>{
             }
         )}
 )
+//get posts by user id instead
 
 server.get('/api/posts/userid/:id', (req, res)=>{
     const id=parseInt(req.params.id);
@@ -192,6 +193,29 @@ server.get('/api/posts/userid/:id', (req, res)=>{
 
 
 //create post
+
+server.post('/api/posts', (req, res) => {
+	const post = req.body;
+
+	if (post.userId && post.text) {
+		dbPosts.insert(post)
+			.then(postId => {
+				dbPosts.getById(postId.id).then(newpost => {
+					post = newpost;
+				});
+			})
+			.then(res.status(201).json(post))
+			.catch(err => {
+				res.status(500).json({
+					error: 'There was an error while saving the post to the database'
+				});
+			});
+	} else {
+		res.status(400).json({
+			errorMessage: 'Please provide userId and text for the post.'
+		});
+	}
+});
 
 //update post
 
