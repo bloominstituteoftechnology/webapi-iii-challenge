@@ -13,4 +13,20 @@ router.get("/", (req, res) => {
     });
 });
 
+router.get("/:id", (req, res) => {
+  const { id } = req.params;
+  postDb
+    .get(id)
+    .then(post => {
+      if (post) {
+        res.json(post);
+      } else {
+        res.status(404).json({ message: "post does not exist" });
+      }
+    })
+    .catch(err => {
+      res.status(404).json({ error: "The post could not be retrieved" });
+    });
+});
+
 module.exports = router;

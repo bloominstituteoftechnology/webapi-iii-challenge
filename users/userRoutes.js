@@ -15,7 +15,7 @@ router.get("/", (req, res) => {
     });
 });
 
-router.get("/api/users/:id", (req, res) => {
+router.get("/:id", (req, res) => {
   const { id } = req.params;
   userDb
     .get(id)
