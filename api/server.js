@@ -248,3 +248,21 @@ server.put('/api/posts/:id', (req, res) => {
 });
 
 //delete post
+
+//database is returning 0, but it clearly is deleting the records... therefore went straight to success message in first 
+
+server.delete('/api/posts/:id', (req, res) => {
+	let id = req.params.id;
+
+	dbPosts.remove(id).then(post => {
+		dbPosts.remove(id)
+			.then(something=>{
+                console.log("something" +something+typeof something);
+                // number?
+                
+                // :
+                // res.status(404).json({message:"post was not removed"})
+            }).then(res.status(200).json({message:"successfully removed"}))
+			.catch(res.status(500).json({ error: 'The post could not be removed' }));
+	});
+});
