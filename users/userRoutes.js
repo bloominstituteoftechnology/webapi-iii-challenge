@@ -1,4 +1,5 @@
 const express = require("express");
+
 const userDb = require("../data/helpers/userDb");
 const router = express.Router();
 
@@ -32,5 +33,27 @@ router.get("/:id", (req, res) => {
         .json({ error: "The user information could not be retrieved." });
     });
 });
+
+router.post("/", (req, res) => {
+  const user = req.body;
+  if (user.name) {
+    userDb
+      .insert(user)
+      .then(idInfo => {
+        userDb.get(idInfo.id).then(user => {
+          res.status(201).json(user);
+        });
+      })
+      .catch(err => {
+        res.status(500).json({
+          error: "There was an error while saving user to the database"
+        });
+      });
+  } else {
+    res.status(400).json({ errorMessage: "Please provide name for user" });
+  }
+});
+
+
 
 module.exports = router;
