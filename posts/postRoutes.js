@@ -49,6 +49,23 @@ router.post("/", (req, res) => {
   }
 });
 
+router.put('/:id', async (req, res) => {
+  const post = req.body
+  const { id } = req.params
+  if (post) {
+    postDb.update(id, post)
+      .then(count => {
+        if (count) {
+          postDb.get(id).then(post => {
+            res.json(post)
+          })
+        } else {
+          res.status(404).json({ message: 'The post with specified ID does not exist'})
+        }
+      })
+}
+})
+
 router.delete('/:id', (req, res) => {
   const { id } = req.params
   postDb.remove(id)
