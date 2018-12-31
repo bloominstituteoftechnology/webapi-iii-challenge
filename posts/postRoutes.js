@@ -54,7 +54,7 @@ router.post("/", (req, res) => {
 router.put("/:id", (req, res) => {
   const post = req.body;
   const { id } = req.params;
-  if (post) {
+  if (post.text) {
     postDb
       .update(id, post)
       .then(count => {
