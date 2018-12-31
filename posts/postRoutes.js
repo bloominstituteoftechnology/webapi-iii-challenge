@@ -21,11 +21,11 @@ router.get("/:id", (req, res) => {
       if (post) {
         res.json(post);
       } else {
-        res.status(404).json({ message: "post does not exist" });
+        res.status(404).json({ message: "This post does not exist" });
       }
     })
     .catch(err => {
-      res.status(404).json({ error: "The post could not be retrieved" });
+      res.status(404).json({ error: "This post does not exist" });
     });
 });
 
@@ -45,42 +45,55 @@ router.post("/", (req, res) => {
         });
       });
   } else {
-    res.status(400).json({ errorMessage: "Please provide text and userId for post" });
+    res
+      .status(400)
+      .json({ errorMessage: "Please provide text and userId for post" });
   }
 });
 
-router.put('/:id', async (req, res) => {
-  const post = req.body
-  const { id } = req.params
+router.put("/:id", (req, res) => {
+  const post = req.body;
+  const { id } = req.params;
   if (post) {
-    postDb.update(id, post)
+    postDb
+      .update(id, post)
       .then(count => {
         if (count) {
           postDb.get(id).then(post => {
-            res.json(post)
-          })
+            res.json(post);
+          });
         } else {
-          res.status(404).json({ message: 'The post with specified ID does not exist'})
+          res
+            .status(404)
+            .json({ message: "The post with specified ID does not exist" });
         }
       })
-}
-})
+      .catch(err => {
+        res
+          .status(500)
+          .json({ error: "The post information could not be modified" });
+      });
+  } else {
+    res.status(400).json({ errorMessage: "Please provide text for the post" });
+  }
+});
 
-router.delete('/:id', (req, res) => {
-  const { id } = req.params
-  postDb.remove(id)
+router.delete("/:id", (req, res) => {
+  const { id } = req.params;
+  postDb
+    .remove(id)
     .then(count => {
       if (count) {
-        res.json({ message: 'Post successfully deleted'})
+        res.json({ message: "Post successfully deleted" });
       } else {
         res
           .status(404)
-          .json({ message: 'The post with the specified ID does not exist'})
+          .json({ message: "The post with the specified ID does not exist" });
       }
     })
     .catch(err => {
-      res.status(500).json({ error: 'The post could not be removed'})
-    })
-})
+      res.status(500).json({ error: "The post could not be removed" });
+    });
+});
 
 module.exports = router;
