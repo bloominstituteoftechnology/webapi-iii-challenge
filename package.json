@@ -1,22 +1,23 @@
 {
-    "name": "blog",
-    "version": "1.0.0",
-    "description": "this is my node blog",
-    "main": "index.js",
-    "scripts": {
-        "start": "nodemon"
-    },
-    "keywords": [],
-    "author": "moi",
-    "license": "ISC",
-    "dependencies": {
-        "express": "^4.16.4",
-        "helmet": "^3.15.0",
-        "knex": "^0.16.2",
-        "morgan": "^1.9.1",
-        "sqlite3": "^4.0.4"
-    },
-    "devDependencies": {
-        "nodemon": "^1.18.9"
-    }
+	"name": "blog",
+	"version": "1.0.0",
+	"description": "this is my node blog",
+	"main": "index.js",
+	"scripts": {
+		"start": "node index.js",
+		"server": "nodemon"
+	},
+	"keywords": [],
+	"author": "moi",
+	"license": "ISC",
+	"dependencies": {
+		"express": "^4.16.4",
+		"helmet": "^3.15.0",
+		"knex": "^0.16.2",
+		"morgan": "^1.9.1",
+		"sqlite3": "^4.0.4"
+	},
+	"devDependencies": {
+		"nodemon": "^1.18.9"
+	}
 }
