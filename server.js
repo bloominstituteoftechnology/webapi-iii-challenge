@@ -74,21 +74,21 @@ server.post("/api/posts", (req, res) => {
     })
     .catch(err => {
       // console.log(err.errno);
-      console.log(err);
+      // console.log(err);
       res.status(500).json({ errorMessage: "The post information could not be retrieved" });
     });
 });
 
-server.put("/api/posts/:postId", (req, res) => {
+server.put("/api/posts/:id", (req, res) => {
   const updated = req.body;
-  const { postId } = req.params;
+  const { id } = req.params;
 
   posts
-    .get(postId)
+    .get(id)
     .then(response => {
-      console.log(response);
+      // console.log(response);
       if (response) {
-        post.update(postId, updated).then(response => {
+        posts.update(postId, updated).then(response => {
           // console.log(response);
           res.status(200).json(updated);
         });
@@ -108,8 +108,8 @@ server.delete("/api/posts/:id", (req, res) => {
   posts
     .get(id)
     .then(response => {
-      console.log(response);
-      post
+      // console.log(response);
+      posts
         .remove(id)
         .then(info => res.status(200).json({ recordsDeleted: info }))
         .catch(err => {
@@ -119,7 +119,7 @@ server.delete("/api/posts/:id", (req, res) => {
         });
     })
     .catch(err => {
-      console.log(err);
+      // console.log(err);
       res.status(500).json({ errorMessage: "The server could not be reached" });
     });
 });
