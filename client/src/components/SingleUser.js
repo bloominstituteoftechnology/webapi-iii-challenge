@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 class SingleUser extends React.Component {
   state = {
@@ -16,16 +17,34 @@ class SingleUser extends React.Component {
 
   render() {
     const { posts } = this.state;
-    console.log(posts);
+
+    if (posts.length === 0) {
+      return (
+        <div className="empty">
+          <h2>This user has no posts</h2>
+          <Link to="/users" className="back">
+            Back to Users
+          </Link>
+        </div>
+      );
+    }
+
     return (
-      <div className="user-page">
-        {posts.length !== 0 && <h2>{posts[0].postedBy}</h2>}
-        {posts.map(post => (
-          <div className="single-post" key={post.id}>
-            <p>{post.text}</p>
+      <>
+        {posts.length > 0 && (
+          <div className="user-page">
+            {posts.length !== 0 && <h2>{posts[0].postedBy}</h2>}
+            {posts.map(post => (
+              <div className="single-post" key={post.id}>
+                <p>{post.text}</p>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        )}
+        <Link to="/users" className="back">
+          Back to Users
+        </Link>
+      </>
     );
   }
 }

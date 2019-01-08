@@ -132,9 +132,9 @@ router.get("/posts/:userId", (req, res) => {
         return errorMaker(404, "A user with that ID does not exist", res);
       } else {
         users.getUserPosts(userId).then(response => {
-          if (response.length === 0) {
-            return res.send("This user has no posts");
-          }
+          // if (response.length === 0) {
+          //   return res.send("This user has no posts");
+          // }
           res.json(response);
         });
       }

@@ -8,7 +8,7 @@ const server = express();
 const port = 5000;
 
 server.use(express.json());
-server.use(cors({}));
+server.use(cors());
 server.use("/api/users", userRoutes);
 server.use("/api/posts", postRoutes);
 

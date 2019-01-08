@@ -39,11 +39,19 @@ nav {
   margin: 0 auto;
   justify-content: space-between;
   width: 25%;
+  padding-bottom: 5%;
 }
 
 .navlink {
   color: blue;
   text-decoration: none;
+}
+
+.user h2 {
+  width: 30%;
+  margin: 0 auto;
+  padding: 1.5%;
+  color: black;
 }
 
 .link {
@@ -63,4 +71,20 @@ nav {
 .single-post {
   border: 1px solid lightslategrey;
   margin: 0 auto;
+}
+
+.back {
+  text-decoration: none;
+  color: black;
+  margin: 0 auto;
+  margin-top: 5%;
+  border: 1px solid black;
+  padding: 1%;
+  width: 15%;
+}
+
+.back:hover {
+  background-color: black;
+  color: white;
+  cursor: pointer;
 }

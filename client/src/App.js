@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "./App.css";
 import axios from "axios";
-import { Route, Link, NavLink } from "react-router-dom";
+import { Route, Link } from "react-router-dom";
 
 import SingleUser from "./components/SingleUser";
 import UserList from "./components/UserList";
@@ -24,14 +24,7 @@ class App extends Component {
     return (
       <div className="App">
         <h1>Welcome to Holden's API page</h1>
-        <nav>
-          <NavLink to="/" className="navlink">
-            Home
-          </NavLink>
-          <NavLink to="/users" className="navlink">
-            User Page
-          </NavLink>
-        </nav>
+
         <Route
           exact
           path="/"
