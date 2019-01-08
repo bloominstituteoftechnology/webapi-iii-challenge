@@ -5,12 +5,17 @@ const users = require("../data/helpers/userDb");
 
 const capitalizeName = (req, res, next) => {
   const { name } = req.body;
-  const isUpperCase = name[0] === name[0].toUpperCase();
-  if (!isUpperCase) {
-    return errorMaker(404, "First letter of name must be capitalized", res);
-  } else {
-    next();
-  }
+  // const isUpperCase = name[0] === name[0].toUpperCase();
+  // if (!isUpperCase) {
+  // return errorMaker(404, "First letter of name must be capitalized", res);
+
+  // Had this in an if else check but doesn't seem like it'd be taxing for the computer to check every input instead
+  // of only some
+  req.body.name = name[0].toUpperCase() + name.slice(1);
+  next();
+  // } else {
+  //   next();
+  // }
 };
 
 const errorMaker = (code, message, res) => {
