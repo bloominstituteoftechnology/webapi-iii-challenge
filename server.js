@@ -86,9 +86,9 @@ server.put("/api/posts/:id", (req, res) => {
   posts
     .get(id)
     .then(response => {
-      // console.log(response);
+      console.log(response);
       if (response) {
-        posts.update(postId, updated).then(response => {
+        posts.update(id, updated).then(response => {
           // console.log(response);
           res.status(200).json(updated);
         });
