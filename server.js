@@ -3,10 +3,13 @@ const posts = require("./data/helpers/postDb");
 const users = require("./data/helpers/userDb");
 const express = require("express");
 
+const errorMaker = (code, message, res) => {
+  res.status(code).json({ error: message });
+};
 const nameCheckMiddleware = (req, res, next) => {
   const { name } = req.body;
   if (!name) {
-    errorHelper(404, "Name must be included", res);
+    errorMaker(404, "Name must be included", res);
     next();
   } else {
     next();
@@ -24,79 +27,82 @@ server.get("/api/posts", (req, res) => {
   posts
     .get()
     .then(posts => res.status(200).json(posts))
-    .catch(err => res.status(500).json({ errorMessage: "Unable to retrieve posts at this time" }));
+    .catch(err => errorMaker(500, "Unable to reach server", res));
 });
-
-// server.get("/api/posts/:id", (req, res) => {
-//   const { id } = req.params;
-
-//   post
-//     .get(id)
-//     .then(response => {
-//       if (response === 0) {
-//         return res
-//           .status(404)
-//           .json({ errorMessage: "A post with the specified ID does not exist" });
-//       } else {
-//         res.status(200).json(response);
-//       }
-//     })
-//     .catch(err => {
-//       console.log(err);
-//       res.status(500).json({ errorMessage: "The post information could not be retrieved" });
-//     });
-// });
 
 server.get("/api/posts/:id", (req, res) => {
   const { id } = req.params;
   posts
     .get(id)
     .then(response => {
-      console.log(response);
-      if (!response) {
-        return res.status(404).json({ errorMessage: "There is no post with that id" });
-      } else {
+      if (response) {
         res.status(200).json(response);
+      } else {
+        return errorMaker(404, "There is no post with that id", res);
       }
     })
-    .catch(err => {
-      console.log(err);
-      res.status(500).json({ errorMessage: "no way hosea" });
-    });
+    .catch(err => errorMaker(500, "Unable to reach server", res));
 });
 
 server.post("/api/posts", (req, res) => {
   const newPost = req.body;
 
-  posts
-    .insert(newPost)
-    .then(doc => {
-      res.status(201).json(newPost);
-    })
-    .catch(err => {
-      res.status(500).json({ errorMessage: "The post information could not be retrieved" });
-    });
+  if (newPost.userId) {
+    users
+      .get(newPost.userId)
+      .then(response => {
+        if (response) {
+          posts.insert(newPost).then(response => res.status(201).json(newPost));
+        } else {
+          return errorMaker(404, "A user with that id does not exist", res);
+        }
+      })
+      .catch(err => errorMaker(500, "Unable to reach server", res));
+  } else {
+    posts
+      .insert(newPost)
+      .then(response => {
+        res.status(201).json(newPost);
+      })
+      .catch(err => errorMaker(500, "Unable to reach server", res));
+  }
 });
 
 server.put("/api/posts/:id", (req, res) => {
   const updated = req.body;
   const { id } = req.params;
 
-  posts
-    .get(id)
-    .then(post => {
-      console.log(post);
-      if (post) {
-        posts.update(id, updated).then(response => {
-          res.status(200).json(updated);
-        });
-      } else {
-        res.status(404).json({ errorMessage: "The post with the specified ID does not exist." });
-      }
-    })
-    .catch(err => {
-      res.status(500).send({ error: "The post information could not be modified." });
-    });
+  if (updated.userId) {
+    users
+      .get(updated.userId)
+      .then(response => {
+        if (response) {
+          posts.get(id).then(post => {
+            if (post) {
+              posts.update(id, updated).then(response => res.status(200).json(updated));
+            } else {
+              return errorMaker(404, "A post with that ID does not exist", res);
+            }
+          });
+        } else {
+          return errorMaker(404, "A user with that ID does not exist", res);
+        }
+      })
+      .catch(err => errorMaker(500, "Unable to reach server", res));
+  } else {
+    posts
+      .get(id)
+      .then(post => {
+        if (post) {
+          posts.update(id, updated).then(response => {
+            res.status(200).json(updated);
+          });
+        } else {
+          return errorMaker(404, "A post with that ID does not exist", res);
+        }
+      })
+      .catch(err => errorMaker(500, "Unable to reach server", res));
+  }
 });
 
 server.delete("/api/posts/:id", (req, res) => {
@@ -114,9 +120,7 @@ server.delete("/api/posts/:id", (req, res) => {
             .json({ errorMessage: "The post with the specified ID does not exist." });
         });
     })
-    .catch(err => {
-      res.status(500).json({ errorMessage: "The server could not be reached" });
-    });
+    .catch(err => errorMaker(500, "Unable to reach server", res));
 });
 
 //
@@ -127,7 +131,7 @@ server.get("/api/users", (req, res) => {
   users
     .get()
     .then(users => res.status(200).json(users))
-    .catch(err => res.status(500).json({ errorMessage: "Unable to retrieve user information" }));
+    .catch(err => errorMaker(500, "Unable to reach server", res));
 });
 
 server.get("/api/users/:id", (req, res) => {
@@ -137,12 +141,12 @@ server.get("/api/users/:id", (req, res) => {
     .get(id)
     .then(user => {
       if (!user) {
-        return res.status(404).json({ errorMessage: "A user with this ID does not exist" });
+        return errorMaker(404, "A user with that ID does not exist", res);
       } else {
         res.status(200).json(user);
       }
     })
-    .catch(err => res.status(500).json({ errorMessage: "Unable to retrieve user at this time" }));
+    .catch(err => errorMaker(500, "Unable to reach server", res));
 });
 
 server.post("/api/users", nameCheckMiddleware, (req, res) => {
@@ -151,7 +155,7 @@ server.post("/api/users", nameCheckMiddleware, (req, res) => {
   users
     .insert({ name })
     .then(response => res.json(response))
-    .catch(err => res.status(500).json({ errorMessage: "Unable to reach server" }));
+    .catch(err => errorMaker(500, "Unable to reach server", res));
 });
 
 server.put("/api/users/:id", nameCheckMiddleware, (req, res) => {
@@ -167,7 +171,7 @@ server.put("/api/users/:id", nameCheckMiddleware, (req, res) => {
         users.update(id, updated).then(response => res.json(response));
       }
     })
-    .catch(err => res.status(500).json({ errorMessage: "Unable to reach server" }));
+    .catch(err => errorMaker(500, "Unable to reach server", res));
 });
 
 server.delete("/api/users/:id", (req, res) => {
@@ -182,7 +186,7 @@ server.delete("/api/users/:id", (req, res) => {
         users.remove(id).then(response => res.json(response));
       }
     })
-    .catch(err => res.status(500).json({ errorMessage: "Unable to reach server" }));
+    .catch(err => errorMaker(500, "Unable to reach server", res));
 });
 
 server.get("/api/users/posts/:userId", (req, res) => {
@@ -191,7 +195,8 @@ server.get("/api/users/posts/:userId", (req, res) => {
     .get(userId)
     .then(user => {
       if (!user) {
-        res.status(404).json({ errorMessage: "A user with that ID does not exist" });
+        // res.status(404).json({ errorMessage: "A user with that ID does not exist" });
+        return errorMaker(404, "A user with that ID does not exist", res);
       } else {
         users.getUserPosts(userId).then(response => {
           if (response.length === 0) {
@@ -201,7 +206,7 @@ server.get("/api/users/posts/:userId", (req, res) => {
         });
       }
     })
-    .catch(err => res.status(500).json({ errorMessage: "Unable to reach server" }));
+    .catch(err => errorMaker(500, "Unable to reach server", res));
 });
 
 server.listen(5000, () => console.log("Server is listening on Port 5000"));
