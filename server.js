@@ -1,11 +1,17 @@
-const posts = require("./data/helpers/postDb");
-// const tag = require("./data/helpers/tagDb");
-const users = require("./data/helpers/userDb");
 const express = require("express");
+const cors = require("cors");
+
+const posts = require("./data/helpers/postDb");
+const users = require("./data/helpers/userDb");
+
+const server = express();
+server.use(express.json());
+server.use(cors({}));
 
 const errorMaker = (code, message, res) => {
   res.status(code).json({ error: message });
 };
+
 const nameCheckMiddleware = (req, res, next) => {
   const { name } = req.body;
   if (!name) {
@@ -15,9 +21,6 @@ const nameCheckMiddleware = (req, res, next) => {
     next();
   }
 };
-
-const server = express();
-server.use(express.json());
 
 //
 ///// POSTS ENDPOINTS
@@ -195,7 +198,6 @@ server.get("/api/users/posts/:userId", (req, res) => {
     .get(userId)
     .then(user => {
       if (!user) {
-        // res.status(404).json({ errorMessage: "A user with that ID does not exist" });
         return errorMaker(404, "A user with that ID does not exist", res);
       } else {
         users.getUserPosts(userId).then(response => {

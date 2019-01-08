@@ -1,5 +1,8 @@
 .App {
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
 }
 
 .App-logo {
@@ -29,4 +32,35 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+nav {
+  display: flex;
+  margin: 0 auto;
+  justify-content: space-between;
+  width: 25%;
+}
+
+.navlink {
+  color: blue;
+  text-decoration: none;
+}
+
+.link {
+  margin: 15% auto;
+  padding: 3%;
+  text-decoration: none;
+  color: white;
+  border: 1px solid black;
+  background-color: black;
+}
+
+.link:hover {
+  background-color: white;
+  color: black;
+}
+
+.single-post {
+  border: 1px solid lightslategrey;
+  margin: 0 auto;
 }
