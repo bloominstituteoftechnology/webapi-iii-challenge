@@ -15,9 +15,9 @@ module.exports = {
       return Promise.all(promises).then(function(results) {
         let [posts, tags] = results;
         let post = posts[0];
-        if (post) {
-          post.tags = tags.map(t => t.tag);
-        }
+        // if (post) {
+        //   post.tags = tags.map(t => t.tag);
+        // }
 
         return post;
       });

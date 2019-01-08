@@ -14,9 +14,9 @@ const errorMaker = (code, message, res) => {
 
 const nameCheckMiddleware = (req, res, next) => {
   const { name } = req.body;
-  if (!name) {
-    errorMaker(404, "Name must be included", res);
-    next();
+  const isUpperCase = name[0] === name[0].toUpperCase();
+  if (!isUpperCase) {
+    return errorMaker(404, "First letter of name must be capitalized", res);
   } else {
     next();
   }
