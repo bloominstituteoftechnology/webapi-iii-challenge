@@ -51,14 +51,18 @@ server.get("/api/posts/:id", (req, res) => {
   const { id } = req.params;
   posts
     .get(id)
-    .then(post => {
-      if (!post) {
-        return res.status(404).json({ errorMessage: "fuck you" });
+    .then(response => {
+      console.log(response);
+      if (!response) {
+        return res.status(404).json({ errorMessage: "There is no post with that id" });
       } else {
-        res.status(200).json(post);
+        res.status(200).json(response);
       }
     })
-    .catch(err => res.status(500).json({ errorMessage: "no way hosea" }));
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({ errorMessage: "no way hosea" });
+    });
 });
 
 server.post("/api/posts", (req, res) => {
@@ -81,6 +85,7 @@ server.put("/api/posts/:id", (req, res) => {
   posts
     .get(id)
     .then(post => {
+      console.log(post);
       if (post) {
         posts.update(id, updated).then(response => {
           res.status(200).json(updated);
