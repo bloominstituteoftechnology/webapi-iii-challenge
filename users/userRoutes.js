@@ -17,51 +17,90 @@ const errorMaker = (code, message, res) => {
   res.status(code).json({ error: message });
 };
 
-router.get("/", (req, res) => {
-  users
-    .get()
-    .then(users => res.status(200).json(users))
-    .catch(err => errorMaker(500, "Unable to reach server", res));
+//
+/////// ROUTES
+//
+
+router.get("/", async (req, res) => {
+  try {
+    const userlist = await users.get();
+    res.status(200).json(userlist);
+  } catch (err) {
+    errorMaker(500, "Unable to reach server", res);
+  }
+
+  // users
+  //   .get()
+  //   .then(users => res.status(200).json(users))
+  //   .catch(err => errorMaker(500, "Unable to reach server", res));
 });
 
-router.get("/:id", (req, res) => {
+router.get("/:id", async (req, res) => {
   const { id } = req.params;
 
-  users
-    .get(id)
-    .then(user => {
-      if (!user) {
-        return errorMaker(404, "A user with that ID does not exist", res);
-      } else {
-        res.status(200).json(user);
-      }
-    })
-    .catch(err => errorMaker(500, "Unable to reach server", res));
+  try {
+    const user = await users.get(id);
+    if (!user) {
+      return errorMaker(404, "A user with that ID does not exist", res);
+    } else {
+      res.status(200).json(user);
+    }
+  } catch (err) {
+    errorMaker(500, "Unable to reach server", res);
+  }
+  // users
+  //   .get(id)
+  //   .then(user => {
+  //     if (!user) {
+  //       return errorMaker(404, "A user with that ID does not exist", res);
+  //     } else {
+  //       res.status(200).json(user);
+  //     }
+  //   })
+  //   .catch(err => errorMaker(500, "Unable to reach server", res));
 });
 
-router.post("/", capitalizeName, (req, res) => {
+router.post("/", capitalizeName, async (req, res) => {
   const { name } = req.body;
+  try {
+    const newUser = await users.insert({ name });
+    res.status(201).json(newUser);
+  } catch (err) {
+    errorMaker(500, "Unable to reach server", res);
+  }
 
-  users
-    .insert({ name })
-    .then(response => res.json(response))
-    .catch(err => errorMaker(500, "Unable to reach server", res));
+  // users
+  //   .insert({ name })
+  //   .then(response => res.json(response))
+  //   .catch(err => errorMaker(500, "Unable to reach server", res));
 });
 
-router.put("/:id", capitalizeName, (req, res) => {
+router.put("/:id", capitalizeName, async (req, res) => {
   const { id } = req.params;
-  const updated = req.body;
+  const changes = req.body;
 
-  users
-    .get(id)
-    .then(user => {
-      if (!user) {
-        res.status(404).json({ errorMessage: "A user with that ID does not exist" });
-      } else {
-        users.update(id, updated).then(response => res.json(response));
-      }
-    })
-    .catch(err => errorMaker(500, "Unable to reach server", res));
+  try {
+    const user = await users.get(id);
+    if (!user) {
+      res.status(404).json({ errorMessage: "A user with that ID does not exist" });
+    } else {
+      const updated = await users.update(id, changes);
+      if (updated) res.json(changes);
+    }
+  } catch (err) {
+    errorMaker(500, "Unable to reach server", res);
+  }
+
+  // users
+  //   .get(id)
+  //   .then(user => {
+  //     if (!user) {
+  //       res.status(404).json({ errorMessage: "A user with that ID does not exist" });
+  //     } else {
+  //       users.update(id, updated).then(response => res.json(response));
+  //     }
+  //   })
+  //   .catch(err => errorMaker(500, "Unable to reach server", res));
 });
 
 router.delete("/:id", (req, res) => {
