@@ -12,11 +12,17 @@ const UserList = ({ users }) => {
           User Page
         </NavLink>
       </nav>
-      {users.map((user, i) => (
-        <Link className="user" key={user.id} to={`/users/${user.id}`}>
-          <h2>{user.name}</h2>
-        </Link>
-      ))}
+      <div className="userlist-container">
+        {users.map((user, i) => (
+          <div className="user-container" key={user.id}>
+            <h2>
+              <Link to={`/users/${user.id}`} className="userlink">
+                {user.name}
+              </Link>
+            </h2>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
