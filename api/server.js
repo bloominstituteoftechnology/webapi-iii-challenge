@@ -120,4 +120,21 @@ server.get("/api/posts", async (req, res) => {
   }
 });
 
+server.get("/api/posts/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const post = await postDb.get(id);
+    console.log("bt3", post);
+    if (!post) {
+      res.status(404).json({ message: "The post was not found" });
+    } else {
+      res.json(post);
+    }
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "There was an error trying to find the post." });
+  }
+});
+
 module.exports = server;
