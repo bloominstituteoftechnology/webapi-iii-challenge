@@ -15,6 +15,11 @@ server.use(express.json());
 server.use(helmet());
 server.use(morgan('short'));
 
+// uppercase first letter of name
+function upperCase(name) {
+    return name.charAt(0).toUpperCase() + name.slice(1);
+}
+
 // fetch users
 server.get('/api/users', async (req, res) => {
     try {
@@ -31,6 +36,7 @@ server.get('/api/users', async (req, res) => {
 // fetch user by ID
 server.get('/api/users/:id', async (req, res) => {
     const { id } = req.params;
+
     try {
         const user = await userDb.get(id);
         if (user) {
@@ -52,10 +58,6 @@ server.get('/api/users/:id', async (req, res) => {
 server.post('/api/users', async (req, res) => {
     const name = req.body;
 
-    function upperCase(name) {
-        return name.charAt(0).toUpperCase() + name.slice(1);
-    }
-
     if (!name || name.length > 128) {
         res.status(400).json({
             message: 'Invalid username'
@@ -63,6 +65,7 @@ server.post('/api/users', async (req, res) => {
     } else {
         name.name = upperCase(name.name);
     }
+
     try {
         const id = await userDb.insert(name);
         const user = await userDb.get(id.id);
@@ -75,9 +78,10 @@ server.post('/api/users', async (req, res) => {
     }
 });
 
-// delete user
+// delete user by ID
 server.delete('/api/users/:id', async (req, res) => {
     const { id } = req.params;
+
     try {
         const removedUser = await userDb.get(id);
         const removedCount = await userDb.remove(id);
@@ -91,6 +95,37 @@ server.delete('/api/users/:id', async (req, res) => {
     } catch (err) {
         res.status(500).json({
             message: 'There was an error while deleting this user.',
+            error: err
+        });
+    }
+});
+
+// update user
+server.put('/api/users/:id', async (req, res) => {
+    const { id } = req.params;
+    const name = req.body;
+
+    if (!name || name.length > 128) {
+        res.status(400).json({
+            message: 'Invalid username'
+        });
+    } else {
+        name.name = upperCase(name.name);
+    }
+
+    try {
+        const editedCount = await userDb.update(id, name);
+        if (editedCount === 1) {
+            const editedUser = await userDb.get(id);
+            res.status(200).json(editedUser);
+        } else {
+            res.status(404).json({
+                message: 'User not found.'
+            });
+        }
+    } catch (err) {
+        res.status(500).json({
+            message: 'There was an error updating this user.',
             error: err
         });
     }
