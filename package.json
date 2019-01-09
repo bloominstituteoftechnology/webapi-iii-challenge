@@ -16,5 +16,11 @@
   "bugs": {
     "url": "https://github.com/cwright0428/Node-Blog/issues"
   },
-  "homepage": "https://github.com/cwright0428/Node-Blog#readme"
+  "homepage": "https://github.com/cwright0428/Node-Blog#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.9"
+  }
 }
