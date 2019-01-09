@@ -9,4 +9,14 @@ module.exports = {
     },
     seeds: { directory: './data/seeds' },
   },
+  production: {
+   client: pg,
+   connection: {
+     dbConfig
+   },
+    migrations: {
+      directory: './data/migrations' 
+    },
+    seeds: { directory: './data/seeds'
+  }
 };
