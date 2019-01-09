@@ -42,6 +42,23 @@ server.get("/api/users", async (req, res) => {
   }
 });
 
+server.get("/api/users/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const user = await userDb.get(id);
+    if (!user) {
+      res.status(404).json({ message: "The User was not found" });
+    } else {
+      res.json(user);
+    }
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "There was an error trying to find the user." });
+  }
+});
+
 server.post("/api/users", upperCase, async (req, res) => {
   const user = req.body;
 
