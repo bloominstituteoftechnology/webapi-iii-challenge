@@ -5,17 +5,11 @@ const users = require("../data/helpers/userDb");
 
 const capitalizeName = (req, res, next) => {
   const { name } = req.body;
-  // const isUpperCase = name[0] === name[0].toUpperCase();
-  // if (!isUpperCase) {
-  // return errorMaker(404, "First letter of name must be capitalized", res);
-
-  // Had this in an if else check but doesn't seem like it'd be taxing for the computer to check every input instead
-  // of only some
-  req.body.name = name[0].toUpperCase() + name.slice(1);
+  const isUpperCase = name[0] === name[0].toUpperCase();
+  if (!isUpperCase) {
+    req.body.name = name[0].toUpperCase() + name.slice(1);
+  }
   next();
-  // } else {
-  //   next();
-  // }
 };
 
 const errorMaker = (code, message, res) => {
@@ -26,18 +20,20 @@ const errorMaker = (code, message, res) => {
 /////// ROUTES
 //
 
-router.get("/", async (req, res) => {
+router.get("/posts/:userId", async (req, res) => {
+  const { userId } = req.params;
+
   try {
-    const userlist = await users.get();
-    res.status(200).json(userlist);
+    const user = await users.get(userId);
+    if (!user) {
+      errorMaker(404, "A user with that ID does not exist", res);
+    } else {
+      const posts = await users.getUserPosts(userId);
+      res.status(200).json(posts);
+    }
   } catch (err) {
     errorMaker(500, "Unable to reach server", res);
   }
-
-  // users
-  //   .get()
-  //   .then(users => res.status(200).json(users))
-  //   .catch(err => errorMaker(500, "Unable to reach server", res));
 });
 
 router.get("/:id", async (req, res) => {
@@ -53,16 +49,15 @@ router.get("/:id", async (req, res) => {
   } catch (err) {
     errorMaker(500, "Unable to reach server", res);
   }
-  // users
-  //   .get(id)
-  //   .then(user => {
-  //     if (!user) {
-  //       return errorMaker(404, "A user with that ID does not exist", res);
-  //     } else {
-  //       res.status(200).json(user);
-  //     }
-  //   })
-  //   .catch(err => errorMaker(500, "Unable to reach server", res));
+});
+
+router.get("/", async (req, res) => {
+  try {
+    const userlist = await users.get();
+    res.status(200).json(userlist);
+  } catch (err) {
+    errorMaker(500, "Unable to reach server", res);
+  }
 });
 
 router.post("/", capitalizeName, async (req, res) => {
@@ -71,13 +66,12 @@ router.post("/", capitalizeName, async (req, res) => {
     const newUser = await users.insert({ name });
     res.status(201).json(newUser);
   } catch (err) {
-    errorMaker(500, "Unable to reach server", res);
+    if ((err.errno = 19)) {
+      errorMaker(404, "A user with that name already exists", res);
+    } else {
+      errorMaker(500, "Unable to reach server", res);
+    }
   }
-
-  // users
-  //   .insert({ name })
-  //   .then(response => res.json(response))
-  //   .catch(err => errorMaker(500, "Unable to reach server", res));
 });
 
 router.put("/:id", capitalizeName, async (req, res) => {
@@ -93,53 +87,28 @@ router.put("/:id", capitalizeName, async (req, res) => {
       if (updated) res.json(changes);
     }
   } catch (err) {
-    errorMaker(500, "Unable to reach server", res);
+    if ((err.errno = 19)) {
+      errorMaker(400, "A user with that name already exists", res);
+    } else {
+      errorMaker(500, "Unable to reach server", res);
+    }
   }
-
-  // users
-  //   .get(id)
-  //   .then(user => {
-  //     if (!user) {
-  //       res.status(404).json({ errorMessage: "A user with that ID does not exist" });
-  //     } else {
-  //       users.update(id, updated).then(response => res.json(response));
-  //     }
-  //   })
-  //   .catch(err => errorMaker(500, "Unable to reach server", res));
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", async (req, res) => {
   const { id } = req.params;
 
-  users
-    .get(id)
-    .then(user => {
-      if (!user) {
-        return res.status(404).json({ errorMessage: "A user with that ID does not exist" });
-      } else {
-        users.remove(id).then(response => res.json(response));
-      }
-    })
-    .catch(err => errorMaker(500, "Unable to reach server", res));
-});
-
-router.get("/posts/:userId", (req, res) => {
-  const { userId } = req.params;
-  users
-    .get(userId)
-    .then(user => {
-      if (!user) {
-        return errorMaker(404, "A user with that ID does not exist", res);
-      } else {
-        users.getUserPosts(userId).then(response => {
-          // if (response.length === 0) {
-          //   return res.send("This user has no posts");
-          // }
-          res.json(response);
-        });
-      }
-    })
-    .catch(err => errorMaker(500, "Unable to reach server", res));
+  try {
+    const user = await users.get(id);
+    if (!user) {
+      errorMaker(404, "A user with that ID does not exist", res);
+    } else {
+      const numberDeleted = await users.remove(id);
+      res.status(200).json(numberDeleted);
+    }
+  } catch (err) {
+    errorMaker(500, "Unable to reach server", res);
+  }
 });
 
 module.exports = router;

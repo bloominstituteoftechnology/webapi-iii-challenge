@@ -1,110 +1,98 @@
 const express = require("express");
 const router = express.Router();
 
-const users = require("../data/helpers/postDb");
+const posts = require(".././data/helpers/postDb");
+const users = require(".././data/helpers/userDb");
 
 const errorMaker = (code, message, res) => {
   res.status(code).json({ error: message });
 };
 
-router.get("/", (req, res) => {
-  posts
-    .get()
-    .then(posts => res.status(200).json(posts))
-    .catch(err => errorMaker(500, "Unable to reach server", res));
-});
-
-router.get("/:id", (req, res) => {
+router.get("/:id", async (req, res) => {
   const { id } = req.params;
-  posts
-    .get(id)
-    .then(response => {
-      if (response) {
-        res.status(200).json(response);
-      } else {
-        return errorMaker(404, "There is no post with that id", res);
-      }
-    })
-    .catch(err => errorMaker(500, "Unable to reach server", res));
-});
 
-router.post("/", (req, res) => {
-  const newPost = req.body;
-
-  if (newPost.userId) {
-    users
-      .get(newPost.userId)
-      .then(response => {
-        if (response) {
-          posts.insert(newPost).then(response => res.status(201).json(newPost));
-        } else {
-          return errorMaker(404, "A user with that id does not exist", res);
-        }
-      })
-      .catch(err => errorMaker(500, "Unable to reach server", res));
-  } else {
-    posts
-      .insert(newPost)
-      .then(response => {
-        res.status(201).json(newPost);
-      })
-      .catch(err => errorMaker(500, "Unable to reach server", res));
+  try {
+    const post = await posts.get(id);
+    return !post
+      ? errorMaker(404, "A post with that id does not exist", res)
+      : res.status(302).json(post);
+  } catch (err) {
+    errorMaker(500, "The server could not be reached", res);
   }
 });
 
-router.put("/:id", (req, res) => {
+router.get("/", async (req, res) => {
+  try {
+    const postList = await posts.get();
+    res.status(302).json(postList);
+  } catch (err) {
+    errorMaker(500, "Unable to reach server", res);
+  }
+});
+
+router.post("/", async (req, res) => {
+  const newPost = req.body;
+
+  if (!newPost.userId || !newPost.text) {
+    errorMaker(400, "Please include both a userId and text", res);
+  } else {
+    try {
+      const user = await users.get(newPost.userId);
+      if (!user) {
+        return errorMaker(404, "A user with that id does not exist", res);
+      }
+      const post = await posts.insert(newPost);
+      return post
+        ? res.status(201).json(post)
+        : errorMaker(404, "A user with that id does not exist", res);
+    } catch (err) {
+      errorMaker(500, "Unable to reach server", res);
+    }
+  }
+});
+
+router.put("/:id", async (req, res) => {
   const updated = req.body;
   const { id } = req.params;
 
-  if (updated.userId) {
-    users
-      .get(updated.userId)
-      .then(response => {
-        if (response) {
-          posts.get(id).then(post => {
-            if (post) {
-              posts.update(id, updated).then(response => res.status(200).json(updated));
-            } else {
-              return errorMaker(404, "A post with that ID does not exist", res);
-            }
-          });
-        } else {
-          return errorMaker(404, "A user with that ID does not exist", res);
-        }
-      })
-      .catch(err => errorMaker(500, "Unable to reach server", res));
+  if (!updated.userId || !updated.text) {
+    errorMaker(400, "Please include both a userId and text", res);
   } else {
-    posts
-      .get(id)
-      .then(post => {
-        if (post) {
-          posts.update(id, updated).then(response => {
-            res.status(200).json(updated);
-          });
-        } else {
-          return errorMaker(404, "A post with that ID does not exist", res);
-        }
-      })
-      .catch(err => errorMaker(500, "Unable to reach server", res));
+    try {
+      const user = await users.get(updated.userId);
+      const success = await posts.update(id, updated);
+
+      if (!user && !success) {
+        return errorMaker(404, "Neither the userId nor the postId exist", res);
+      }
+
+      if (!user) {
+        return errorMaker(404, "A user with that id does not exist", res);
+      }
+
+      return success
+        ? res.status(202).json(updated)
+        : errorMaker(404, "A post with that id does not exist", res);
+    } catch (err) {
+      errorMaker(500, "Unable to reach server", res);
+    }
   }
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", async (req, res) => {
   const { id } = req.params;
 
-  posts
-    .get(id)
-    .then(response => {
-      posts
-        .remove(id)
-        .then(info => res.status(200).json({ recordsDeleted: info }))
-        .catch(err => {
-          return res
-            .status(404)
-            .json({ errorMessage: "The post with the specified ID does not exist." });
-        });
-    })
-    .catch(err => errorMaker(500, "Unable to reach server", res));
+  try {
+    const post = await posts.get(id);
+    const success = await posts.remove(id);
+    if (success) {
+      res.status(200).json(post);
+    } else {
+      errorMaker(404, "A post with that id does not exist", res);
+    }
+  } catch (err) {
+    errorMaker(500, "Unable to reach server", res);
+  }
 });
 
 module.exports = router;
