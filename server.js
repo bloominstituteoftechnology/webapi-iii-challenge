@@ -75,4 +75,25 @@ server.post('/api/users', async (req, res) => {
     }
 });
 
+// delete user
+server.delete('/api/users/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const removedUser = await userDb.get(id);
+        const removedCount = await userDb.remove(id);
+        if (removedCount === 1) {
+            res.status(200).json(removedUser);
+        } else {
+            res.status(404).json({
+                message: 'User not found.'
+            });
+        }
+    } catch (err) {
+        res.status(500).json({
+            message: 'There was an error while deleting this user.',
+            error: err
+        });
+    }
+});
+
 module.exports = server; 
