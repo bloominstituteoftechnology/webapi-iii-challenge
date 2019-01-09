@@ -53,4 +53,22 @@ server.post("/api/users", upperCase, async (req, res) => {
       .json({ message: "There was an error saving user to the database" });
   }
 });
+
+server.delete("/api/users/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await userDb.get(id);
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+    } else {
+      await userDb.remove(user.id);
+      res.json(user);
+    }
+  } catch (err) {
+    res.status(500).json({
+      message: "There was an error trying to delete the user from the database."
+    });
+  }
+});
+
 module.exports = server;
