@@ -1,6 +1,5 @@
 // import modules
-// const bodyParser = require('body-parser');
-const cors = require('cors');
+// const cors = require('cors'); // for react app use later
 const express = require('express');
 const helmet = require('helmet');
 const morgan = require('morgan');
@@ -11,12 +10,8 @@ const userDb = require('./data/helpers/userDb.js');
 // init server
 const server = express();
 
-// body-parser deprecated?
-server.use(express.json());
-
 // apply middleware
-// server.use(bodyParser());
-server.use(cors());
+server.use(express.json());
 server.use(helmet());
 server.use(morgan('short'));
 
