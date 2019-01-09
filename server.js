@@ -15,7 +15,7 @@ server.use(express.json());
 server.use(helmet());
 server.use(morgan('short'));
 
-// get users
+// fetch users
 server.get('/api/users', async (req, res) => {
     try {
         const users = await userDb.get();
@@ -28,7 +28,7 @@ server.get('/api/users', async (req, res) => {
     }
 });
 
-// get user by ID
+// fetch user by ID
 server.get('/api/users/:id', async (req, res) => {
     const { id } = req.params;
     try {
@@ -43,6 +43,33 @@ server.get('/api/users/:id', async (req, res) => {
     } catch(err) {
         res.status(500).json({
             message: 'There was an error while retrieving the user.',
+            error: err
+        });
+    }
+});
+
+// add new user
+server.post('/api/users', async (req, res) => {
+    const name = req.body;
+
+    function upperCase(name) {
+        return name.charAt(0).toUpperCase() + name.slice(1);
+    }
+
+    if (!name || name.length > 128) {
+        res.status(400).json({
+            message: 'Invalid username'
+        });
+    } else {
+        name.name = upperCase(name.name);
+    }
+    try {
+        const id = await userDb.insert(name);
+        const user = await userDb.get(id.id);
+        res.status(201).json(user);
+    } catch (err) {
+        res.status(500).json({
+            message: 'There was an error while creating new user.',
             error: err
         });
     }
