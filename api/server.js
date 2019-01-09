@@ -25,7 +25,7 @@ function upperCase(req, res, next) {
       item => item[0].toUpperCase() + item.slice(1).toLowerCase()
     );
     const joined = upperCased.join(" ");
-    res.send(joined);
+    req.body.name = joined;
   } else {
     res.status(400).json({ message: "Please include user name" });
   }
@@ -44,9 +44,10 @@ server.get("/api/users", async (req, res) => {
 
 server.post("/api/users", upperCase, async (req, res) => {
   const user = req.body;
+
   try {
     const result = await userDb.insert(user);
-    res.status(201).json({ messege: `User ${user} has been created!` });
+    res.status(201).json({ message: `User has been created!` });
   } catch (err) {
     res
       .status(500)
@@ -67,6 +68,24 @@ server.delete("/api/users/:id", async (req, res) => {
   } catch (err) {
     res.status(500).json({
       message: "There was an error trying to delete the user from the database."
+    });
+  }
+});
+
+server.put("/api/users/:id", upperCase, async (req, res) => {
+  const { id } = req.params;
+  const updatedUser = req.body;
+  try {
+    const user = await userDb.get(id);
+    if (!user) {
+      res.status(404).json({ message: "User was not found" });
+    } else {
+      await userDb.update(id, updatedUser);
+      res.json({ message: `${updatedUser} has been updated` });
+    }
+  } catch (err) {
+    res.status(500).json({
+      message: "The user information cannot be modified."
     });
   }
 });
