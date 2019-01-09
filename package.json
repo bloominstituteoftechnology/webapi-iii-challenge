@@ -5,7 +5,7 @@
   "main": "knexfile.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js"
+    "start": "nodemon index.js"
   },
   "repository": {
     "type": "git",
@@ -19,8 +19,11 @@
   },
   "homepage": "https://github.com/tommaay/Node-Blog#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.16.4",
+    "helmet": "^3.15.0",
     "knex": "^0.16.3",
+    "morgan": "^1.9.1",
     "sqlite3": "^4.0.4"
   },
   "devDependencies": {
