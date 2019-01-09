@@ -13,6 +13,7 @@ const tagDb = require("../data/helpers/tagDb");
 // middleware - global
 server.use(express.json());
 server.use(morgan("short"));
+server.use(helmet());
 server.use(cors());
 
 function upperCase(req, res, next) {
