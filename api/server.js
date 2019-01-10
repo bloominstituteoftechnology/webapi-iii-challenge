@@ -47,11 +47,27 @@ server.get("/users/:id", async (req, res) => {
   const { id } = req.params;
   try {
     const user = await userDb.get(id);
-    console.log("bt3", user);
     if (!user) {
       res.status(404).json({ message: "The User was not found" });
     } else {
       res.json(user);
+    }
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "There was an error trying to find the user." });
+  }
+});
+
+server.get("/users/:id/posts", async (req, res) => {
+  const { id } = req.params;
+  const user = await userDb.get(id);
+  const userPosts = await userDb.getUserPosts(id);
+  try {
+    if (!user) {
+      res.status(404).json({ message: "The User was not found" });
+    } else {
+      res.json(userPosts);
     }
   } catch (err) {
     res
