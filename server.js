@@ -3,6 +3,8 @@ const morgan = require('morgan');
 const helmet = require('helmet');
 const cors = require('cors');
 const usersdb = require('./data/helpers/userDb.js');
+const postDB = require('./data/helpers/postDb');
+const userDB = require('./data/helpers/userDb');
 
 const server = express();
 
@@ -76,6 +78,19 @@ server.get('/api/users', (req, res) => {
       .catch(err => res.status(500).json({ error: err }));
   });
   
+// post a post
+server.post('/api/posts', (req, res) => {
+    const postInfo = req.body;
+    userDB
+      .insert (postInfo)
+      .then (result => {
+        res.status (201).json (result);
+      })
+      .catch (err =>
+        res.status (500).json ({errorMessage: 'please provide post info'})
+      );
+  });
+
   server.post('/api/users', validateUserName, (req, res) => {
     const { name } = req.body;
     const newUser = { name };
@@ -124,8 +139,58 @@ server.get('/api/users', (req, res) => {
       })
       .catch(err => res.status(500).json({ error: err }));
   });
-  
 
+  server.delete ('/api/posts/:id', (req, res) => {
+    const id = req.params.id;
+    postDB
+      .remove (id)
+      .then (posts => {
+        res.json (posts);
+      })
+      .catch (err => {
+        res.status (500).json ({error: 'the post could not be retrieved'});
+      });
+  });
+  
+  server.delete ('/api/users/:id', (req, res) => {
+    const id = req.params.id;
+    userDB
+      .remove (id)
+      .then (users => {
+        res.json (users);
+      })
+      .catch (err => {
+        res.status (500).json ({error: 'the user could not be retrieved'});
+      });
+  });
+  
+// get tags
+
+server.get ('/api/tags/:id', (req, res) => {
+    const id = req.params.id
+  postDB
+    .getPostTags (id)
+    .then (tags => {
+      res.json ( {tags} );
+    })
+    .catch (err => {
+      res.status (500).json ({error: 'the tags could not be retrieved'});
+    });
+});
+
+// get user posts
+server.get('/api/users/posts/:id', (req, res) => {
+    const id = req.params.id;
+
+    userDB
+        .getUserPosts(id)
+        .then(tags => {
+            res.json({ tags });
+        })
+        .catch(err => {
+            res.status(500).json({ error: 'the tags could not be retrieved' });
+        });
+});
 // export(s)
 
 module.exports = server;
