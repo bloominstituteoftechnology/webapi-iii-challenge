@@ -1,19 +1,14 @@
-// import modules
-// const cors = require('cors'); // for react app use later
 const express = require('express');
-const helmet = require('helmet');
-const morgan = require('morgan');
+const configureMiddleware = require('./config/middleware.js');
 
-// import helpers
+// import DB helpers
 const userDb = require('./data/helpers/userDb.js');
+const postDb = require('./data/helpers/postDb.js');
 
-// init server
 const server = express();
 
 // apply middleware
-server.use(express.json());
-server.use(helmet());
-server.use(morgan('short'));
+configureMiddleware(server);
 
 // uppercase first letter of name
 function upperCase(name) {
@@ -21,7 +16,7 @@ function upperCase(name) {
 }
 
 // fetch users
-server.get('/api/users', async (req, res) => {
+server.get('/api/users', async ({ res }) => {
     try {
         const users = await userDb.get();
         res.status(200).json(users);
@@ -56,19 +51,19 @@ server.get('/api/users/:id', async (req, res) => {
 
 // add new user
 server.post('/api/users', async (req, res) => {
-    const name = req.body;
+    const { body } = req;
 
-    if (!name || name.length > 128) {
+    if (!body.name || body.name.length > 128) {
         res.status(400).json({
             message: 'Invalid username'
         });
     } else {
-        name.name = upperCase(name.name);
+        body.name = upperCase(body.name);
     }
 
     try {
-        const id = await userDb.insert(name);
-        const user = await userDb.get(id.id);
+        const { id } = await userDb.insert(body);
+        const user = await userDb.get(id);
         res.status(201).json(user);
     } catch (err) {
         res.status(500).json({
@@ -126,6 +121,31 @@ server.put('/api/users/:id', async (req, res) => {
     } catch (err) {
         res.status(500).json({
             message: 'There was an error updating this user.',
+            error: err
+        });
+    }
+});
+
+// fetch user posts by user ID
+server.get('/api/user/:id/posts', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const posts = await userDb.getUserPosts(id);
+        res.status(200).json(posts);
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+// fetch all posts
+server.get('/api/posts', async (req, res) => {
+    try {
+        const posts = await postDb.get();
+        res.status(200).json(posts);
+    } catch (err) {
+        res.status(500).json({
+            message: 'There was an error retrieving the posts.',
             error: err
         });
     }
