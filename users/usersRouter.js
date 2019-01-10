@@ -54,6 +54,16 @@ router.get('/:id', (req, res) => {
     })
 });
 
+router.get('/:id/posts', checkUser, (req,res) => {
+    userDb.getUserPosts(req.params.id)
+        .then(posts => {
+            res.status(200).json(posts)
+        })
+        .catch(err => {
+            res.status(500).json({message: `error retrieving posts of user ${req.params.id}`})
+        })
+})
+
 router.post('/', upperCheck, (req, res) => {
     userDb.insert(req.body)
         .then(result => {
