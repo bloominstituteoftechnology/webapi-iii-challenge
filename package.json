@@ -1,0 +1,27 @@
+{
+  "name": "Node-Blog",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error no test specified\" && exit 1",
+    "server": "nodemon index.js",
+    "start": "nodemon index.js"
+  },
+  "keywords": [],
+  "repository": "https://github.com/jm020801/Node-Blog.git",
+  "author": "jm020801 <jm020801@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "nodemon": "^1.18.9"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "helmet": "^3.15.0",
+    "knex": "^0.16.3",
+    "morgan": "^1.9.1",
+    "server": "^1.0.18",
+    "sqlite3": "^4.0.4"
+  }
+}
