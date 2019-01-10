@@ -10,8 +10,11 @@ const server = express();
 
 //middleware
 function upper(req, res, next) {
-    const user = req.body;
-    user.name = user.name.toUpperCase()
+    const user = req.body.name;
+    req.body.name = user.toLowerCase()
+    .split(' ')
+    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+    .join(' ');
     next();
 }
 
@@ -31,7 +34,7 @@ server.get('/users', (req, res) => {
     })
 })
 
-server.get('/users/:id', (req, res) => {
+server.get('/posts/:id', (req, res) => {
     const id = req.params.id;
     dbu.getUserPosts(id)
     .then(usersPosts => {
