@@ -1,3 +1,4 @@
+
 const express = require('express');
 const configureMiddleware = require('./config/middleware.js');
 
@@ -151,4 +152,18 @@ server.get('/api/posts', async (req, res) => {
     }
 });
 
-module.exports = server; 
+// create new post
+server.post('/api/posts', async (req, res) => {
+    try {
+        console.log(req);
+        const newPost = await postDb.insert(req.body);
+        res.status(201).json(newPost);
+    } catch (err) {
+        res.status(500).json({
+            message: 'There was an error creating this post.',
+            error: err
+        });
+    }
+});
+
+module.exports = server;

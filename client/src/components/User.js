@@ -25,6 +25,7 @@ export default class extends Component {
             <Fragment>
                 <h3>{this.state.user.name}</h3>
                 <p onClick={() => {this.props.history.push(`/user/${this.state.user.id}/posts`)}}>view posts</p>
+                <p onClick={() => {this.props.history.push(`/user/${this.state.user.id}/posts/new`)}}>create post</p>
             </Fragment>
         );
     }
