@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from "styled-components";
 import UserInput from './userInput';
+import UserQuotes from './userQuotes';
 
 class User extends React.Component {
     state = {
@@ -22,6 +23,7 @@ class User extends React.Component {
                 <button onClick={this.toggleUpdate}>Update User</button>
                 </UserDiv>
             }
+            <UserQuotes user={this.props.user} />
             </>
             
         )
