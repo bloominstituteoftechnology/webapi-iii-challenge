@@ -34,7 +34,7 @@ function upperCase(req, res, next) {
 
 // routes - users
 
-server.get("/api/users", async (req, res) => {
+server.get("/users", async (req, res) => {
   try {
     const userList = await userDb.get();
     res.json(userList);
@@ -43,7 +43,7 @@ server.get("/api/users", async (req, res) => {
   }
 });
 
-server.get("/api/users/:id", async (req, res) => {
+server.get("/users/:id", async (req, res) => {
   const { id } = req.params;
   try {
     const user = await userDb.get(id);
@@ -56,11 +56,11 @@ server.get("/api/users/:id", async (req, res) => {
   } catch (err) {
     res
       .status(500)
-      .json({ message: "There was an error trying to find the user." });        
+      .json({ message: "There was an error trying to find the user." });
   }
 });
 
-server.post("/api/users", upperCase, async (req, res) => {
+server.post("/users", upperCase, async (req, res) => {
   const user = req.body;
 
   try {
@@ -73,7 +73,7 @@ server.post("/api/users", upperCase, async (req, res) => {
   }
 });
 
-server.delete("/api/users/:id", async (req, res) => {
+server.delete("/users/:id", async (req, res) => {
   const { id } = req.params;
   try {
     const user = await userDb.get(id);
@@ -82,7 +82,7 @@ server.delete("/api/users/:id", async (req, res) => {
     } else {
       await userDb.remove(user.id);
       res.json(user);
-    }      
+    }
   } catch (err) {
     res.status(500).json({
       message: "There was an error trying to delete the user from the database."
@@ -90,7 +90,7 @@ server.delete("/api/users/:id", async (req, res) => {
   }
 });
 
-server.put("/api/users/:id", upperCase, async (req, res) => {
+server.put("/users/:id", upperCase, async (req, res) => {
   const { id } = req.params;
   const updatedUser = req.body;
   try {
@@ -109,7 +109,7 @@ server.put("/api/users/:id", upperCase, async (req, res) => {
 });
 
 // routes - posts
-server.get("/api/posts", async (req, res) => {
+server.get("/posts", async (req, res) => {
   try {
     const posts = await postDb.get();
     res.json(posts);
@@ -119,7 +119,7 @@ server.get("/api/posts", async (req, res) => {
       .json({ message: "The posts cannot be retrieved from the database." });
   }
 });
-server.get("/api/posts/:id", async (req, res) => {
+server.get("/posts/:id", async (req, res) => {
   const { id } = req.params;
   try {
     const post = await postDb.get(id);
@@ -136,7 +136,7 @@ server.get("/api/posts/:id", async (req, res) => {
   }
 });
 
-server.post("/api/addpost/:userId", async (req, res) => {
+server.post("/addpost/:userId", async (req, res) => {
   const { userId } = req.params;
   const post = req.body;
 
@@ -153,7 +153,7 @@ server.post("/api/addpost/:userId", async (req, res) => {
   }
 });
 
-server.delete("/api/posts/:id", async (req, res) => {
+server.delete("/posts/:id", async (req, res) => {
   const { id } = req.params;
   try {
     const post = await postDb.get(id);
@@ -169,12 +169,12 @@ server.delete("/api/posts/:id", async (req, res) => {
   }
 });
 
-server.put("/api/posts/:postId", async (req, res) => {
-  const { postId } = req.params;
+server.put("/posts/:id", async (req, res) => {
+  const { id } = req.params;
   const post = req.body;
 
   try {
-    const updatedPost = await postDb.update(postId, post);
+    const updatedPost = await postDb.update(id, post);
     if (!updatedPost) {
       res
         .status(404)

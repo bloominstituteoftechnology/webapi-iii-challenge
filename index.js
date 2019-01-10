@@ -1,3 +1,4 @@
 const server = require("./api/server.js");
 
-server.listen(5001, console.log("Server running on Port: 5001"));
+const port = process.env.PORT || 5000
+server.listen(5000, console.log("Server Running"));
