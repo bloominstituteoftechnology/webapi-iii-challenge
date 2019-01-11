@@ -29,7 +29,8 @@ export default class UserPosts extends Component {
                 {(this.state.posts.length) && (<p>posted by: {this.state.posts[0].postedBy}</p>)}
                 {this.state.posts.map(post => (
                     <Fragment key={post.id}>
-                        <p onClick={() => this.props.history.push(`/post/${post.id}`)}>{post.text}</p><p onClick={this.deletePost}>delete</p>
+                        <p onClick={() => this.props.history.push(`/post/${post.id}`)}>{post.text}</p>
+                        <p onClick={this.deletePost}>delete</p>
                     </Fragment>
                 ))}
             </Fragment>

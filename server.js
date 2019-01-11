@@ -171,7 +171,13 @@ server.post('/api/posts', async (req, res) => {
     try {
         console.log(req.body);
         const newPostCount = await postDb.insert(req.body);
-        res.status(201).json(newPostCount);
+        if (newPostCount === 1) {
+            res.status(201).json(newPostCount);
+        } else {
+            res.status(404).json({
+                message: 'Sorry, we couldn\'t find that user.'
+            })
+        }
     } catch (err) {
         res.status(500).json({
             message: 'There was an error creating this post.',
@@ -181,11 +187,25 @@ server.post('/api/posts', async (req, res) => {
 });
 
 // edit post
-// server.put('/api/posts/', async (req, res) => {
-//     const { body } = req;
-//     try {
-//         const editedCount = await postDb.update()
-//     }
-// });
+server.put('/api/posts/:id', async (req, res) => {
+    const { id } = req.params;
+    const { body } = req;
+
+    try {
+        const editedCount = await postDb.update(id, body);
+        if (editedCount === 1) {
+            res.status(201).json(editedCount);
+        } else {
+            res.status(404).json({
+                message: 'Sorry, we couldn\'t find this post.'
+            });
+        }
+    } catch (err) {
+        res.status(500).json({
+            message: 'There was an error while updating this post.',
+            error: err
+        });
+    }
+});
 
 module.exports = server;
