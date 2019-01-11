@@ -24,16 +24,11 @@ export default class Post extends Component {
             <Fragment>
                 <p>posted by: {this.state.post.postedBy}</p>
                 <p>{this.state.post.text}</p>
-                {/* formats tags to string list */}
-                <p>{(this.state.post.tags) && this.state.post.tags.map((tag, index, tagsArray) => {
-                    if (index === 0) {
-                        return `tags: #${tag}`;
-                    } else if (index === tagsArray.length - 1) {
-                        return `#${tag}`;
-                    } else {
-                        return `#${tag}, `;
-                    }
-                })}</p>
+                {(this.state.post.tags) &&
+                    this.state.post.tags.map((tag, index) => (
+                        <p key={index}>#{tag}</p>
+                    ))
+                }
             </Fragment>
         );
     }
