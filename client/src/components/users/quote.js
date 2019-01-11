@@ -1,11 +1,17 @@
 import React from 'react';
 import axios from 'axios';
-import styled from 'styled-components';
 
 class Quote extends React.Component {
     state = {
         toUpdate: false,
         text: this.props.quote.text
+    }
+
+    componentDidUpdate() {
+        if(this.props.deselect){
+            this.setState({toUpdate: false});
+            this.props.toggleDeselect();
+        }
     }
 
     handleChange = (ev) => {
@@ -14,8 +20,13 @@ class Quote extends React.Component {
         })
     }
 
-    toggleUpdate = () => {
+    toggleUpdate = (ev) => {
         this.setState({toUpdate: !this.state.toUpdate});
+    }
+
+    stageUpdate = (ev) => {
+        ev.stopPropagation();
+        this.setState({toUpdate: true})
     }
     
     editQuote = (ev) => {
@@ -39,13 +50,17 @@ class Quote extends React.Component {
             })
     }
 
+    stopProp = (ev) => {
+        ev.stopPropagation();
+    }
+
     render() {
         return (
-            <li onClick={this.state.toUpdate? null : this.toggleUpdate}>
+            <li onClick={this.state.toUpdate? this.stopProp : this.stageUpdate}>
                 {this.state.toUpdate? 
                 <form onSubmit={this.editQuote}>
                     <input value={this.state.text} name='text' onChange={this.handleChange} />
-                    <button type='submit'>Update</button>
+                    <button type='submit'>Edit Quote</button>
                     <button onClick={this.toggleUpdate}>Cancel Update</button>
                     <button onClick={this.deleteQuote}>DELETE QUOTE</button>
                     

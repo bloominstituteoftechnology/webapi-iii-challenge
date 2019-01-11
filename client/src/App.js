@@ -7,7 +7,8 @@ import styled from 'styled-components';
 
 class App extends Component {
   state = {
-    users: []
+    users: [],
+    deselect: false
   }
 
   componentDidMount() {
@@ -22,15 +23,21 @@ class App extends Component {
       .catch(err => console.log(err));
   }
 
+  toggleDeselect = () => {
+    this.setState({deselect: !this.state.deselect});
+  }
   render() {
     return (
+      <body onClick={()=>this.toggleDeselect()}>
+
       <UserHolder className="App">
       <h1>Users of the Rings</h1>
       {this.state.users.map(user => (
-        <User getUsers={this.getUsers} user={user} />
-      ))}
+        <User getUsers={this.getUsers} user={user} deselect={this.state.deselect} toggleDeselect={this.toggleDeselect} />
+        ))}
       <UserInput getUsers={this.getUsers} />
       </UserHolder>
+        </body>
     );
   }
 }

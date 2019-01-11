@@ -43,7 +43,7 @@ class UserQuotes extends React.Component {
     render() {
         return (
             <QuoteHolder>
-                {this.state.quotes.map(quote => (<Quote quote={quote} user={this.props.user} getQuotes={this.getQuotes}/>))}
+                {this.state.quotes.map(quote => (<Quote quote={quote} user={this.props.user} getQuotes={this.getQuotes} deselect={this.props.deselect} toggleDeselect={this.props.toggleDeselect}/>))}
                 <li>
 
                 <form onSubmit={this.addQuote}>

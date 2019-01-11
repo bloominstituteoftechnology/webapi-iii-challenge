@@ -30,7 +30,9 @@ class UserInput extends React.Component {
     }
 
     updateUser = (ev) => {
+        ev.stopPropagation();
         ev.preventDefault();
+
         axios.put(`http://localhost:5000/users/${this.props.user.id}`, this.state)
             .then(res => this.props.getUsers())
             .catch(err => console.log(err));
@@ -46,10 +48,14 @@ class UserInput extends React.Component {
             .catch(err => console.log(err));
     }
 
+    stopProp = (ev) => {
+        ev.stopPropagation();
+    }
+
     render() {
         return(
-            <StyledInput onSubmit={this.props.forUpdate ? this.updateUser : this.addUser} forUpdate={this.props.forUpdate}>
-                <input name="name" value={this.state.name} onChange={this.handleChange} placeholder="username" />
+            <StyledInput onSubmit={this.props.forUpdate ? this.updateUser : this.addUser} onClick={this.stopProp}>
+                <input onClick={this.stopProp} name="name" value={this.state.name} onChange={this.handleChange} placeholder="username" />
                 <button type='submit'>{this.props.forUpdate ? 'Update User' : 'Create User'}</button>
                 {this.props.forUpdate ? <button className='deleteBtn' onClick={this.deleteUser}>Delete User</button> : null}
             </StyledInput>

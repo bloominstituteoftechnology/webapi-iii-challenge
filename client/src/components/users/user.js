@@ -8,6 +8,18 @@ class User extends React.Component {
         toUpdate: false
     }
 
+    componentDidUpdate() {
+        if(this.props.deselect){
+            this.setState({toUpdate: false});
+            this.props.toggleDeselect();
+        }
+    }
+
+    stageUpdate = (ev) => {
+        ev.stopPropagation();
+        this.setState({toUpdate: true});
+    }
+
     toggleUpdate = () => {
         this.setState({toUpdate: !this.state.toUpdate})
     }
@@ -20,10 +32,10 @@ class User extends React.Component {
                 : 
                 <UserDiv>
                 <h3>{this.props.user.name}</h3>
-                <button onClick={this.toggleUpdate}>Update User</button>
+                <button onClick={this.stageUpdate}>Update User</button>
                 </UserDiv>
             }
-            <UserQuotes user={this.props.user} />
+            <UserQuotes user={this.props.user} deselect={this.props.deselect} toggleDeselect={this.props.toggleDeselect} />
             </>
             
         )
