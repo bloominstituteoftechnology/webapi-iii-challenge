@@ -30,7 +30,7 @@ router.get('/:id', (req, res) => {
     .catch(err => res.status(500).json({ error: err }));
 });
 
-// /api/users/:id
+// /api/users/:id/posts
 router.get('/:id/posts', (req, res) => {
   const id = req.params.id;
 
