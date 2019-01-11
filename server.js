@@ -1,4 +1,3 @@
-
 const express = require('express');
 const configureMiddleware = require('./config/middleware.js');
 
@@ -152,12 +151,27 @@ server.get('/api/posts', async (req, res) => {
     }
 });
 
+// fetch post by post ID
+server.get('/api/posts/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const post = await postDb.get(id);
+        res.status(200).json(post);
+    } catch (err) {
+        res.status(500).json({
+            message: 'There was an error while retrieving your post.',
+            error: err
+        });
+    }
+});
+
 // create new post
 server.post('/api/posts', async (req, res) => {
     try {
-        console.log(req);
-        const newPost = await postDb.insert(req.body);
-        res.status(201).json(newPost);
+        console.log(req.body);
+        const newPostCount = await postDb.insert(req.body);
+        res.status(201).json(newPostCount);
     } catch (err) {
         res.status(500).json({
             message: 'There was an error creating this post.',
@@ -165,5 +179,13 @@ server.post('/api/posts', async (req, res) => {
         });
     }
 });
+
+// edit post
+// server.put('/api/posts/', async (req, res) => {
+//     const { body } = req;
+//     try {
+//         const editedCount = await postDb.update()
+//     }
+// });
 
 module.exports = server;

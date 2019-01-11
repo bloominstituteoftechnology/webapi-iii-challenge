@@ -19,13 +19,17 @@ export default class UserPosts extends Component {
             .catch(err => console.log(err));
     }
 
+    deletePost = () => {
+        console.log('will delete soon');
+    }
+
     render() {
         return (
             <Fragment>
                 {(this.state.posts.length) && (<p>posted by: {this.state.posts[0].postedBy}</p>)}
                 {this.state.posts.map(post => (
                     <Fragment key={post.id}>
-                        <p>{post.text}</p>
+                        <p onClick={() => this.props.history.push(`/post/${post.id}`)}>{post.text}</p><p onClick={this.deletePost}>delete</p>
                     </Fragment>
                 ))}
             </Fragment>

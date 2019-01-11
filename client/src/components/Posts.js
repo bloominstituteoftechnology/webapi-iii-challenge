@@ -19,12 +19,16 @@ export default class Posts extends Component {
             .catch(console.log);
     }
 
+    deletePost = () => {
+        axios.get()
+    }
+
     render() {
         return (
             <Fragment>
                 {this.state.posts.map(post => (
-                    <Fragment key={post.id}>
-                        <p>{post.text}</p>
+                    <Fragment onClick={() => {this.props.history.push(`/post/${post.id}/edit`)}} key={post.id}>
+                        <p>{post.text}</p><p onClick={() => this.deletePost}>delete</p>
                     </Fragment>
                 ))}
             </Fragment>
