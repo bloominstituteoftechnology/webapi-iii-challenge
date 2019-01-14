@@ -53,4 +53,20 @@ server.post(`${url}:id`, async(req, res) => {
     }
 });
 
+server.put(`${url}:id`, async(req, res) => {
+    const { id } = req.params;
+    const data = req.body;
+    const { name } = req.body;
+    try{
+        const results = await users.update(id, data)
+        if(!name) {
+            res.status(404).json(`{error: 'please enter name for this user'}`)
+        } else {
+            res.status(200).json(results)
+        }
+    }catch(err){
+        res.status(500).json(`{error: something went wrong}`);
+    }
+});
+
 module.exports = server
