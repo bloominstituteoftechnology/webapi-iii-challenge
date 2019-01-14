@@ -69,4 +69,19 @@ server.put(`${url}:id`, async(req, res) => {
     }
 });
 
+server.delete(`${url}:id`, async(req, res) => {
+    const { id } = req.params;
+    users.get(id);
+    try{
+        const userData = await users.remove(req.params.id)
+        if(userData) {
+            res.status(204).json(userData)
+        } else {
+            res.status(404).json(`{error: 'The user with this ID does not exist'}`)
+        }
+    }catch(err){
+        res.status(500).json(err)
+    }
+});
+
 module.exports = server
