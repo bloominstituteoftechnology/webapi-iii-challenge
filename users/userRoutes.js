@@ -68,15 +68,35 @@ router.get('/', async (req, res) => {
 });
 
 // R1 - ReadOne
-router.get('/:userId', (req, res) => {
+router.get('/:userId', async (req, res) => {
     const id = req.params.userId;
 
-    res
-        .status(200)
-        .json({
-            url: `/users/${id}`,
-            operation: `GET to User with id ${id}`
-        });
+    try {
+        let users = await db.get();
+        let user = null;
+        users.map(u => {
+            if (u.id == id) {
+                user = u
+            }
+        })
+
+        user ?
+            res
+                .status(200)
+                .json(user)
+            :
+            res
+                .status(404)
+                .json({
+                    errorMessage: 'No user was found with that ID'
+                });
+    } catch (err) {
+        res
+            .status(500)
+            .json({
+                errorMessage: 'Houston, we have a problem'
+            });
+    }
 });
 
 // U - Update
