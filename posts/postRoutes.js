@@ -3,18 +3,61 @@ const express = require('express');
 const router = express.Router();
 
 const db = require('../data/helpers/postDb');
+const userDb = require('../data/helpers/userDb');
 
 router.use(express.json());
 
 
 // C - Create
-router.post('/', (req, res) => {
-    res
-        .status(200)
-        .json({
-            url: '/posts',
-            operation: 'POST'
-        });
+router.post('/:userId/post', async (req, res) => {
+    const userId = req.params.userId;
+    let user = null;
+    let users = await userDb.get();
+
+    const newNote = req.body;
+
+    users.map(u => {
+        if (u.id == userId) {
+            user = u;
+            newNote.userId = userId;
+        }
+    });
+
+    try {
+        if (!user) {
+            res
+                .status(404)
+                .json({
+                    errorMessage: 'The new note must be attached to an existing user'
+                });
+        } else if (!newNote.text || newNote.text === '') {
+            res
+                .status(400)
+                .json({
+                    errorMessage: 'The new note needs to have some type of text'
+                });
+        } else {
+            let response = await db.insert(newNote);
+            newNote.id = response.id;
+
+            response ?
+                res
+                    .status(201)
+                    .json(newNote)
+                :
+                res
+                    .status(500)
+                    .json({
+                        errorMessage: 'An error occurred while attempting to save the post'
+                    });
+        }
+    } catch (err) {
+        res
+            .status(500)
+            .json({
+                errorMessage: 'Houston we have a problem'
+            });
+    }
 });
 
 // Ra - ReadAll
