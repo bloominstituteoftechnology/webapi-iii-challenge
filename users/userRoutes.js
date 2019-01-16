@@ -39,12 +39,32 @@ router.post('/', async (req, res) => {
 
 // Ra - ReadAll
 router.get('/', async (req, res) => {
-    res
-        .status(200)
-        .json({
-            url: '/users',
-            operation: 'GET'
-        });
+    try {
+        const users = await db.get();
+        const sortBy = req.query.sortby || 'id';
+
+        if (users.length === 0) {
+            res
+                .status(404)
+                .json({
+                    errorMessage: 'No posts found at this time. Please try again later'
+                });
+        } else {
+            sortedUsers = users.sort(
+                (a, b) => (a[sortBy] < b[sortBy] ? -1 : 1)
+            )
+
+            res
+                .status(200)
+                .json(sortedUsers);
+        }
+    } catch (err) {
+        res
+            .status(500)
+            .json({
+                errorMessage: 'Houston, we have a problem.'
+            });
+    }
 });
 
 // R1 - ReadOne
