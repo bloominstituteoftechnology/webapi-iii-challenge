@@ -142,15 +142,47 @@ router.put('/:userId', async (req, res) => {
 });
 
 // D - Destroy
-router.delete('/:userId', (req, res) => {
-    const id = req.params.userd;
+router.delete('/:userId', async (req, res) => {
+    const id = req.params.userId;
+    let user = null;
+    const users = await db.get();
 
-    res
-        .status(200)
-        .json({
-            url: `/users/${id}`,
-            operation: `DELETE to User with id ${id}`
-        });
+    users.map(u => {
+        if (u.id == id) {
+            user = u
+        }
+    })
+
+    try {
+        if (!user) {
+            res
+                .status(404)
+            .json({
+                errorMessage: `No user was found with the id of ${id}`
+            });
+        } else {
+            const response = await db.remove(id);
+            const users = await db.get();
+            
+            response ?
+                res
+                    .status(200)
+                    .json(users)
+            :
+                res
+                    .status(500)
+                    .json({
+                        errorMessage: 'There was a problem deleting the record'
+                    });
+            
+        }
+    } catch (err) {
+        res
+            .status(500)
+            .json({
+                errorMessage: 'Houston we have a problem'
+            });
+    }
 });
 
 module.exports = router;
