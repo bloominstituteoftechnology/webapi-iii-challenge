@@ -5,7 +5,7 @@
   "main": "knexfile.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "nodemon",
+    "server": "nodemon server.js",
     "start": "yarn server"
   },
   "repository": {
@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/TraiLynne/Node-Blog#readme",
   "dependencies": {
+    "express": "^4.16.4",
     "knex": "^0.16.3",
     "sqlite3": "^4.0.6"
   },
