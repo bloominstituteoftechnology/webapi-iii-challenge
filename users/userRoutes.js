@@ -100,15 +100,45 @@ router.get('/:userId', async (req, res) => {
 });
 
 // U - Update
-router.put('/:userId', (req, res) => {
+router.put('/:userId', async (req, res) => {
     const id = req.params.userId;
+    let user = null;
+    const updatedUser = req.body;
+    const users = await db.get();
 
-    res
-        .status(200)
-        .json({
-            url: `/users/${id}`,
-            operation: `PUT to user with id ${id}`
-        });
+    users.map(u => {
+        if (u.id == id) {
+            user = u
+        }
+    })
+    console.log(user)
+    try {
+         if (!updatedUser.name || updatedUser.name === '') {
+             res
+                 .status(400)
+                 .json({
+                     errorMessage: 'INCOMPLETE: Please attach a name to this new user.'
+                 })
+         } else if (!user) {
+             res
+                 .status(404)
+                 .json({
+                     errorMessage: `No user was found with the id of ${id}`
+                 });
+         } else {
+             await db.update(id, updatedUser);
+             res
+                 .status(200)
+                 .json(updatedUser);
+         }
+            
+    } catch (err) {
+        res
+            .status(500)
+            .json({
+                errorMessage: 'Houston, we have a problem'
+            });
+    }
 });
 
 // D - Destroy
