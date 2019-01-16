@@ -8,13 +8,33 @@ router.use(express.json());
 
 
 // C - Create
-router.post('/', (req, res) => {
-    res
-        .status(200)
-        .json({
-            url: '/users',
-            operation: 'POST'
-        });
+router.post('/', async (req, res) => {
+    const newUser = req.body;
+
+    try {
+        if (!newUser.name || newUser.name === '') {
+            res
+                .status(400)
+                .json({
+                errorMessage: 'INCOMPLETE: Please attach a name to this new user.'
+            })
+        } else {
+            let assignedId = await db.insert(newUser);
+            newUser.id = assignedId.id;
+
+            res
+                .status(200)
+                .json(newUser);
+        }
+
+    } catch (err) {
+        res
+            .status(500)
+            .json({
+                errorMessage: 'Houston, we have a problem.'
+            });
+    }
+    
 });
 
 // Ra - ReadAll
