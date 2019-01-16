@@ -8,6 +8,14 @@ router.use(express.json());
 
 
 // C - Create
+router.post('/', (req, res) => {
+    res
+        .status(200)
+        .json({
+            url: '/posts',
+            operation: 'POST'
+        });
+});
 // Ra - ReadAll
 router.get('/', async (req, res) => {
     try {
@@ -37,7 +45,39 @@ router.get('/', async (req, res) => {
 });
 
 // R1 - ReadOne
+router.get('/:postId', (req, res) => {
+    const id = req.params.postId;
+
+    res
+        .status(200)
+        .json({
+            url: `/posts/${id}`,
+            operation: `GET to Post with id ${id}`
+        });
+});
+
 // U - Update
+router.put('/:postId', (req, res) => {
+    const id = req.params.postId;
+
+    res
+        .status(200)
+        .json({
+            url: `/posts/${id}`,
+            operation: `PUT to Post with id ${id}`
+        });
+});
+
 // D - Destroy
+router.delete('/:postId', (req, res) => {
+    const id = req.params.postId;
+
+    res
+        .status(200)
+        .json({
+            url: `/posts/${id}`,
+            operation: `DELETE to Post with id ${id}`
+        });
+});
 
 module.exports = router;
