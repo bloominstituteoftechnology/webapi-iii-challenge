@@ -25,7 +25,7 @@ const nameCheckMiddleware = (req, res, next) => {
     }
 };
 
-// ==== Endpoints ====
+// ==== User Endpoints ====
 
 server.get('/api/users', (req, res) => {
     users
@@ -97,6 +97,26 @@ server.delete('/api/users/:id', (req, res) => {
     });
 });
 
+server.put('/api/users/:id', nameCheckMiddleware, (req, res) => {
+    const { id } = req.params;
+    const { name } = req.body;
+    users
+      .update(id, { name })
+      .then(response => {
+        if (response === 0) {
+          return errorHelper(404, 'No user by that id');
+        } else {
+          db.find(id).then(user => {
+            res.json(user);
+          });
+        }
+      })
+      .catch(err => {
+        return errorHelper(500, 'User by that ID could not be updated', res);
+      });
+  });
+
+// ==== POST Endpoints ====
 
 
 
