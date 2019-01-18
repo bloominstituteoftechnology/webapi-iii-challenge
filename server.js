@@ -102,7 +102,7 @@ server.put('/api/users/:id', nameCheckMiddleware, (req, res) => {
     const { name } = req.body;
     users
       .update(id, { name })
-      .then(response => {
+      .then(response => {  // This request updates a user with the ID specified in the DB.
         if (response === 0) {
           return errorHelper(404, 'No user by that id');
         } else {
@@ -117,6 +117,17 @@ server.put('/api/users/:id', nameCheckMiddleware, (req, res) => {
   });
 
 // ==== POST Endpoints ====
+
+server.get('/api/posts', (req, res) => {
+    posts
+    .get()
+    .then(foundPosts => {
+        res.json(foundPosts);
+    })
+    .catch(err => {
+        return errorHelper(500, 'Posts could not be retrieved.', res);
+    });
+});
 
 
 

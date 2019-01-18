@@ -1,9 +1,9 @@
 {
   "name": "Node-Blog",
   "version": "1.0.0",
-  "main": "index.js",
-  "repository": "https://github.com/LambdaSchool/Node-Blog.git",
-  "author": "Ryan Hamblin <ryanhca@gmail.com>",
+  "main": "server.js",
+  "repository": "https://github.com/theiseja/Node-Blog.git",
+  "author": "",
   "license": "MIT",
   "scripts": {
     "start": "nodemon server.js"
