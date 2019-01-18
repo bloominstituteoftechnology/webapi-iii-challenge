@@ -34,7 +34,7 @@ server.get('/api/users', (req, res) => {
          res.json(foundUsers);
      })
      .catch(err => {
-         return errorHelper(500, 'The users could not be retrieved from the DB.', res);
+         return errorHelper(500, 'Database failed to load.', res);
      });
 });
 
@@ -49,7 +49,7 @@ server.get('/api/users/:id', (req, res) => {
         res.json(user);
       })
       .catch(err => {
-        return errorHelper(500, 'The user with that ID does not exist in the DB', res);
+        return errorHelper(500, 'Database failed to load.', res);
       });
   });
   
@@ -65,7 +65,7 @@ server.get('/api/users/posts/:userId', (req, res) => {
         res.json(usersPosts);
     })
     .catch(err => {
-        return errorHelper(500, 'Users posts could not be retrieved.');
+        return errorHelper(500, 'Database failed to load.');
     });
 });
 
@@ -77,7 +77,7 @@ server.post('/api/users', nameCheckMiddleware, (req, res) => {
         res.json(response);
     })
     .catch(err => {
-        return errorHelper(500, 'placeholder', res);
+        return errorHelper(500, 'Database failed to load.', res);
     });
 });
 
@@ -93,7 +93,7 @@ server.delete('/api/users/:id', (req, res) => {
         }
     })
     .catch(err => {
-        return errorHelper(500, 'The user could not be removed from the DB.', res);
+        return errorHelper(500, 'Database failed to load.', res);
     });
 });
 
@@ -112,7 +112,7 @@ server.put('/api/users/:id', nameCheckMiddleware, (req, res) => {
         }
       })
       .catch(err => {
-        return errorHelper(500, 'User by that ID could not be updated', res);
+        return errorHelper(500, 'Database failed to load', res);
       });
   });
 
@@ -125,7 +125,22 @@ server.get('/api/posts', (req, res) => {
         res.json(foundPosts);
     })
     .catch(err => {
-        return errorHelper(500, 'Posts could not be retrieved.', res);
+        return errorHelper(500, 'Database failed to load.', res);
+    });
+});
+
+server.get('/api/posts/:id', (req, res) => {
+    const { id } = req.params;
+    posts
+    .get(id)
+    .then(post => {
+        if (post === 0) {
+            return errorHelper(404, 'No post by that ID exists in the DB.', res);
+        }
+        res.json(post);
+    })
+    .catch(err => {
+        return errorHelper(500, 'Database failed to load.', res);
     });
 });
 
