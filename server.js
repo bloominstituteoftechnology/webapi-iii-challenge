@@ -121,7 +121,7 @@ server.put('/api/users/:id', nameCheckMiddleware, (req, res) => {
 server.get('/api/posts', (req, res) => {
     posts
     .get()
-    .then(foundPosts => {
+    .then(foundPosts => {  // This request loads all the posts contained within the DB.
         res.json(foundPosts);
     })
     .catch(err => {
@@ -134,7 +134,7 @@ server.get('/api/posts/:id', (req, res) => {
     posts
     .get(id)
     .then(post => {
-        if (post === 0) {
+        if (post === 0) { // This request loads a specific post by an ID contained within the DB.
             return errorHelper(404, 'No post by that ID exists in the DB.', res);
         }
         res.json(post);
@@ -143,6 +143,37 @@ server.get('/api/posts/:id', (req, res) => {
         return errorHelper(500, 'Database failed to load.', res);
     });
 });
+
+server.get('/api/posts/tags/:id', (req, res) => {
+    const { id } = req.params;
+    posts
+    .getPostTags(id)
+    .then(postTags => { // This request gets a tag by a specific ID within the DB.
+        if (postTags === 0) {
+            return errorHelper(404, 'Post by that ID not found within the DB.', res);
+        }
+        res.json(postTags);
+    })
+    .catch(err => {
+        return errorHelper(500, 'Database failed to load.', res);
+    });
+});
+
+server.post('/api/posts', (req, res) => {
+    const { userId, text } = req.body;
+    posts
+    .insert({ userId, text })
+    .then(response => {
+        res.json(response);
+    })
+    .catch(err => {
+        return errorHelper(500, 'Database failed to load.', res);
+    });
+});
+
+
+// ==== TAG Endpoints ====
+
 
 
 
