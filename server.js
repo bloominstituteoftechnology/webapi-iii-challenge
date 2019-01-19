@@ -174,6 +174,16 @@ server.post('/api/posts', (req, res) => {
 
 // ==== TAG Endpoints ====
 
+server.get('/api/tags', (req, res) => {
+    users
+    .get()
+    .then(foundTags => {
+        res.json({ foundTags });
+    })
+    .catch(err => {
+        return errorHelper(500, 'Database failed to load.', res);
+    });
+});
 
 
 
