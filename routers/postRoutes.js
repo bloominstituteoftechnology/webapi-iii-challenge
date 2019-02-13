@@ -89,8 +89,29 @@ router.get('/', async (req, res) => {
 });
 
 // R1 - ReadOne
-router.get('/:postId', (req, res) => {
+router.get('/:postId', async (req, res) => {
     const id = req.params.postId;
+
+    try {
+        let post = await db.get(id);
+
+        post ?
+            res
+                .status(200)
+                .json(post)
+            :
+            res
+                .status(404)
+                .json({
+                    errorMessage: `There is no post with the corresponding id of ${id}`
+                });
+    } catch (err) {
+        res
+            .status(500)
+            .json({
+                errorMessage: 'Houston, we have a problem'
+            });
+    }
 
     res
         .status(200)
@@ -101,27 +122,75 @@ router.get('/:postId', (req, res) => {
 });
 
 // U - Update
-router.put('/:postId', (req, res) => {
+router.put('/:postId', async (req, res) => {
     const id = req.params.postId;
+    const updatedPost = req.body;
 
-    res
-        .status(200)
-        .json({
-            url: `/posts/${id}`,
-            operation: `PUT to Post with id ${id}`
-        });
+    try {
+        let post = await db.get(id);
+
+        if (!updatedPost.text || updatedUser.text === '') {
+            res
+                .status(400)
+                .json({
+                    errorMessage: 'INCOMPLETE: Please attach text to this post.'
+                })
+        } else if (!post) {
+            res
+                .status(404)
+                .json({
+                    errorMessage: `No post was found with the id of ${id}`
+                });
+        } else {
+            await db.update(id, updatedPost);
+            res
+                .status(200)
+                .json(updatedPost);
+        }
+
+    } catch (err) {
+        res
+            .status(500)
+            .json({
+                errorMessage: 'Houston, we have a problem'
+            });
+    }
 });
 
 // D - Destroy
-router.delete('/:postId', (req, res) => {
+router.delete('/:postId', async (req, res) => {
     const id = req.params.postId;
+    let post = await db.get(id);
 
-    res
-        .status(200)
-        .json({
-            url: `/posts/${id}`,
-            operation: `DELETE to Post with id ${id}`
-        });
+    try {
+        if (!post) {
+            res
+                .status(404)
+                .json({
+                    errorMessage: `No user was found with the id of ${id}`
+                });
+        } else {
+            const response = await db.remove(id);
+            const posts = await db.get();
+
+            response ?
+                res
+                .status(200)
+                .json(posts) :
+                res
+                .status(500)
+                .json({
+                    errorMessage: 'There was a problem deleting the record'
+                });
+
+        }
+    } catch (err) {
+        res
+            .status(500)
+            .json({
+                errorMessage: 'Houston we have a problem'
+            });
+    }
 });
 
 module.exports = router;

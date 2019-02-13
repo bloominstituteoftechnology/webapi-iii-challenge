@@ -72,13 +72,13 @@ router.get('/:userId', async (req, res) => {
     const id = req.params.userId;
 
     try {
-        let users = await db.get();
-        let user = null;
-        users.map(u => {
-            if (u.id == id) {
-                user = u
-            }
-        })
+        let user = await db.get(id);
+        let posts = await db.getUserPosts(id);
+
+        user = {
+            ...user,
+            posts: posts
+        }
 
         user ?
             res
@@ -102,22 +102,16 @@ router.get('/:userId', async (req, res) => {
 // U - Update
 router.put('/:userId', async (req, res) => {
     const id = req.params.userId;
-    let user = null;
     const updatedUser = req.body;
-    const users = await db.get();
 
-    users.map(u => {
-        if (u.id == id) {
-            user = u
-        }
-    })
-    console.log(user)
     try {
+        let user = await db.get(id);
+
          if (!updatedUser.name || updatedUser.name === '') {
              res
                  .status(400)
                  .json({
-                     errorMessage: 'INCOMPLETE: Please attach a name to this new user.'
+                     errorMessage: 'INCOMPLETE: Please attach a name to this user.'
                  })
          } else if (!user) {
              res
@@ -144,14 +138,7 @@ router.put('/:userId', async (req, res) => {
 // D - Destroy
 router.delete('/:userId', async (req, res) => {
     const id = req.params.userId;
-    let user = null;
-    const users = await db.get();
-
-    users.map(u => {
-        if (u.id == id) {
-            user = u
-        }
-    })
+    let user = await db.get(id);
 
     try {
         if (!user) {
