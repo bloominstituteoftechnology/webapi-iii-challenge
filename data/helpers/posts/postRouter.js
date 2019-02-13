@@ -21,9 +21,9 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/:id", async (req, res) => {
-  const userId = req.params.id;
+  const id = req.params.id;
   try {
-    const post = await Posts.getById(userId);
+    const post = await Posts.getById(id);
     console.log(post)
     if (!post) {
       res.status(404).json({
@@ -66,7 +66,60 @@ router.post('/', async (req, res) => {
 
 // PUT
 
+router.put("/:id", async (req, res) => {
+  const id = req.params.id;
+  const changes = req.body
+
+  if (!changes.text) {
+    return res.status(400).json({
+      errorMessage: "Please provide text to update the post"
+    })
+  }
+
+  try {
+    const post = await Posts.update(id, changes);
+    if (!post) {
+      res.status(404).json({
+        message: "The post with the specified ID does not exist"
+      })
+    } else {
+      res.status(201).json({
+        success: true,
+        post
+      })
+    }
+    } catch (error) {
+    res.status(500).json({
+      error: "The post information could not be modified."
+    })
+  }
+
+})
 
 // DELETE
+
+router.delete('/:id', async (req, res) => {
+  const id = req.params.id
+
+  try {
+    const post = await Posts.remove(id)
+    if (!post) {
+      res.status(404).json({
+        message: "The post with the specified ID does not exist"
+      })
+    } else {
+      res.status(204).end();
+    }
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: "The user could not be removed"
+
+    })
+  }
+
+})
+
 
 module.exports = router;
