@@ -1,7 +1,6 @@
 const express = require('express');
 
 const User = require('../data/helpers/userDb');
-const Post = require('../data/helpers/postDb');
 
 const router = express.Router();
 router.use(express.json());

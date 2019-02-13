@@ -5,7 +5,7 @@ const Post = require('../data/helpers/postDb');
 const router = express.Router();
 router.use(express.json());
 
-router.get('/', async (req, res) => {
+router.get('/', capitalizeName, async (req, res) => {
   try {
     const post = await Post.get(req.query);
     res.status(200).json(post);
@@ -62,5 +62,11 @@ router.delete('/:id', async (req, res) => {
     res.status(500).json({ message: 'Error removing the post' });
   }
 });
+
+function capitalizeName(req, res, next) {
+  let { name } = req.body;
+  req.body.name = name.toUpperCase();
+  next();
+}
 
 module.exports = router;
