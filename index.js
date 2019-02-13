@@ -24,3 +24,22 @@ server.get('/api/users', (req, res) => {
         res.json(`Huh, can't find those`)
     })
 })
+
+// get a specific user 
+
+server.get('/api/users/:id', (req, res) => {
+    const {id} = req.params;
+    userDb.get(id)
+    .then(user => {
+        if(user){
+            res.json(user);
+        } else {
+            status(404)
+            res.json(`Huh, don't know that user`)
+        }
+    })
+    .catch(err => {
+        res.status(500)
+        res.json('Error 500: Idk that user')
+    })
+})
