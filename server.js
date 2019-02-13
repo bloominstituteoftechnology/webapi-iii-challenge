@@ -5,6 +5,7 @@ const helmet = require('helmet');
 
 
 const usersRouter = require('./users/users-router.js');
+const postsRouter = require('./posts/post-router.js');
 
 
 // creates the server / creates an express application using the express module
@@ -17,6 +18,9 @@ server.use(express.json());
 
 // this only runs if the url has /api/users in it
 server.use('/api/users', usersRouter);
+
+// this only runs if the url has /api/posts in it
+server.use('/api/posts', postsRouter);
 
 
 // initial server test
