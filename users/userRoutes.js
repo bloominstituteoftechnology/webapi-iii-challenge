@@ -1,5 +1,6 @@
 const express = require('express');
 const db = require('../data/helpers/userDb');
+const dbPosts = require('../data/helpers/postDb');
 const router = express();
 
 const checkName = (req, res, next) => {
@@ -73,20 +74,18 @@ router.put('/:id', checkName, async (req, res) => {
 
 // DELETE in CRUD
 router.delete("/:id", async (req, res) => {
-    const id = (req.params.id)
+    const id = req.params.id;
     try {
-      console.log(await db.remove(id));
-      if (user > 0) {
-        res.status(204);
-      } else {
-        res
-          .status(404)
-          .json({ message: 'we can\'t find that user' });
-      }
-    } catch (error) {
-        console.log(await db.remove(id));
-      res.status(500).json({ error: "user cant be removed sorry" });
+        const deleted = await db.remove(id)
+        if(deleted) {
+            res.status(204)
+        } else {
+            res.status(404).json({message: 'we cant find the user... try again'})
+        }
     }
-  });
+    catch(error) {
+        res.status(500).json({ message: 'ahhhh sorry, we\'re having issues'})
+    }
+});
   
 module.exports = router;
