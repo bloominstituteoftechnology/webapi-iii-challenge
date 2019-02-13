@@ -1,8 +1,7 @@
 const express = require('express');
 
 // Route Imports
-const postRoutes = require('./posts/postRoutes');
-const userRoutes = require('./users/userRoutes');
+const mainRouter = require('./routers');
 
 // Server Creation
 const server = express();
@@ -11,8 +10,7 @@ const server = express();
 const port = 4000;
 
 // Routers
-server.use('/posts', postRoutes);
-server.use('/users', userRoutes);
+server.use('/api', mainRouter);
 
 
 server.use('/', (req, res) => res.send(`It's working !!\nIt's working !!`));
