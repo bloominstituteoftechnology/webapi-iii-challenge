@@ -58,3 +58,30 @@ server.post('/api/users', (req, res) => {
         .json('Error: failed to add user')
     })
 })
+
+
+server.delete('/api/users/:id', (req, res) => {
+    const {id} = req.params;
+    const user = req.body;
+
+    userDb.remove(id)
+    .then(count => {
+        if(count) {
+            res.json('user was successfully deleted')
+
+        } else {
+            res.status(404).json('invalid ID')
+        }
+
+    })
+    .catch(err => {
+        res.status(500).json('I could not delete that user')
+    })
+
+})
+
+
+// *>*>*>*>*>*>*>*>*>*>*>*>*>*>*>*>*>*>*>*>*>*>*>*
+server.listen(PORT, () => {
+  console.log(`server is alive on port ${PORT}`)
+})
