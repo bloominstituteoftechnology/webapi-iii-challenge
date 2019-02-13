@@ -36,25 +36,39 @@ router.post('/', (req, res) => {
     if (!text) {
       return res
         .status(400)
-        .json({ errorMessage: "Please provide text for the post." });
+        .json({ errorMessage: "Please provide a text for the post." });
     }
     db.insert(newPost)
       .then(postId => {
         const { id } = postId;
-        db.getById(id).then(post => {
-          console.log(post);
-          if (!post) {
+        db.getById(id).then(user => {
+          console.log(user);
+          if (!user) {
             return res
               .status(404)
               .send({ Error: `A post does not exist by that id ${id}` });
           }
           else{
-            res.status(201).json(post);
+          res.status(201).json(user);
           }
         });
       })
-      .catch(() => res.status(500).json({success: false, message: "There was an error while saving the post to the database."})
+      .catch(() => res.status(500).json({success: false, message: "There was an error while saving the user to the database."})
   )});
+
+// router.post('/', (req, res) => {
+//     const { text, user_id } = req.body;
+//     const newPost= { text, user_id };
+//     if (!text) {
+//       return res
+//         .status(400)
+//         .json({ errorMessage: "Please provide text for the post." });
+//     }
+//     db.insert(newPost)
+//       .then(post => console.log(post))
+//       .catch(err => console.log(err))
+// });
+
 // Delete Single Post
 router.delete('/:id', (req, res) => {
     const {id} = req.params;
