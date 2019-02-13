@@ -29,7 +29,7 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// POST // POST // POST // POST // POST // POST // POST // POST // POST // POST // POST // POST // POST // POST // POST // POST // POST // POST // POST // POST
+// POST // POST // POST // POST // POST // POST // POST // POST // POST // POST // POST // POST // POST // POST // POST // POST // POST // POST // POST 
 router.post('/', async (req, res) => {
     if (!req.body.name || !req.body.name === '') {
         res.status(400).json({message:'Please provide valid username'})
@@ -41,9 +41,54 @@ router.post('/', async (req, res) => {
         console.log(error)
         res.status(500).json({message:'error adding the user!'});
     }
+});
+
+// DELETE // DELETE // DELETE // DELETE // DELETE // DELETE // DELETE // DELETE // DELETE // DELETE // DELETE // DELETE // DELETE // DELETE // DELETE 
+router.delete('/:id', async (req, res) => {
+    try {
+        const count = await Users.remove(req.params.id);
+        if (count > 0) {
+            res.status(200).json({message: 'The user has been deleted'});
+        } else {
+            res.status(404).json({message: 'The user could not be found'});
+        } 
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({message: 'error removing the user.'});
+    }
+});
+
+// PUT // PUT // PUT // PUT // PUT // PUT // PUT // PUT // PUT // PUT // PUT // PUT // PUT // PUT // PUT // PUT // PUT // PUT // PUT // PUT // PUT // 
+router.put('/:id', async (req, res) => {
+    try {
+        const user = await Users.update(req.params.id, req.body);
+        if(user) {
+            res.status(200).json(user);
+        }else {
+            res.status(404).json({message: 'could not be found'});
+        }
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({message: 'error updating the user.'});
+    }
 })
 
+// Post a Post // Post a Post // Post a Post // Post a Post // Post a Post // Post a Post // Post a Post // Post a Post // Post a Post // Post a Post 
+router.get('/:id/posts', async (req, res) => {
+   
+    try {
+        const posts = await Users.getUserPosts(req.params.id);
+        if(posts) {
+            res.status(200).json(posts);
+        }else {
+            res.status(404).json({message: 'could not be found'});
+        }
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({message: 'error finding the post.'});
+    }
 
+})
 
 
 const error = {
