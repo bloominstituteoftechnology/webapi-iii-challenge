@@ -13,4 +13,13 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.get('/:id', async (req, res) => {
+    const posts = await PostFuncs.getById(req.params.id);
+    try {
+        res.status(200).json(posts)
+    } catch(err) {
+        console.log(err)
+        res.status(500).json({ message: 'Error retrieving posts'})
+    }
+});
 module.exports = router;
