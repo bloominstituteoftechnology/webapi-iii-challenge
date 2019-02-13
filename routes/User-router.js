@@ -30,7 +30,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // POST // POST // POST // POST // POST // POST // POST // POST // POST // POST // POST // POST // POST // POST // POST // POST // POST // POST // POST 
-router.post('/', async (req, res) => {
+router.post('/', uppercaseCheck(), async (req, res) => {
     if (!req.body.name || !req.body.name === '') {
         res.status(400).json({message:'Please provide valid username'})
     }
@@ -59,7 +59,7 @@ router.delete('/:id', async (req, res) => {
 });
 
 // PUT // PUT // PUT // PUT // PUT // PUT // PUT // PUT // PUT // PUT // PUT // PUT // PUT // PUT // PUT // PUT // PUT // PUT // PUT // PUT // PUT // 
-router.put('/:id', async (req, res) => {
+router.put('/:id', uppercaseCheck(),  async (req, res) => {
     try {
         const user = await Users.update(req.params.id, req.body);
         if(user) {
@@ -89,6 +89,18 @@ router.get('/:id/posts', async (req, res) => {
     }
 
 })
+
+
+function uppercaseCheck (name) {
+    return function (req, res, next) {
+        if (!req.body.name) {
+            res.status(422).json({ message: "name required" });
+          } else {
+            req.body.name = req.body.name.toUpperCase();
+            next();
+          }
+    }
+}
 
 
 const error = {
