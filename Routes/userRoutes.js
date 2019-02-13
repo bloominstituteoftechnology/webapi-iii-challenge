@@ -3,6 +3,14 @@ const db = require('../data/helpers/userDb.js')
 const posts = require('../data/helpers/postDb')
 const router = express.Router();
 
+function toCaps(req, res, next){
+    if(!req.body.name){
+        res.status(422).json({message: "name required"});
+    } else{
+        req.body.name = req.body.name.toUpperCase();
+        next();
+    }
+}
 
 router.get('/', (req, res) => {
     db
@@ -79,14 +87,6 @@ router.get('/posts/:id', (req, res) => {
     })
 });
 // Add users
-function toCaps(req, res, next){
-    if(!req.body.name){
-        res.status(422).json({message: "name required"});
-    } else{
-        req.body.name = req.body.name.toUpperCase();
-        next();
-    }
-}
 router.use(toCaps);
 router.post('/', (req, res) => {
    

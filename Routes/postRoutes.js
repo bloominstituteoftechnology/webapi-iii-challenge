@@ -31,8 +31,8 @@ router.get('/:id', (req, res) => {
 });
 // Add Posts
 router.post('/', (req, res) => {
-    const { text } = req.body;
-    const newPost= { text };
+    const { text, user_id } = req.body;
+    const newPost= { text, user_id};
     if (!text) {
       return res
         .status(400)
@@ -40,6 +40,7 @@ router.post('/', (req, res) => {
     }
     db.insert(newPost)
       .then(postId => {
+        console.log(postId)
         const { id } = postId;
         db.getById(id).then(user => {
           console.log(user);
