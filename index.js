@@ -43,3 +43,18 @@ server.get('/api/users/:id', (req, res) => {
         res.json('Error 500: Idk that user')
     })
 })
+
+// add user
+
+server.post('/api/users', (req, res) => {
+    const user = req.body;
+    console.log('user from body:', user)
+    userDb.insert(user).then(user => {
+        console.log('user from insert method:', user);
+        res.json(user);
+    }).catch(err => {
+        res
+        .status(500)
+        .json('Error: failed to add user')
+    })
+})
