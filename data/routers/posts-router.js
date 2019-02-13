@@ -22,4 +22,36 @@ router.get('/:id', async (req, res) => {
         res.status(500).json({ message: 'Error retrieving posts'})
     }
 });
+
+router.post('/', async (req, res) => {
+    const newPost = await PostFuncs.insert(req.body);
+
+    try {
+        res.status(201).json({newPost})
+    } catch(err) {
+        console.log(err)
+        res.status(500).json({ message: 'Error adding post'})
+    }
+});
+
+router.put('/:id', async (req, res) => {
+    try {
+        if (!req.body.text) {
+            return res.status(400).json({ errorMessage: "Please provide text for the post." })
+        }
+        const post = await PostFuncs.update(req.params.id, req.body)
+
+        if(post) {
+            res.status(200).json(post)
+        } else {
+            res.status(404).json({ message: 'This post could not be found.'})
+        }
+    }
+    catch (err) {
+        console.log(err)
+        res.status(500).json({
+            message: 'Error updating the post'
+        })
+    }
+});
 module.exports = router;
