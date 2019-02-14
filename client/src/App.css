@@ -1,26 +1,71 @@
 
 
 .App {
-  text-align: center;
   background-color: #282c34;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  justify-content: flex-start;
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.postsContainer {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  border: 1px solid red;
+  width: 600px;
+  padding-top: 20px;
+  margin: 0 auto;  
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.usersContainer {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  border: 1px solid grey; 
+  border-radius: 3px;
+  width: 600px;
+  padding-top: 20px;
+  margin: 0 auto;
+}
+
+.userPosts {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  border: 1px solid grey; 
+  width: 600px;
+  
+  margin: 0 auto;
+}
+
+.loader {
+  text-align: center;
+  margin: 0 auto;
+ 
+} 
+
+.loader p {
+  opacity: 0;
+  animation-name: display;
+  animation-delay: 5s;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+  color: red;
+}
+
+@keyframes display {
+  0% {opacity: 0; }
+  100% {opacity: 1; }
+}
+
+@-webkit-keyframes display {
+  0% {opacity: 0; }
+  100% {opacity: 1; }
+}
+
+@-moz-keyframes display {
+  0% {opacity: 0; }
+  100% {opacity: 1; }
 }
