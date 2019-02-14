@@ -14,7 +14,6 @@ router.get('/', async (req, res) => {
         res.status(500).json({message:'error getting the post!'});
     }
 });
-
 router.get('/:id', async (req, res) => {
     try {
         const post = await Posts.getById(req.params.id);
