@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const server = express();
 const helmet = require('helmet');
@@ -15,8 +16,10 @@ server.use(morgan('dev'));
 server.use('/api/users', userRouter);
 server.use('/api/posts', postRouter);
 
-server.listen(4000, () => {
-    console.log('\n* Server Running on http://localhost:4000 *\n');
+const port = process.env.PORT || 4000;
+
+server.listen(port, () => {
+    console.log(`\n* Server Running on http://localhost:${port} *\n`);
   });
 
 // module.exorts = server;
