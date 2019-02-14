@@ -1,25 +1,25 @@
 exports.up = function(knex) {
-  return knex.schema
-    .createTable('users', function(users) {
-      users.increments();
-      users
-        .string('name')
-        .notNullable()
-        .unique();
-    })
-    .createTable('posts', function(posts) {
-      posts.increments();
-      posts.text('text').notNullable();
+	return knex.schema
+		.createTable('users', function(users) {
+			users.increments();
+			users
+				.string('name')
+				.notNullable()
+				.unique();
+		})
+		.createTable('posts', function(posts) {
+			posts.increments();
+			posts.text('text').notNullable();
 
-      posts
-        .integer('user_id')
-        .unsigned()
-        .notNullable()
-        .references('id')
-        .inTable('users');
-    });
+			posts
+				.integer('user_id')
+				.unsigned()
+				.notNullable()
+				.references('id')
+				.inTable('users');
+		});
 };
 
 exports.down = function(knex) {
-  return knex.schema.dropTableIfExists('posts').dropTableIfExists('users');
+	return knex.schema.dropTableIfExists('posts').dropTableIfExists('users');
 };
