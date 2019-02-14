@@ -111,7 +111,7 @@ router.delete('/:id', async (req, res) => {
     } catch (error) {
         // log error to database
         console.log(error);
-        res.status(500).json({ error: "The user could not be removed" });
+        res.status(500).json({ error: "The user could not be removed. Please check that the user's post(s) have been removed first." });
     }
 });
 
