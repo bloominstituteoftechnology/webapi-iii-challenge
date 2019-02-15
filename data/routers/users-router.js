@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/users/:id', async (req, res) => {
+router.get('/userinfo/:id', async (req, res) => {
     const user = await UserFuncs.getById(req.params.id);
     if(user) {
         res.status(200).json(user)
@@ -29,7 +29,7 @@ router.get('/users/:id', async (req, res) => {
         res.status(500).json({message: "Error retrieving user"})
     }
 });
-router.get('/users/posts/:id', async (req, res) => {
+router.get('/posts/:id', async (req, res) => {
     const posts = await UserFuncs.getUserPosts(req.params.id);
     if(posts) {
         res.status(200).json(posts)
@@ -83,7 +83,7 @@ router.delete('/users/:id', async (req, res) => {
     }
 });
 
-router.put('/users/:id', async (req, res) => {
+router.put('/userinfo/:id', async (req, res) => {
     try {
         if (!req.body.name) {
             return res.status(400).json({ errorMessage: "Please provide a name for the user." })
