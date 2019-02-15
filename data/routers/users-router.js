@@ -14,22 +14,36 @@ router.get('/', async (req, res) => {
     }
 });
 
+// router.get('/:id', async (req, res) => {
+//     const user = await UserFuncs.getById(req.params.id);
+//     if(user) {
+//         res.status(200).json(user)
+//     } else {
+//         res.status(404).json({ message: "The user with the specified ID does not exist." })
+//     }
+//     try {
+//         res.status(200).json(user)
+//     }
+//     catch(err) {
+//         console.log(err)
+//         res.status(500).json({message: "Error retrieving user"})
+//     }
+// });
 router.get('/:id', async (req, res) => {
-    const user = await UserFuncs.getById(req.params.id);
-    if(user) {
-        res.status(200).json(user)
+    const posts = await UserFuncs.getUserPosts(req.params.id);
+    if(posts) {
+        res.status(200).json(posts)
     } else {
         res.status(404).json({ message: "The user with the specified ID does not exist." })
     }
     try {
-        res.status(200).json(user)
+        res.status(200).json(posts)
     }
     catch(err) {
         console.log(err)
-        res.status(500).json({message: "Error retrieving user"})
+        res.status(500).json({message: "Error retrieving posts"})
     }
 });
-
 function capitalizeName(req, res, next) {
   req.body.name = req.body.name.toLowerCase();
   req.body.name = (req.body.name.charAt(0).toUpperCase() + req.body.name.slice(1))
