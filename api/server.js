@@ -1,8 +1,8 @@
 const express = require('express');
 
-const usersRouter = require('./data/users/usersRouter');
+const usersRouter = require('../data/users/usersRouter');
 
-const postsRouter = require('./data/posts/postsRouter');
+const postsRouter = require('../data/posts/postsRouter');
 
 const server = express();
 
