@@ -14,22 +14,22 @@ router.get('/', async (req, res) => {
     }
 });
 
-// router.get('/:id', async (req, res) => {
-//     const user = await UserFuncs.getById(req.params.id);
-//     if(user) {
-//         res.status(200).json(user)
-//     } else {
-//         res.status(404).json({ message: "The user with the specified ID does not exist." })
-//     }
-//     try {
-//         res.status(200).json(user)
-//     }
-//     catch(err) {
-//         console.log(err)
-//         res.status(500).json({message: "Error retrieving user"})
-//     }
-// });
-router.get('/:id', async (req, res) => {
+router.get('/users/:id', async (req, res) => {
+    const user = await UserFuncs.getById(req.params.id);
+    if(user) {
+        res.status(200).json(user)
+    } else {
+        res.status(404).json({ message: "The user with the specified ID does not exist." })
+    }
+    try {
+        res.status(200).json(user)
+    }
+    catch(err) {
+        console.log(err)
+        res.status(500).json({message: "Error retrieving user"})
+    }
+});
+router.get('/users/posts/:id', async (req, res) => {
     const posts = await UserFuncs.getUserPosts(req.params.id);
     if(posts) {
         res.status(200).json(posts)
@@ -68,7 +68,7 @@ router.post('/', capitalizeName, async (req, res) => {
     }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/users/:id', async (req, res) => {
     const user = await UserFuncs.remove(req.params.id)
     try {
         if (user > 0) {
@@ -83,7 +83,7 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/users/:id', async (req, res) => {
     try {
         if (!req.body.name) {
             return res.status(400).json({ errorMessage: "Please provide a name for the user." })
