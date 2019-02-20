@@ -2,11 +2,11 @@ const express = require('express');
 
 const db = require('../helpers/userDb.js');
 
-const router = express.Router();
+const userRouter = express.Router();
 
 //GET:
 
-router.get('/', (req, res ) => {
+userRouter.get('/', (req, res ) => {
     db
     .get()
     .then(users => {
@@ -19,7 +19,7 @@ router.get('/', (req, res ) => {
 
 //GET:
 
-router.get('/:id', ( req, res ) => {
+userRouter.get('/:id', ( req, res ) => {
     const { id } = req.params;
 
     db.getById(id)
@@ -39,7 +39,7 @@ router.get('/:id', ( req, res ) => {
 
     //POST:
 
-    router.post('/', ( req, res ) => {
+    userRouter.post('/', ( req, res ) => {
         const { name } = req.body;
         if ( !name) {
             res.status(400).json({ error: 'Please provide name of the user.' });
@@ -58,7 +58,7 @@ router.get('/:id', ( req, res ) => {
 
     //DELETE: 
 
-    router.delete('/:id', ( req, res ) => {
+    userRouter.delete('/:id', ( req, res ) => {
     const { id } =req.params;
     db
     .remove(id)
@@ -74,6 +74,29 @@ router.get('/:id', ( req, res ) => {
     })
 })
 
+//PUT:
+
+userRouter.put('/:id', ( req, res ) => {
+    const { id } = req.params;
+    const changes = req.body;
+
+    db
+    .update( id, changes ) 
+    .then(userInfoUpdate => {
+        if( !userInfoUpdate )  {
+            res.status(404).json({ success: false, message:'The user with the specified ID does not exist.'  })
+        }else if ( !changes.name ){
+            return res.status(400).json({ success: false, message: 'Please provide the name of the  user.' })
+        }else{
+            return res.status(200).json({ success: true, changes })
+    }
+
+})
+.catch(err=> {
+    res.status(500).json({ success: false, error:'The user information could not be modified.' })
+})
+})
 
 
-module.exports = router;
+
+module.exports = userRouter;

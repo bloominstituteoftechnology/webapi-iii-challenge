@@ -3,7 +3,7 @@ const express = require('express');
 const helmet =  require('helmet');
 
 const userRoute = require('./data/helpers/userRouter.js');
-
+const postRoute = require('./data/helpers/postsRouter.js');
 
 const server = express();
 
@@ -11,6 +11,7 @@ const server = express();
 server.use(express.json());
 server.use(helmet());
 server.use('/api/users', userRoute);
+server.use('/api/posts', postRoute);
 
 
 
