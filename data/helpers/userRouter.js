@@ -4,6 +4,8 @@ const db = require('../helpers/userDb.js');
 
 const router = express.Router();
 
+//GET:
+
 router.get('/', (req, res ) => {
     db
     .get()
@@ -32,6 +34,25 @@ router.get('/:id', ( req, res ) => {
         res.status(500).json({ success: false, error: 'The user information could not be retrieved.'})
 
         })
+    })
+
+
+    //POST:
+
+    router.post('/', ( req, res ) => {
+        const { name } = req.body;
+        if ( !name) {
+            res.status(400).json({ error: 'Please provide name of the user.' });
+        }else{
+            db
+            .insert({ name })
+            .then(user => {
+                res.status(201).json( user );
+            })
+            .catch(err => {
+                res.status(500).json({ error: 'There was an error while saving the user to the database' })
+            })
+        }
     })
 
 module.exports = router;
