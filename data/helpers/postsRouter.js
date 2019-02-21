@@ -36,7 +36,7 @@ postRouter.get('/:id', (req, res) => {
 		});
 });
 
-//POST:
+//POST:  // use for custom middleware 
 
 postRouter.post('/', (req, res) => {
     const { text, user_id } = req.body;
@@ -81,18 +81,20 @@ postRouter.put('/:id', (req, res) => {
 
 	db
 		.update(id, changes)
-		.then((userInfoUpdate) => {
-			if (!userInfoUpdate) {
-				res.status(404).json({ success: false, message: 'The user with the specified ID does not exist.' });
-			} else if (!changes.name) {
-				return res.status(400).json({ success: false, message: 'Please provide the name of the  user.' });
+		.then((postUpdate) => {
+			if (!postUpdate) {
+				res.status(404).json({ success: false, message: 'The post with the specified ID does not exist.' });
+			} else if ( !changes.text && !changes.user_id ) {
+				return res.status(400).json({ success: false, message: 'Please provide the text and user id.' });
 			} else {
 				return res.status(200).json({ success: true, changes });
 			}
 		})
 		.catch((err) => {
-			res.status(500).json({ success: false, error: 'The user information could not be modified.' });
-		});
+			res.status(500).json({ success: false, error: 'The post information could not be modified.' });
+		})
 });
+
+
 
 module.exports = postRouter;

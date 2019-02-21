@@ -9,12 +9,19 @@ const server = express();
 
 //pull in global middleware:
 server.use(express.json());
+server.use(upperCase);
 server.use(helmet());
 server.use('/api/users', userRoute);
 server.use('/api/posts', postRoute);
 
-
-
+function upperCase(req, res, next) {
+    if (!req.body.name) {
+        next();
+    } else {
+        req.body.name = req.body.name.toUpperCase();
+        next();
+    }
+}
 
 
 module.exports = server;
