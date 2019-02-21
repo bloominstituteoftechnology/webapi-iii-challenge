@@ -14,6 +14,11 @@ server.use(helmet());
 server.use('/api/users', userRoute);
 server.use('/api/posts', postRoute);
 
+
+server.get('/', (req, res) => {
+    res.send(`<h2>Node-Blog -- Success</h2>`);
+})
+
 function upperCase(req, res, next) {
     if (!req.body.name) {
         next();
