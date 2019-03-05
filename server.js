@@ -4,7 +4,7 @@ const postRoutes = require('./posts/postRoutes')
 const cors = require("cors");
 const helmet = require("helmet");
 const logger = require("morgan");
-const PORT = 5000;
+const PORT = 9090;
 const server = express();
 
 server.use(express.json(), logger("tiny"), helmet(), cors());
@@ -16,5 +16,4 @@ server.use('/', (req, res) => {
   res.json('API is running.')
 })
 
-server.listen(PORT, () => console.log(`API running on port ${PORT}`));
-
+server.listen(PORT, () => console.log(`Server is listening on port ${PORT}`));
