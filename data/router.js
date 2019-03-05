@@ -142,21 +142,39 @@ router.get('/users/:userId/posts/', (req, res) => {
 
 
 //post --- not working
-router.post('/posts/', (req,res) => {
-    const {text, userId} = req.body;
-    const newPost = {userId, text};
+// router.post('/posts/', (req,res) => {
+//     const {text, userId} = req.body;
+//     const newPost = {userId, text};
 
-    if (!text || !userId) {
-        return res.status(400).json({msg: 'please provide all required fields'});
+//     if (!text || !userId) {
+//         return res.status(400).json({msg: 'please provide all required fields'});
+//     }
+//     postDb
+//     .insert(newPost)
+//     .then(post => {
+//         res.status(201).json(post);
+//     })
+//     .catch(err => {
+//         res.status(500).json({error: "Error saving post"});
+//     });
+// });
+router.post('/posts/', async (req, res) => {
+    try {
+        const [id] = await postDb.insert(req.body)
+        
+        if (text && id) {
+           return res.status(201).json(text);
+        } else {
+            res.status(400).json({
+                errorMessage: "Please provide text for the post."
+            })
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: "Error while saving the post to the database"
+        })
     }
-    postDb
-    .insert(newPost)
-    .then(post => {
-        res.status(201).json(post);
-    })
-    .catch(err => {
-        res.status(500).json({error: "Error saving post"});
-    });
 });
 
 //put
