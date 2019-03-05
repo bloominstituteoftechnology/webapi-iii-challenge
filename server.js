@@ -5,10 +5,9 @@ const express = require('express');
 
 const server = express();
 const routes = './data/routers/';
-const users = `${routes}users`;
-const posts = `${routes}posts`;
-const tags = `${routes}tags`;
-console.log(tags) // check if routes are correct
+const users = require(`${routes}users`);
+const posts = require(`${routes}posts`);
+const tags = require(`${routes}tags`);
 
 // establish parser and port
 const port = 9090;
@@ -21,9 +20,18 @@ const helmet = require('helmet'); // light-weight basic security middleware
 
 // apply middleware
 server.use(
-    // parser,
-    // port,
-    // logger('dev'),
-    // cors(),
-    // helmet(),
+    parser,
+    logger('dev'),
+    cors(),
+    helmet(),
 );
+
+// define api routes
+
+// server.use('/api/users', users)
+// server.use('/api/posts', posts)
+// server.use('/api/tags', tags)
+
+server.listen(port, () => {
+    console.log(`Server started on port ${port}..`);
+})
