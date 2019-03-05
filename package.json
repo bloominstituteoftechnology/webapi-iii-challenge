@@ -3,7 +3,13 @@
   "version": "1.0.0",
   "description": "Blog API for Node & Express",
   "main": "server.js",
-  "repository": "https://github.com/Jerrardsmith215/Node-Blog",
+  "scripts": {
+    "server": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url":"https://github.com/Jerrardsmith215/Node-Blog.git"
+  },
   "author": "Jerrard Smith (forked from LambdaSchool)",
   "license": "MIT",
   "private": false,
@@ -14,5 +20,8 @@
     "knex": "^0.16.3",
     "morgan": "^1.9.1",
     "sqlite3": "^4.0.6"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.10"
   }
 }
