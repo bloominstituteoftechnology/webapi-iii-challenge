@@ -2,7 +2,18 @@ const express = require('express');
 
 const UserData = require('../helpers/userDb.js');
 
-const router = express.Router(); // notice the Uppercase "R" in Router
+const router = express.Router();
+
+
+//castom middleware
+const upperCaseMiddleware = (req, res, next) =>{
+    if (!req.body.name) {
+        res.status(400).json({ message: "Forgot about the name" });
+      } else {
+        req.body.name = req.body.name.toUpperCase();
+        next();
+      }
+};
 
 
 
@@ -20,6 +31,7 @@ router.get('/', async (req, res) => {
 });
 
 // GET by id
+
 router.get('/:id', async (req, res) => {
   try {
 
@@ -39,7 +51,7 @@ router.get('/:id', async (req, res) => {
 
 //POST
 
-router.post('/', async (req, res) => {
+router.post('/', upperCaseMiddleware, async (req, res) => {
 
   if (!req.body.name) {
      res.status(400).json({ errorMessage: "Please provide a name for the user." });
@@ -58,11 +70,9 @@ router.post('/', async (req, res) => {
 
 //PUT (Update)
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', upperCaseMiddleware, async (req, res) => {
 
-  if (!req.body.name) {
-     res.status(400).json({ message: "Please provide a name for the user." });
- } else {  
+  
      try {
          const user = await UserData.update(req.params.id, req.body);
 
@@ -75,10 +85,8 @@ router.put('/:id', async (req, res) => {
          // log error to database
          console.log(error);
          res.status(500).json({ error: "The user information could not be modified." });
-     }
- }
-});
-
+     };
+    });
 
 
  //DELETE

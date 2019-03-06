@@ -2,7 +2,7 @@ const express = require('express');
 
 const PostData = require('../helpers/postDb.js');
 
-const router = express.Router(); // notice the Uppercase "R" in Router
+const router = express.Router();
 
 
 
