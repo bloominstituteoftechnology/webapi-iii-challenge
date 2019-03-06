@@ -61,4 +61,18 @@ userRouter.put("/:id", async (req, res) => {
   }
 });
 
+userRouter.delete("/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const success = await db.remove(id);
+    if (success) {
+      res.status(200).json({ message: "User removed" });
+    } else {
+      res.status(400).json({ err: "User by that ID not found" });
+    }
+  } catch {
+    res.status(500).json(genericError);
+  }
+});
+
 module.exports = userRouter;
