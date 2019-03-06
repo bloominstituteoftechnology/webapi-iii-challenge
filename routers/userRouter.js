@@ -42,4 +42,23 @@ userRouter.post("/", async (req, res) => {
   }
 });
 
+userRouter.put("/:id", async (req, res) => {
+  try {
+    if (!req.body.name) {
+      res.status(400).json({ err: "Please provide a new user name" });
+    } else {
+      const id = req.params.id;
+      const newName = req.body;
+      const editedUser = await db.update(id, newName);
+      if (editedUser) {
+        res.status(201).json({ message: "User name edited" });
+      } else {
+        res.status(400).json({ err: "Please provide a valid user id to edit" });
+      }
+    }
+  } catch {
+    res.status(500).json(genericError);
+  }
+});
+
 module.exports = userRouter;
