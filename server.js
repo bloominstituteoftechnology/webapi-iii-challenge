@@ -13,7 +13,7 @@ const tags = require(`${routes}tags`);
 const port = 9090;
 const parser = express.json();
 
-// middleware importation
+// middleware
 const logger = require('morgan'); // simple logging tool
 const cors = require('cors'); // cross origin resource sharing middleware
 const helmet = require('helmet'); // light-weight basic security middleware
