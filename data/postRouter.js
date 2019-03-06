@@ -4,25 +4,20 @@ const router = express.Router();
 
 // POST
 router.post('/', async (req, res) => {
-	/*const {  } = req.body;
+	if(!req.body.text || req.body.text === '' || !req.body.user_id) {
+		res
+			.status(400)
+			.json({ message: "Please provide valid text and user id." });
+	}
 	try {
-		if(title && contents) {
-			const post = await postDb.insert({ title, contents, id });
-			res
-				.status(201)
-				.json(post);
-		}
-		else {
-			res
-				.status(404)
-				.json({ message: "Please provide title and contents for the post." });
-		}
+		const posts = await postDb.insert({ text: req.body.text, used_id: req.body.user_id });
+		res.json(posts);
 	}
 	catch (err) {
 		res
 			.status(500)
-			.json({ err: "There was an error while saving the post to the database" });
-	}*/
+			.json({ error: "The post could not be added. "});
+	}
 });
 
 // GET ALL
@@ -62,9 +57,9 @@ router.get('/:id', async (req, res) => {
 // DELETE
 router.delete('/:id', async (req, res) => {
 	try {
-		const users = await postDb.remove(req.params.id);
-		if(users) {
-			res.json(users);
+		const posts = await postDb.remove(req.params.id);
+		if(posts) {
+			res.json(posts);
 		}
 		else {
 			res
@@ -81,14 +76,13 @@ router.delete('/:id', async (req, res) => {
 
 // PUT
 router.put('/:id', async (req, res) => {
-	/*const { id } = req.params.id;
 	try {
-		if (name && contents) {
-			const user = await postDb.update({ name, contents });
-			if(user) {
+		const updatePost = await postDb.update(req.params.id, req.body);
+		if (req.params.id && req.body) {
+			if(updatePost) {
 				res
 					.status(200)
-					.json(user);
+					.json(updatePost);
 			}
 			else {
 				res
@@ -99,14 +93,14 @@ router.put('/:id', async (req, res) => {
 		else {
 			res
 				.status(400)
-				.json({ message: "Please provide title and contents for the post." });
+				.json({ message: "Please provide user id and contents for the post." });
 		}
 	}
 	catch (err) {
 		res
 			.status(500)
 			.json({ error: "The post information could not be modified." });
-	}*/
+	}
 });
 
 module.exports = router;

@@ -3,7 +3,7 @@ const userDb = require('./helpers/userDb.js');
 const router = express.Router();
 
 // POST
-router.post('/', async (req, res) => {
+router.post('/', checkCase(), async (req, res) => {
 	const { name } = req.body;
 	try {
 		if(name) {
@@ -80,7 +80,7 @@ router.delete('/:id', async (req, res) => {
 });
 
 // PUT
-router.put('/:id', async (req, res) => {
+router.put('/:id', checkCase(), async (req, res) => {
 	const { id } = req.params.id;
 	try {
 		if (name && contents) {
@@ -108,6 +108,41 @@ router.put('/:id', async (req, res) => {
 			.json({ error: "The post information could not be modified." });
 	}
 });
+
+// LIST OF POSTS FOR USER
+router.get('/:id/post', async (req, res) => {
+	try {
+		const userPosts = await userDb.getUserPosts(req.params.id);
+		if (userPosts) {
+			res.json(userPosts);
+		}
+		else {
+			res
+				.status(400)
+				.json({ message: "No posts for this user" });
+		}
+	}
+	catch (err) {
+		res
+			.status(500)
+			.json({ err: "Posts could not be retrieved." });
+	}
+});
+
+// DEFINING CUSTOM MIDDLEWARE - TO UPPERCASE
+function checkCase (name) {
+	return function (req, res, next) {
+		if (!req.body.name) {
+			res
+				.status(418)
+				.json({ message: "I'm a little teapot!" });
+		}
+		else {
+			req.body.name = req.body.name.toUpperCase();
+			next();
+		}
+	}
+}
 
 module.exports = router;
 
