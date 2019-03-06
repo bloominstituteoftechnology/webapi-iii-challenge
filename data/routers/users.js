@@ -7,9 +7,9 @@ const db = require('../helpers/userDb');
 const nameMiddleware = require('../middleware/nameToUppercase')
 
 // Create/post logic
-router.post('/', nameMiddleware, (req, res) => {
-    if (req.body.name) {
-        const user = req.body
+router.post('/', (req, res) => {
+    if (typeof req.body.name === 'string' && req.body.name.length < 128) { // check for string name, less than 128 chars.
+        const user = nameMiddleware(req.body)
         db
             .insert(user) // insert user with name uppercase
             .then(newuser => {
@@ -21,6 +21,14 @@ router.post('/', nameMiddleware, (req, res) => {
                         .json(newuser)
                 });
             });
+        } else if (typeof req.body.name !== 'string') { // error 400 if not string
+            res
+                .status(400)
+                .json({ err: 'user name is invalid, must be a string of length < 128!'})
+        } else {
+            res
+                .status(500)
+                .json({ err: 'user cannot be added to db!'})
         }
 })
 
@@ -39,7 +47,7 @@ router.get('/', (req, res) => {
     });
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', (req, res) => { // retrieve user by id
     const id = req.params.id; // set variable for id of get request object
     if (Number.isInteger(id)) {
         db
