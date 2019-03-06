@@ -12,4 +12,14 @@ postRouter.get("/", async (req, res) => {
   }
 });
 
+postRouter.get("/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const getPost = await db.getById(id);
+    res.status(200).json(getPost);
+  } catch {
+    res.status(500).json({ err: "There was a problem completing the request" });
+  }
+});
+
 module.exports = postRouter;
