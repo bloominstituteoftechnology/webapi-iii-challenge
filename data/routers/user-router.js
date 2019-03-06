@@ -79,4 +79,23 @@ router.put('/:id', async (req, res) => {
  }
 });
 
+
+
+ //DELETE
+
+ router.delete('/:id', async (req, res) => {
+  try {
+      const user = await UserData.remove(req.params.id);
+
+       if (user > 0) {
+          res.status(200).json({ message: "The post has been removed" });
+      } else {
+          res.status(404).json({ message: "The user with the specified ID does not exist." });
+      }
+  } catch (error) {
+      // log error to database
+      console.log(error);
+      res.status(500).json({ error: "The user could not be removed" });
+  }
+});
 module.exports = router;
