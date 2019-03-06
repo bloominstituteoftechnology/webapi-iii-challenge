@@ -39,4 +39,27 @@ router.get('/', (req, res) => {
     });
 });
 
+router.get('/:id', (req, res) => {
+    const id = req.params.id; // set variable for id of get request object
+    if (Number.isInteger(id)) {
+        db
+            .get(id)
+            .then(user => {
+                console.log(user) // returns looked up user object
+                res
+                    .status(200)
+                    .json(user)
+                }
+            );
+    } else if (!id || !Number.isInteger(id)) {
+        res
+            .status(404)
+            .json({ err: 'User ID not found in db! (ID cannot be located, is invalid, or is not an integer)'})
+    } else {
+        res
+        .status(500)
+        .json({ err: 'Cannot retrieve user'})
+    }
+})
+
 module.exports = router; // Export the route
