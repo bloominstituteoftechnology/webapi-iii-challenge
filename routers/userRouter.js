@@ -28,6 +28,20 @@ userRouter.get("/:id", async (req, res) => {
   }
 });
 
+userRouter.get("/:id/posts", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const userPosts = await db.getUserPosts(id);
+    if (userPosts.length) {
+      res.status(200).json(userPosts);
+    } else {
+      res.status(400).json({ err: "please provide a valid user id" });
+    }
+  } catch {
+    res.status(500).json(genericError);
+  }
+});
+
 userRouter.post("/", async (req, res) => {
   try {
     if (!req.body.name) {
