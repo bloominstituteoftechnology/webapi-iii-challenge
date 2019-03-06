@@ -10,4 +10,4 @@ server.get('/', (req, res) => {
 
 server.listen(PORT, () => {
     console.log(`server running on port number ${PORT}...`)
-})
+});
