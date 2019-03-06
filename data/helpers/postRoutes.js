@@ -1,6 +1,6 @@
 const express = require('express');
 const postDB = require('./postDB.js');
-const userDb = require('./userDb.js');
+const userDB = require('./userDb.js');
 const router = express.Router();
 
 router.get('/', async (req, res) => {
@@ -14,11 +14,11 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   try {
-    const post = await postDB.get(req.params.id);
-    if (post.length === 0) {
-      res.status(404).send({ error: 'The post with the specified ID does not exist.'});
-    } else {
+    const post = await postDB.getById(req.params.id);
+    if (post) {
       res.status(200).json(post);
+    } else {
+      res.status(404).json({error: 'The post with the specified ID does not exist'});
     }
   } catch (err) {
     res.status(500).send({ error: 'The post information could not be retrieved.' });
@@ -31,7 +31,7 @@ router.post('/', async (req, res) => {
       res.status(400).json({message: 'Provide userid and text'});
     } else {
       const { text, userId } = req.body;
-      const post = await postsDB.insert(text, userId);
+      const post = await postDB.insert(text, userId);
       res.status(201).json(post);
     }
   } catch (err) {
@@ -45,7 +45,7 @@ router.delete('/:id', async (req, res) => {
     if (post.length === 0) {
       res.status(404).send({ error: 'The post with the specified ID does not exist.' })
     } else {
-      await postDb.remove(req.params.id)
+      await postDB.remove(req.params.id)
       res.status(200).json(post);
     }
   } catch (err) {
@@ -53,7 +53,7 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-router.put('/api/posts/:id', async (req, res) => {
+router.put('/:id', async (req, res) => {
   const { userId, text } = req.body;
 
   if (!text) {
@@ -61,7 +61,7 @@ router.put('/api/posts/:id', async (req, res) => {
   }
 
   try {
-    const user = await userDb.get(userId);
+    const user = await userDB.get(userId);
     if (user.length === 0) {
       res.status(404).send({ error: 'The user with the specified ID does not exist.'});
     } 
@@ -70,12 +70,12 @@ router.put('/api/posts/:id', async (req, res) => {
   }
 
   try {
-    let post = await postDb.get(req.params.id);
+    let post = await postDB.get(req.params.id);
     if (post.length === 0) {
       res.status(404).send({ error: 'The post with the specified ID does not exist.' })
     } else {
-      await postDb.update(req.params.id, req.body);
-      post = await postDb.get(req.params.id);
+      await postDB.update(req.params.id, req.body);
+      post = await postDB.get(req.params.id);
       res.status(200).json(post);
     }
   } catch (err) {

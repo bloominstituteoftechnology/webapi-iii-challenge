@@ -19,20 +19,21 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   try {
-    const user = await userDb.get(req.params.id);
-    if (user.length === 0) {
-      res.status(404).send({ error: 'The user with the specified ID does not exist.'});
-    } else {
+    const user = await userDB.getById(req.params.id);
+    if (user) {
       res.status(200).json(user);
+    } else {
+      res.status(404).json({ error: 'The user with the specified ID does not exist.'});
     }
   } catch (err) {
-    res.status(500).send({ error: 'The user information could not be retrieved.' });
+    console.log(err);
+    res.status(500).json({ error: 'The user information could not be retrieved.' });
   }
 });
 
 router.get('/posts/:id', async (req, res) => {
   try {
-    const user = await userDb.get(req.params.id);
+    const user = await userDB.get(req.params.id);
     if (user.length === 0) {
       res.status(404).send({ error: 'The user with the specified ID does not exist.'});
     } 
@@ -41,7 +42,7 @@ router.get('/posts/:id', async (req, res) => {
   }
 
   try {
-    const posts = await userDb.getUserPosts(req.params.id);
+    const posts = await userDB.getUserPosts(req.params.id);
     if (posts.length === 0) {
       res.status(204).send({ error: 'This user has no posts.' })
     } else {
@@ -54,7 +55,7 @@ router.get('/posts/:id', async (req, res) => {
 
 router.post('/', upperCase, async (req, res) => {
   try {
-    const user = await usersDB.insert(req.body);
+    const user = await userDB.insert(req.body);
     res.status(200).json(user);
   } catch(err) {
     res.status(500).json({message: 'Error'});
@@ -68,12 +69,12 @@ router.put('/:id', async (req, res) => {
       res.status(400).send({ error: 'Please provide name for the user.' })
     }
 
-    let user = await userDb.get(req.params.id);
+    let user = await userDB.get(req.params.id);
     if (user.length === 0) {
       res.status(404).send({ error: 'The user with the specified ID does not exist.' })
     } else {
-      await userDb.update(req.params.id, req.body);
-      user = await userDb.get(req.params.id);
+      await userDB.update(req.params.id, req.body);
+      user = await userDB.get(req.params.id);
       res.status(200).json(user);
     }
   } catch (err) {
@@ -83,14 +84,15 @@ router.put('/:id', async (req, res) => {
     
 router.delete('/:id', async (req, res) => {
   try {
-    const user = await userDb.get(req.params.id);
-    if (user.length === 0) {
-      res.status(404).send({ error: 'The user with the specified ID does not exist.' })
-    } else {
-      await userDb.remove(req.params.id)
+    const user = await userDB.remove(req.params.id);
+    if (user) {
       res.status(200).json(user);
+    } else {
+      await userDB.remove(req.params.id);
+      res.status(404).send({ error: 'The user with the specified ID does not exist.' });
     }
   } catch (err) {
+    console.log(err);
     res.status(500).send({ error: 'The user could not be removed.' });
   }
 });
