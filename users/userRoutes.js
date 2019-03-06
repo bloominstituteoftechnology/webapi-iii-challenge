@@ -3,6 +3,15 @@ const express = require("express");
 const userDb = require("../data/helpers/userDb");
 const router = express.Router();
 
+const nameCheckMiddleware = (req, res, next) => {
+  if (!req.body.name) {
+      res.status(400).json({ errorMessage: "Please provide a name for the user." });
+    } else {
+      req.body.name = req.body.name.toUpperCase();
+      next();
+    }
+};
+
 router.get("/", (req, res) => {
   userDb
     .get()
@@ -52,7 +61,7 @@ router.get('/:id/posts', (req, res) => {
     })
 })
 
-router.post("/", (req, res) => {
+router.post("/", nameCheckMiddleware,(req, res) => {
   const user = req.body;
   if (user.name) {
     userDb
@@ -72,7 +81,7 @@ router.post("/", (req, res) => {
   }
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', nameCheckMiddleware, (req, res) => {
   const user = req.body
   const { id } = req.params
   if (user.name) {
