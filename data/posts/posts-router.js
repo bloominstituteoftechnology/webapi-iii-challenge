@@ -109,7 +109,7 @@ router.put('/:id', async (req, res) => {
             res.status(200).json(post);
         } else {
             res.status(404).json({
-                message: 'The hub could not be found'
+                message: 'The post could not be found'
             })
         }
     } catch (e) {
