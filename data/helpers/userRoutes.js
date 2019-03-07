@@ -77,6 +77,7 @@ router.put('/:id', async (req, res) => {
       user = await userDB.get(req.params.id);
       res.status(200).json(user);
     }
+    
   } catch (err) {
     res.status(500).send({ error: 'The user information could not be modified.' });
   }
@@ -84,15 +85,17 @@ router.put('/:id', async (req, res) => {
     
 router.delete('/:id', async (req, res) => {
   try {
-    const user = await userDB.remove(req.params.id);
+    const { id } = req.params
+    const user = await userDB.getById(id);
+
     if (user) {
-      res.status(200).json(user);
+      await userDB.remove(id);
+      res.status(200).json({message: 'User deleted'});
     } else {
-      await userDB.remove(req.params.id);
       res.status(404).send({ error: 'The user with the specified ID does not exist.' });
     }
+
   } catch (err) {
-    console.log(err);
     res.status(500).send({ error: 'The user could not be removed.' });
   }
 });
