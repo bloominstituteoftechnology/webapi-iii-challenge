@@ -1,10 +1,11 @@
+require('dotenv').config();
 const express = require("express");
 const userRoutes = require('./users/userRoutes')
 const postRoutes = require('./posts/postRoutes')
 const cors = require("cors");
 const helmet = require("helmet");
 const logger = require("morgan");
-const PORT = 9090;
+const PORT = process.env.PORT || 9090;
 const server = express();
 
 server.use(express.json(), logger("tiny"), helmet(), cors());
