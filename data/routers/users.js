@@ -4,7 +4,8 @@ const router = express.Router();
 const db = require('../helpers/userDb');
 
 // import middleware
-const nameMiddleware = require('../middleware/nameToUppercase')
+const nameMiddleware = require('../middleware/nameToUppercase');
+const numberIdCheck = require('../middleware/numberIdCheck');
 
 // Create/post logic
 router.post('/', (req, res) => {
@@ -67,6 +68,51 @@ router.get('/:id', (req, res) => { // retrieve user by id
         res
         .status(500)
         .json({ err: 'Cannot retrieve user'})
+    }
+})
+
+// Update/put logic
+router.put('/:id', (req, res) => {
+    const changes = req.body; // specify object used to update existing user
+    const id = req.params.id // specify id
+    if (numberIdCheck(id)) { // use middleware to check for loose equality of id to integer
+        db
+            .get(id)
+            .then(user => {
+                if (user) {
+                    db
+            .update(id, changes)
+            .then(count => {
+                res
+                    .status(200)
+                    .json(count) // return number of records changed (1)
+                /*
+                To return new user object instead of a count add
+                if(count) {
+                    db
+                        .get(id)
+                        .then(updatedUser => {
+                            res
+                                .status(200)
+                                .json(updatedUser);
+                        })
+                }
+                */
+            }).catch(err => {
+                res
+                    .status(500)
+                    .json({ message: 'failed to update'})
+            })
+                } else if (!user) {
+                    res
+                        .status(404)
+                        .json({ message: 'id is not valid (user not found)'})
+                }
+            })
+    } else if (!numberIdCheck(id)) {
+        res
+            .status(404)
+            .json({ message: 'id is not valid (not an integer)'})
     }
 })
 

@@ -1,4 +1,4 @@
-// custom middleware
+// custom middleware to transform name into uppercase
 nameToUppercase = (req, res, next) => { // take in an object
     const NAME = req.body.name.toUpperCase(); // variable equal to uppercase version of user's name
     req.body.name = NAME; // set the users name to its uppercase version

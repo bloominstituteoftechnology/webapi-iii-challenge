@@ -22,7 +22,7 @@ const helmet = require('helmet'); // light-weight basic security middleware
 server.use(
     parser,
     logger('dev'),
-    cors(),
+    cors('*'),
     helmet(),
 );
 
