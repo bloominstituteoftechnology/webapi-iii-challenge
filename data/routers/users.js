@@ -73,7 +73,7 @@ router.get('/:id', (req, res) => { // retrieve user by id
     } else {
         res
         .status(500)
-        .json({ err: 'Cannot retrieve user'});
+        .json({ err: 'Cannot retrieve user..'});
     }
 })
 
