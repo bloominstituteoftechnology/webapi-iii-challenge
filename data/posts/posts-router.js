@@ -41,17 +41,6 @@ router.get('/:id', async (req, res) => {
 });
 
 
-// //get only posts from specific users
-// router.get('/:user_id', async (req, res) => {
-//     try {
-
-//     } catch (e) {
-//         res.status(500).json({
-//             message: 'Error getting posts for that id'
-//         })
-//     }
-// });
-
 //post
 
 router.post('/', async (req, res) => {

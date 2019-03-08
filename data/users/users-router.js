@@ -6,6 +6,11 @@ const router = express.Router();
 
 router.use(express.json());
 
+uppercaseName = (name) => {
+    name = name.toUpperCase();
+    return name;
+}
+
 // //test get
 // router.get('/', (req, res) => {
 //     res.status(200).send('Hello from Users Router')
@@ -50,7 +55,8 @@ router.get('/posts/:id', async (req, res) => {
 //create new user
 router.post('/', async (req, res) => {
     try {
-        const user = await db.insert(req.body)
+        const upper = uppercaseName(req.body.name)
+        const user = await db.insert(upper)
         if(req.body.name) {
             res.status(200).json(user);
         } else {
