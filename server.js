@@ -28,7 +28,7 @@ server.use(
 
 // define api routes
 server.use('/api/users', users)
-// server.use('/api/posts', posts)
+server.use('/api/posts', posts)
 // server.use('/api/tags', tags)
 
 server.listen(port, () => {
