@@ -5,11 +5,13 @@ const express = require('express');
 const router = express.Router();
 
 // Import User db
-const db = require('./data/helpers/userDb.js');
+const db = require('../data/helpers/userDb.js');
 
 
 // Endpoints
-
+router.get('/', (req, res) => {
+    res.send('hello');
+});
 
 // Export Router
 module.exports = router;

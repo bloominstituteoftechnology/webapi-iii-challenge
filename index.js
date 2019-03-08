@@ -1,14 +1,9 @@
 // Import Express
 const express = require('express');
 
-
-// Import Routes
-
-// User Routes
-const userRoutes = ('./routes/userRoutes.js');
-
-// Post Routes
-const postRoutes = ('./routes/postRoutes.js');
+// Routes
+const userRoutes = require('./routes/userRoutes.js');
+const postRoutes = require('./routes/postRoutes.js');
 
 
 // Initialize Express

@@ -5,10 +5,13 @@ const express = require('express');
 const router = express.Router();
 
 // Import Post db
-const db = require('./data/helpers/postDb.js');
+const db = require('../data/helpers/postDb.js');
 
 
 // Endpoints
+router.get('/', (req, res) => {
+    res.send('hello 2');
+});
 
 
 // Export Router
