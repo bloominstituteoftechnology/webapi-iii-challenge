@@ -5,8 +5,8 @@ const postRoutes = require('./posts/postRoutes')
 const cors = require("cors");
 const helmet = require("helmet");
 const logger = require("morgan");
-const PORT = process.env.PORT || 9091;
 const server = express();
+const PORT = process.env.PORT || 3000;
 
 server.use(express.json(), logger("tiny"), helmet(), cors());
 
@@ -20,10 +20,6 @@ const errorHelper = (status, message, res) => {
 
 server.use('/api/users', userRoutes)
 server.use('/api/posts', postRoutes)
-
-server.use('/', (req, res) => {
-  res.json('API is running.')
-});
 
 server.listen(PORT, () => {
   console.log('\n*** Server Running on PORT ${PORT} ***\n');
