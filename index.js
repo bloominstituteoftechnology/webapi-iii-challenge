@@ -1,4 +1,6 @@
 // code away!
+require('dotenv').config();
+
 const server = require('./server.js');
 
 server.listen(9090, () => {
