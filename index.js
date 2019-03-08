@@ -1,6 +1,6 @@
 // code away!
 require('dotenv').config();
-const server = require('./data/server.js');
+const server = require('./server.js');
 
 PORT= process.env.PORT || 9090;
 
