@@ -1,8 +1,8 @@
 // code away!
-require('dovenv').config();
-const server = require('./server.js');
+require('dotenv').config();
+const server = require('./data/server.js');
 
-PORT= propcess.env.PORT || 9090;
+PORT= process.env.PORT || 9090;
 
 server.listen(PORT, () => {
   console.log(`\n* Server Running on PORT ${PORT} *\n`);
