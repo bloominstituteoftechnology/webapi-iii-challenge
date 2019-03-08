@@ -1,8 +1,9 @@
 // code away!
-require('dotenv').config();
-
+require('dovenv').config();
 const server = require('./server.js');
 
-server.listen(9090, () => {
-  console.log('\n* Server Running on http://localhost:9090 *\n');
+PORT= propcess.env.PORT || 9090;
+
+server.listen(PORT, () => {
+  console.log(`\n* Server Running on PORT ${PORT} *\n`);
 });
