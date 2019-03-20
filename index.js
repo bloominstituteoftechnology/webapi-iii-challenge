@@ -88,4 +88,36 @@ server.post('/blogs', //upperCase,
             .catch(err=>res.send(err));
 });
 
+//DELETE user id
+server.delete('/users/:id', (req, res)=>{
+    const id = req.params.id;
+    userDb.remove(id)
+            .then(responseId=>{
+                if (responseId===0){
+                    return res.status(500)
+                                .json({
+                        error: `User not found.` })
+                }
+                res.status(204)
+                    .send(`ID: ${responseId} deleted`);
+            })
+            .catch(err=>res.send(err));
+});
+
+//DELETE blog id
+server.delete('/blogs/:id', (req, res)=>{
+    const id = req.params.id;
+    postDb  .remove(id)
+            .then(responseId=>{
+                if (responseId===0){
+                    return res.status(500)
+                                .json({
+                        error: `Post with the provided id number cannot be found.` })
+                }
+                res .status(204)
+                    .send(`ID: ${responseId} has been deleted`);
+            })
+            .catch(err=>res.send(err));
+});
+
  server.listen(port, () => console.log(`server rolling on port ${port}`));
