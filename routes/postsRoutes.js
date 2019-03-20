@@ -3,7 +3,7 @@ const router = express.Router();
 
 const postDb = require('../data/helpers/postDb');
 
-route.get("/", async (req, res) => {
+router.get("/", async (req, res) => {
     try {
       const posts = await postDb.get();
       res.json(posts);
@@ -14,7 +14,7 @@ route.get("/", async (req, res) => {
     }
 });
 
-route.get("/:id", async (req, res) => {
+router.get("/:id", async (req, res) => {
     const { id } = req.params;
     try {
       const post = await postDb.get(id);
@@ -26,7 +26,7 @@ route.get("/:id", async (req, res) => {
     }
 });
 
-route.post('post/:id', async (req,res) =>{
+router.post('post/:id', async (req,res) =>{
     const {id} = req.params;
     const post = req.body;
 
@@ -43,7 +43,7 @@ route.post('post/:id', async (req,res) =>{
     }
 });
 
-route.delete("/:id", async (req, res) => {
+router.delete("/:id", async (req, res) => {
     const { id } = req.params;
     try {
       const post = await postDb.get(id);
@@ -59,7 +59,7 @@ route.delete("/:id", async (req, res) => {
     }
 });
 
-route.put("/:id", async (req, res) => {
+router.put("/:id", async (req, res) => {
     const { id } = req.params;
     const post = req.body;
     try {
@@ -76,5 +76,5 @@ route.put("/:id", async (req, res) => {
     }
 });
 
-module.exports = route;
+module.exports = router;
   
