@@ -189,6 +189,5 @@ server.put('/blogs/:id', upperCase, (req, res)=>{
 
 
 // server.listen to my port
-server.listen(port, () => {
-  console.log(`checking out whats going on with port ${port}`);
-});
+const port = 8000;
+ server.listen(port, () => console.log(`server rolling on port ${port}`));
