@@ -1,23 +1,80 @@
-const express = require("express");
-const morgan = require("morgan");
-const helmet = require("helmet");
-const cors = require("cors");
-const server = express();
+const express = require ('express');
+const router = express.Router();
 
-// routes
-const postsRoutes = require("../routes/postsRoutes");
-const usersRoutes = require("../routes/usersRoutes");
+const postDb = require('../data/helpers/postDb');
 
-// middleware - global
-server.use(express.json());
-server.use(morgan("short"));
-server.use(helmet());
-server.use(cors());
+route.get("/", async (req, res) => {
+    try {
+      const posts = await postDb.get();
+      res.json(posts);
+    } catch (err) {
+      res
+        .status(500)
+        .json({ message: "The posts cannot be retrieved from the database." });
+    }
+});
 
+route.get("/:id", async (req, res) => {
+    const { id } = req.params;
+    try {
+      const post = await postDb.get(id);
+      res.json(post);
+    } catch (err) {
+      res
+        .status(500)
+        .json({ message: "There was an unexpected error happened." });
+    }
+});
 
-// routes - users
-server.use("/users", usersRoutes);
-// routes - posts
-server.use("/posts", postsRoutes);
+route.post('post/:id', async (req,res) =>{
+    const {id} = req.params;
+    const post = req.body;
 
-module.exports = server;
+    try{
+        const user = await postDb.get(id);
+        if(!user){
+            res.status(404).json({message :' User doesnt exist'});
+        } else {
+            const newPost = await postDb.insert(post);
+            res.json(newPost);
+        }
+    } catch (err){
+        res.status(500).json({message: 'Post rejected.'});
+    }
+});
+
+route.delete("/:id", async (req, res) => {
+    const { id } = req.params;
+    try {
+      const post = await postDb.get(id);
+      console.log("post", post);
+      if (!post) {
+        res.status(404).json({ message: "The post does not exist." });
+      } else {
+        await postDb.remove(id);
+        res.json(post);
+      }
+    } catch (err) {
+      res.status(500).json({ message: "Could not delete the post." });
+    }
+});
+
+route.put("/:id", async (req, res) => {
+    const { id } = req.params;
+    const post = req.body;
+    try {
+      const updatedPost = await postDb.update(id, post);
+      if (!updatedPost) {
+        res
+          .status(404)
+          .json({ message: "Cannot update the post." });
+      } else {
+        res.json(updatedPost);
+      }
+    } catch (err) {
+      res.status(500).json({ message: "Could not update post." });
+    }
+});
+
+module.exports = route;
+  
