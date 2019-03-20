@@ -17,10 +17,10 @@ const postDb = require('./data/helpers/postDb.js');
 
 const upperCase = (req, res, next) => {
     if(req.body.name){
-        req.body.name = req.body.name.toUpperCase();
+        req.body.name = req.body.name[0].toUpperCase();
     }
     if (req.body.text){
-        req.body.text = req.body.text.toUpperCase();
+        req.body.text = req.body.text[0].toUpperCase();
     }
     next();
 };
