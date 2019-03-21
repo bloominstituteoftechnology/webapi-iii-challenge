@@ -1,7 +1,7 @@
 const express = require("express");
 
 const Users = require("./data/helpers/userDb.js");
-const Posts = require("./data/helpers/postDb.js");
+// const Posts = require("./data/helpers/postDb.js");
 
 const router = express.Router();
 
@@ -33,10 +33,12 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", capitalName, async (req, res) => {
     const user = await Users.insert(req.body);  
 //   console.log(user);
+console.log(req.body.name);
   if (user.name) {
+      
     try {
       res.status(201).json(user);
     } catch (err) {
@@ -54,7 +56,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-// router.post('/', (req, res) => {
+// router.post('/', capitalName, (req, res) => {
 //     const newUser = req.body;
 //     console.log(newUser);
 
@@ -85,7 +87,7 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', capitalName, async (req, res) => {
     const { id } = req.params;
     const userChange = req.body;
     if(userChange.name) {
@@ -104,6 +106,16 @@ router.put('/:id', async (req, res) => {
         res.status(400).json({ errorMessage: 'Please provide a name for the user '})
     }
 });
+
+function capitalName(req, res, next) {
+    req.body.name = req.body.name.toUpperCase();
+    next();
+//     if(upperCaseName) {
+//         next();
+//     } else {
+//         res.status(403).send("User's name should be uppercased")
+//     }
+}
 
 router.get('/:id/posts', async (req, res) => {
     try {

@@ -1,6 +1,6 @@
 const express = require('express');
 
-const Posts = require('./data/helpers/postDb');
+const Posts = require('./data/helpers/postDb.js');
 
 const Postrouter = express.Router();
 
@@ -49,11 +49,12 @@ Postrouter.get('/:id', async (req, res) => {
 
 Postrouter.post('/', (req, res) => {
     const newPost = req.body;
-    console.log(newPost);
+    // console.log(newPost);
 
-    if(newPost.text) {
+    if(newPost.text && newPost.user_id) {
         Posts.insert(newPost)
         .then(post => {
+            // console.log(post);
             res.status(201).json(post);
         })
         .catch(err => {
@@ -61,6 +62,42 @@ Postrouter.post('/', (req, res) => {
         });
     } else {
         res.status(400).json({ errorMessage: 'Please provide the name for the post'})
+    }
+});
+
+Postrouter.delete('/:id', async(req, res) => {
+    try {
+        const count = await Posts.remove(req.params.id);
+        if(count > 0) {
+            res.status(200).end();
+        } else {
+            res.status(404).json({ message: "The post witht the specified ID does not exist"})
+        }
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: "The post could not be removed"})
+    }
+});
+
+Postrouter.put('/:id', async (req, res) => {
+    const { id } = req.params;
+    const postChange = req.body;
+    console.log(req.body)
+    if(postChange.text && postChange.user_id) {
+        try {
+            const post = await Posts.update(id, postChange);
+            if(post) {
+                console.log(post)
+                res.status(200).json(post);
+            } else {
+                res.status(404).json({ message: "The post with the specified ID does not exist"})
+            }
+        } catch (err) {
+            console.log(err);
+            res.status(500).json({ error: "The post information could not be modified." })
+        }
+    } else {
+        res.status(400).json({ errorMessage: "Please provide text for the post." })
     }
 });
 
