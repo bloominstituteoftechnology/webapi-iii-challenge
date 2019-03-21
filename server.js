@@ -16,7 +16,7 @@ server.use(cors());
 
 
 // routes - users
-server.use("/users", usersRoutes);
+server.use("/", usersRoutes);
 // routes - posts
 server.use("/posts", postsRoutes);
 
