@@ -3,10 +3,14 @@ const express = require('express');
 const router = express.Router();
 const usdb = require('../data/helpers/userDb')
 
-// var myCaps = function (req, res, next) {
- 
-//   next()
-// }
+
+const myCaps = function (req, res, next) {
+   console.log(`not sure how to convert ${req.body} to caps`)
+    
+  
+  next()
+}
+
 
 // get a list of users
 router.get('/', async (req, res) => {
@@ -56,9 +60,11 @@ router.get('/:id/posts',async (req, res) =>{
   }
 })
 // add a new user
-router.post('/', async (req, res) => {
+router.post('/',myCaps,async (req, res) => {
   try {
+    
     const user = await usdb.insert(req.body);
+    
     res.status(201).json(user);
   } catch (error) {
     // log error to database

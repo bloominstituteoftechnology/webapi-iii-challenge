@@ -10,14 +10,20 @@ const morgan = require('morgan');
 const server = express();
 
 
+function logger(req,res,next){
+  console.log(new Date(), req.method,req.url);
+  next ();
+}
+
 
 server.use(express.json());
 server.use(helmet());
 server.use(morgan('dev'));
-
+server.use(logger);
 
 server.use('/api/blogs', userRouter);
 server.use('/api/post', postRouter);
+
 
 // server.get('/', async (req, res) => {
 //   res.send(`
