@@ -10,7 +10,7 @@ const usersRoutes = require("./routes/usersRoutes");
 
 // middleware - global
 server.use(express.json());
-server.use(morgan("short"));
+server.use(morgan("dev"));
 server.use(helmet());
 server.use(cors());
 
