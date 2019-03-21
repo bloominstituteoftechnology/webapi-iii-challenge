@@ -1,6 +1,6 @@
 const postRouter = require('express').Router();
 
-const db = require('./postDB.js');
+const db = require('./postDb.js');
 // Return The array of posts
 postRouter.get('/', (req, res) => {
     db.get()

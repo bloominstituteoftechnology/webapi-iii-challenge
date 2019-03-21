@@ -1,6 +1,6 @@
 const userRouter = require('express').Router();
 
-const db = require('./userDB.js');
+const db = require('./userDb.js');
 
 const prepUsername = (req, res, next) => {
   const username = req.body.name[0].toUpperCase() + req.body.name.slice(1);
