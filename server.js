@@ -25,11 +25,11 @@ server.use('/api/blogs', userRouter);
 server.use('/api/post', postRouter);
 
 
-// server.get('/', async (req, res) => {
-//   res.send(`
-//     <h2>Lambda blog API</h2>
-//     <p>Welcome to the Lambda Blogs API</p>
-//     `);
-// });
+server.get('/', async (req, res) => {
+  res.send(`
+    <h2>Lambda blog API</h2>
+    <p>Welcome to the Lambda Blogs API</p>
+    `);
+});
 
 module.exports = server;
