@@ -56,4 +56,49 @@ router.post('/', upperCase, (req, res) => {
     }
 })
 
+router.put('/:id', upperCase, (req, res) => {
+    const userChanges = req.body;
+    const { id } = req.params;
+    if (userChanges.name) {
+        userDb.update(id, userChanges)
+            .then(countOfUpdated => {
+                if (countOfUpdated) {
+                    userDb.getById(id)
+                        .then(user => {
+                            res.json(user);
+                        });
+                } else {
+                    res.status(400).json({ message: "Invalid ID. This user does not exist." });
+                }
+            })
+            .catch(err => {
+                res.status(500).json({ errorMessage: "There was an error updating the user." });
+            });
+
+    } else {
+        res.status(400).json({ message: "Please input a name." });
+    }
+})
+
+router.delete('/:id', (req, res) => {
+    const { id } = req.params;
+    userDb.getById(id)
+        .then(user => {
+            if (user) {
+                userDb.remove(id)
+                    .then(countOfDeleted => {
+                        res.json(user);
+                    })
+                    .catch(err => {
+                        res.status(500).json({ errorMessage: "Could not delete user." });
+                    });
+            } else {
+                res.status(400).json({ message: "Given user id is invalid. User does not exist." });
+            }
+        })
+        .catch(err => {
+            res.status(500).json({ errorMessage: "Could not find user." });
+        });
+})
+
 module.exports = router;

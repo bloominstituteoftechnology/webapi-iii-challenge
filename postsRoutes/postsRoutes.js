@@ -39,22 +39,44 @@ router.put('/:id', (req, res) => {
     const { id } = req.params;
     const postChanges = req.body;
 
-    if(postChanges.text || postChanges['user_id']){
+    if (postChanges.text || postChanges['user_id']) {
         postDb.update(id, postChanges).then(countUpdated => {
-            if(countUpdated){
+            if (countUpdated) {
                 postDb.getById(id)
-                .then(post => {
-                    res.json(post);
-                });
-            }else{
-                res.status(404).json({message: "This post ID does not exist."});
+                    .then(post => {
+                        res.json(post);
+                    });
+            } else {
+                res.status(404).json({ message: "This post ID does not exist." });
             }
         }).catch(err => {
-            res.status(500).json({message: err})
+            res.status(500).json({ message: err })
         })
-    }else{
-        res.status(400).json({message: "Please include either text or user_id information for the post changes."});
+    } else {
+        res.status(400).json({ message: "Please include either text or user_id information for the post changes." });
     }
+})
+
+router.delete('/:id', (req, res) => {
+    const { id } = req.params;
+
+    postDb.getById(id)
+        .then(post => {
+            postDb.remove(id)
+                .then(countOfDeleted => {
+                    if(countOfDeleted){
+                        res.json(post);
+                    }else{
+                        res.status(400).json({message: "Invalid Id. This post does not exist."});
+                    }
+                })
+                .catch(err => {
+                    res.status(500).json({ errorMessage: "Could not delete post." });
+                })
+        })
+        .catch(err => {
+            res.status(500).json({ errorMessage: "Could not get post." });
+        });
 })
 
 module.exports = router;
