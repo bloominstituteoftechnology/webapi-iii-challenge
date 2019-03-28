@@ -32,7 +32,6 @@ router.post('/', async (req, res) => {
       const post = await posts.insert(req.body);
       res.status(201).json(post);
     } catch (error) {
-      // log error to database
       console.log(error);
       res.status(500).json({
         message: 'Error adding the post',
