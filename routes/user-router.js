@@ -4,7 +4,7 @@ const users = require('../data/helpers/userDb.js');
 
 const router = express.Router();
 
-const {nameChecker} = require('../middleware/middleware');
+const {nameChecker, toCap} = require('../middleware/middleware');
 
 
 
@@ -18,32 +18,47 @@ router.get('/', (req, res) => {
         res.status(500).json({message: 'no access'});
       });
   });
-  
-  router.post('/', nameChecker, (req, res) => {
-    users
-      .insert(req.body.name)
-      .then(response => {
-        res.status(201).json(response);
-      })
-      .catch(err => {
-        res.status(500).json({message: 'post error'});
+
+
+
+
+
+  router.post('/', nameChecker, toCap, async (req, res) => {
+    try {
+      const user = await users.insert(req.body);
+      res.status(201).json(user);
+    } catch (error) {
+      // log error to database
+      console.log(error);
+      res.status(500).json({
+        message: 'Error adding user',
       });
+    }
   });
+
+
+
+  router.get('/:id', async (req, res) => {
+    try {
+      const id = await users.getById(req.params.id);
   
-  router.get('/:id', (req, res) => {
-    const { id } = req.params;
-    users
-      .get(id)
-      .then(user => {
-        if (user === 0) {
-            res.status(500).json({message: 'no access'});
-        }
-        res.json(user);
-      })
-      .catch(err => {
-        res.status(500).json({message: 'no access'});
+      if (id) {
+        res.status(200).json(id);
+      } else {
+        res.status(404).json({ message: 'id not found' });
+      }
+    } catch (error) {
+      // log error to database
+      console.log(error);
+      res.status(500).json({
+        message: 'Error retrieving the id',
       });
+    }
   });
+
+
+  
+
   
   router.get('/posts/:userId', (req, res) => {
     const { userId } = req.params;

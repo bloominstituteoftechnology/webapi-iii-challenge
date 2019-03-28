@@ -1,7 +1,9 @@
 
 const express = require('express');
-const helmet = require('helmet')
-const morgan = require('morgan')
+
+const cors = require('cors')
+const helmet = require('helmet');
+const morgan = require('morgan');
 const userRouter = require('./routes/user-router');
 const postsRouter = require('./routes/posts-router.js');
 const {nameChecker} = require('./middleware/middleware');
@@ -10,10 +12,9 @@ const server = express();
 
 
 server.use(express.json())
-// server.use(cohortNamer)
 server.use(helmet())
 server.use(morgan('dev'))
-
+server.use(cors())
 
 server.use('/api/posts', postsRouter);
 

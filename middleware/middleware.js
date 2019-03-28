@@ -7,7 +7,7 @@ const nameChecker = (req, res, next) => {
     }
   };
 
-  const toCap = () => {
+  const toCap = (req, res, next) => {
       const name = req.body.name.toUpperCase();
       req.body.name = name;
       next()
@@ -15,5 +15,6 @@ const nameChecker = (req, res, next) => {
   
   
   module.exports = {
-    nameChecker
+    nameChecker,
+    toCap
 }
