@@ -2,7 +2,7 @@
 const express = require('express');
 const helmet = require('helmet')
 const morgan = require('morgan')
-// const userRouter = require('./routes/user-routers');
+const userRouter = require('./routes/user-router');
 const postsRouter = require('./routes/posts-router.js');
 const {nameChecker} = require('./middleware/middleware');
 
@@ -15,9 +15,9 @@ server.use(helmet())
 server.use(morgan('dev'))
 
 
-server.use('/api/posts', nameChecker, postsRouter);
-// server.use('/api/user', userRouter);
+server.use('/api/posts', postsRouter);
 
+server.use('/api/user', userRouter);
 
 
 
