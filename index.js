@@ -6,6 +6,8 @@ const greeting = process.env.GREETING
 
 const server = require('./server.js');
 
-server.listen(4000, () =>{
+server.listen(port, () =>{
     console.log(`\n${greeting} Server running on http://localhost: 4000\n`)
 })
+
+//
