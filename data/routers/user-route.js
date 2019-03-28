@@ -1,5 +1,5 @@
 const express = require('express');
-const Users = require('./helpers/userDB.js');
+const Users = require('../../data/helpers/userDb.js');
 const router = express.Router();
 
 router.get('/', async (req, res) =>{
@@ -47,7 +47,7 @@ router.delete('/"id', async(req, res) =>{
         if (count > 0){
             res.status(200).json({message: `Done Deleted`})
         }else{
-            res.status(404).json({message: `Couldn't find the fucker`})
+            res.status(404).json({message: `Couldn't find the thing`})
         }
     }catch(error){
         console.log(error)

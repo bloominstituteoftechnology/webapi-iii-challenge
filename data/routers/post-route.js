@@ -1,5 +1,5 @@
 const express = require('express');
-const Posts = require('./helpers/postDB.js');
+const Posts = require('../../data/helpers/postDb.js');
 const router = express.Router();
 
 router.get('/', async (req, res) =>{
