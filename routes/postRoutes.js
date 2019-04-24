@@ -54,6 +54,25 @@ router.get("/:id", (req, res) => {
 });
 
 // Update
+router.put("/:id", (req, res) => {
+  const { id } = req.params;
+  const { text, user_id } = req.body;
+  if (!text || !user_id) {
+    res
+      .status(400)
+      .json({ error: "Please provide text and user id for the post." });
+  }
+  db.update(id, { text, user_id })
+    .then(post => {
+      if (post.length === 0) {
+        res.status(404).json({ message: "Post does not exists." });
+      }
+      res.status(200).json(post);
+    })
+    .catch(err => {
+      res.status(500).json({ error: "The post info could not be modified." });
+    });
+});
 
 // Destroy
 
