@@ -7,10 +7,14 @@ const router = express.Router();
 // Import User db
 const db = require("../data/helpers/userDb.js");
 
+// Middleware
+const usersMiddleware = require("../middleware/users");
+const uppercaseName = usersMiddleware.uppercaseName;
+
 // Endpoints
 
 // Create
-router.post("/", (req, res) => {
+router.post("/", uppercaseName, (req, res) => {
   const { id, name } = req.body;
   if (!name) {
     res
@@ -68,7 +72,7 @@ router.get("/posts/:id", (req, res) => {
 });
 
 // Update
-router.put("/:id", (req, res) => {
+router.put("/:id", uppercaseName, (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
   if (!name) {
