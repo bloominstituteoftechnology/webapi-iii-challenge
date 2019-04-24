@@ -30,7 +30,27 @@ router.post("/", (req, res) => {
 
 // Read
 router.get("/", (req, res) => {
-  res.send("hello 2");
+  db.get()
+    .then(posts => {
+      res.status(200).json(posts);
+    })
+    .catch(err => {
+      res.status(500).json({ error: "The posts could not be retrieved" });
+    });
+});
+
+router.get("/:id", (req, res) => {
+  const { id } = req.params;
+  db.getById(id)
+    .then(post => {
+      if (post.length === 0) {
+        res.status(404).json({ message: "Post does not exists." });
+      }
+      res.status(200).json(post);
+    })
+    .catch(err => {
+      res.status(500).json({ error: "Post info could not be retrieved." });
+    });
 });
 
 // Update
