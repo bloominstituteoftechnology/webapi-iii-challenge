@@ -12,12 +12,12 @@ const db = require("../data/helpers/userDb.js");
 // Create
 router.post("/", (req, res) => {
   const { id, name } = req.body;
-  if (!id || !name) {
+  if (!name) {
     res
       .status(400)
-      .json({ errorMessage: "Please provide id and name for the user." });
+      .json({ errorMessage: "Please provide a name for the user." });
   }
-  db.insert({ id, name })
+  db.insert({ name })
     .then(user => {
       res.status(201).json(user);
     })
@@ -41,6 +41,19 @@ router.get("/", (req, res) => {
     });
 });
 
+router.get("/:id", (req, res) => {
+  const { id } = req.params;
+  db.getById(id)
+    .then(user => {
+      res.status(200).json(user);
+    })
+    .catch(err => {
+      res
+        .status(500)
+        .json({ error: "The user information could not be retrieved." });
+    });
+});
+
 // Update
 router.put("/:id", (req, res) => {
   const { id } = req.params;
@@ -50,7 +63,7 @@ router.put("/:id", (req, res) => {
       .status(400)
       .json({ errorMessage: "Please provide a name for the user." });
   }
-  db.update(id, name)
+  db.update(id, { name })
     .then(user => {
       if (user === 0) {
         res

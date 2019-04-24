@@ -56,13 +56,11 @@ router.get("/:id", (req, res) => {
 // Update
 router.put("/:id", (req, res) => {
   const { id } = req.params;
-  const { text, user_id } = req.body;
-  if (!text || !user_id) {
-    res
-      .status(400)
-      .json({ error: "Please provide text and user id for the post." });
+  const { text } = req.body;
+  if (!text) {
+    res.status(400).json({ error: "Please provide text for the post." });
   }
-  db.update(id, { text, user_id })
+  db.update(id, { text })
     .then(post => {
       if (post.length === 0) {
         res.status(404).json({ message: "Post does not exists." });
@@ -75,6 +73,19 @@ router.put("/:id", (req, res) => {
 });
 
 // Destroy
+router.delete("/:id", (req, res) => {
+  const { id } = req.params;
+  db.remove(id)
+    .then(post => {
+      if (post === 0) {
+        res.status(404).json({ error: "The post with the id does not exist" });
+      }
+      res.status(204).end();
+    })
+    .catch(err => {
+      res.status(500).json({ error: "The post could not be removed" });
+    });
+});
 
 // Export Router
 module.exports = router;
