@@ -27,7 +27,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.post('/:id/posts', async (req, res) => {});
+router.post('/:id/posts', validateUserId,  async (req, res) => {});
 
 router.get('/', async (req, res) => {
     try {
@@ -40,9 +40,19 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/:id', (req, res) => {});
+router.get('/:id', validateUserId,  async (req, res) => {
+    const { id } = req.params
+    
+    try {
+        const user = await db.getById(id)
+        res.status(200).json(user)
+    } catch (error) {
+        res.status(500).json({ error: 'There was an error returning user by id'})
+    }
 
-router.get('/:id/posts', async (req, res) => {
+}); //TODO
+
+router.get('/:id/posts', validateUserId, async (req, res) => {
     const { id } = req.params;
     const post = req.body;
 
@@ -64,7 +74,7 @@ router.get('/:id/posts', async (req, res) => {
     }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', validateUserId,  async (req, res) => {
     const { id } = req.params;
 
     if (!id) {
@@ -93,7 +103,7 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', validateUserId,  async (req, res) => {
     const { id } = req.params
     const { name } = req.body
     const userInfo = req.body
@@ -113,7 +123,21 @@ router.put('/:id', async (req, res) => {
 
 //custom middleware
 
-function validateUserId(req, res, next) {}
+async function validateUserId(req, res, next) {
+    const { id } = req.params
+    try {
+        const user = await db.getById(id)
+        if (user) {
+            req.user = user
+        }
+        else {
+            res.status(400).json({ message: "invalid user id" })
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'There was an error validating user by id'})
+    }
+    next()
+}
 
 function validateUser(req, res, next) {}
 
