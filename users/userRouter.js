@@ -20,8 +20,7 @@ router.post('/', async (req, res) => {
             }
         } catch (error) {
             res.status(500).json({
-                message:
-                    'There was a problem adding a new user to the database',
+                error: 'There was a problem adding a new user to the database',
                 error
             });
         }
@@ -36,7 +35,7 @@ router.get('/', async (req, res) => {
         res.status(200).json(users);
     } catch (error) {
         res.status(500).json({
-            message: 'There was a problem returning all users from database'
+            error: 'There was a problem returning all users from database'
         });
     }
 });
@@ -59,13 +58,40 @@ router.get('/:id/posts', async (req, res) => {
         }
     } catch (error) {
         res.status(500).json({
-            message: 'There was a problem adding a new post to the database',
+            error: 'There was a problem adding a new post to the database',
             error
         });
     }
 });
 
-router.delete('/:id', (req, res) => {});
+router.delete('/:id', async (req, res) => {
+    const { id } = req.params;
+
+    if (!id) {
+        res.status(400).json({
+            message: 'User id is required to delete a user'
+        }); // TODO: not displaying message
+    } else {
+        try {
+            const removedUser = await db.remove(id);
+
+            if (removedUser) {
+                res.status(200).json({
+                    message: `User with id of ${id} successfully removed`
+                });
+            } else {
+                res.status(404).json({
+                    message: `There was no user with id of ${id}`
+                });
+            }
+        } catch (error) {
+            res.status(500).json({
+                error: 'There was a problem removing user',
+                error
+            });
+        }
+    }
+});
 
 router.put('/:id', (req, res) => {});
 
