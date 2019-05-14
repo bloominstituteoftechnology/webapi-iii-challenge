@@ -7,7 +7,7 @@ validateUserId = async (req, res, next) => {
         ?   (req.user = user, next())
         :   res.status(404).json({message: 'invalid user id'})
     }
-    catch(err) {
+    catch (err) {
         res.status(500).json({message: 'server broke trying to process your request'})
     }
 }
