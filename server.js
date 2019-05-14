@@ -1,4 +1,4 @@
-const express = 'express';
+const express = require('express'); // importing a CommonJS module
 
 const server = express();
 
