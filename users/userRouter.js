@@ -1,9 +1,22 @@
-const express = 'express';
+const express = require('express');
+const db = require('./userDb')
 
 const router = express.Router();
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
+    // try {
+    //     const user = req.body
+    //     const newUser = await db.insert(user)
 
+    //     if (!user.name) {
+    //         res.status(403).json({ message: 'a user name is required'})
+    //     }
+    //     if (newUser) {
+    //         res.status(200).json({ message: 'User successfully added to database', newUser})
+    //     }
+    // } catch (error) {
+    //     res.status(500).json({ message: 'There was a problem adding a new user to the database', error })
+    // }
 });
 
 router.post('/:id/posts', (req, res) => {
