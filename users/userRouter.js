@@ -93,7 +93,23 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
-router.put('/:id', (req, res) => {});
+router.put('/:id', async (req, res) => {
+    const { id } = req.params
+    const { name } = req.body
+    const userInfo = req.body
+
+    if (!name) {
+        res.status(400).json({ message: `A user name is required`})
+    }
+    else {
+        try {
+            const updatedUser = await db.update(id, userInfo)
+            res.status(200).json({ message: 'User info has been updated'})
+        } catch (error) {
+            res.status(500).json({ error: `There was a problem updating the user`})
+        }
+    }
+});
 
 //custom middleware
 
