@@ -6,10 +6,9 @@ const router = express.Router();
 router.post('/', async (req, res) => {
     const user = req.body;
 
-    if (!user || !user.name) {
+    if (!user || !user.name || !Object.keys(user).includes('name')) {
         res.status(400).json({ message: 'A user name is required' });
-    } 
-    else {
+    } else {
         try {
             const newUser = await db.insert(user);
 
@@ -29,13 +28,42 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.post('/:id/posts', (req, res) => {});
+router.post('/:id/posts', async (req, res) => {});
 
-router.get('/', (req, res) => {});
+router.get('/', async (req, res) => {
+    try {
+        const users = await db.get();
+        res.status(200).json(users);
+    } catch (error) {
+        res.status(500).json({
+            message: 'There was a problem returning all users from database'
+        });
+    }
+});
 
 router.get('/:id', (req, res) => {});
 
-router.get('/:id/posts', (req, res) => {});
+router.get('/:id/posts', async (req, res) => {
+    const { id } = req.params;
+    const post = req.body;
+
+    try {
+        const newUserPost = await db.getUserPosts(id);
+
+        if (newUserPost) {
+            res.status(200).json(newUserPost);
+        } else {
+            res.status(404).json({
+                message: `There was no user with id ${id}`
+            });
+        }
+    } catch (error) {
+        res.status(500).json({
+            message: 'There was a problem adding a new post to the database',
+            error
+        });
+    }
+});
 
 router.delete('/:id', (req, res) => {});
 
