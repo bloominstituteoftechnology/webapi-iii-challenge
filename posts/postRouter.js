@@ -2,6 +2,8 @@ const express = require('express')
 const router = express.Router()
 const db_posts = require('./postDb')
 
+const warez = require('../middleware')
+
 //R
 router.get('/', async (req, res) => {
     try {
@@ -15,20 +17,20 @@ router.get('/', async (req, res) => {
     }
 })
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', warez.validatePostId, async (req, res) => {
     try {
-        const post = await db_posts.getById(req.params.id)
-        post
-        ?   res.status(200).json(post)
-        :   res.status(400).json({message: `No posts found for user`})
+        //middleware validates the id
+        //wait for db to send back post data, then pass it along to the client
+        //look Carlos a somehwat useful comment!
+        res.status(200).json(await db_posts.getById(req.params.id))
     }
     catch (err) {
-        res.status(500).json({message: `Server broken, get user posts yourself.`})
+        res.status(500).json({message: `Server broken, get posts yourself.`})
     }
 })
 
 //U
-router.put('/:id', async (req, res) => {
+router.put('/:id', warez.validatePostId, async (req, res) => {
     try {
         await db_posts.update(req.params.id, req.body)
         ?   res.status(200).json({id: req.params.id, ...req.body})
@@ -40,7 +42,7 @@ router.put('/:id', async (req, res) => {
 })
 
 //D
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', warez.validatePostId, async (req, res) => {
     try {
         await db_posts.remove(req.params.id)
         ?   res.status(200).json({message: `post has been died`})

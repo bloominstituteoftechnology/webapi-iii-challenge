@@ -3,18 +3,21 @@ const router = express.Router()
 const db_users = require('./userDb')
 const db_posts = require('../posts/postDb')
 
+const warez = require('../middleware')
+
 //C
-router.post('/', async (req, res) => {
+router.post('/', warez.validateUser, async (req, res) => {
     try {
         const user = await db_users.insert(req.body)
         res.status(201).json(user)
     }
     catch (err) {
-        res.status(500).json({message: `new user broke server before being added`})
+        res.status(500).json({message: `If you made it here your name probably isn't unique, live a more exciting life!`})
     }
 })
 
-router.post('/:id/posts', async (req, res) => {
+//validatePost doesn't require a db call, so let's check that first
+router.post('/:id/posts', warez.validatePost, warez.validateUserId, async (req, res) => {
     try {
         let post = {...req.body, user_id: req.params.id}
         post = await db_posts.insert(post)
@@ -38,7 +41,7 @@ router.get('/', async (req, res) => {
     }
 })
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', warez.validateUserId, async (req, res) => {
     try {
         const user = await db_users.getById(req.params.id)
         user
@@ -50,7 +53,7 @@ router.get('/:id', async (req, res) => {
     }
 })
 
-router.get('/:id/posts', async (req, res) => {
+router.get('/:id/posts', warez.validateUserId, async (req, res) => {
     try {
         const posts = await db_users.getUserPosts(req.params.id)
         posts.length > 0
@@ -63,7 +66,7 @@ router.get('/:id/posts', async (req, res) => {
 })
 
 //U
-router.put('/:id', async (req, res) => {
+router.put('/:id', warez.validateUser, warez.validateUserId, async (req, res) => {
     try {
         await db_users.update(req.params.id, req.body)
         ?   res.status(200).json({id: req.params.id, ...req.body})
@@ -86,4 +89,4 @@ router.delete('/:id', async (req, res) => {
     }
 })
 
-module.exports = router;
+module.exports = router

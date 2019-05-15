@@ -88,9 +88,11 @@ We have provided test data for the resources.
 
 ## Stretch Goals
 
+YUP
 - Add the Post Router
   - Implement all endpoints and middleware within `posts/postRouter.js`
 
+NOPE
 - Create a React App
   - Use `create-react-app` to create an application inside the root folder, name it `client`.
   - From the React application connect to the `/api/users` endpoint in the API and show the list of users.
