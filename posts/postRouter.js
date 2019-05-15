@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const db_posts = require('./postDb')
 
+//R
 router.get('/', async (req, res) => {
     try {
         const posts = await db_posts.get()
@@ -26,12 +27,28 @@ router.get('/:id', async (req, res) => {
     }
 })
 
-router.delete('/:id', (req, res) => {
-
+//U
+router.put('/:id', async (req, res) => {
+    try {
+        await db_posts.update(req.params.id, req.body)
+        ?   res.status(200).json({id: req.params.id, ...req.body})
+        :   res.status(404).json({message: `Where in the world is Carmon SanYourpostgo?`})
+    }
+    catch (err) {
+        res.status(500).json({error: `meaningless error message`})
+    }
 })
 
-router.put('/:id', (req, res) => {
-
+//D
+router.delete('/:id', async (req, res) => {
+    try {
+        await db_posts.remove(req.params.id)
+        ?   res.status(200).json({message: `post has been died`})
+        :   res.status(404).json({message: `invalid id, post escaped termination`})
+    }
+    catch (err) {
+        res.status(500).json({error: `I didn't code the server wrong, you coded the frontend wrong!`})
+    }
 })
 
 module.exports = router;
