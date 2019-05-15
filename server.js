@@ -2,11 +2,13 @@ const express = require('express')
 const server = express()
 
 const UserRouter = require('./users/userRouter')
+const PostRouter = require('./posts/postRouter')
 
 server.use(express.json())
 
 //ROUTES
 server.use('/api/users', UserRouter)
+server.use('/api/posts', PostRouter)
 
 //custom middleware
 const warez = require('./middleware')
