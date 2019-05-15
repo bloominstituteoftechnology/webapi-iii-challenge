@@ -4,6 +4,11 @@ const Posts = require('./postDb.js');
 
 const router = express.Router();
 
+router.use((req, res, next) => {
+    console.log('Hubs Router, whoo!')
+    next();
+  })
+
 // this only runs if the url has /api/hubs in it
 router.get('/', async (req, res) => {
     try {
@@ -18,7 +23,7 @@ router.get('/', async (req, res) => {
 });
 
 // /api/posts/:id
-router.get('/:id', async (req, res) => {
+router.get('/:id', validatePostId, async (req, res) => {
     try {
         const post = await Posts.getById(req.params.id);
 
@@ -86,8 +91,21 @@ router.put('/:id', async (req, res) => {
 
 // custom middleware
 
-function validatePostId(req, res, next) {
-
+async function validatePostId(req, res, next) {
+    try {
+        const { id } = req.params;
+        const hub = await Posts.getById(id);
+        if (post) {
+            req.post = post;
+            next();
+        } else {
+            res.status(404).json({ message: "post not found; invalid id" });
+        }
+    } catch (err) {
+        res.status(500).json({ 
+            message: 'failed to validate id'
+        })
+    }
 };
 
 module.exports = router;
