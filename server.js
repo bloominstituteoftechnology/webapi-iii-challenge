@@ -1,21 +1,30 @@
-const express = 'express';
+const express = require('express');
+const helmet = require('helmet');
+
+const postsRouter = require('./posts/postRouter.js');
+const userRouter = require('./users/userRouter.js');
 
 const server = express();
-const helmet = require("helmet");
-const morgan = require("morgan");
+server.use(express.json());
 
-const postsRouter = require("./posts/postsRouter.js");
-const usersRouter = require("./users/userRouter")
+function logger(req, res, next) {
+  const seconds = new Date().toISOString();
+    type= req.headers.type;
+    url = req.headers.url;
+  console.log(url, type, seconds);
+    next();
+  };
 
 server.use(express.json());
 server.use(helmet());
-server.use(morgan("dev"));
+server.use(logger);
+
+server.use('/api/posts',  postsRouter);
+
+server.use('/api/users', userRouter);
 
 server.get('/', (req, res) => {
-  res.send(`<h2>THIS IS HOW WE POST</h2>`)
+  res.send(`<h2>Writing Middleware!</h2>`)
 });
-
-server.use("/api/post", postsRouter);
-server.use("/api/users", usersRouter);
 
 module.exports = server;

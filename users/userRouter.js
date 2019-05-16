@@ -1,98 +1,76 @@
-const express = 'express';
-const dbUsers = require("../data/helpers/userDb.js");
-
+const express = require('express');
+const Posts = require('./postDb.js');
 const router = express.Router();
 
-router.get('/', (req, res) => {
-  dbUsers
-    .getById(req.params.id)
-    .then((user) => {
-      if (user.length === 0) {
-        res.status(404).json({ message: "The user with the specified ID does not exist." })
-      } else {
-        res.status(200).json(user);
-      }
+router.get('/', async (req, res) => {
+    try{
+      const posts = await Posts.get();
+        res.status(200).json(posts);
+    } catch(error) {
+        res.status(500).json({
+          message: "This post could not be retrieved"
     })
-    .catch((err) => {
-      res.status(500).json({ error: "The user information could not be retrieved" });
-    })
-});
-
-router.get('/:id', (req, res) => {
-  dbUsers
-    .getById(req.params.id)
-    .then((user) => {
-      if (user.length === 0 ) {
-        res.status(404).json({ message: "The user with the specifie ID does not exist" });
-      } else {
-        res.status(200).json(user);
-      }
-    })
-    .catch((err) => {
-      res.status(500).json({ error: "The user information could not be retrieved." });
-    })
-});
-
-router.get("/:id/posts", (req, res) => {
-  dbUsers
-    .getUsersPosts(req.params.id)
-    .then((posts) => {
-      res.status(200).json(posts);
-    })
-    .catch((err) => {
-      res.status(500).json(err);
-    })
-})
-
-router.post('/', (req, res) => {
-  const newUser = req.body;
-  if (!newUser.hasOwnProperty("name")) {
-    res.status(400).json({ errorMessage: "Please provide name for the user" })
   }
-  dbUsers
-    .insert(newUser)
-    .then((idOfNewUser) => {
-      res.status(201).json(idOfNewUser);
-    })
-    .catch((err) => {
-      res.status(500).json({ error: "There was an error while saving new user to the database"})
-    })
 });
 
-router.delete('/:id', (req, res) => {
-  dbUsers
-    .remove(req.params.id)
-    .then((numOfUserDeleted) => {
-      if (!numOfUserDeleted) {
-        res.status(404).json({ message: "User with the specified ID does not exist" })
-      } else {
-        res.status(204).end();
-      }
-    })
-    .catch((err) => {
-      res.status(500).json({ error: "User could not be removed" });
-    })
-});
+router.get('/:id', async(req, res) => {
+    try{
+      const post = await Posts.getById(req.params.id);
+    if(post) {
+        res.status(200).json(post);
+    } else {
+        res.status(404),json({message: 'This post was not found'});
+    }
 
-router.put('/:id', (req, res) => {
-  const userToUpdate = req.body;
-  if (!userToUpdate.hasOwnProperty("name")) {
-    res.status(400).json({ errorMessage: "Please provide name for the user" })
+    } catch(error) {
+      console.log(error);
+        res.status(500).json({
+          message: 'Error retrieving the post',
+    });
   }
-  dbUsers
-    .update(req.params.id, userToUpdate)
-    .then((numOfUpdatedUsers) => {
-        if (!numOfUpdatedUsers) {
-          res.status(404).json({ message: "User with the specified ID does not exist."})
-        } else {
-          dbUsers.getById(req.params.id).then((updatedUser) => {
-            res.status(200).json(updatedUser);
-          })
-        }
-    })
-    .catch((err) => {
-      res.status(500).json({ error: "User information could not be modified."})
-    })
 });
+
+router.delete('/:id', async(req, res) => {
+    try{
+      const postId = await Posts.remove(req.params.id);
+    if(postId) {
+        res.status(200).json({message: 'This post has been deleted'});
+    } else {
+        res.status(404).json({message: 'This post is not found'});
+    }
+
+    } catch(error) {
+      console.log(error);
+      res.status(500).json({
+        message: 'There was an error removing the hub',
+    });
+  }
+});
+
+router.put('/:id', validatePost, async(req, res) => {
+    try{
+        const post = await Posts.update(req.params.id, req.body);
+    if(post) {
+          res.status(200).json(post);
+    } else {
+          res.status(404).json({message: 'This post is not found'});
+    }
+
+    } catch(error) {
+      console.log(error);
+        res.status(500).json({
+          message: 'There was an error updating the post',
+    });
+  }
+});
+
+  function validatePost(req, res, next) {
+    if(req.body && Object.keys(req.body).length) {
+        next();
+    } else {
+        res.status(404).json({message: 'Please include the requested body'});
+    }
+
+};
 
 module.exports = router;
