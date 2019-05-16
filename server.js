@@ -1,7 +1,9 @@
+require('dotenv').config();
+
 const express = require('express');
 const helmet = require('helmet');
 
-const postsRouter = require('./posts/postRouter.js');
+const postsRouter = require('./posts/postsRouter');
 const userRouter = require('./users/userRouter.js');
 
 const server = express();

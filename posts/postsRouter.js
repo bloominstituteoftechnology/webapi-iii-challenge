@@ -1,6 +1,6 @@
 const express = require('express');
-const Users = require('./userDb.js');
-const Post = require('../posts/postDb.js');
+const Users = require('../users/userDb.js');
+const Post = require('./postDb');
 const router = express.Router();
 
 router.post('/', validateUser, async (req, res) => {
@@ -11,7 +11,7 @@ try{
 }catch (error) {
     console.log(error);
     res.status(500).json({
-      message: 'Error adding user',
+      message: 'There was an error adding the user',
     });
   }
 });
@@ -24,7 +24,7 @@ try{
 }catch (error) {
     console.log(error);
     res.status(500).json({
-      message: 'Error adding post',
+      message: 'There was an error adding the post',
     });
   }
 });
@@ -36,7 +36,7 @@ router.get('/', async (req, res) => {
         res.status(200).json(users);
     }catch(error) {
         res.status(500).json({
-            message: "users could not be retrieved"
+            message: "The users could not be retrieved"
         })
     }
 
@@ -48,12 +48,12 @@ try{
     if(user) {
         res.status(200).json(user);
     }else{
-        res.status(404).json({message:'user does not exist'});
+        res.status(404).json({message:'The user does not exist'});
     }
 } catch (error) {
       
     res.status(500).json({
-      message: 'Error retrieving the post',
+      message: 'There was an error retrieving the post',
     });
   }
 });
@@ -67,7 +67,7 @@ try{
     }catch (error) {
         console.log(error);
         res.status(500).json({
-          message: 'Error getting the messages for the hub',
+          message: 'There was an error getting the messages for the hub',
         });
       }
 });
@@ -77,15 +77,15 @@ router.delete('/:id', validateUserId, async(req, res) => {
     try{
         const user = await Users.remove(req.params.id);
         if(user>0) {
-            res.status(200).json({message:'user removed'});
+            res.status(200).json({message:'The user was removed'});
         } else{
-            res.status(404).json({message: 'user is not found'});
+            res.status(404).json({message: 'This user is not found'});
         }
 
     }catch (error) {
         console.log(error);
         res.status(500).json({
-          message: 'Error removing the user',
+          message: 'There was an error removing the user',
         });
       }
 
@@ -98,12 +98,12 @@ router.put('/:id', validateUserId,  async (req, res) => {
         if(user) {
             res.status(200).json(user);
         }else{
-            res.status(404).json({message:'user not found'});
+            res.status(404).json({message:'This user is  not found'});
         }
     }catch (error) {
         console.log(error);
         res.status(500).json({
-          message: 'Error updating the hub',
+          message: 'There was an error updating the hub',
         });
       }
 
@@ -117,12 +117,12 @@ async function validateUserId(req, res, next) {
             req.user = user;
             next();
         }else{
-            res.status(404).json({message: 'user not found; invalid id'});
+            res.status(404).json({message: 'There user not found or invalid id'});
         }
     }catch (error) {
         console.log(error);
         res.status(500).json({
-          message: 'Error getting the user',
+          message: 'There was an error getting the user',
           });
         }
 };
@@ -132,7 +132,7 @@ function validateUser(req, res, next) {
   if(req.body && Object.keys(req.body).length) {
       next();
   }else{
-    res.status(404).json({message: 'please use name field'});
+    res.status(404).json({message: 'Please use name field'});
   }
 };
 
@@ -140,7 +140,7 @@ function validatePost(req, res, next) {
     if(req.body && Object.keys(req.body).length){
         next();
     }else{
-        next({message: 'please include req body'});
+        next({message: 'Please include req body'});
     }
 
 };
