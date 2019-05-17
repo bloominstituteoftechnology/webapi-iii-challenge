@@ -1,5 +1,6 @@
 const express = require('express');
 const db = require('./userDb');
+const dbPosts = require('../posts/PostDb');
 
 const router = express.Router();
 
@@ -24,16 +25,17 @@ router.post('/', validateUser, async (req, res) => {
 });
 
 //TODO: Implement new db method to add posts to users
-// router.post('/:id/posts', validateUserId, validatePost, async (req, res) => {
-//     const { id } = req.params
-//     const { post } = req.body
+router.post('/:id/posts', validateUserId, validatePost, async (req, res) => {
+    const { post } = req
+    const user_id = req.user.id
 
-//     try {
-        
-//     } catch (error) {
-        
-//     }
-// });
+    try {
+        const newPost = await dbPosts.insert({ ...post, user_id })
+        res.status(200).json({ message: 'Successfully inserted post'})
+    } catch (error) {
+        res.status(500).json({ error: 'You done messed up now!'})
+    }
+});
 
 router.get('/', async (req, res) => {
     try {
@@ -173,6 +175,7 @@ function validatePost(req, res, next) {
             message: 'missing required text field'
         });
     } else {
+        req.post = body
         next();
     }
 }

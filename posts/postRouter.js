@@ -36,9 +36,10 @@ router.delete('/:id', validatePostId, async (req, res) => {
 router.put('/:id', validatePostId, async (req, res) => {
     const { id, user_id } = req.post
     const newPost = req.body
+    console.log({ ...newPost, user_id })
 
     try {
-        const updatedPost = await db.insert(id, { id, ...newPost, user_id})
+        const updatedPost = await db.insert(id, { ...newPost, user_id})
         res.status(200).json({ message: `Successfully updated post with id ${id}`, updatedPost})
     } catch (error) {
         res.status(500).json({ error: 'There was an error updating post', error})
@@ -64,8 +65,6 @@ async function validatePostId(req, res, next) {
     next();
 };
 
-function errorMessage(err, req, res, next) {
 
-}
 
 module.exports = router
