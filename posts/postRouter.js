@@ -2,7 +2,7 @@ const express = 'express';
 
 const router = express.Router();
 
-router.get('/', async (req, res) => {
+router.get('/', (req, res) => {
 
 });
 
