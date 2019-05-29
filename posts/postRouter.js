@@ -66,9 +66,22 @@ router.put("/:id", async (req, res) => {
 function validatePostId(req, res, next) {
   const { id } = req.params;
 
-Posts.getById(id)
-.then()
+  Posts.getById(id)
+    .then(post => {
+      if (!post) {
+        res.status(400).json({
+          message: "invalid post id"
+        });
+      } else {
+        req.post = post;
+        next();
+      }
+    })
 
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({ message: "it failed" });
+    });
 }
 
 module.exports = router;
