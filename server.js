@@ -1,16 +1,23 @@
-const express = 'express';
+const express = require('express'); // importing a CommonJS module
+const helmet = require('helmet');
 
 const server = express();
 
-server.get('/', (req, res) => {
+server.use(express.json());
+server.use(helmet());
+server.use(logger);
+
+server.get('/', logger, (req, res) => {
   res.send(`<h2>Let's write some middleware!</h2>`)
 });
 
 //custom middleware
 
 function logger(req, res, next) {
-  console.log(req.)
+  console.log(`A ${req.method} request to '${req.url}' at '${Date.now()}`);
+  next();
+}
 
-};
+//function 
 
 module.exports = server;
