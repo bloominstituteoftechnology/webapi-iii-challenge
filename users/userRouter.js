@@ -1,6 +1,7 @@
 const express = require('express');
 
 const Users = require('./userDb.js');
+const Posts = require('../posts/postDb.js');
 const router = express.Router();
 
 router.use(express.json());
@@ -11,13 +12,22 @@ router.post('/', validateUser, async (req, res) => {
         const newAcct = await Users.insert(req.body);
         res.status(201).json(newAcct);
     } catch (error) {
-        console.long(error);
+        console.log(error);
         res.status(500).json({ message: 'Error adding user.'});
     }
 });
 
-router.post('/:id/posts', (req, res) => {
+router.post('/:id/posts', validatePost, async (req, res) => {
 
+    const postInfo = { ...req.body, user_id: req.params.id };
+
+    try {
+        const newPost = await Posts.insert(postInfo);
+        res.status(201).json(newPost);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Error adding post.' });
+    } 
 });
 
 router.get('/', async (req, res) => {
@@ -40,8 +50,14 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-router.get('/:id/posts', (req, res) => {
-
+router.get('/:id/posts', async (req, res) => {
+    try {
+        const posts = await Posts.getById(req.params.id);
+        res.status(200).json(posts);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Cannot find posts.' });
+    }
 });
 
 router.delete('/:id', (req, res) => {
