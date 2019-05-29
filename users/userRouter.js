@@ -6,8 +6,14 @@ const router = express.Router();
 router.use(express.json());
 // router.use(validateUserId, validateUser, validatePost);
 
-router.post('/', async (req, res) => {
-    
+router.post('/', validateUser, async (req, res) => {
+    try {
+        const newAcct = await Users.insert(req.body);
+        res.status(201).json(newAcct);
+    } catch (error) {
+        console.long(error);
+        res.status(500).json({ message: 'Error adding user.'});
+    }
 });
 
 router.post('/:id/posts', (req, res) => {
