@@ -60,12 +60,21 @@ router.get('/:id/posts', async (req, res) => {
     }
 });
 
-router.delete('/:id', (req, res) => {
-
+router.delete('/:id', validateUserId, async (req, res) => {
+    try {
+        res.status(200).json(await Users.remove(req.params.id));
+    } catch (error) {
+        res.status(500).json({ message: 'Error removing user.' });
+    }
 });
 
-router.put('/:id', (req, res) => {
-
+router.put('/:id', validateUserId, async (req, res) => {
+    try {
+        res.status(200).json(await Users.update(req.params.id, req.body));
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Error updating user.' });
+    }
 });
 
 //custom middleware
