@@ -1,4 +1,4 @@
-require('dovent').config().
+require('dotenv').config();
 
 // code away!
 const server = require('./server.js');
