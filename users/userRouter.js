@@ -89,6 +89,14 @@ function validateUserId(req, res, next) {
 };
 
 function validateUser(req, res, next) {
+    // console.log(req.body);
+    // if (JSON.stringify(req.body) === '{}' ) {
+    //     res.status(400).json({ message: 'Missing user data.' });
+    // } else if (!req.body.name) {
+    //     res.status(400).json({ message: 'Missing required name field.' });
+    // } 
+    // next();
+
     if (!req.body) {
         res.status(400).json({ message: 'Missing user data.'});
     } else if (!req.body.name) {
