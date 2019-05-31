@@ -1,12 +1,15 @@
 const express = require('express'); // importing a CommonJS module
 const helmet = require('helmet');
+const cors = require("cors");
 
 const userRoutes = require("./users/userRouter")
 const postRoutes = require("./posts/postRouter")
 
 const server = express();
+server.use(cors());
 
 server.use(express.json());
+server.use(cors())
 server.use(helmet());
 
 server.use('/users', userRoutes );
