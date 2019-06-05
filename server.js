@@ -1,10 +1,20 @@
-const express = require('express');
-const helmet = require('helmet')
+const express = require('express'); // importing a CommonJS module
+const helmet = require('helmet');
+const cors = require("cors");
+
+const userRoutes = require("./users/userRouter")
+const postRoutes = require("./posts/postRouter")
+
 const server = express();
+server.use(cors());
 
 server.use(express.json());
+server.use(cors())
 server.use(helmet());
 server.use(logger);
+
+server.use('/users', userRoutes );
+server.use('/posts', postRoutes);
 
 
 server.get('/', logger, (req, res) => {
@@ -12,6 +22,9 @@ server.get('/', logger, (req, res) => {
 });
 
 //custom middleware
+
+
+
 
 function logger(req, res, next) {
   console.log(`A ${req.method} request to '${req.url}' at '${Date.now()}'`);
