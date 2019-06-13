@@ -4,7 +4,7 @@ const Users = require("../users/userDb.js")
 
 const router = express.Router();
 
-router.post('/', async (req, res) => {
+router.post('/', validateUser,async (req, res) => {
     try{
         const user = await Users.get()
         res.status(200).json(user)
@@ -14,7 +14,7 @@ router.post('/', async (req, res) => {
    }
 })
 
-router.post('/:id/posts',validateUserId, async (req, res) => {
+router.post('/:id/posts',validateUserId,validateUser,  async (req, res) => {
     const userPost = { ...req.body, user_id: req.params.id };
     try{
         const user = await Posts.insert(userPost);
@@ -24,7 +24,7 @@ router.post('/:id/posts',validateUserId, async (req, res) => {
     }
 });
 
-router.get('/', async (req, res) => {
+router.get('/', validateUser, async (req, res) => {
     try{
         const user = await Users.get()
         res.status(200).json(user)
@@ -86,8 +86,14 @@ async function validateUserId (req, res, next) {
     }
 };
 
-function validateUser(req, res, next) {
-
+async function validateUser(req, res, next) {
+   if (!req.body) {
+       res.status(400).json({message:"Missing user data"})
+   } else if (!req.body.name) {
+       res.status(400).json({message:"Missing user name"})
+   } else{
+       next()
+   }  
 };
 
 function validatePost(req, res, next) {
