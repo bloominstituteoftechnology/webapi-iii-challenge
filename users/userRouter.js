@@ -58,8 +58,20 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/:id', (req, res) => {
-
+// get user by its id
+router.get('/:id', async (req, res) => {
+    const userId = req.params.id;
+    try {
+    const user = await Users.getById(userId);
+    if(user){
+        res.status(200).json(user);
+    }
+    else {
+        res.status(404).json({ errorMessage: "The user with the specified ID does not exist." });
+    }
+    } catch (error) {
+    res.status(500).json({ errorMessage: "The user information could not be retrieved." });
+    }
 });
 
 router.get('/:id/posts', (req, res) => {
