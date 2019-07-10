@@ -74,8 +74,20 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-router.get('/:id/posts', (req, res) => {
-
+// get list of post for a given user id
+router.get('/:id/posts', async (req, res) => {
+    const userId = req.params.id;
+    try {
+    const posts = await Users.getUserPosts(userId);
+    if(posts && posts.length > 0){
+        res.status(200).json(posts);
+    }
+    else {
+        res.status(404).json({ errorMessage: "The post with the specified user ID does not exist." });
+    }
+    } catch (error) {
+    res.status(500).json({ errorMessage: "The posts information could not be retrieved." });
+    }
 });
 
 router.delete('/:id', (req, res) => {
