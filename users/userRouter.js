@@ -48,8 +48,14 @@ router.post('/:id/posts', async (req, res) => {
     } 
 });
 
-router.get('/', (req, res) => {
-
+// get all users in the DB
+router.get('/', async (req, res) => {
+    try {
+        const allUsers = await Users.get();
+        res.status(200).json(allUsers);
+    } catch (error) {
+        res.status(500).json({ errorMessage: "The users information could not be retrieved." });
+    }
 });
 
 router.get('/:id', (req, res) => {
