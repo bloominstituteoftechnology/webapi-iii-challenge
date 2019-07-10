@@ -15,8 +15,29 @@ const validateUserId = async (req, res, next) => {
         req.user = currentUser;
         next();
     }
-
 };
+
+function validateUser(req, res, next) {
+    if(Object.keys(req.body) == 0){
+        res.status(404).json({ errorMessage: "missing user data" });
+    }
+    else if(!req.body.name){
+        res.status(400).json({ errorMessage: "missing required name field" });
+    }
+    else next();
+};
+
+function validatePost(req, res, next) {
+    if(Object.keys(req.body) == 0){
+        res.status(404).json({ errorMessage: "missing post data" });
+    }
+    else if(!req.body.text){
+        res.status(400).json({ errorMessage: "missing required text field" });
+    }
+    else next();
+};
+
+// endpoints
 
 
 // Create a new user
@@ -113,25 +134,5 @@ router.put('/:id', validateUserId, validateUser, async (req, res) => {
         res.status(500).json({ errorMessage: "The user could not be updated" });
     }
 });
-
-function validateUser(req, res, next) {
-    if(Object.keys(req.body) == 0){
-        res.status(404).json({ errorMessage: "missing user data" });
-    }
-    else if(!req.body.name){
-        res.status(400).json({ errorMessage: "missing required name field" });
-    }
-    else next();
-};
-
-function validatePost(req, res, next) {
-    if(Object.keys(req.body) == 0){
-        res.status(404).json({ errorMessage: "missing post data" });
-    }
-    else if(!req.body.text){
-        res.status(400).json({ errorMessage: "missing required text field" });
-    }
-    else next();
-};
 
 module.exports = router;
