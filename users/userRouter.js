@@ -32,9 +32,12 @@ router.put('/:id', (req, res) => {
 
 //custom middleware
 
-function validateUserId(req, res, next) {
-
-};
+function validateUserId(req, res, next){
+    const user = await 
+    if(!isNaN(req.params.id)){
+      res.
+    }
+  }
 
 function validateUser(req, res, next) {
 
