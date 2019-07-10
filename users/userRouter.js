@@ -3,6 +3,21 @@ const Users = require("./userDb");
 const Posts = require("../posts/postDb");
 const router = express.Router();
 
+//custom middleware
+
+const validateUserId = async (req, res, next) => {
+    const userId = req.params.id;
+    const currentUser = await Users.getById(userId);
+    if(!userId || isNaN(parseInt(userId, 10)) || !currentUser){
+        res.status(400).json({errorMessage: 'invalid user id'})
+    }
+    else {
+        req.user = currentUser;
+        next();
+    }
+
+};
+
 
 // Create a new user
 router.post('/', async (req, res) => {
@@ -109,11 +124,9 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
-router.put('/:id', async (req, res) => {
-    const userIdToUpdate = req.params.id;
-    //console.log(text);
-    if(!userIdToUpdate || Object.keys(req.body) == 0){
-        res.status(404).json({ errorMessage: "Please provide a user ID and new data" });
+router.put('/:id', validateUserId, async (req, res) => {
+    if(Object.keys(req.body) == 0){
+        res.status(404).json({ errorMessage: "Please provide new data" });
     }
     else {
         const userToUpdate = Users.getById(userIdToUpdate);
@@ -135,11 +148,7 @@ router.put('/:id', async (req, res) => {
 
 });
 
-//custom middleware
 
-function validateUserId(req, res, next) {
-
-};
 
 function validateUser(req, res, next) {
 
