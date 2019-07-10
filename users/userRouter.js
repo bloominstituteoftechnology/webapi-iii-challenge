@@ -40,26 +40,20 @@ router.post('/', async (req, res) => {
 
 // create a post for a user by its id
 router.post('/:id/posts', validateUserId, async (req, res) => {
-    const user_id = req.params.id;
+    const user_id = req.user.id;
     const text = req.body.text;
-    if (!user_id || !text){
-        res.status(404).json({ errorMessage: "Please provide a User ID and Post text." });
+    if (!text){
+        res.status(404).json({ errorMessage: "Please provide a Post text." });
     }
     else {
-        const userToAddPostTo = await Posts.getById(user_id);
-        if(!userToAddPostTo || userToAddPostTo.length === 0){
-            res.status(404).json({ errorMessage: "The User with the specified ID does not exist." });
-        }
-        else {
-            try {
-                const insertedPost = await Posts.insert({text, user_id});
-                // const newCommentData =  await Posts.findCommentById(insertedComment.id);
-                res.status(200).json(insertedPost);
-            } 
-            catch (error) {
-                res.status(500).json({ errorMessage: "There was an error while saving the post to the database" });
-            }
-        }      
+        try {
+            const insertedPost = await Posts.insert({text, user_id});
+            // const newCommentData =  await Posts.findCommentById(insertedComment.id);
+            res.status(200).json(insertedPost);
+        } 
+        catch (error) {
+            res.status(500).json({ errorMessage: "There was an error while saving the post to the database" });
+        }  
     } 
 });
 
@@ -75,7 +69,7 @@ router.get('/', async (req, res) => {
 
 // get user by its id
 router.get('/:id', async (req, res) => {
-    const userId = req.params.id;
+    const userId = req.user.id;
     try {
     const user = await Users.getById(userId);
     if(user){
