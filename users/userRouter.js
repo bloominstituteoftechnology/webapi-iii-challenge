@@ -39,7 +39,7 @@ router.post('/', async (req, res) => {
 });
 
 // create a post for a user by its id
-router.post('/:id/posts', async (req, res) => {
+router.post('/:id/posts', validateUserId, async (req, res) => {
     const user_id = req.params.id;
     const text = req.body.text;
     if (!user_id || !text){
@@ -129,20 +129,15 @@ router.put('/:id', validateUserId, async (req, res) => {
         res.status(404).json({ errorMessage: "Please provide new data" });
     }
     else {
-        const userToUpdate = Users.getById(userIdToUpdate);
-        if(!userToUpdate){
-            res.status(404).json({ errorMessage: "The user with the specified ID does not exist." });
+        try{
+            const name = req.body;
+            const userIdToUpdate = req.user.id;
+            await Users.update(userIdToUpdate, name);
+            const updatedUser = await Users.getById(userIdToUpdate);
+            res.status(200).json(updatedUser);
         }
-        else{
-            try{
-                const name = req.body;
-                await Users.update(userIdToUpdate, name);
-                const updatedUser = await Users.getById(userIdToUpdate);
-                res.status(200).json(updatedUser);
-            }
-            catch(error){
-                res.status(500).json({ errorMessage: "The user could not be updated" });
-            }
+        catch(error){
+            res.status(500).json({ errorMessage: "The user could not be updated" });
         }
     }
 
