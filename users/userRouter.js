@@ -106,21 +106,15 @@ router.get('/:id/posts', async (req, res) => {
 });
 
 // delete a user
-router.delete('/:id', async (req, res) => {
-    const userId = req.params.id;
-    const userToBeDeleted = await Users.getById(userId);
-    if(!userToBeDeleted){
-        res.status(404).json({ errorMessage: "The user with the specified ID does not exist." });
+router.delete('/:id', validateUserId, async (req, res) => {
+    const userId = req.user.id;
+    const deletedUser = req.user;
+    try{
+        await Users.remove(userId);
+        res.status(200).json(deletedUser)
     }
-    else {
-        const deletedUser = userToBeDeleted;
-        try{
-            await Users.remove(userId);
-            res.status(200).json(deletedUser)
-        }
-        catch(error){
-            res.status(500).json({ errorMessage: "The user could not be removed" });
-        }
+    catch(error){
+        res.status(500).json({ errorMessage: "The user could not be removed" });
     }
 });
 
