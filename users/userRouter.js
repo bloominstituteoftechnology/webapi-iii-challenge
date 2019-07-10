@@ -109,7 +109,29 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', async (req, res) => {
+    const userIdToUpdate = req.params.id;
+    //console.log(text);
+    if(!userIdToUpdate || Object.keys(req.body) == 0){
+        res.status(404).json({ errorMessage: "Please provide a user ID and new data" });
+    }
+    else {
+        const userToUpdate = Users.getById(userIdToUpdate);
+        if(!userToUpdate){
+            res.status(404).json({ errorMessage: "The user with the specified ID does not exist." });
+        }
+        else{
+            try{
+                const name = req.body;
+                await Users.update(userIdToUpdate, name);
+                const updatedUser = await Users.getById(userIdToUpdate);
+                res.status(200).json(updatedUser);
+            }
+            catch(error){
+                res.status(500).json({ errorMessage: "The user could not be updated" });
+            }
+        }
+    }
 
 });
 
