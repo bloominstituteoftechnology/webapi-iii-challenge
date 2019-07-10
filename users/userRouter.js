@@ -90,8 +90,8 @@ router.get('/:id', async (req, res) => {
 });
 
 // get list of post for a given user id
-router.get('/:id/posts', async (req, res) => {
-    const userId = req.params.id;
+router.get('/:id/posts', validateUserId, async (req, res) => {
+    const userId = req.user.id;
     try {
     const posts = await Users.getUserPosts(userId);
     if(posts && posts.length > 0){
