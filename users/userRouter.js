@@ -1,7 +1,10 @@
 const express = require("express");
 const Users = require("./userDb");
+const Posts = require("../posts/postDb");
 const router = express.Router();
 
+
+// Create a new user
 router.post('/', async (req, res) => {
     const { name } = req.body;
     console.log(name);
@@ -20,8 +23,29 @@ router.post('/', async (req, res) => {
     } 
 });
 
-router.post('/:id/posts', (req, res) => {
-
+// create a post for a user by its id
+router.post('/:id/posts', async (req, res) => {
+    const user_id = req.params.id;
+    const text = req.body.text;
+    if (!user_id || !text){
+        res.status(404).json({ errorMessage: "Please provide a User ID and Post text." });
+    }
+    else {
+        const userToAddPostTo = await Posts.getById(user_id);
+        if(!userToAddPostTo || userToAddPostTo.length === 0){
+            res.status(404).json({ errorMessage: "The User with the specified ID does not exist." });
+        }
+        else {
+            try {
+                const insertedPost = await Posts.insert({text, user_id});
+                // const newCommentData =  await Posts.findCommentById(insertedComment.id);
+                res.status(200).json(insertedPost);
+            } 
+            catch (error) {
+                res.status(500).json({ errorMessage: "There was an error while saving the post to the database" });
+            }
+        }      
+    } 
 });
 
 router.get('/', (req, res) => {
