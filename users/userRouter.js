@@ -1,9 +1,9 @@
-const express = 'express';
-
+const express = require("express");
+const Users = require("./userDb");
 const router = express.Router();
 
 router.post('/', (req, res) => {
-
+    res.status(200).json({message: 'root end point'})
 });
 
 router.post('/:id/posts', (req, res) => {
