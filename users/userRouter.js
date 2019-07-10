@@ -32,22 +32,18 @@ router.post('/', async (req, res) => {
 });
 
 // create a post for a user by its id
-router.post('/:id/posts', validateUserId, async (req, res) => {
+router.post('/:id/posts', validateUserId, validatePost, async (req, res) => {
     const user_id = req.user.id;
     const text = req.body.text;
-    if (!text){
-        res.status(404).json({ errorMessage: "Please provide a Post text." });
-    }
-    else {
-        try {
-            const insertedPost = await Posts.insert({text, user_id});
-            // const newCommentData =  await Posts.findCommentById(insertedComment.id);
-            res.status(200).json(insertedPost);
-        } 
-        catch (error) {
-            res.status(500).json({ errorMessage: "There was an error while saving the post to the database" });
-        }  
+    try {
+        const insertedPost = await Posts.insert({text, user_id});
+        // const newCommentData =  await Posts.findCommentById(insertedComment.id);
+        res.status(200).json(insertedPost);
     } 
+    catch (error) {
+        res.status(500).json({ errorMessage: "There was an error while saving the post to the database" });
+    }  
+
 });
 
 // get all users in the DB
@@ -129,7 +125,13 @@ function validateUser(req, res, next) {
 };
 
 function validatePost(req, res, next) {
-
+    if(Object.keys(req.body) == 0){
+        res.status(404).json({ errorMessage: "missing post data" });
+    }
+    else if(!req.body.text){
+        res.status(400).json({ errorMessage: "missing required text field" });
+    }
+    else next();
 };
 
 module.exports = router;
