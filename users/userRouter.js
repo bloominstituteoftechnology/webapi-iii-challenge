@@ -22,20 +22,13 @@ const validateUserId = async (req, res, next) => {
 // Create a new user
 router.post('/', async (req, res) => {
     const { name } = req.body;
-    console.log(name);
-    if (!name){
-        res.status(400).json({ errorMessage: "Please provide the user name." });
-    }
-    else {
-        try {
-            const newUser = await Users.insert({name});
-            //const newUserData =  await Users.getById(newUserId);
-            res.status(200).json(newUser);
-        } 
-        catch (error) {
-            res.status(500).json({ errorMessage: "There was an error while adding the new user" });
-        }
+    try {
+        const newUser = await Users.insert({name});
+        res.status(200).json(newUser);
     } 
+    catch (error) {
+        res.status(500).json({ errorMessage: "There was an error while adding the new user" });
+    }
 });
 
 // create a post for a user by its id
@@ -112,29 +105,27 @@ router.delete('/:id', validateUserId, async (req, res) => {
     }
 });
 
-router.put('/:id', validateUserId, async (req, res) => {
-    if(Object.keys(req.body) == 0){
-        res.status(404).json({ errorMessage: "Please provide new data" });
+router.put('/:id', validateUserId, validateUser, async (req, res) => {
+    try{
+        const name = req.body;
+        const userIdToUpdate = req.user.id;
+        await Users.update(userIdToUpdate, name);
+        const updatedUser = await Users.getById(userIdToUpdate);
+        res.status(200).json(updatedUser);
     }
-    else {
-        try{
-            const name = req.body;
-            const userIdToUpdate = req.user.id;
-            await Users.update(userIdToUpdate, name);
-            const updatedUser = await Users.getById(userIdToUpdate);
-            res.status(200).json(updatedUser);
-        }
-        catch(error){
-            res.status(500).json({ errorMessage: "The user could not be updated" });
-        }
+    catch(error){
+        res.status(500).json({ errorMessage: "The user could not be updated" });
     }
-
 });
 
-
-
 function validateUser(req, res, next) {
-
+    if(Object.keys(req.body) == 0){
+        res.status(404).json({ errorMessage: "missing user data" });
+    }
+    else if(!req.body.name){
+        res.status(400).json({ errorMessage: "missing required name field" });
+    }
+    else next();
 };
 
 function validatePost(req, res, next) {
