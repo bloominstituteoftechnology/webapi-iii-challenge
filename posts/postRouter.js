@@ -1,21 +1,7 @@
 const express = require("express");
 const Posts = require("./postDb");
 const router = express.Router();
-
-// custom middleware
-
-const validatePostId = async (req, res, next) => {
-    const postId = req.params.id;
-    const currentPost = await Posts.getById(postId);
-    if(!postId || isNaN(parseInt(postId, 10)) || !currentPost){
-        res.status(400).json({errorMessage: 'invalid post id'})
-    }
-    else {
-        req.post = currentPost;
-        next();
-    }
-};
-
+const postMiddleware = require('../middleware/postMiddleware')
 
 router.get('/', async (req, res) => {
     try{
@@ -27,7 +13,7 @@ router.get('/', async (req, res) => {
     };
 });
 
-router.get('/:id', validatePostId, async (req, res) => {
+router.get('/:id', postMiddleware.validatePostId, async (req, res) => {
     const postId = req.params.id;
     try{
         res.status(200).json(req.post)
@@ -37,7 +23,7 @@ router.get('/:id', validatePostId, async (req, res) => {
     }
 });
 
-router.delete('/:id', validatePostId, async (req, res) => {
+router.delete('/:id', postMiddleware.validatePostId, async (req, res) => {
     const postId = req.params.id;
     try{
         await Posts.remove(postId);
@@ -48,7 +34,7 @@ router.delete('/:id', validatePostId, async (req, res) => {
     }
 });
 
-router.put('/:id', validatePostId, async (req, res) => {
+router.put('/:id', postMiddleware.validatePostId, async (req, res) => {
     const postId = req.params.id;
     const text = req.body.text;
     try{
@@ -60,7 +46,5 @@ router.put('/:id', validatePostId, async (req, res) => {
         res.status(500).json({ errorMessage: "The post could not be updated." });
     }
 });
-
-
 
 module.exports = router;
