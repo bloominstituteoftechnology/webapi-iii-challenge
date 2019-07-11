@@ -17,7 +17,6 @@ server.get('/', logger, (req, res) => {
 });
 
 
-
 function logger(req, res, next) {
   console.log(`${req.method} Request`);
   next();
