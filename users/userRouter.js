@@ -96,7 +96,7 @@ router.put('/:id', validateUserId, validateUser, async (req, res) => {
 
 //custom middleware
 
-function validateUserId(req, res, next){
+async function validateUserId(req, res, next){
     const user = await Users.getById(req.params.id);
     if(user){
         req.user = user;
