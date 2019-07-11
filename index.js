@@ -19,7 +19,7 @@ server.use(logger);
 server.use('/api/users', userRouter);
 server.use('/api/posts', postRouter);
 
-const port = process.env.PORT  || 5000;
+const port = process.env.PORT;
 
 server.listen(port, () => {
   console.log(`\n*** Server Running on http://localhost:${port} ***\n`);
