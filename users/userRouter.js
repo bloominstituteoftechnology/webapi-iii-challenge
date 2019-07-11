@@ -1,4 +1,4 @@
-const express = 'express';
+const express = require('express');
 
 const router = express.Router();
 
@@ -37,7 +37,13 @@ function validateUserId(req, res, next) {
 };
 
 function validateUser(req, res, next) {
-
+  if(!req.body){
+    next(res.status(400).json({ message: "missing user data" }));
+  } else if(!req.body.name){
+    next(    res.status(400).json({ message: "missing required name field" }));
+  } else{
+    next();
+  }
 };
 
 function validatePost(req, res, next) {
