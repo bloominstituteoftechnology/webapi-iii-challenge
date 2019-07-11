@@ -6,12 +6,13 @@ const User = require('./userDb.js');
 const Post = require('../posts/postDb.js');
 
 //Post a new user
-router.post('/', validateUserId, async, (req, res) => {
-    const { userName } = req.body;
+router.post('/', validateUser, async (req, res) => {
+    const userName = req.body;
+    console.log(userName)
     
     try {
-        const newUser = await User.insert({ userName });
-        res.status(201).json(newUser)
+        const name = await User.insert(userName);
+        res.status(201).json(name)
     }
     catch (err) { 
         res.status(500).json({ errorMessage: 'There was an error while add the new user!' })
@@ -22,9 +23,10 @@ router.post('/', validateUserId, async, (req, res) => {
 router.post('/:id/posts', validateUserId, validatePost, async (req, res) => {
     const id = req.user.id;
     const text = req.body.text;
+    console.log(text, id)
 
     try {
-        const newPost = await Post.insert({ text, id })
+        const newPost = await Post.insert({text, user_id:id})
         res.status(201).json(newPost)
     }
     catch (err) {
@@ -36,7 +38,7 @@ router.post('/:id/posts', validateUserId, validatePost, async (req, res) => {
 router.get('/', async (req, res) => {
     try {
         const users = await User.get();
-        res,status(200).json(users)
+        res.status(200).json(users)
     }
     catch (err) {
         res.status(500).json({ errorMessage: 'The users information could not be retrived.' })
@@ -44,7 +46,7 @@ router.get('/', async (req, res) => {
 });
 
 //Get user by ID
-router.get('/:id', async (req, res) => {
+router.get('/:id', validateUserId, async (req, res) => {
     const id = req.user.id;
     
     try {
@@ -83,7 +85,7 @@ router.delete('/:id', validateUserId, async (req, res) => {
     try {
         const deleted = await User.remove(id);
             if(deleted) {
-                res.status(200).end() 
+                res.status(200).json({ message: 'User was deleted.' }) 
             }   else {
                 res.status(400).json({ errorMessage: 'User with that ID could not be deleted' })
             }
@@ -131,7 +133,7 @@ function validateUserId(req, res, next) {
 function validateUser(req, res, next) {
     if (!req.body) {
         res.status(400).json({ message: 'missing user data' })
-    } else if (!req.body.text) {
+    } else if (!req.body.name) {
         res.status(400).json({ message: 'missing required name field' })
     } else {
         next()
