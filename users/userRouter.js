@@ -2,44 +2,9 @@ const express = require("express");
 const Users = require("./userDb");
 const Posts = require("../posts/postDb");
 const router = express.Router();
-
-//custom middleware
-
-const validateUserId = async (req, res, next) => {
-    const userId = req.params.id;
-    const currentUser = await Users.getById(userId);
-    if(!userId || isNaN(parseInt(userId, 10)) || !currentUser){
-        res.status(400).json({errorMessage: 'invalid user id'})
-    }
-    else {
-        req.user = currentUser;
-        next();
-    }
-};
-
-function validateUser(req, res, next) {
-    if(Object.keys(req.body) == 0){
-        res.status(404).json({ errorMessage: "missing user data" });
-    }
-    else if(!req.body.name){
-        res.status(400).json({ errorMessage: "missing required name field" });
-    }
-    else next();
-};
-
-function validatePost(req, res, next) {
-    if(Object.keys(req.body) == 0){
-        res.status(404).json({ errorMessage: "missing post data" });
-    }
-    else if(!req.body.text){
-        res.status(400).json({ errorMessage: "missing required text field" });
-    }
-    else next();
-};
+const middleware = require('../middleware/userMiddleware');
 
 // endpoints
-
-
 // Create a new user
 router.post('/', async (req, res) => {
     const { name } = req.body;
@@ -53,7 +18,7 @@ router.post('/', async (req, res) => {
 });
 
 // create a post for a user by its id
-router.post('/:id/posts', validateUserId, validatePost, async (req, res) => {
+router.post('/:id/posts', middleware.validateUserId, middleware.validatePost, async (req, res) => {
     const user_id = req.user.id;
     const text = req.body.text;
     try {
@@ -94,7 +59,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // get list of post for a given user id
-router.get('/:id/posts', validateUserId, async (req, res) => {
+router.get('/:id/posts', middleware.validateUserId, async (req, res) => {
     const userId = req.user.id;
     try {
     const posts = await Users.getUserPosts(userId);
@@ -110,7 +75,7 @@ router.get('/:id/posts', validateUserId, async (req, res) => {
 });
 
 // delete a user
-router.delete('/:id', validateUserId, async (req, res) => {
+router.delete('/:id', middleware.validateUserId, async (req, res) => {
     const userId = req.user.id;
     const deletedUser = req.user;
     try{
@@ -122,7 +87,7 @@ router.delete('/:id', validateUserId, async (req, res) => {
     }
 });
 
-router.put('/:id', validateUserId, validateUser, async (req, res) => {
+router.put('/:id', middleware.validateUserId, middleware.validateUser, async (req, res) => {
     try{
         const name = req.body;
         const userIdToUpdate = req.user.id;
