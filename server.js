@@ -1,3 +1,4 @@
+const userRoutes = require('./users/userRouter.js');
 const express = require('express');
 
 const server = express();
@@ -13,5 +14,7 @@ function logger(req, res, next) {
 };
 
 server.use(logger);
+
+server.use('/api/users', userRoutes);
 
 module.exports = server;
