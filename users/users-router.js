@@ -3,6 +3,9 @@ const express = require('express');
 const router = express.Router();
 
 const Users = require('./users-model')
+const Posts = require('../posts/posts-model.js');
+
+
 
 
 router.post('/', async (req, res) => {
@@ -122,9 +125,7 @@ router.delete('/:id', async (req, res) => {
 
 //custom middleware
 
-function validateUserId(req, res, next) {
 
-};
 
 function validateUser(req, res, next) {
 
@@ -133,5 +134,6 @@ function validateUser(req, res, next) {
 function validatePost(req, res, next) {
 
 };
+
 
 module.exports = router;

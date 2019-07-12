@@ -6,6 +6,6 @@ function gate(req, res, next) {
   if (password && password === 'password') {
     next();
   } else {
-    next('You shall not pass'); // go to next error handling middleware
+    next("Hmm... That password doesn't seem to match our records."); // go to next error handling middleware
   }
 }

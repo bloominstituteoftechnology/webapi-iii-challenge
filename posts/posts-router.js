@@ -4,19 +4,6 @@ const Posts = require('./posts-model.js');
 
 const router = express.Router();
 
-router.get('/', async (req, res) => {
-    try {
-        const posts = await Posts.get(req.query);
-        res.status(200).json(posts);
-      } catch (error) {
-        // log error to server
-        console.log(error);
-        res.status(500).json({
-          message: 'Error retrieving the posts',
-        });
-      }
-});
-
 router.get('/:id', async (req, res) => {
     try {
       const post = await Posts.getById(req.params.id);
@@ -85,8 +72,11 @@ router.get('/:id', async (req, res) => {
 
 // custom middleware
 
-function validatePostId(req, res, next) {
+router.use(validatePostId)
 
+function validatePostId(req, res, next) {
+  console.log('hello')
+  next();
 };
 
 module.exports = router;

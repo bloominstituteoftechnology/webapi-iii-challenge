@@ -3,11 +3,12 @@ const express = require('express'); // importing a CommonJS modu
 const postsRouter = require('./posts/posts-router.js');
 const usersRouter = require('./users/users-router.js');
 const gate = require('./auth/gate-middleware.js'); // <<<<<<<
+const validateUserId = require('./auth/validateUserId.js');
 
 const server = express();
 
 function logger(req, res, next) {
-  console.log(`${req.method} to ${req.path}`);
+  console.log(`${req.method} to ${req.path} at ${Date.now()}`);
 
   next();
 }
@@ -24,9 +25,13 @@ server.get('/paid', gate, (req, res) => {
   res.status(200).json({ welcome: 'To the mines of Moria' });
 });
 
-server.use('/api/posts', /*gate,*/ postsRouter);
+server.get('/api/users/:id', validateUserId, (req, res) => {
+  res.status(200).json({ UserId: 'Valid!' });
+});
 
-server.use('/api/users', /*gate,*/ usersRouter);
+server.use('/api/posts', postsRouter);
+
+server.use('/api/users', usersRouter);
 
 function addName(req, res, next) {
   const name = 'Web 20 Developers';
