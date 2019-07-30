@@ -4,7 +4,7 @@ module.exports = {
   get,
   getById,
   getUserPosts,
-  insert,
+  add,
   update,
   remove,
 };
@@ -26,7 +26,7 @@ function getUserPosts(userId) {
     .where('p.user_id', userId);
 }
 
-function insert(user) {
+function add(user) {
   return db('users')
     .insert(user)
     .then(ids => {

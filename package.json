@@ -4,7 +4,7 @@
   "description": "Web API Blog Project",
   "main": "index.js",
   "scripts": {
-    "server": "nodemon index.js"
+    "server": "nodemon server.js"
   },
   "repository": {
     "type": "git",
@@ -23,8 +23,9 @@
   },
   "homepage": "https://github.com/LambdaSchool/Node-Blog#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.17.1",
-    "knex": "^0.18.3",
+    "knex": "^0.19.1",
     "sqlite3": "^4.0.9"
   },
   "devDependencies": {
