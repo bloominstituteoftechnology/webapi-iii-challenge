@@ -1,104 +1,98 @@
-# Building an API using a Node.js and Express
+# Building an API using a Node.js and Express Middleware
 
-## Topics
+In this challenge, you build an API and write custom middleware that satisfies the requirements listed under the `Minimum Viable Product` section.
 
-* Building RESTful APIs.
-* Performing CRUD Operations on Multiple Resources.
-* Configuring CORS.
-* Writing Custom Middleware.
-* Using Express Routers to Modularize Application.
+## Instructions
 
-## Assignment
+**Read these instructions carefully. Understand exactly what is expected before starting.**
 
-Use Node.js and Express to design and build an API that performs CRUD operations on **users, posts and post tags**. Write custom middleware to ensure that the _tags_ are uppercased before they are processed by the request handlers.
+You are allowed, and **encouraged**, to collaborate with other peers. Please follow the twenty-minute rule, before seeking support from your PM and Instructor.
 
-### Download Project Files and Install Dependencies
+## Project Set Up
 
-* **Fork** and **Clone** this repository.
-* **CD into the folder** where you cloned the repository.
-* Do your magic!
+- [ ] Create a forked copy of this project.
+- [ ] Add your project manager as collaborator on Github.
+- [ ] Clone your OWN version of the repository.
+- [ ] Create a new branch: git checkout -b `<firstName-lastName>`.
+- [ ] Implement the project on your newly created `<firstName-lastName>` branch, committing changes regularly.
+- [ ] Push commits: git push origin `<firstName-lastName>`.
 
-### Implement Requirements
+Follow these steps for completing your project.
 
-* Take the steps necessary to create a `package.json` to keep a record of our dependencies.
-* use _yarn_ or _npm_ to add **knex** and **sqlite3** as dependencies to the project. **This is required for database access**.
-* Configure an _npm script_ named _"start"_ that will execute your code using _nodemon_ so that the server restarts on changes. Make _nodemon_ be a development time dependency only, it shouldn't be deployed to production.
-* Design and build a set of endpoints that satisfy the API requirements.
-* **Use _Postman_ to test the API as you work through the exercises.**
+- [ ] Submit a Pull-Request to merge <firstName-lastName> Branch into master (student's Repository). **Please don't merge your own pull request**
+- [ ] Add your project manager as a reviewer on the pull-request
+- [ ] Your project manager will count the project as complete by merging the branch back into master.
+- [ ] Do your magic!
+
+## Minimum Viable Product
+
+1. Write and implement four custom `middleware` functions, detailed below.
+1. Build an API to let clients perform CRUD operations on `users`.
+1. Add endpoints to retrieve the list of `posts` for a `user` and to store a new `post` for a `user`.
+
+#### Custom Middleware Requirements
+
+- `logger()`
+  - `logger` logs to the console the following information about each request: request method, request url, and a timestamp
+  - this middleware runs on every request made to the API
+
+- `validateUserId()`
+  - `validateUserId` validates the user id on every request that expects a user id parameter
+  - if the `id` parameter is valid, store that user object as `req.user`
+  - if the `id` parameter does not match any user id in the database, cancel the request and respond with status `400` and `{ message: "invalid user id" }`
+
+- `validateUser()`
+  - `validateUser` validates the `body` on a request to create a new user
+  - if the request `body` is missing, cancel the request and respond with status `400` and `{ message: "missing user data" }`
+  - if the request `body` is missing the required `name` field, cancel the request and respond with status `400` and `{ message: "missing required name field" }`
+
+- `validatePost()`
+  - `validatePost` validates the `body` on a request to create a new post
+  - if the request `body` is missing, cancel the request and respond with status `400` and `{ message: "missing post data" }`
+  - if the request `body` is missing the required `text` field, cancel the request and respond with status `400` and `{ message: "missing required text field" }`
 
 ### Database Persistence Helpers
 
-The `/data/helpers` folder includes helper files that you can use to manage the persistence of users, posts and tags data. These files are `userDb.js`, `postDb.js` and `tagDb.js`. All three of them publish the following api, that you can use to store, modify and retrieve each resource:
+There are two helper files that you can use to manage the persistence of _users_ and _posts_ data. These files are `users/userDb.js` and `posts/postDb.js`. Both files publish the following api:
 
-* `get()`: calling find returns a promise that resolves to an array of all the resources contained in the database. If you pass an `id` to this method it will return the resource with that id if found.
-* `insert()`: calling insert passing it a resource object will add it to the database and return an object with the id of the inserted resource. The object looks like this: `{ id: 123 }`.
-* `update()`: accepts two arguments, the first is the `id` of the resource to update and the second is an object with the `changes` to apply. It returns the count of updated records. If the count is 1 it means the record was updated correctly.
-* `remove()`: the remove method accepts an `id` as it's first parameter and, upon successfully deleting the resource from the database, returns the number of records deleted.
+- `get()`: calling find returns a promise that resolves to an array of all the `resources` contained in the database.
+- `getById()`: takes an `id` as the argument and returns a promise that resolves to the `resource` with that id if found.
+- `insert()`: calling insert passing it a `resource` object will add it to the database and return the new `resource`.
+- `update()`: accepts two arguments, the first is the `id` of the `resource` to update and the second is an object with the `changes` to apply. It returns the count of updated records. If the count is 1 it means the record was updated correctly.
+- `remove()`: the remove method accepts an `id` as it's first parameter and, upon successfully deleting the `resource` from the database, returns the number of records deleted.
 
-The `postDb.js` helper includes an extra method called `getPostTags()` that when passed a post id as it's only argument, returns a list of all the _tags_ for the post.
+The `userDb.js` helper includes an extra method called `getUserPosts()` that when passed a user's `id`, returns a list of all the `posts` for the `user`.
 
-The `userDb.js` helper includes an extra method called `getUserPosts()` that when passed a user id as it's only argument, returns a list of all the posts for the user.
-
-**All these helper methods return a promise.**
+**All helper methods return a promise.**
 
 #### Database Schemas
 
-The _schemas_ (properties and data type of each property) used to store and retrieve the resources inside the included database (`lambda.sqlite3`) is described below.
+The _Database Schemas_ for the `users` and `posts` resources are:
 
 ##### Users
 
-* id: number, no need to provide it when creating users, the database will generate it.
-* name: up to 128 characters long, required.
+| field | data type        | metadata                                            |
+| ----- | ---------------- | --------------------------------------------------- |
+| id    | unsigned integer | primary key, auto-increments, generated by database |
+| name  | string           | required, unique                                    |
 
 ##### Posts
 
-* id: number, no need to provide it when creating posts, the database will automatically generate it.
-* userId: number, required, must be the id of an existing user.
-* text: string, no size limit, required.
+| field   | data type        | metadata                                            |
+| ------- | ---------------- | --------------------------------------------------- |
+| id      | unsigned integer | primary key, auto-increments, generated by database |
+| text    | text             | required                                            |
+| user_id | unsigned integer | required, must be the `id` of an existing `user`              |
 
-##### Tags
+We have provided test data for the resources.
 
-* id: number, no need to provide it when creating tags, the database will generate it.
-* tag: string up to 80 characters long, must be a unique value.
+## Stretch Goals
 
-We have provided test data for all the resources.
+- Add the Post Router
+  - Implement all endpoints and middleware within `posts/postRouter.js`
 
-Now that we have a way to add, update, remove and retrieve data from the provided database, it is time to work on the API.
-
-### Design and Build Endpoints
-
-Design and build the necessary endpoints to:
-
-* perform CRUD operations on _users_, _posts_, and _tags_.
-* retrieve the list of posts for a user.
-* retrieve the list of tags for a post.
-
-## Stretch Goal
-
-* Use `create-react-app` to create an application inside the root folder, name it `client`.
-* From the React application connect to th|e `/api/users` endpoint in the API and show the list of users.
-* Add functionality to show the details of a user, including their posts, when clicking a user name in the list. Use React Router to navigate to a `/users/:id` route to show the user details.
-* Add styling!
-
-##endpoints
-
-
-method      | *endpoint*               | what it is         |route handler  |client err |server err|
-----        | ----                     | :----:             | ----:| ----      | ----|
-|get:       | `/api/users `            |   list of users    |  X   |   X       | X   |
-|get:       | `/api/users/:id`         |  A user            |  X   |   X       | X   |
-|post:      | `/api/users`             | add user           |  X   |   X       | X   |
-|delete:    | `/api/users/:id`         | delete a user      |  X   |   X       | X   |
-|get:       | `/api/posts`             | list of posts      |  X   |   X       | X   |
-|get:       | `/api/posts/:id`         | A post             |  X   |   X       | X   |
-|post:      | `/api/posts`             | add post           |  X   |   X       | X   |
-|delete:    | `/api/posts/:id`         | delete a post      |  X   |   X       | X   |
-|get:       | `/api/tags`              | list of tags       |  X   |   X       | X   |
-|get:       | `/api/tags/:id`          | A tag              |  X   |   X       | X   |
-|post:      | `/api/tags `             | add tag            |  X   |   X       | X   |
-|delete:    | `/api/tags/:id`          | delete a tag       |  X   |   X       | X   |
-|get:       | `/api/postsbyid/:userId` |posts :userID       |  X   |   X       | X   |
-|get:       | `/api/posttags/:id `     |tags by post ID     |  X   |   X       | X   |
-|put:       | `/api/users/:id`         |  A user            |  X   |   X       | X   |
-|put:       | `/api/posts/:id`         | A post             |  X   |   X       | X   |
-|put:       | `/api/tags/:id`          | A tag              |  X   |   X       | X   |
+- Create a React App
+  - Use `create-react-app` to create an application inside the root folder, name it `client`.
+  - From the React application connect to the `/api/users` endpoint in the API and show the list of users.
+  - Add functionality to show the details of a user, including their posts, when clicking a user name in the list. Use React Router to navigate to a `/users/:id` route to show the user details.
+  - Add styling!
