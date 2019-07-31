@@ -2,6 +2,10 @@ const express = require('express');
 const postDb = require('./postDb.js');
 
 const router = express.Router();
+router.use((req, res, next) => {
+  console.log('>>>> FROM_POSTS_ROUTER <<<<');
+  next();
+});
 
 router.get('/', async (req, res) => {
   try {

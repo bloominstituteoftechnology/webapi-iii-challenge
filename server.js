@@ -20,7 +20,7 @@ server.get('/', (req, res) => {
 //custom middleware
 
 function typeLogger(req, res, next) {
-  console.log(`${req.method} Request, ${req.url} Request, ${Date()}`);
+  console.log(`${req.method} Type Request, ${req.url} Url Request, ${Date()}`);
   next();
 }
 

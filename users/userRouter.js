@@ -4,48 +4,128 @@ const router = express.Router();
 const userDb = require('./userDb');
 const postDb = require('../posts/postDb.js');
 
-router.post('/', (req, res) => {
-  const post = req.body;
-  userDb
-    .insert(post)
-    .then(post => {
-      res.status(201).json(post);
-    })
-    .catch(err => {
-      res.status(500).json({
-        error: err,
-        message: 'There was an error while saving the post to the database'
-      });
-    });
+router.use((req, res, next) => {
+  console.log('>>>> FROM_USERS_ROUTER <<<<');
+  next();
 });
 
-router.post('/:id/posts', validatePost, async (req, res) => {
-  const { id } = req.params;
-  const newPost = { ...req.body, user_id: id };
+router.post('/', validateUser, async (req, res) => {
+  const user = req.body;
   try {
-    const post = await postDb.insert(newPost);
-    res.status(200).json(post);
+    const userData = await userDb.insert(user);
+    res.status(201).json({ userData });
   } catch (err) {
-    next({ message: 'missing required text field' });
+    res.status(500).json({ succuss: false, message: 'Error getting user' });
   }
 });
 
-router.get('/', (req, res) => {});
+router.post('/:id/posts', validateUserId, validatePost, async (req, res) => {
+  const { text } = req.body;
+  const post = {
+    text: text,
+    user_id: req.user.id
+  };
+  try {
+    const postData = await postDb.insert(post);
+    res.status(200).json({ postData });
+  } catch (err) {
+    res
+      .status(500)
+      .json({ success: false, message: "Error getting user's post" });
+  }
+});
 
-router.get('/:id', (req, res) => {});
+router.get('/', async (req, res) => {
+  try {
+    const userData = await userDb.get();
+    res.status(200).json({ userData });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Error getting users' });
+  }
+});
 
-router.get('/:id/posts', (req, res) => {});
+router.get('/:id', validateUserId, async (req, res) => {
+  try {
+    const userData = await userDb.getById(req.user.id);
+    res.status(200).json({ userData });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Error getting user' });
+  }
+});
 
-router.delete('/:id', (req, res) => {});
+router.get('/:id/posts', validateUserId, async (req, res) => {
+  try {
+    const postData = await userDb.getUserPosts(req.user.id);
+    res.status(200).json({ postData });
+  } catch (err) {
+    res
+      .status(500)
+      .json({ success: false, message: "Error getting user's posts" });
+  }
+});
 
-router.put('/:id', (req, res) => {});
+router.delete('/:id', validateUserId, async (req, res) => {
+  try {
+    const userData = await userDb.remove(req.user.id);
+    res.status(204).json({ userData });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Error deleting user' });
+  }
+});
+
+router.put('/:id', validateUserId, validateUser, async (req, res) => {
+  const user = req.body;
+  try {
+    const userData = await userDb.update(req.user.id, user);
+    res.status(200).json({ userData });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Error saving user' });
+  }
+});
 
 //custom middleware
 
-function validateUserId(req, res, next) {}
+async function validateUserId(req, res, next) {
+  try {
+    const { id } = req.params;
+    const user = await userDb.getById(id);
+    if (user) {
+      req.user = user;
+      next();
+    } else {
+      res.status(404).json({ message: 'invalid user id' });
+    }
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Error' });
+  }
+}
 
-function validateUser(req, res, next) {}
+function validateUser(req, res, next) {
+  const body = req.body;
+  try {
+    if (Object.keys(body).length === 0) {
+      res.status(400).json({ message: 'missing post data' });
+    } else if (!body.name) {
+      res.status(400).json({ message: 'missing required text field' });
+    }
+    next();
+  } catch (error) {
+    res.status(500).json({ succuss: false, message: 'Error' });
+  }
+}
 
-function validatePost(req, res, next) {}
+function validatePost(req, res, next) {
+  const body = req.body;
+  try {
+    if (Object.keys(body).length === 0) {
+      res.status(400).json({ message: 'missing post data' });
+    } else if (!body.text) {
+      res.status(400).json({ message: 'missing required text field' });
+    }
+    next();
+  } catch (error) {
+    res.status(500).json({ succuss: false, message: 'Error' });
+  }
+}
 
 module.exports = router;
