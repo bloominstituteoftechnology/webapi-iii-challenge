@@ -5,14 +5,15 @@ const userRouter = require('./users/userRouter');
 const postRouter = require('./posts/postRouter');
 
 server.use(express.json());
-server.use(cors())
+server.use(cors());
+server.use(logger);
 
 
 server.get('/', (req, res) => {
   res.send(res.send({Success: "sanity check..."}));
 });
 
-server.use('/api/users', logger, userRouter);
+server.use('/api/users', userRouter);
 server.use('/api/posts', postRouter);
 
 //custom middleware
