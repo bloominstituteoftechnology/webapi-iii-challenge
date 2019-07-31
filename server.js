@@ -2,14 +2,14 @@ const express = require('express');
 const postRouter = require('./posts/postRouter');
 const userRouter = require('./users/userRouter');
 const helmet = require('helmet');
-const morgan = require('morgan');
+const logger = require('morgan');
 
 const server = express();
 
-server.use(morgan('dev'));
-server.use(logger);
+server.use(logger('dev'));
+server.use(typeLogger);
 server.use(express.json());
-server.use(helmet);
+server.use(helmet());
 server.use('/api/posts', postRouter);
 server.use('/api/users', userRouter);
 
@@ -19,6 +19,9 @@ server.get('/', (req, res) => {
 
 //custom middleware
 
-function logger(req, res, next) {}
+function typeLogger(req, res, next) {
+  console.log(`${req.method} Request, ${req.url} Request, ${Date()}`);
+  next();
+}
 
 module.exports = server;

@@ -1,10 +1,27 @@
 const express = require('express');
-const Post = require('./postDb.js');
+const postDb = require('./postDb.js');
+
 const router = express.Router();
 
-router.get('/', (req, res) => {});
+router.get('/', async (req, res) => {
+  try {
+    const posts = await postDb.get();
+    res.status(200).json({ posts });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Error getting posts.' });
+  }
+});
 
-router.get('/:id', (req, res) => {});
+router.get('/:id', validatePostId, async (req, res) => {
+  try {
+    const posts = await postDb.getById(req.post.id);
+    res.status(200).json({ posts });
+  } catch (err) {
+    res
+      .status(500)
+      .json({ success: false, message: 'Error getting requested post.' });
+  }
+});
 
 router.delete('/:id', (req, res) => {});
 
