@@ -23,12 +23,32 @@ router.get('/:id', validatePostId, async (req, res) => {
   }
 });
 
-router.delete('/:id', (req, res) => {});
+router.delete('/:id', validatePostId, async (req, res) => {
+  try {
+    const posts = await postDb.remove(req.post.id);
+    res.status(204).json({ posts });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Error deleting post' });
+  }
+});
 
 router.put('/:id', (req, res) => {});
 
 // custom middleware
 
-function validatePostId(req, res, next) {}
+async function validatePostId(req, res, next) {
+  const { id } = req.params;
+  try {
+    const postId = await postDb.getById(id);
+    if (postId) {
+      req.post = postId;
+      next();
+    } else {
+      res.status(404).json({ message: 'That post does not exist.' });
+    }
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Error' });
+  }
+}
 
 module.exports = router;
