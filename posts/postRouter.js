@@ -36,11 +36,8 @@ const getPostsById = async (req, res) => {
 const postPosts = async (req, res) => {
     try {
         const { body } = req;
-        const user = await Db.add(body);
-        if(!body) {
-            res.status(401).json({Error: "post must have content"});
-        }
-        res.status(201).json(user);
+        const post = await Db.add(body);
+        res.status(201).json(post);
     }
     catch (error) {
         res.status(500).json({Error: "error adding post to database."})
@@ -55,9 +52,9 @@ const updatePosts = async (req, res) => {
             res.status(401).json({Error: "post must have content"});
         }
        else {
-            const user = await Db.update(id, body);
-            if(user) {
-                res.status(201).json({id, body: body.name});
+            const post = await Db.update(id, body);
+            if(post) {
+                res.status(201).json({id, body: body.text});
             } else {
                 res.status(404).json({Error: "id not found"})
             }
@@ -70,8 +67,8 @@ const updatePosts = async (req, res) => {
 const deletePosts = async (req, res) => {
     try {
         const { id } = req.params;
-        const user = await Db.remove(id);
-        if(user) {
+        const post = await Db.remove(id);
+        if(post) {
             res.status(204).end();
         } else {
             res.status(404).json({Error: "id not found"});
