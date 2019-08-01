@@ -23,8 +23,12 @@ function add(post) {
   return db('posts')
     .insert(post)
     .then(ids => {
+      console.log(ids);
       return getById(ids[0]);
-    });
+    })
+    .catch(err => {
+      console.log(err.message);
+    })
 }
 
 function update(id, changes) {
