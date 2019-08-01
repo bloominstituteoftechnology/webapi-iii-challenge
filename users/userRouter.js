@@ -3,7 +3,7 @@ const express =  require('express');
 const router = express.Router();
 const users = require('./userDb')
 
-router.post('/', validateUser, async (req, res) => {
+router.post('/', validatePost, validateUser, async (req, res) => {
     try {
       const post = await users.insert(req.body);
       res.status(201).json(post);
@@ -16,11 +16,11 @@ router.post('/', validateUser, async (req, res) => {
     }
   });
   
-router.post('/:id/posts', (req, res) => {
-    // const post = await users.insert(req.params.id)
+// router.post('/:id/posts', validatePost (req, res) => {
+//     const post = await users.insert(req.params.id)
 
 
-});
+// });
 
 router.get('/', async (req, res) => {
     try {
@@ -103,6 +103,7 @@ async function validateUserId(req,res, next){
   
       if(user){
         req.user = user;
+        console.log(req.body)
         next();
       }else {
         res.status(404).json({message: 'id not found'})
@@ -114,8 +115,8 @@ async function validateUserId(req,res, next){
   }
 
 function validateUser(req, res, next) {
-    const body = req.body.name;
-    if(body){
+    const name = req.body.name;
+    if(name){
         next();
      }else{
          res.status(400).json({message: "missing required name field."})
@@ -124,6 +125,14 @@ function validateUser(req, res, next) {
 };
 
 function validatePost(req, res, next) {
+
+  // const body  = req.body;
+  // if(body){
+  //   next();
+  // }else{
+  //   res.status(400).json({message: "missing body."})
+  // }
+
     if (req.body && Object.keys(req.body).length > 0) {
         next();
       } else {

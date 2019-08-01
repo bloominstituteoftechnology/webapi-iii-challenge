@@ -2,7 +2,9 @@ const express = require('express');
 
 const server = express();
 const users = require('./users/userDb')
+// const posts = require('./posts/postDb');
 const usersRouter = require('./users/userRouter')
+const postsRouter = require('./posts/postRouter')
 server.use(express.json());
 
 
@@ -16,6 +18,8 @@ server.get('/', logger , atGate,(req, res) => {
 
  
 server.use('/users', usersRouter)
+
+server.use('/posts', postsRouter)
 
 
 //  async function validateUserId(req,res, next){
