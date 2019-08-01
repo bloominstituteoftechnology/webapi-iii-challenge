@@ -97,7 +97,7 @@ const postUserPosts = async (req, res) => {
         const post = await PostDb.add({text: req.body.text, user_id: user.id});
             res.status(201).json(post)
     } catch (error) {
-        res.status(500).json({Error: error});
+        res.status(500).json({Error: error.message});
     }
 }
 
