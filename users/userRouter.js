@@ -110,7 +110,7 @@ function validateUser(req, res, next) {
   const body = req.body;
   try {
     if (Object.keys(body).length === 0) {
-      res.status(400).json({ message: 'missing post data' });
+      res.status(400).json({ message: 'missing required data' });
     } else if (!body.name) {
       res.status(400).json({ message: 'missing required text field' });
     }
