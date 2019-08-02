@@ -5,7 +5,7 @@ const userDb = require('./userDb');
 const postDb = require('../posts/postDb.js');
 
 router.use((req, res, next) => {
-  console.log('>>>> FROM_USERS_ROUTER <<<<');
+  console.log('>>>>>>  FROM_USERS_ROUTER  <<<<<<');
   next();
 });
 
@@ -13,7 +13,7 @@ router.post('/', validateUser, async (req, res) => {
   const user = req.body;
   try {
     const userData = await userDb.insert(user);
-    res.status(201).json({ userData });
+    res.status(201).json(userData);
   } catch (err) {
     res.status(500).json({ succuss: false, message: 'Error getting user' });
   }
@@ -27,7 +27,7 @@ router.post('/:id/posts', validateUserId, validatePost, async (req, res) => {
   };
   try {
     const postData = await postDb.insert(post);
-    res.status(200).json({ postData });
+    res.status(200).json(postData);
   } catch (err) {
     res
       .status(500)
@@ -38,7 +38,7 @@ router.post('/:id/posts', validateUserId, validatePost, async (req, res) => {
 router.get('/', async (req, res) => {
   try {
     const userData = await userDb.get();
-    res.status(200).json({ userData });
+    res.status(200).json(userData);
   } catch (err) {
     res.status(500).json({ success: false, message: 'Error getting users' });
   }
@@ -47,7 +47,7 @@ router.get('/', async (req, res) => {
 router.get('/:id', validateUserId, async (req, res) => {
   try {
     const userData = await userDb.getById(req.user.id);
-    res.status(200).json({ userData });
+    res.status(200).json(userData);
   } catch (err) {
     res.status(500).json({ success: false, message: 'Error getting user' });
   }
@@ -56,7 +56,7 @@ router.get('/:id', validateUserId, async (req, res) => {
 router.get('/:id/posts', validateUserId, async (req, res) => {
   try {
     const postData = await userDb.getUserPosts(req.user.id);
-    res.status(200).json({ postData });
+    res.status(200).json(postData);
   } catch (err) {
     res
       .status(500)
@@ -67,21 +67,27 @@ router.get('/:id/posts', validateUserId, async (req, res) => {
 router.delete('/:id', validateUserId, async (req, res) => {
   try {
     const userData = await userDb.remove(req.user.id);
-    res.status(204).json({ userData });
+    res.status(204).json(userData);
   } catch (err) {
     res.status(500).json({ success: false, message: 'Error deleting user' });
   }
 });
 
-router.put('/:id', validateUserId, validateUser, async (req, res) => {
-  const user = req.body;
-  try {
-    const userData = await userDb.update(req.user.id, user);
-    res.status(200).json({ userData });
-  } catch (err) {
-    res.status(500).json({ success: false, message: 'Error saving user' });
+router.put(
+  '/:id',
+  validateUserId,
+  validateUser,
+  validatePost,
+  async (req, res) => {
+    const user = req.body;
+    try {
+      const userData = await userDb.update(req.user.id, user);
+      res.status(200).json(userData);
+    } catch (err) {
+      res.status(500).json({ success: false, message: 'Error saving user' });
+    }
   }
-});
+);
 
 //custom middleware
 

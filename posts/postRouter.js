@@ -3,14 +3,14 @@ const postDb = require('./postDb.js');
 
 const router = express.Router();
 router.use((req, res, next) => {
-  console.log('>>>> FROM_POSTS_ROUTER <<<<');
+  console.log('>>>>>>  FROM_POSTS_ROUTER  <<<<<<');
   next();
 });
 
 router.get('/', async (req, res) => {
   try {
     const posts = await postDb.get();
-    res.status(200).json({ posts });
+    res.status(200).json(posts);
   } catch (err) {
     res.status(500).json({ success: false, message: 'Error getting posts.' });
   }
@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
 router.get('/:id', validatePostId, async (req, res) => {
   try {
     const posts = await postDb.getById(req.post.id);
-    res.status(200).json({ posts });
+    res.status(200).json(posts);
   } catch (err) {
     res
       .status(500)
@@ -30,7 +30,7 @@ router.get('/:id', validatePostId, async (req, res) => {
 router.delete('/:id', validatePostId, async (req, res) => {
   try {
     const posts = await postDb.remove(req.post.id);
-    res.status(204).json({ posts });
+    res.status(204).json(posts);
   } catch (err) {
     res.status(500).json({ success: false, message: 'Error deleting post' });
   }
@@ -40,7 +40,7 @@ router.put('/:id', validatePostId, async (req, res) => {
   const updated = req.body;
   try {
     const posts = await postDb.update(req.post.id, updated);
-    res.status(200).json({ posts });
+    res.status(200).json(posts);
   } catch (err) {
     res.status(500).json({ success: false, message: 'Error posting' });
   }

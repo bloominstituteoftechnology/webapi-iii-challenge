@@ -6,10 +6,7 @@ const logger = require('morgan');
 
 const server = express();
 
-server.use(logger('dev'));
-server.use(typeLogger);
-server.use(express.json());
-server.use(helmet());
+server.use(logger('dev'), typeLogger, express.json(), helmet());
 server.use('/api/posts', postRouter);
 server.use('/api/users', userRouter);
 
@@ -20,7 +17,7 @@ server.get('/', (req, res) => {
 //custom middleware
 
 function typeLogger(req, res, next) {
-  console.log(`${req.method} Type Request, ${req.url} Url Request, ${Date()}`);
+  console.log(`Type:${req.method}, Url:${req.url}, Requested on:${Date()}`);
   next();
 }
 
