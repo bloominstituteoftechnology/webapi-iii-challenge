@@ -15,7 +15,13 @@ router.post('/', validateUser, async (req, res) => {
     const userData = await userDb.insert(user);
     res.status(201).json(userData);
   } catch (err) {
-    res.status(500).json({ succuss: false, message: 'Error getting user' });
+    res
+      .status(500)
+      .json({
+        succuss: false,
+        message: 'Error getting user',
+        err: err.message
+      });
   }
 });
 
@@ -29,9 +35,11 @@ router.post('/:id/posts', validateUserId, validatePost, async (req, res) => {
     const postData = await postDb.insert(post);
     res.status(200).json(postData);
   } catch (err) {
-    res
-      .status(500)
-      .json({ success: false, message: "Error getting user's post" });
+    res.status(500).json({
+      success: false,
+      message: "Error getting user's post",
+      err: err.message
+    });
   }
 });
 
@@ -40,7 +48,13 @@ router.get('/', async (req, res) => {
     const userData = await userDb.get();
     res.status(200).json(userData);
   } catch (err) {
-    res.status(500).json({ success: false, message: 'Error getting users' });
+    res
+      .status(500)
+      .json({
+        success: false,
+        message: 'Error getting users',
+        err: err.message
+      });
   }
 });
 
@@ -49,7 +63,13 @@ router.get('/:id', validateUserId, async (req, res) => {
     const userData = await userDb.getById(req.user.id);
     res.status(200).json(userData);
   } catch (err) {
-    res.status(500).json({ success: false, message: 'Error getting user' });
+    res
+      .status(500)
+      .json({
+        success: false,
+        message: 'Error getting user',
+        err: err.message
+      });
   }
 });
 
@@ -58,9 +78,11 @@ router.get('/:id/posts', validateUserId, async (req, res) => {
     const postData = await userDb.getUserPosts(req.user.id);
     res.status(200).json(postData);
   } catch (err) {
-    res
-      .status(500)
-      .json({ success: false, message: "Error getting user's posts" });
+    res.status(500).json({
+      success: false,
+      message: "Error getting user's posts",
+      err: err.message
+    });
   }
 });
 
@@ -69,25 +91,27 @@ router.delete('/:id', validateUserId, async (req, res) => {
     const userData = await userDb.remove(req.user.id);
     res.status(204).json(userData);
   } catch (err) {
-    res.status(500).json({ success: false, message: 'Error deleting user' });
+    res.status(500).json({
+      success: false,
+      message: 'Error deleting user',
+      err: err.message
+    });
   }
 });
 
-router.put(
-  '/:id',
-  validateUserId,
-  validateUser,
-  validatePost,
-  async (req, res) => {
-    const user = req.body;
-    try {
-      const userData = await userDb.update(req.user.id, user);
-      res.status(200).json(userData);
-    } catch (err) {
-      res.status(500).json({ success: false, message: 'Error saving user' });
-    }
+router.put('/:id', validateUserId, validateUser, async (req, res) => {
+  const user = req.body;
+  try {
+    const userData = await userDb.update(req.user.id, user);
+    res.status(200).json(userData);
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: 'Error saving user',
+      err: err.message
+    });
   }
-);
+});
 
 //custom middleware
 
@@ -102,7 +126,9 @@ async function validateUserId(req, res, next) {
       res.status(404).json({ message: 'invalid user id' });
     }
   } catch (err) {
-    res.status(500).json({ success: false, message: 'Error' });
+    res
+      .status(500)
+      .json({ success: false, message: 'Error', err: err.message });
   }
 }
 
@@ -116,7 +142,9 @@ function validateUser(req, res, next) {
     }
     next();
   } catch (error) {
-    res.status(500).json({ succuss: false, message: 'Error' });
+    res
+      .status(500)
+      .json({ succuss: false, message: 'Error', err: err.message });
   }
 }
 
@@ -130,7 +158,9 @@ function validatePost(req, res, next) {
     }
     next();
   } catch (error) {
-    res.status(500).json({ succuss: false, message: 'Error' });
+    res
+      .status(500)
+      .json({ succuss: false, message: 'Error', err: err.message });
   }
 }
 

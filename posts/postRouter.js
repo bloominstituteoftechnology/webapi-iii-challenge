@@ -42,7 +42,9 @@ router.put('/:id', validatePostId, async (req, res) => {
     const posts = await postDb.update(req.post.id, updated);
     res.status(200).json(posts);
   } catch (err) {
-    res.status(500).json({ success: false, message: 'Error posting' });
+    res
+      .status(500)
+      .json({ success: false, message: 'Error posting', err: err.message });
   }
 });
 
