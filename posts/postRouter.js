@@ -16,9 +16,11 @@ router.get('/', async (req, res) => {
 
 });
 
+router.get('/:id')
+
 router.get('/:id', async (req, res) => {
    try{
-     const post = await users.getById(req.params.id)
+     const post = await posts.getById(req.params.id)
      if(post){
        res.status(200).json(post)
      }else{
@@ -33,6 +35,17 @@ router.get('/:id', async (req, res) => {
      })
    }
 });
+
+router.post('/', async(req, res) => {
+  try{
+    const post = await posts.insert(req.body);
+    res.status(201).json(post);
+  }catch (error){
+    res.status(500).json({
+      message: 'Error adding the post'
+    })
+  }
+})
 
 router.delete('/:id',  async (req, res) => {
   try {
@@ -95,17 +108,17 @@ function validatePostId(req, res, next) {
 };
 function validatePost(req, res, next) {
 
-  // const body  = req.body;
+  const body  = req.body;
   // if(body){
   //   next();
   // }else{
   //   res.status(400).json({message: "missing body."})
-  // }
+  // }}
 
     if (req.body && Object.keys(req.body).length > 0) {
         next();
       } else {
-        res.status(400).json({message:'Pleaes include a body in your request.'});
+        res.status(400).json({message:'Please include a body in your request.'});
       }
     }
 

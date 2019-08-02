@@ -50,6 +50,8 @@ router.get('/:id', validateUserId,  async(req, res) => {
 
 });
 
+router.getU
+
 // router.get('/:id/posts', (req, res) => {
 //     try{
 //         const user =
