@@ -50,7 +50,16 @@ router.get('/:id', validateUserId,  async(req, res) => {
 
 });
 
-router.getU
+router.get('/posts/:id', async(req,res)=> {
+  try{const userPosts = await users.getUserPosts(req.params.id);
+    res.status(200).json(userPosts);
+
+  }catch (error){
+    res.status(500).json({
+      message: 'Error retreiving the user'
+    })
+  }
+})
 
 // router.get('/:id/posts', (req, res) => {
 //     try{
