@@ -5,7 +5,7 @@ module.exports = {
   getById,
   insert,
   update,
-  remove,
+  remove
 };
 
 function get() {

@@ -1,27 +1,68 @@
-const express = 'express';
+const express = require('express');
+const postDb = require('./postDb.js');
 
 const router = express.Router();
-
-router.get('/', (req, res) => {
-
+router.use((req, res, next) => {
+  console.log('>>>>>>  FROM_POSTS_ROUTER  <<<<<<');
+  next();
 });
 
-router.get('/:id', (req, res) => {
-
+router.get('/', async (req, res) => {
+  try {
+    const posts = await postDb.get();
+    res.status(200).json(posts);
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Error getting posts.' });
+  }
 });
 
-router.delete('/:id', (req, res) => {
-
+router.get('/:id', validatePostId, async (req, res) => {
+  try {
+    const posts = await postDb.getById(req.post.id);
+    res.status(200).json(posts);
+  } catch (err) {
+    res
+      .status(500)
+      .json({ success: false, message: 'Error getting requested post.' });
+  }
 });
 
-router.put('/:id', (req, res) => {
+router.delete('/:id', validatePostId, async (req, res) => {
+  try {
+    const posts = await postDb.remove(req.post.id);
+    res.status(204).json(posts);
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Error deleting post' });
+  }
+});
 
+router.put('/:id', validatePostId, async (req, res) => {
+  const updated = req.body;
+  try {
+    const posts = await postDb.update(req.post.id, updated);
+    res.status(200).json(posts);
+  } catch (err) {
+    res
+      .status(500)
+      .json({ success: false, message: 'Error posting', err: err.message });
+  }
 });
 
 // custom middleware
 
-function validatePostId(req, res, next) {
-
-};
+async function validatePostId(req, res, next) {
+  const { id } = req.params;
+  try {
+    const postId = await postDb.getById(id);
+    if (postId) {
+      req.post = postId;
+      next();
+    } else {
+      res.status(404).json({ message: 'That post does not exist.' });
+    }
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Error' });
+  }
+}
 
 module.exports = router;
