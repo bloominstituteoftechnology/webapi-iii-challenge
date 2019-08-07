@@ -1,4 +1,4 @@
-const express = 'express';
+const express = require('express');
 
 const router = express.Router();
 
@@ -18,6 +18,11 @@ router.put('/:id', (req, res) => {
 
 });
 
+
+router.post('/', (req, res) => {
+    insert({user_id, text})
+});
+
 // custom middleware
 
 function validatePostId(req, res, next) {
@@ -25,3 +30,7 @@ function validatePostId(req, res, next) {
 };
 
 module.exports = router;
+
+// localhostXXX.com/users/:id/posts/:id
+// localhostXXX.com/users/
+// localhostXXX.com/posts/
