@@ -1,5 +1,6 @@
 const express = 'express';
 const db = require('./userDb')
+const postDb = require('../posts/postDb');
 const router = require('express').Router();
 
 
@@ -13,8 +14,17 @@ router.post('/', validateUser, (req, res) => {
         });
 });
 
-router.post('/:id/posts', (req, res) => {
+router.post('/:id/posts',validateUserId, (req, res) => {
+    if(req.body){
+        postDb.insert(req.body)
+            .then(post => {
+                res.status(200).json(post);
+            })
+            .catch(err => {
+                res.status(500).json({error: 'There was an error posting to the database.'})
+            })
 
+    }
 });
 
 router.get('/', (req, res) => {
