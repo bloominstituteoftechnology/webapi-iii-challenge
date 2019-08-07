@@ -1,3 +1,4 @@
+const moment = require('moment')
 const express = require('express');
 
 const usersRoutes = require('./users/userRouter');
@@ -13,11 +14,16 @@ server.get('/', (req, res) => {
 //custom middleware
 
 function logger(req, res, next) {
+  const method = req.method;
+  const url = req.url;
+  const timestamp = moment().format('MMMM Do YYYY, h:mm:ss a');;
 
+  console.log(`you made a ${method} request to ${url} at ${timestamp}`);
+  next();
 };
 
 
-
+server.use(logger)
 server.use('/users', usersRoutes);
 server.use('/posts', postsRoutes)
 

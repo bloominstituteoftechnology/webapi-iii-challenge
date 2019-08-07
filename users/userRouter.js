@@ -5,16 +5,6 @@ const db = require('./userDb');
 const postDb = require('../posts/postDb');
 
 
-router.post('/', validateUser, (req, res) => {
-    const name = req.body;
-    db.insert(name)
-        .then((user) => {
-            res.status(200).json(user)
-        })
-        .catch((err) => {
-            res.status(500).json({ message: "doh" })
-        })
-});
 
 
 
@@ -94,6 +84,18 @@ router.post('/:id/posts', validateUserId, validatePost, (req, res) => {
         })
 });
 
+router.post('/', validateUser, (req, res) => {
+    const body = req.body;
+    db.insert(body)
+        .then((user) => {
+            res.status(200).json(user)
+        })
+        .catch((err) => {
+            res.status(500).json({ message: "doh" })
+        })
+});
+
+
 //custom middleware
 
 function validateUserId(req, res, next) {
@@ -113,6 +115,7 @@ function validateUserId(req, res, next) {
 
 function validateUser(req, res, next) {
     let body = req.body;
+    console.log("BODYYYYYY", body)
     if(body && body.name){
         next();
     }else{
