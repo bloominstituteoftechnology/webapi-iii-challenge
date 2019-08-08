@@ -14,7 +14,7 @@ router.post('/', validateUser, (req, res) => {
         });
 });
 
-router.post('/:id/posts',validateUserId, (req, res) => {
+router.post('/:id/posts',validateUserId, validatePost, (req, res) => {
     if(req.body){
         postDb.insert(req.body)
             .then(post => {

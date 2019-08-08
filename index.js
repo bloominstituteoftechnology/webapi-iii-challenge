@@ -1,4 +1,6 @@
 // code away!
+require('dotenv').config();
+
 const express = require('express');
 
 const server = express();
@@ -17,25 +19,11 @@ server.use('/api/posts', postRouter);
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 server.get('/', (req, res) => {
     res.send(`<h2>Let's write some middleware!</h2>`)
   });
 
 
-server.listen(8000, () => console.log('\nAPI running on port 8000\n'));
+  const port = process.env.PORT;
+
+  server.listen(port, () => console.log(`API running on ${port}`))
