@@ -1,4 +1,4 @@
-const express = 'express';
+const express = require('express');
 
 const router = express.Router();
 
@@ -16,6 +16,11 @@ router.delete('/:id', (req, res) => {
 
 router.put('/:id', (req, res) => {
 
+});
+
+
+router.post('/', (req, res) => {
+    insert({user_id, text})
 });
 
 // custom middleware
