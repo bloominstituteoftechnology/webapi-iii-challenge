@@ -21,11 +21,44 @@ router.get('/:id', validateUserId, (req, res) => {
   res.status(200).json(req.user);
 });
 
-router.get('/:id/posts', (req, res) => {});
+router.get('/:id/posts', validateUserId, (req, res) => {
+  userDb
+    .getUserPosts(req.params.id)
+    .then(posts => {
+      res.status(200).json(posts);
+    })
+    .catch(err => {
+      res.status(500).json({ message: 'Error getting posts' });
+    });
+});
 
-router.delete('/:id', (req, res) => {});
+router.delete('/:id', validateUserId, (req, res) => {
+  userDb
+    .remove(req.params.id)
+    .then(user => {
+      res.status(200).json({ message: 'User deleted, never comming back' });
+    })
+    .catch(err => {
+      res
+        .status(500)
+        .json({ error: 'Internal server error, failed to delete' });
+    });
+});
 
-router.put('/:id', (req, res) => {});
+router.put('/:id', validateUserId, validateUser, (req, res) => {
+  const { id } = req.params;
+  const changes = req.body;
+  userDb
+    .update(id, changes)
+    .then(update => {
+      res.status(200).json(update);
+    })
+    .catch(err => {
+      res
+        .status(500)
+        .json({ error: 'Internal server error, this is really really bad' });
+    });
+});
 
 //custom middleware
 
