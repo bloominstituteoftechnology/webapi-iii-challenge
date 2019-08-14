@@ -25,6 +25,7 @@
   "dependencies": {
     "express": "^4.17.1",
     "knex": "^0.18.3",
+    "morgan": "^1.9.1",
     "sqlite3": "^4.0.9"
   },
   "devDependencies": {
