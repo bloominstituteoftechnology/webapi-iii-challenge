@@ -1,4 +1,4 @@
-const express = 'express';
+const express = require('express');
 
 const router = express.Router();
 
@@ -11,6 +11,8 @@ router.post('/:id/posts', (req, res) => {
 });
 
 router.get('/', (req, res) => {
+console.log('get users')
+res.send('get to /users/');
 
 });
 
@@ -31,9 +33,18 @@ router.put('/:id', (req, res) => {
 });
 
 //custom middleware
-
+function auth(req, res, next) {
+    if (req.url === '/mellon') {
+      next();
+    } else {
+      res.send('You shall not pass!');
+    }
+  }
+  
 function validateUserId(req, res, next) {
 
+    console.log('validateUserId',getById(req.id))
+next()
 };
 
 function validateUser(req, res, next) {

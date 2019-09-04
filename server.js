@@ -4,16 +4,21 @@ const userDb = require('./users/userDb')
 
 const postDb = require('./posts/postDb')
 
+const userRouter = require('./users/userRouter');
 
 const server = express();
+
+server.use(express.json());
+
+server.use('/users', userRouter);
 
 server.get('/', (req, res) => {
 userDb.get()
 .then(response   => {
-  console.log('response',response)
+  // console.log('response',response)
   postDb.get()
   .then(results   => {
-    console.log('results',results)
+    // console.log('results',results)
   })
   .catch(error => {
     res.status(500).json({ message: 'error getting posts'}) 
