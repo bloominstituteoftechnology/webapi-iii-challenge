@@ -4,7 +4,8 @@
   "description": "Web API Blog Project",
   "main": "index.js",
   "scripts": {
-    "server": "nodemon index.js"
+    "server": "nodemon index.js",
+    "start": "nodemon index.js"
   },
   "repository": {
     "type": "git",
