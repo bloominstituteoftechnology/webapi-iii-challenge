@@ -6,9 +6,23 @@ const postDb = require('./posts/postDb')
 
 const userRouter = require('./users/userRouter');
 
+const validateUserId = require('./users/userRouter');
+
+const validateUser = require('./users/userRouter');
+
+const validatePost = require('./users/userRouter');
+
 const server = express();
 
 server.use(express.json());
+
+server.use(logger);
+
+server.use(validateUserId);
+
+server.use(validateUser);
+
+server.use(validatePost);
 
 server.use('/users', userRouter);
 
