@@ -103,7 +103,22 @@ router.put('/:id', (req, res) => {
 // custom middleware
 
 function validatePostId(req, res, next) {
-
+    const id = req.url.substring(req.url.lastIndexOf(":")+1).replace('/','')
+    postDb.getById(id)
+   .then(response => {
+if (response)
+  { 
+    req.user = json(response).name
+  }
+else
+{
+    res.status(400).json({ message: 'invalid user id'})
+}
+})
+   .catch(error => {
+    res.status(400).json({ message: 'invalid user id'})
+   })
+next()
 };
 
 module.exports = router;
