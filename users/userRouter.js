@@ -23,6 +23,14 @@ const post = req.body
 });
 
 router.post('/:id/posts', (req, res) => {
+userDb.getUserPosts(req.body.id)
+.then(response => {
+    res.status(201).json(response)
+})
+.catch(error => {
+    res.status(500).json({ message: 'error getting user posts'})
+
+})
 
 });
 
