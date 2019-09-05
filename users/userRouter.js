@@ -4,7 +4,22 @@ const router = express.Router();
 const userDb = require('../users/userDb')
 
 router.post('/', (req, res) => {
-
+const post = req.body
+    console.log('post name',post)
+    // if(!(req.body.name))
+    // {
+    //     res.status(400).json({errorMessage: "Please provide name for the post." })
+    // }
+    // else
+    {
+    userDb.insert(post)
+        .then(response => {
+            res.status(201).json(req.url);
+        })
+        .catch(error => {
+            res.status(500).json({ message: 'error adding to list of names'})
+        })
+      }    
 });
 
 router.post('/:id/posts', (req, res) => {
@@ -67,12 +82,38 @@ router.get('/:id/posts', (req, res) => {
 });
 
 router.delete('/:id', (req, res) => {
-
+    const id = req.url.substring(req.url.lastIndexOf(":")+1).replace('/','')
+    userDb.getById(id)
+    .then(response => {
+       userDb.remove(id)
+       .then(result => {
+           console.log('deleted title '+id)
+         res.status(200).json(response);
+       })
+       .catch(error => {
+           res.status(500).json({ message: 'error deleting name'})
+       })
+       })
+   .catch(error => {
+       res.status(500).json({ message: 'error deleting name'})
+   })
+   
 });
 
 router.put('/:id', (req, res) => {
-
+    const id = req.url.substring(req.url.lastIndexOf(":")+1).replace('/','')
+    const post =  req.body;
+    userDb.update(id, post)
+    .then(response => {
+       post.id = id
+       res.status(200).json(post);
+   })
+   .catch(error => {
+       res.status(500).json({ message: 'error updating title'})
+   })
+   
 });
+
 
 //custom middleware
   
