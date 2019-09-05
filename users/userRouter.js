@@ -2,7 +2,10 @@ const express = require("express");
 
 const router = express.Router();
 
-const db = require("../data/dbConfig.js");
+const db = require("./userDb.js");
+const Posts = require("../posts/postDb.js");
+
+router.use(express.json());
 
 router.post("/", (req, res) => {
   const newUser = req.body;
@@ -11,23 +14,37 @@ router.post("/", (req, res) => {
       res.status(200).json(user);
     })
     .catch(err => {
-      console.log(err);
-      res.status(500).json({ message: "user added" });
+      console.log("post error", err);
+      res.status(500).json({ message: "user not added" });
     });
 });
 
-router.post("/:id/posts", (req, res) => {});
+router.post("/:id/posts", (req, res) => {
+  const rePost = req.body;
+  rePost.user_id = req.params.id;
 
-// router.get("/", (req, res) => {
-//   db.get()
-//     .then(user => {
-//       res.status(200).json(users);
-//     })
-//     .catch(err => {
-//       console.log(err);
-//       res.status(500).json({ message: "cant get him/her" });
-//     });
-// });
+  if (rePost) {
+    Posts.insert(rePost)
+      .then(post => {
+        res.status(201).json(post);
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(500).json({ error: "no luck" });
+      });
+  }
+});
+
+router.get("/", (req, res) => {
+  db.get()
+    .then(user => {
+      res.status(200).json(user);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({ message: "cant get him/her" });
+    });
+});
 
 router.get("/:id", (req, res) => {
   const id = req.params.id;
@@ -43,7 +60,7 @@ router.get("/:id", (req, res) => {
 
 router.get("/:id/posts", (req, res) => {
   const id = req.params.id;
-  db.getById(id)
+  db.getUserPosts(id)
     .then(posts => {
       res.status(200).json(posts);
     })
@@ -68,7 +85,7 @@ router.delete("/:id", (req, res) => {
     });
 });
 
-router.put("/:id", (req, res) => {
+router.put("/:id", validateUserId, (req, res) => {
   const id = req.params.id;
   const changes = req.body;
   db.update(id, changes)
@@ -83,10 +100,25 @@ router.put("/:id", (req, res) => {
 //custom middleware
 
 function validateUserId(req, res, next) {
-  let user = req.params.id;
+  let users = req.params.id;
+
+  db.getById(users)
+    .then(user => {
+      if (user) {
+        next();
+      } else {
+        res.status(400).json({ message: "user not fouond" });
+      }
+    })
+    .catch(err => {
+      res.status(500).json({ error: "no way" });
+    });
 }
 
-function validateUser(req, res, next) {}
+function validateUser(req, res, next) {
+  //  const users = req.body;
+  //  if (users.)
+}
 
 function validatePost(req, res, next) {}
 
