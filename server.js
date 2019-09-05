@@ -20,12 +20,6 @@ server.use(express.json());
 
 server.use(logger);
 
-server.use(validateUserId);
-
-server.use(validateUser);
-
-server.use(validatePost);
-
 server.use('/users', userRouter);
 
 server.use('/posts', postRouter);

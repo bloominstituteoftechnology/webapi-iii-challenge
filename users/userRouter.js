@@ -3,14 +3,28 @@ const express = require('express');
 const router = express.Router();
 const userDb = require('../users/userDb')
 
+
+// router.use(validateUserId);
+
+// router.use(validateUser);
+
+// router.use(validatePost);
+
+
+const logger = (req, res, next) => {
+     console.log(
+      `[${new Date().toISOString()}] ${req.method} to ${req.url} from ${req.get(
+        'Origin'
+      )}`
+    );
+  
+    next();
+  }
+  
+
 router.post('/', (req, res) => {
 const post = req.body
-    console.log('post name',post)
-    // if(!(req.body.name))
-    // {
-    //     res.status(400).json({errorMessage: "Please provide name for the post." })
-    // }
-    // else
+    // console.log('post name',post)
     {
     userDb.insert(post)
         .then(response => {
@@ -35,7 +49,7 @@ userDb.getUserPosts(req.body.id)
 });
 
 router.get('/', (req, res) => {
-console.log('get users')
+// console.log('get users')
 userDb.get()
 .then(response => {
     res.status(200).json(response)
@@ -49,8 +63,8 @@ userDb.get()
 
 router.get('/:id', (req, res) => {
     const id = req.url.substring(req.url.lastIndexOf(":")+1).replace('/','')
-    console.log('get users id url'+req.url)
-    console.log('get users id['+id+']')
+    // console.log('get users id url'+req.url)
+    // console.log('get users id['+id+']')
 if(parseInt(id) > 0)
 {
 userDb.getById(id)
@@ -58,7 +72,7 @@ userDb.getById(id)
  if(!response)
  res.status(400).json({ message: 'invalid user id'})
 
- console.log('then got to response',response)
+ // console.log('then got to response',response)
        res.status(200).json(response)
    })
    .catch(error => {
@@ -95,7 +109,7 @@ router.delete('/:id', (req, res) => {
     .then(response => {
        userDb.remove(id)
        .then(result => {
-           console.log('deleted title '+id)
+           // console.log('deleted title '+id)
          res.status(200).json(response);
        })
        .catch(error => {
@@ -169,5 +183,6 @@ function validatePost(req, res, next) {
     }
     next()
     };
-    
+
+          
 module.exports = router;
