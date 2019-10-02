@@ -15,6 +15,13 @@ server.use((req, res, next) => {
   );
   next();
 });
+server.use((req,res,next) => {
+  req.user = "JORDO";
+  next();
+})
+
+server.use('api/posts/', postRoutes);
+server.use('api/users/', userRoutes);
 
 server.get('/', (req,res) => {
   res.send("HOME PAGE!!!");
