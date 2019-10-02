@@ -16,6 +16,7 @@ function logger(req, res, next) {
   console.log(`${req.method} Request | http://localhost:8000${req.url} | ${date} , ${time}`)
   next()
        
-};
+}; 
+
 
 module.exports = server;

@@ -122,7 +122,7 @@ function validateUserId(req, res, next) {
       if (user) {
         next();
       } else {
-        res.status(404).json({ message: "No user with given id." });
+        res.status(400).json({ message: "invalid user id" });
       }
     })
     .catch(err => {
