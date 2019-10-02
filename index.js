@@ -15,13 +15,13 @@ server.use((req, res, next) => {
   next();
 });
 
-
 server.use('/api/posts/', postRoutes);
 server.use('/api/users/', userRoutes);
 
 server.get('/', (req,res) => {
-  res.send("HOME PAGE!!!");
+  res.send("HOME PAGE!!! please try /api/users or /api/posts for actual data");
 })
+
 server.listen(port, () => {
   console.log("Server has started!");
 });
