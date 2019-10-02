@@ -137,7 +137,7 @@ function validateUser(req, res, next) {
   if (req.body && Object.keys(req.body).length > 0) {
     next();
   } else {
-    next({ message: "Bad request." });
+    next({ message: "missing user data." });
   }
 }
 
@@ -145,7 +145,7 @@ function validatePost(req, res, next) {
   if (req.body && Object.keys(req.body).length > 0) {
     next();
   } else {
-    next({ message: "Bad request." });
+    next({ message: "missing required name field" });
   }
 }
 
