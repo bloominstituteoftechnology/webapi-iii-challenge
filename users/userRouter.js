@@ -1,6 +1,5 @@
 const express = require("express");
 const userRouter = express.Router();
-const postRouter = require("../posts/postRouter");
 const server = express();
 
 const userDb = require("./userDb");
@@ -20,10 +19,9 @@ userRouter.get("/", (req, res) => {
     });
 });
 
-userRouter.get("/:id", validateUserId, async (req, res) => {
+userRouter.get("/:id", validateUserId, (req, res) => {
   try {
-    const user = await userDb.getById(req.params.id);
-    res.status(200).json(user);
+    res.status(200).json(req.user);
   } catch (error) {
     res
       .status(500)
@@ -31,7 +29,18 @@ userRouter.get("/:id", validateUserId, async (req, res) => {
   }
 });
 
-userRouter.get("/:id/posts", validateUserId, validateUser, (req, res) => {});
+userRouter.get("/:id/posts", validateUserId, async (req, res) => {
+  try {
+    const posts = await userDb.getUserPosts(req.params.id);
+    posts.length > 0
+      ? res.status(200).json(posts)
+      : res.status(400).json({ message: "No posts for this user" });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "The user information could not be retrieved." });
+  }
+});
 
 userRouter.post("/", validateUser, (req, res) => {
   userDb
@@ -71,7 +80,5 @@ userRouter.put("/:id", validateUserId, validateUser, (req, res) => {
         .json({ error: "The user information could not be modified." });
     });
 });
-
-server.use("/:id/posts", userRouter);
 
 module.exports = userRouter;
