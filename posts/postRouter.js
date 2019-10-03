@@ -1,27 +1,17 @@
-const express = 'express';
+const express = require("express");
 
-const router = express.Router();
+const postRouter = express.Router();
 
-router.get('/', (req, res) => {
+postRouter.get("/", (req, res) => {});
 
-});
+postRouter.get("/:id", (req, res) => {});
 
-router.get('/:id', (req, res) => {
+postRouter.delete("/:id", (req, res) => {});
 
-});
-
-router.delete('/:id', (req, res) => {
-
-});
-
-router.put('/:id', (req, res) => {
-
-});
+postRouter.put("/:id", (req, res) => {});
 
 // custom middleware
 
-function validatePostId(req, res, next) {
+function validatePostId(req, res, next) {}
 
-};
-
-module.exports = router;
+module.exports = postRouter;
