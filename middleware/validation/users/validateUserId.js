@@ -8,7 +8,7 @@ function validateUserId(req, res, next) {
             req.user = user
             next();    
         } else {
-            res.status(404).json({errorMessage: "No user exists by that ID"})
+            res.status(400).json({errorMessage: "No user exists by that ID"})
         }
     })
     .catch(err => {
