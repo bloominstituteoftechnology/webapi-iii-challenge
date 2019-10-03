@@ -3,6 +3,8 @@ const userRouter = express.Router();
 const server = express();
 
 const userDb = require("./userDb");
+const postDb = require("../posts/postDb");
+const validatePost = require("../posts/middleware/validatePost");
 const validateUserId = require("./middleware/validateUserId");
 const validateUser = require("./middleware/validateUser");
 
@@ -55,7 +57,17 @@ userRouter.post("/", validateUser, (req, res) => {
     });
 });
 
-userRouter.post("/:id/posts", validateUserId, (req, res) => {});
+userRouter.post("/:id/posts", validatePost, (req, res) => {
+  postDb
+    .insert({ ...req.body, user_id: req.params.id })
+    .then(post => {
+      res.status(201).json(post);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({ message: "There was an error while adding post" });
+    });
+});
 
 userRouter.delete("/:id", validateUserId, (req, res) => {
   userDb
