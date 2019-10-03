@@ -1,7 +1,7 @@
 const express = require("express");
 const server = express();
 
-const logger = require("./custom/logger-middleware");
+const logger = require("./global-middleware/logger-middleware");
 const userRouter = require("./users/userRouter");
 
 server.get("/", (req, res) => {
@@ -10,7 +10,6 @@ server.get("/", (req, res) => {
 
 server.use(logger);
 server.use(express.json());
-
 server.use("/api/users", userRouter);
 
 module.exports = server;
