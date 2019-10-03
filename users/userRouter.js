@@ -1,6 +1,5 @@
 const express = require("express");
 const userRouter = express.Router();
-const server = express();
 
 const userDb = require("./userDb");
 const postDb = require("../posts/postDb");
@@ -57,7 +56,7 @@ userRouter.post("/", validateUser, (req, res) => {
     });
 });
 
-userRouter.post("/:id/posts", validatePost, (req, res) => {
+userRouter.post("/:id/posts", validateUserId, validatePost, (req, res) => {
   postDb
     .insert({ ...req.body, user_id: req.params.id })
     .then(post => {
