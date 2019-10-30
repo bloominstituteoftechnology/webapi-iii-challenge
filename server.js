@@ -13,7 +13,10 @@ function logger(req, res, next) {
   console.log(
   new Date().toISOString() `Accessed by ${method} from ${originalUrl}`
   )
+  next()
 };
+
+
 
 server.use(express.json())
 server.use(logger)
