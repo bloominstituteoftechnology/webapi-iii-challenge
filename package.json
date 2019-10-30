@@ -23,11 +23,15 @@
   },
   "homepage": "https://github.com/LambdaSchool/Node-Blog#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.17.1",
+    "helmet": "^3.21.2",
     "knex": "^0.18.3",
+    "npx": "^10.2.0",
     "sqlite3": "^4.0.9"
   },
   "devDependencies": {
+    "eslint": "^6.6.0",
     "nodemon": "^1.19.1"
   }
 }
