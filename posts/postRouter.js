@@ -65,6 +65,7 @@ router.put("/:id", validatePostId, async (req, res) => {
 
 async function validatePostId(req, res, next) {
   const post = await db.getById(req.params.id);
+
   try {
     if (post) {
       req.user_id = post.user_id;
