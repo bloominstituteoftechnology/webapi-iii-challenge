@@ -1,6 +1,7 @@
 const express = require('express');
 const userDb = require('./userDb')
 const router = express.Router();
+const postsDb = require('../posts/postDb')
 
 router.post('/', validateUser, (req, res) => {
     userDb
@@ -9,13 +10,14 @@ router.post('/', validateUser, (req, res) => {
         .catch(err => res.status(500).json({error: 'Error with post'}))
 });
 
-router.post('/:id/posts', validateUserId, (req, res) => {
-    const { id, user_id, text } = req.params
+router.post('/:id/posts', validateUserId, validatePost, (req, res) => {
+    const {  text } = req.params
     const post = req.body
 
-    userDb
-        .getUserPosts(id)
-            .then(
+    postsDb
+        .insert(post)
+            .then(post => res.status(201).json(post)
+            .catch(err => res.status(500).json({error: 'error in creating post'}))
 );
 
 router.get('/', (req, res) => {
@@ -105,6 +107,14 @@ function validateUser(req, res, next) {
 };
 
 function validatePost(req, res, next) {
+    const {text} = req.body
+    if (req.body){
+        text
+        ? next()
+        : res.status(400).json({message: 'missing required text field'})
+    } else {
+        res.status(400).json({message: 'missing post data'})
+    }
 
 };
 
