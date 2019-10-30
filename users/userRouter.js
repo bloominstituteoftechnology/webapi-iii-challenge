@@ -4,6 +4,11 @@ const postDB = require('../posts/postDb')
 
 const router = express.Router();
 
+router.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    next();
+});
+
 router.post('/', validateUser, (req, res) => {
     const info = req.body
 
