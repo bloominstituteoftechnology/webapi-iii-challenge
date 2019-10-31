@@ -15,7 +15,6 @@ const UserCard = props => {
 }
 
 const Card = styled.div`
-    border: 1px solid gray;
     width: 45%;
     min-width: 400px;
     background: white;

@@ -22,6 +22,12 @@ const PostCard = props => {
 
     return(
         <div>
+            <Row>
+                <p>Test text.</p>
+            </Row>
+            <Row>
+                <p>Test text.</p>
+            </Row>
             {postData.map(post=> (
                 <Row>
                     <p>{post.text}</p>
@@ -36,6 +42,10 @@ const Row = styled.div`
     padding: 2px;
     color: gray;
     margin-bottom: 2px;
+    p{
+        padding-top: 2px;
+        margin: 0;
+    }
 `;
 
 export default PostCard;

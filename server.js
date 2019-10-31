@@ -2,7 +2,6 @@ const express = require('express');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const cors = require ('cors');
-const dotenv = require('dotenv').config();
 
 
 const postRouter = require('./posts/postRouter.js');
@@ -24,7 +23,6 @@ server.use(express.json());
 server.use(helmet());
 server.use(morgan('dev'));
 server.use(logger);
-server.use(dotenv);
 
 
 //LOCAL
