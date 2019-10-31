@@ -10,7 +10,7 @@ router.post('/', (req, res) => {
 	Users.insert(req.body)
 		.then(newUser => {
 			console.log(newUser)
-			res.status(201).json({ Response: newUser })
+			return res.status(201).json({ Response: newUser })
 		})
 });
 
@@ -24,7 +24,7 @@ router.post('/:id/posts', validateUserIds, validatePosts, (req, res) => {
 	Posts.insert(userPost)
 		.then(newPost => {
 			console.log(newPost)
-			res.status(201).json({ Response: newPost })
+			return res.status(201).json({ Response: newPost })
 		})
 
 });
@@ -32,25 +32,25 @@ router.post('/:id/posts', validateUserIds, validatePosts, (req, res) => {
 router.get('/', (req, res) => {
 	Users.get()
 		.then(users => {
-			res.status(200).json({ Response: users })
+			return res.status(200).json({ Response: users })
 		})
 });
 
 router.get('/:id', validateUserIds, (req, res) => {
-	res.status(200).json({ user: req.user })
+	return res.status(200).json({ user: req.user })
 });
 
 router.get('/:id/posts', validateUserIds, (req, res) => {
 	Users.getUserPosts(req.params.id)
 		.then(userPosts => {
-			res.status(200).json({ Response: userPosts })
+			return res.status(200).json({ Response: userPosts })
 		})
 });
 
 router.delete('/:id', validateUserIds, (req, res) => {
 	Users.remove(req.params.id)
 		.then(() => {
-			res.status(200).json({ Success: "That user was successfully deleted!" })
+			return res.status(200).json({ Success: "That user was successfully deleted!" })
 		})
 		.catch(err => res.status(500).json({ Error: "The database was unable to delete the user." }))
 });
@@ -59,7 +59,7 @@ router.put('/:id', validateUserIds, (req, res) => {
 
 	Users.update(req.params.id, req.body)
 		.then(() => {
-			res.status(200).json({ Success: "The user's name was updated correctly!" })
+			return res.status(200).json({ Success: "The user's name was updated correctly!" })
 		})
 		.catch(err => res.status(500).json({ Success: "The server was unable to update the users name.", Error: err }))
 });
@@ -74,7 +74,7 @@ function validateUserIds(req, res, next) {
 				req.user = user
 				next()
 			} else {
-				res.status(400).json({ Error: "You provided an invalid user id." })
+				return res.status(400).json({ Error: "You provided an invalid user id." })
 			}
 		})
 
@@ -83,9 +83,9 @@ function validateUserIds(req, res, next) {
 function validateUsers(req, res, next) {
 	// Check there is a req body and also a name field
 	if (!req.body) {
-		res.status(400).json({ Error: "No user data provided!" });
+		return res.status(400).json({ Error: "No user data provided!" });
 	} else if (!req.body.name) {
-		res.status(400).json({ Error: "Required name field not provided." });
+		return res.status(400).json({ Error: "Required name field not provided." });
 	}
 	next();
 };
@@ -93,9 +93,9 @@ function validateUsers(req, res, next) {
 function validatePosts(req, res, next) {
 	// checking for the req body and also text field
 	if (!req.body) {
-		res.status(400).json({ Error: "You are missing post data." });
+		return res.status(400).json({ Error: "You are missing post data." });
 	} else if (!req.body.text) {
-		res.status(400).json({ Error: "Required text field has not been provided." });
+		return res.status(400).json({ Error: "Required text field has not been provided." });
 	}
 
 	next();
