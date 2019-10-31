@@ -3,7 +3,7 @@ require('dotenv').config();
 const server = require('./server.js');
 
 //port coming from environment, it'll be set by Heroku
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 6000;
 
 console.log('Current Port: ', port);
 console.log('\n Process Message: ', process.env.MSG);
