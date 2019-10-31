@@ -1,29 +1,17 @@
-const express = require('express');
+const router = require('express').Router();
 
 const Posts = require("./postDb");
 
-const router = express.Router();
 
 router.get('/', (req, res) => {
     Posts.get()
     .then(posts => res.status(200).json(posts))
     .catch( err => res.status(500).json({ error: "Failed to retrieve all posts." }))
-    
 });
 
-router.get('/:id', (req, res) => {
-    const id = req.params.id;
+router.get('/:id', validatePostId, (req, res) => res.status(200).json(req.post));
 
-    Posts.getById(id)
-    .then(post => {
-        post
-        ? res.status(200).json(post)
-        : res.status(404).json({ message: `Could not find a post with an ID of ${id}.` })
-    })
-    .catch(err => res.status(500).json({ error: `Failed to retrieve post with ID of ${id}.` }))
-});
-
-router.delete('/:id', (req, res) => {
+router.delete('/:id', validatePostId, (req, res) => {
     const id = req.params.id;
 
     Posts.remove(id)
@@ -54,7 +42,16 @@ router.put('/:id', (req, res) => {
 // custom middleware
 
 function validatePostId(req, res, next) {
-  
+  const id = req.params.id;
+
+  Posts.getById(id)
+  .then(post => {
+      if (post) {
+          req.post = post;
+          next();
+      } else res.status(404).json({ errorMessage: `Unable to locate a post with ID of ${id}.` })
+  })
+  .catch(err => res.status(500).json({ error: `Failed to locate post with ID of ${id}.` }))
 };
 
 module.exports = router;

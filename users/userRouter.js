@@ -1,8 +1,7 @@
-const express = require('express');
+const router = require('express').Router();
 
 const db = require("./userDb");
-
-const router = express.Router();
+const Posts = require("../posts/postDb")
 
 // Add a new user
 router.post('/', validateUser, (req, res) => {
@@ -12,8 +11,11 @@ router.post('/', validateUser, (req, res) => {
 });
 
 // Add a new post to a user
-router.post('/:id/posts', validatePost, (req, res) => {
-    db.insert(req.body)
+router.post('/:id/posts', validateUserId, validatePost, (req, res) => {
+    Posts.insert({
+        text: req.body.text,
+        user_id: req.user
+    })
     .then(post => res.status(201).json(post))
     .catch(err => res.status(500).json({ error: "Failed to add new post to database." }))
 });
@@ -36,8 +38,8 @@ router.get('/:id', validateUserId, (req, res) => {
 router.get('/:id/posts', validateUserId, (req, res) => {
     const id = req.params.id;
 
-    db.getById(id)
-    .then(user => res.status(200).json(user))
+    db.getUserPosts(id)
+    .then(posts => res.status(200).json(posts))
     .catch(err => res.status(500).json({ error: `Failed to retrieve posts from user with an ID of ${id}.` }))
 });
 
@@ -80,7 +82,7 @@ function validateUserId(req, res, next) {
 function validateUser(req, res, next) {
     const newUser = req.body;
 
-    if (!newUser) {
+    if (!Object.getOwnPropertyNames(req.body).length) {
         res.status(400).json({ errorMessage: "Missing user data." })
     } else if (!newUser.name) {
         res.status(400).json({ errorMessage: "Missing required name field." })
@@ -90,7 +92,7 @@ function validateUser(req, res, next) {
 function validatePost(req, res, next) {
     const newPost = req.body;
 
-    if (!newPost) {
+    if (!Object.getOwnPropertyNames(req.body).length) {
         res.status(400).json({ errorMessage: "Missing post data." })
     } else if (!newPost.text) {
         res.status(400).json({ errorMessage: "Missing required text field." })
