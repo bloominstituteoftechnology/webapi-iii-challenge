@@ -4,7 +4,7 @@ const server = express();
 server.use(express.json());
 //Import Routers
 const userRouter = require('./users/userRouter.js');
-// const postRouter = require('./posts/postRouter.js');
+const postRouter = require('./posts/postRouter.js');
 
 //Import Custom Middleware
 // const logger = require('./middleware/logger');
@@ -13,6 +13,7 @@ const userRouter = require('./users/userRouter.js');
 // const validatePost = require('./middleware/validateUser');
 
 server.use('/api/user', userRouter);
+server.use('/api/post', postRouter);
 
 // const validateUserId = require('./users/userRouter.js');
 // server.use('/api/post', postRouter);
