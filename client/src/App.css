@@ -1,0 +1,10 @@
+.App {
+  text-align: center;
+  background: url('http://1.bp.blogspot.com/-KtWYOqGwEyg/Uj_yN-v8FeI/AAAAAAAAB70/PqAjS1YV5EU/s1600/wallpaper-669865.jpg');
+  background-size: cover;
+  background-attachment: fixed;
+  height: 100%;
+  width: 100%;
+  margin: 0 auto;
+}
+
