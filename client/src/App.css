@@ -1,22 +1,9 @@
 .App {
   text-align: center;
+  background: url('http://1.bp.blogspot.com/-KtWYOqGwEyg/Uj_yN-v8FeI/AAAAAAAAB70/PqAjS1YV5EU/s1600/wallpaper-669865.jpg');
+  background-size: cover;
+  height: 100%;
+  width: 100%;
+  margin: 0 auto;
 }
 
-.App-logo {
-  height: 40vmin;
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #09d3ac;
-}

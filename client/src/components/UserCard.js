@@ -3,12 +3,12 @@ import styled from 'styled-components';
 import PostCard from './PostCard';
 
 
-export default UserCard = props => {
+const UserCard = props => {
     return(
         <Card>
             <h1>{props.name}</h1>
             <div>
-                <PostCard key={id} />
+                <PostCard key={props.id} props={props.user_id}/>
             </div>
         </Card>
     )
@@ -17,12 +17,14 @@ export default UserCard = props => {
 const Card = styled.div`
     border: 1px solid gray;
     width: 45%;
+    min-width: 400px;
+    background: white;
     height: 30%;
     overflow: hidden;
     padding: 5px;
     margin: 20px;
-    h1{
-        background: black;
-        color: white;
-    }
+    text-align: left;
+    margin: 10px auto;
 `;
+
+export default UserCard;

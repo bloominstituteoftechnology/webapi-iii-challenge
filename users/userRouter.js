@@ -1,4 +1,6 @@
-const express = 'express';
+const express = require('express');
+// const cors = require ('cors');
+
 
 const user = require('./userDb.js');
 const post = require('../posts/postDb.js');
@@ -38,7 +40,7 @@ router.post('/:id/posts', (req, res) => {
 
 //GET
 router.get('/', (req, res) => {
-    user.find()
+    user.get()
     .then(data=>{
         res.status(200).json(data);
     })
@@ -52,7 +54,11 @@ router.get('/:id', (req, res) => {
     user.getById(req.params.id)
     .then(data=> {
         res.status(200).json(data);
-    });
+    })
+    .catch(err=> {
+        console.log('Error: ', err);
+        res.status(500).json({message: 'Cannot find user.'})
+    })
 });
 
 router.get('/:id/posts', (req, res) => {
@@ -100,18 +106,46 @@ router.put('/:id', (req, res) => {
     });
 });
 
+
+
 //CUSTOM MIDDLEWARE
-
 function validateUserId(req, res, next) {
-
+    const valUserId = req.params.id;
+    if(valUserId === null){
+        res.status(400).json({message: 'Please add an Id#.'})
+    } else if(users.getById(valUserId)){
+        next()
+    } else {
+        res.status(401).json({message: 'Boo. Can\'t validated.'})
+    }
 };
 
 function validateUser(req, res, next) {
-
+    const valUser = req.body;
+    if (valUser === null){
+        res.status(400).json({message: 'Missing user data.'})
+    } else if (valUser.name === null){
+        res.status(400).json({message: 'Missing user name.'})
+    } else {
+        res.status(200).json(valUser);
+        next();
+    }
 };
 
 function validatePost(req, res, next) {
-
+    const valPost = req.body;
+    if( valPost === null){
+        res.status(400).json({message: 'Missing post data.'})
+    } else if('text' === null){
+        res.status(400).json({message: 'Missing required text field.'})
+    } else {
+        res.status(200).json(valPost);
+        next();
+    }
 };
+
+router.use(validateUserId);
+router.use(validateUser);
+router.use(validatePost);
 
 module.exports = router;

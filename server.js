@@ -1,11 +1,15 @@
 const express = require('express');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const cors = require ('cors');
+
 
 const postRouter = require('./posts/postRouter.js');
 const userRouter = require('./users/userRouter.js');
 
 const server = express();
+server.use(cors());
+
 
 
 //FUNCTIONS
@@ -19,9 +23,7 @@ server.use(express.json());
 server.use(helmet());
 server.use(morgan('dev'));
 server.use(logger);
-server.use(validateUserId);
-server.use(validateUser);
-server.use(validatePost);
+
 
 //LOCAL
 server.use('/api/post', postRouter);
