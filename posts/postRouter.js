@@ -1,22 +1,8 @@
-const express = 'express';
+const express = require('express');
+
+const Posts = require("../posts/postDb.js");
 
 const router = express.Router();
-
-router.get('/', (req, res) => {
-
-});
-
-router.get('/:id', (req, res) => {
-
-});
-
-router.delete('/:id', (req, res) => {
-
-});
-
-router.put('/:id', (req, res) => {
-
-});
 
 // custom middleware
 
