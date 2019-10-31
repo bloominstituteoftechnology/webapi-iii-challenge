@@ -9,7 +9,6 @@ import Posts from './components/Posts'
 function App() {
   const [users, setUsers] = useState()
 
-
   useEffect(() => {
     axios
       .get('http://localhost:5000/users/')
@@ -19,6 +18,7 @@ function App() {
       .catch(err => {
         console.log(err)
       })
+      
   }, [])
 
   if(!users) return <div>Loading</div>
@@ -28,7 +28,7 @@ function App() {
   return (
     <div className="App">
       <Route exact path='/' render={props => (
-        <User {...props} users={users} /> )} />
+        <User {...props} setUsers={setUsers} users={users} /> )} />
       <Route path='/:id' render={props => (
         <Posts {...props} users={users} /> )} />
     </div>

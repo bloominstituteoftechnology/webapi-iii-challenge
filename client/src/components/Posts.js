@@ -3,15 +3,12 @@ import axios from 'axios'
 
 const Posts = props => {
     const [post, setPosts] = useState()
-
-    console.log(props.users)
     
-    // const id =
-    // const userPost = post.find(item => `${item.id}` === props.match.params.id)
-
+    let userId = Number(props.match.params.id)
+    
     useEffect(() => {
         axios
-          .get(`http://localhost:5000/users/${4}/posts`)
+          .get(`http://localhost:5000/users/${userId}/posts`)
           .then(res => {
             setPosts(res.data)
           })
