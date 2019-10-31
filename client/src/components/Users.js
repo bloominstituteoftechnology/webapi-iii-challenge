@@ -21,7 +21,7 @@ const Users = () => {
     return (
         <div>
             <Container>
-                <h1>Users</h1>
+                <h2>Your Feed</h2>
                 {users.map(user=> (
                     <UserCard key={user.id} value={user.id} name={user.name}/>
                 ))}
@@ -38,4 +38,12 @@ const Container = styled.div`
     display: flex;
     justify-content: center;
     flex-direction: column;
+    h2{
+        position: fixed;
+        left: 20px;
+        top: 10px;
+        color: white;
+        border-bottom: 1px solid white;
+        font-size: 48px;
+    }
 `;

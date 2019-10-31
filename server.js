@@ -31,7 +31,7 @@ server.use('/api/user', userRouter);
 
 
 server.get('/', (req, res) => {
-  res.send('<h1>Welcome to the Freak Show<h1>')
+  res.send('<h1>Welcome to the Lord of the Rings Show<h1>')
 })
 
 module.exports = server;
