@@ -11,8 +11,15 @@ server.use(logger);
 server.use('/api/user', userRoutes)
 
 
-server.get('/', (req, res) => {
-	res.send(`<h2>Let's write some middleware!</h2>`)
+server.get('/', async (req, res) => {
+	try {
+		const shoutouts = await db('Shoutouts');
+		const messageOfTheDay = process.env.MOTD || 'Hello World!';
+		res.status(200).json({ motd: messageOfTheDay, Shoutouts });
+	} catch (error) {
+		console.error('\nError', error);
+		res.status(500).json({ error: 'Cannot retrieve the shoutouts' });
+	}
 });
 
 //utilize logger to globally log all requests made to server, of the request method, url and time stamp. The next function allows us to create a chain of causal middleware.
