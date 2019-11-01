@@ -19,7 +19,7 @@ server.use("/api/posts", postRouter);
 server.get("/", (req, res) => {
   const nameInsert = req.name ? `${req.name}` : "";
   res.send(`
-      <h1>Welcome ${nameInsert} to user/posts!</h1>
+      <h1>Take Me To Your Leader!</h1>
       `);
 });
 
