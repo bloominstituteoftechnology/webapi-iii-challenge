@@ -4,14 +4,13 @@ const Users = require('./userDb');
 const Posts = require('../posts/postDb')
 
 
-router.use(validateUsers)
 
-router.post('/', (req, res) => {
+router.post('/', validateUsers, (req, res) => {
 	Users.insert(req.body)
 		.then(newUser => {
 			console.log(newUser)
 			return res.status(201).json({ Response: newUser })
-		})
+		}).catch(err => res.status(500).json({ Message: "Error creating user!" }))
 });
 
 router.post('/:id/posts', validateUserIds, validatePosts, (req, res) => {
@@ -25,7 +24,7 @@ router.post('/:id/posts', validateUserIds, validatePosts, (req, res) => {
 		.then(newPost => {
 			console.log(newPost)
 			return res.status(201).json({ Response: newPost })
-		})
+		}).catch(err => res.sendStatus(500)) //sends default status of 
 
 });
 
@@ -41,7 +40,7 @@ router.get('/:id', validateUserIds, (req, res) => {
 });
 
 router.get('/:id/posts', validateUserIds, (req, res) => {
-	Users.getUserPosts(req.params.id)
+	Users.getUserPosts(req.user.id)
 		.then(userPosts => {
 			return res.status(200).json({ Response: userPosts })
 		})
@@ -57,7 +56,7 @@ router.delete('/:id', validateUserIds, (req, res) => {
 
 router.put('/:id', validateUserIds, (req, res) => {
 
-	Users.update(req.params.id, req.body)
+	Users.update(req.user.id, req.body)
 		.then(() => {
 			return res.status(200).json({ Success: "The user's name was updated correctly!" })
 		})

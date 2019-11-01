@@ -97,3 +97,5 @@ We have provided test data for the resources.
   - Add functionality to show the details of a user, including their posts, when clicking a user name in the list. Use React Router to navigate to a `/users/:id` route to show the user details.
   - Add styling!
 .
+
+Added this as a deployment for Web Deployment of an api to Heroku
