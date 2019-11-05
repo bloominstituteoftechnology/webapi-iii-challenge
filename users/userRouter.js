@@ -67,13 +67,19 @@ function validateUser(req, res, next) {
     } else if(!name) {
         res.status(400).json({ message: 'missing require name field' });
     } else {
-        next();
-    }
-
+        User.insert(req.body)
+            .then(user => {
+                req.user = user;
+                next();
+            })
+            .catch(err => {
+                res.status(500).json({ message: 'there was a problem adding the user to the database' });
+            });
+    };
 };
 
 function validatePost(req, res, next) {
-    
+
 };
 
 module.exports = router;
