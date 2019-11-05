@@ -15,7 +15,7 @@ router.use(middleware);
 
 
 router.post('/', (req, res) => {
-
+    
 });
 
 router.post('/:id/posts', (req, res) => {
