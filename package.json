@@ -24,6 +24,7 @@
   "homepage": "https://github.com/LambdaSchool/Node-Blog#readme",
   "dependencies": {
     "express": "^4.17.1",
+    "helmet": "^3.21.2",
     "knex": "^0.18.3",
     "sqlite3": "^4.0.9"
   },
