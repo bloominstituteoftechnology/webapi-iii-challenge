@@ -2,48 +2,55 @@ const express = require("express");
 const router = express.Router();
 const db = require("./userDb.js");
 
-
-
 //----------------------------------------------------------------------------//
 // CRUD Operations
 //----------------------------------------------------------------------------//
 
-router.post("/", validateUser, (req, res) => {
-  db.add(req.body)
-  .then(user => {
-    res.status(201).json(user)
+router.post("/", (req, res) => {
+  db.insert(req.body)
+  .then(x => {
+    res.status(201).json(x)
   })
   .catch(error => {
     res.status(500).json({
-      message: "Error adding the user."
+      message: "Error adding"
     })
   })
 });
 
-router.post("/:id/posts", validatePost, (req, res) => {});
+router.post("/:id/posts", validateUserId, (req, res) => {
+  db.find(req.query)
+    .then(users => {
+      res.status(200).json(users);
+    })
+    .catch(error => {
+      res.status(500).json({
+        message: "Error retrieving the users"
+      });
+    });
+});
 
-router.get("/", (req, res) => {});
+router.get("/", (req, res) => {
 
-router.get("/:id", validateUserId, (req, res) => {});
+});
 
-router.get("/:id/posts", validateUserId, (req, res) => {});
+router.get("/:id", validateUserId, (req, res) => {
+  res.status(200).json(req.users)
+});
 
-router.delete("/:id", validateUserId, (req, res) => {});
+router.get("/:id/posts", (req, res) => {});
 
-router.put("/:id", validateUserId, validateUser, (req, res) => {});
+router.delete("/:id", (req, res) => {});
 
-
-
+router.put("/:id", (req, res) => {});
 
 //----------------------------------------------------------------------------//
-// MIDDLEWARE 
+// MIDDLEWARE
 //----------------------------------------------------------------------------//
-
 
 //----------------------------------------------------------------------------//
 // validates the user id on every request that expects a user id parameter
 //----------------------------------------------------------------------------//
-
 
 function validateUserId(req, res, next) {
   // if the id parameter is valid, store that user object as req.user
@@ -65,7 +72,6 @@ function validateUserId(req, res, next) {
     }
   });
 }
-
 
 //----------------------------------------------------------------------------//
 // validateUser validates the body on a request to create a new user
