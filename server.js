@@ -12,6 +12,7 @@ server.use("/post/", postRouter);
 server.use("/user/", userRouter);
 
 server.get("/", (req, res) => {
+  console.log("res.send");
   res.send(`<h2>Let's write some middleware!</h2>`);
 });
 
