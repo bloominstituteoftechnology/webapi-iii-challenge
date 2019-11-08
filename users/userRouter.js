@@ -2,7 +2,23 @@ const express = require("express");
 const router = express.Router();
 const db = require("./userDb.js");
 
-router.post("/", validateUser, (req, res) => {});
+
+
+//----------------------------------------------------------------------------//
+// CRUD Operations
+//----------------------------------------------------------------------------//
+
+router.post("/", validateUser, (req, res) => {
+  db.add(req.body)
+  .then(user => {
+    res.status(201).json(user)
+  })
+  .catch(error => {
+    res.status(500).json({
+      message: "Error adding the user."
+    })
+  })
+});
 
 router.post("/:id/posts", validatePost, (req, res) => {});
 
@@ -16,9 +32,18 @@ router.delete("/:id", validateUserId, (req, res) => {});
 
 router.put("/:id", validateUserId, validateUser, (req, res) => {});
 
-// -----MIDDLEWARE ------
 
-//validates the user id on every request that expects a user id parameter
+
+
+//----------------------------------------------------------------------------//
+// MIDDLEWARE 
+//----------------------------------------------------------------------------//
+
+
+//----------------------------------------------------------------------------//
+// validates the user id on every request that expects a user id parameter
+//----------------------------------------------------------------------------//
+
 
 function validateUserId(req, res, next) {
   // if the id parameter is valid, store that user object as req.user
@@ -41,7 +66,11 @@ function validateUserId(req, res, next) {
   });
 }
 
+
+//----------------------------------------------------------------------------//
 // validateUser validates the body on a request to create a new user
+//----------------------------------------------------------------------------//
+
 function validateUser(req, res, next) {
   const userBody = req.body;
 
@@ -60,7 +89,10 @@ function validateUser(req, res, next) {
   }
 }
 
+//----------------------------------------------------------------------------//
 // validatePost validates the body on a request to create a new post
+//----------------------------------------------------------------------------//
+
 function validatePost(req, res, next) {
   const postBody = req.body;
 
