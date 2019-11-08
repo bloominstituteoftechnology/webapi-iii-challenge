@@ -1,5 +1,6 @@
 const express = require("express");
 const userDb = require("./userDb");
+const postDb = require("../posts/postDb");
 
 const router = express.Router();
 
@@ -14,7 +15,17 @@ router.post("/", validateUser, async (req, res) => {
   }
 });
 
-router.post("/:id/posts", validateUserId, validatePost, (req, res) => {});
+// Create new post for user at ID
+router.post("/:id/posts", validateUserId, validatePost, async (req, res) => {
+  try {
+    const id = req.params.id;
+    const post = await postDb.insert({...req.body, user_id: id});
+    return res.status(201).json(post);
+  }
+  catch (err) {
+    return res.status(500).json({ errorMessage: "Unable to add post", error: err });
+  }
+});
 
 router.get("/", (req, res) => {});
 
