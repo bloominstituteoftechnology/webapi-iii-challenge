@@ -62,7 +62,17 @@ router.get("/:id/posts", validateUserId, async (req, res) => {
   }
 });
 
-router.delete("/:id", validateUserId, (req, res) => {});
+// Delete a user
+router.delete("/:id", validateUserId, async (req, res) => {
+  const id  = req.params.id;
+  try {
+    const success = await userDb.remove(id);
+    return res.status(204).end();
+  }
+  catch (err) {
+    return res.status(500).json({ errorMessage: "An error occurred while removing the user from the database."});
+  }
+});
 
 router.put("/:id", validateUserId, (req, res) => {});
 
