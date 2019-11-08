@@ -3,7 +3,16 @@ const userDb = require("./userDb");
 
 const router = express.Router();
 
-router.post("/", validateUser, (req, res) => {});
+// Create a new User
+router.post("/", validateUser, async (req, res) => {
+  try {
+    const user = await userDb.insert(req.body);
+    return res.status(201).json(user);
+  }
+  catch (err) {
+    return res.status(500).json({ errorMessage: "Internal Server Error", error: err });
+  }
+});
 
 router.post("/:id/posts", validateUserId, validatePost, (req, res) => {});
 
