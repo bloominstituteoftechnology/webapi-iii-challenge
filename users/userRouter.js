@@ -62,27 +62,42 @@ router.get("/:id", validateUserId, (req, res) => {
 // get :: /api/users/:id/posts
 router.get("/:id/posts", validateUserId, (req, res) => {
   db.getUserPosts(req.params.id)
-  .then(posts => {
-    res.status(200).json(posts);
-  })
-  .catch(err => {
-    res.status(500).json({message: "Error getting user posts", err})
-  })
+    .then(posts => {
+      res.status(200).json(posts);
+    })
+    .catch(err => {
+      res.status(500).json({ message: "Error getting user posts", err });
+    });
 });
 
 // delete :: /api/users/:id
 router.delete("/:id", validateUserId, (req, res) => {
   db.remove(req.params.id)
-  .then(() => {
-    res.status(204).end();
-  })
-  .catch(err => {
-    res.status(500).json({message: "Error deleting", err})
-  })
+    .then(() => {
+      res.status(204).end();
+    })
+    .catch(err => {
+      res.status(500).json({ message: "Error deleting", err });
+    });
 });
 
 // update :: /api/users/:id
-router.put("/:id", (req, res) => {});
+router.put("/:id", validateUserId, validateUser, (req, res) => {
+  const updateUser = req.body;
+  db.update(req.params.id, updateUser)
+    .then(() => {
+      db.getById(req.params.id)
+        .then(user => {
+          res.status(201).json(user);
+        })
+        .catch(err => {
+          res.status(500).json({ mssage: "Error retrieving update" });
+        });
+    })
+    .catch(err => {
+      res.status(500).json({ message: "Error update", err });
+    });
+});
 
 //----------------------------------------------------------------------------//
 // MIDDLEWARE
