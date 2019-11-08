@@ -7,8 +7,9 @@ const db = require("./userDb.js");
 //----------------------------------------------------------------------------//
 
 // post to ::  /api/users
-router.post("/", (req, res) => {
-  db.insert(req.body)
+router.post("/", validateUser, (req, res) => {
+  const addUser = req.body; 
+  db.insert(addUser)
     .then(user => {
       res.status(201).json(user);
     })
