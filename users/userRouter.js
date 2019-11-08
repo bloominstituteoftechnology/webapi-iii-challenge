@@ -2,23 +2,21 @@ const express = require("express");
 const router = express.Router();
 const db = require("./userDb.js");
 
-router.post("/", validateUser, (req, res) => {
-  console.log("poop");
-});
+router.post("/", validateUser, (req, res) => {});
 
-router.post("/:id/posts", (req, res) => {});
+router.post("/:id/posts", validatePost, (req, res) => {});
 
 router.get("/", (req, res) => {});
 
-router.get("/:id", (req, res) => {});
+router.get("/:id", validateUserId, (req, res) => {});
 
-router.get("/:id/posts", (req, res) => {});
+router.get("/:id/posts", validateUserId, (req, res) => {});
 
-router.delete("/:id", (req, res) => {});
+router.delete("/:id", validateUserId, (req, res) => {});
 
-router.put("/:id", (req, res) => {});
+router.put("/:id", validateUserId, validateUser, (req, res) => {});
 
-//custom middleware
+// -----MIDDLEWARE ------
 
 //validates the user id on every request that expects a user id parameter
 
