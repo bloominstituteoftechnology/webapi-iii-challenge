@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const db = require("./userDb.js");
+const dbPosts = require("../posts/postDb");
 
 //----------------------------------------------------------------------------//
 // CRUD Operations
@@ -8,7 +9,7 @@ const db = require("./userDb.js");
 
 // post to ::  /api/users
 router.post("/", validateUser, (req, res) => {
-  const addUser = req.body; 
+  const addUser = req.body;
   db.insert(addUser)
     .then(user => {
       res.status(201).json(user);
@@ -21,11 +22,22 @@ router.post("/", validateUser, (req, res) => {
 });
 
 // post to ::  /api/users/:id/posts
-router.post("/:id/posts", validateUserId, (req, res) => {});
+router.post("/:id/posts", validateUserId, (req, res) => {
+  const addPost = req.body;
+  addPost.user_id = req.params.id;
+  dbPosts
+    .insert(addPost)
+    .then(post => {
+      res.status(201).json(post);
+    })
+    .catch(err => {
+      res.status(500).json({ message: "Error adding post", err });
+    });
+});
 
 // get :: /api/users
 router.get("/", (req, res) => {
-  db.get(req.query)
+  db.get()
     .then(users => {
       res.status(200).json(users);
     })
@@ -38,11 +50,25 @@ router.get("/", (req, res) => {
 
 // get :: /api/users/:id
 router.get("/:id", validateUserId, (req, res) => {
-  res.status(200).json(req.user)
+  db.getById(req.params.id)
+    .then(user => {
+      res.status(200).json(user);
+    })
+    .catch(err => {
+      res.status(500).json({ message: "Error getting user", err });
+    });
 });
 
 // get :: /api/users/:id/posts
-router.get("/:id/posts", (req, res) => {});
+router.get("/:id/posts", validateUserId, (req, res) => {
+  db.getUserPosts(req.params.id)
+  .then(posts => {
+    res.status(200).json(posts);
+  })
+  .catch(err => {
+    res.status(500).json({message: "Error getting user posts", err})
+  })
+});
 
 // delete :: /api/users/:id
 router.delete("/:id", (req, res) => {});
@@ -63,22 +89,23 @@ function validateUserId(req, res, next) {
   const { id } = req.params;
 
   if (Number.isInteger(Number(id))) {
-    db.getById(id).then(user => {
-      if (user) {
-        req.user = user;
-        next();
-      } else {
-        res.status(404).json({
-          Message: "User with ID not found"
-        });
-      }
-    }) 
-    .catch(error =>  res.status(500).json(error))
+    db.getById(id)
+      .then(user => {
+        if (user) {
+          req.user = user;
+          next();
+        } else {
+          res.status(404).json({
+            Message: "User with ID not found"
+          });
+        }
+      })
+      .catch(error => res.status(500).json(error));
   } else {
     res.status(400).json({
       Message: "Invalid USER ID"
     });
-}
+  }
 }
 
 //----------------------------------------------------------------------------//
