@@ -39,6 +39,11 @@ function validateUser(req, res, next) {
   next();
 }
 
-function validatePost(req, res, next) {}
+function validatePost(req, res, next) {
+  const { text } = req.body;
+  if (!req.body) return res.status(400).json({ message: "Missing post data" });
+  if (!text) return res.status(400).json({ message: "Missing required text field" });
+  next();
+}
 
 module.exports = router;
