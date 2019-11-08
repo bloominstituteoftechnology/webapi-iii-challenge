@@ -9,7 +9,6 @@ server.use(logger);
 server.use("/api/users", userRouter);
 server.use("/api/posts", postRouter);
 
-
 server.get("/", (req, res) => {
   res.send(`<h2>Jashele Tillman</h2>`);
 });

@@ -35,8 +35,27 @@ router.put('/:id', (req, res) => {
 
 //custom middleware
 
-function validateUserId(req, res, next) {
 
+//validates the user id on every request that expects a user id parameter
+
+
+
+function validateUserId(req, res, next) {
+// if the id parameter is valid, store that user object as req.user
+const {id} = req.params;
+db.getById(id)
+.then(userId => {
+   if(userId) {
+      req.userId = userId;
+      next();
+// if the id parameter does not match any user id in the database, cancel the request and respond with status 400 and { message: "invalid user id" }
+   } else {
+      res.status(404).json({
+         Message: "invalid user id" 
+      })
+   }
+})
+// do i need a catch right here or nah?
 };
 
 function validateUser(req, res, next) {
