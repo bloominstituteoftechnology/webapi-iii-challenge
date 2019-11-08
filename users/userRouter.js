@@ -21,13 +21,20 @@ db.insert(req.body)
 });
 
 // post to ::  /api/users/:id/posts
-router.post('/:id/posts', (req, res) => {
-
+router.post('/:id/posts', validateUserId, (req, res) => {
 });
 
 // get :: /api/users
 router.get('/', (req, res) => {
-
+db.get(req.query)
+.then(users => {
+  res.status(200).json(users);
+})
+.catch(error => {
+  res.status(500).json({
+    message: "Error retrieving the users"
+  })
+})
 });
 
 // get :: /api/users/:id
