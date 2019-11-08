@@ -71,7 +71,15 @@ router.get("/:id/posts", validateUserId, (req, res) => {
 });
 
 // delete :: /api/users/:id
-router.delete("/:id", (req, res) => {});
+router.delete("/:id", validateUserId, (req, res) => {
+  db.remove(req.params.id)
+  .then(() => {
+    res.status(204).end();
+  })
+  .catch(err => {
+    res.status(500).json({message: "Error deleting", err})
+  })
+});
 
 // update :: /api/users/:id
 router.put("/:id", (req, res) => {});
