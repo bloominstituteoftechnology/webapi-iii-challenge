@@ -6,43 +6,50 @@ const db = require("./userDb.js");
 // CRUD Operations
 //----------------------------------------------------------------------------//
 
-router.post("/", (req, res) => {
-  db.insert(req.body)
-  .then(x => {
-    res.status(201).json(x)
+
+// post to ::  /api/users
+router.post('/', (req, res) => {
+db.insert(req.body)
+.then(user => {
+  res.status(201).json(user);
+})
+.catch(error => {
+  res.status(500).json({
+    message: "Error adding user"
   })
-  .catch(error => {
-    res.status(500).json({
-      message: "Error adding"
-    })
-  })
+})
 });
 
-router.post("/:id/posts", validateUserId, (req, res) => {
-  db.find(req.query)
-    .then(users => {
-      res.status(200).json(users);
-    })
-    .catch(error => {
-      res.status(500).json({
-        message: "Error retrieving the users"
-      });
-    });
-});
-
-router.get("/", (req, res) => {
+// post to ::  /api/users/:id/posts
+router.post('/:id/posts', (req, res) => {
 
 });
 
-router.get("/:id", validateUserId, (req, res) => {
-  res.status(200).json(req.users)
+// get :: /api/users
+router.get('/', (req, res) => {
+
 });
 
-router.get("/:id/posts", (req, res) => {});
+// get :: /api/users/:id
+router.get('/:id', (req, res) => {
 
-router.delete("/:id", (req, res) => {});
+});
 
-router.put("/:id", (req, res) => {});
+// get :: /api/users/:id/posts
+router.get('/:id/posts', (req, res) => {
+
+});
+
+// delete :: /api/users/:id
+router.delete('/:id', (req, res) => {
+
+});
+
+// update :: /api/users/:id
+router.put('/:id', (req, res) => {
+
+});
+
 
 //----------------------------------------------------------------------------//
 // MIDDLEWARE
