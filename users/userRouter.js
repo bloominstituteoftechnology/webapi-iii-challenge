@@ -27,7 +27,16 @@ router.post("/:id/posts", validateUserId, validatePost, async (req, res) => {
   }
 });
 
-router.get("/", (req, res) => {});
+// Get all users
+router.get("/", async (req, res) => {
+  try {
+    const users = await userDb.get();
+    return res.status(200).json(users);
+  }
+  catch (err) {
+    return res.status(500).json({ errorMessage: "Unable to retrieve users information." });
+  }
+});
 
 router.get("/:id", validateUserId, (req, res) => {});
 
