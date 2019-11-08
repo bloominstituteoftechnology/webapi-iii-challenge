@@ -38,6 +38,7 @@ router.get("/", async (req, res) => {
   }
 });
 
+// Get user by ID
 router.get("/:id", validateUserId, async (req, res) => {
   const id = req.params.id;
   try {
@@ -49,7 +50,17 @@ router.get("/:id", validateUserId, async (req, res) => {
   }
 });
 
-router.get("/:id/posts", validateUserId, (req, res) => {});
+// Get all posts by user ID
+router.get("/:id/posts", validateUserId, async (req, res) => {
+  const id = req.params.id;
+  try {
+    const posts = await userDb.getUserPosts(id);
+    return res.status(200).json(posts);
+  }
+  catch (err) {
+    return res.status(500).json({ errorMessage: "Unable to retrieve posts from database.", error: err });
+  }
+});
 
 router.delete("/:id", validateUserId, (req, res) => {});
 
