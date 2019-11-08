@@ -6,57 +6,48 @@ const db = require("./userDb.js");
 // CRUD Operations
 //----------------------------------------------------------------------------//
 
-
 // post to ::  /api/users
-router.post('/', (req, res) => {
-db.insert(req.body)
-.then(user => {
-  res.status(201).json(user);
-})
-.catch(error => {
-  res.status(500).json({
-    message: "Error adding user"
-  })
-})
+router.post("/", (req, res) => {
+  db.insert(req.body)
+    .then(user => {
+      res.status(201).json(user);
+    })
+    .catch(error => {
+      res.status(500).json({
+        message: "Error adding user"
+      });
+    });
 });
 
 // post to ::  /api/users/:id/posts
-router.post('/:id/posts', validateUserId, (req, res) => {
-});
+router.post("/:id/posts", validateUserId, (req, res) => {});
 
 // get :: /api/users
-router.get('/', (req, res) => {
-db.get(req.query)
-.then(users => {
-  res.status(200).json(users);
-})
-.catch(error => {
-  res.status(500).json({
-    message: "Error retrieving the users"
-  })
-})
+router.get("/", (req, res) => {
+  db.get(req.query)
+    .then(users => {
+      res.status(200).json(users);
+    })
+    .catch(error => {
+      res.status(500).json({
+        message: "Error retrieving the users "
+      });
+    });
 });
 
 // get :: /api/users/:id
-router.get('/:id', (req, res) => {
-
+router.get("/:id", validateUserId, (req, res) => {
+  res.status(200).json(req.user)
 });
 
 // get :: /api/users/:id/posts
-router.get('/:id/posts', (req, res) => {
-
-});
+router.get("/:id/posts", (req, res) => {});
 
 // delete :: /api/users/:id
-router.delete('/:id', (req, res) => {
-
-});
+router.delete("/:id", (req, res) => {});
 
 // update :: /api/users/:id
-router.put('/:id', (req, res) => {
-
-});
-
+router.put("/:id", (req, res) => {});
 
 //----------------------------------------------------------------------------//
 // MIDDLEWARE
@@ -69,22 +60,24 @@ router.put('/:id', (req, res) => {
 function validateUserId(req, res, next) {
   // if the id parameter is valid, store that user object as req.user
   const { id } = req.params;
-  db.getById(id).then(userId => {
-    if (userId) {
-      req.userId = userId;
-      next();
-      // if the id parameter does not match any user id in the database, cancel the request and respond with status 400 and { message: "invalid user id" }
-    } else {
-      res
-        .status(400)
-        .json({
-          Message: "invalid user id"
-        })
-        .catch(err => {
-          res.status(500).json({ message: "Error Retrieving Data", error });
+
+  if (Number.isInteger(Number(id))) {
+    db.getById(id).then(user => {
+      if (user) {
+        req.user = user;
+        next();
+      } else {
+        res.status(404).json({
+          Message: "User with ID not found"
         });
-    }
-  });
+      }
+    }) 
+    .catch(error =>  res.status(500).json(error))
+  } else {
+    res.status(400).json({
+      Message: "Invalid USER ID"
+    });
+}
 }
 
 //----------------------------------------------------------------------------//
