@@ -31,12 +31,16 @@ function validateUserId(req, res, next) {
       next();
       // if the id parameter does not match any user id in the database, cancel the request and respond with status 400 and { message: "invalid user id" }
     } else {
-      res.status(400).json({
-        Message: "invalid user id"
-      });
+      res
+        .status(400)
+        .json({
+          Message: "invalid user id"
+        })
+        .catch(err => {
+          res.status(500).json({ message: "Error Retrieving Data", error });
+        });
     }
   });
-  // do i need a catch right here or nah?
 }
 
 // validateUser validates the body on a request to create a new user
@@ -60,15 +64,15 @@ function validateUser(req, res, next) {
 
 // validatePost validates the body on a request to create a new post
 function validatePost(req, res, next) {
-  const postBody = req.body; 
+  const postBody = req.body;
 
   // if the request body is missing, cancel the request and respond with status 400 and { message: "missing post data" }
   if (Object.keys(postBody).length < 1) {
     res.status(400).json({
       Message: "Missing Post Data"
-    })
+    });
   } else if (!postBody.text) {
-        // if the request body is missing the required text field, cancel the request and respond with status 400 and { message: "missing required text field" }
+    // if the request body is missing the required text field, cancel the request and respond with status 400 and { message: "missing required text field" }
     res.status(400).json({
       Message: "Missing required text field"
     });
