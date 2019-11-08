@@ -1,17 +1,14 @@
 const express = require('express');
-
 const server = express();
+const middleware = [
+  express.json(),
+  logger,
+  validateUserId,
+  validateUser,
+  validatePost
+];
+server.use(middleware);
 
-server.use(express.json());
-
-server.get("/", (req, res) => {
-   res.send(` 
-   
-   <h1>Hello.</h1>
-   <p>This is a template.</p>
-   
-   `);
-});
 
 
 module.exports = server;
