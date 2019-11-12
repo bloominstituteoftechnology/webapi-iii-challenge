@@ -1,4 +1,7 @@
-# Building an API using a Node.js and Express Middleware - Jashele Tillman-
+# Deployed @ [Web iii API](https://jashele-deploy-challenge.herokuapp.com/api/users "Google's Homepage")
+
+
+# Building an API using a Node.js and Express Middleware - Jashele Tillman
 
 In this challenge, you build an API and write custom middleware that satisfies the requirements listed under the `Minimum Viable Product` section.
 
