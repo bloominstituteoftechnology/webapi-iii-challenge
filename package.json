@@ -25,7 +25,7 @@
   "dependencies": {
     "express": "^4.17.1",
     "knex": "^0.18.3",
-    "sqlite3": "^4.0.9"
+    "sqlite3": "^4.2.0"
   },
   "devDependencies": {
     "nodemon": "^1.19.1"
